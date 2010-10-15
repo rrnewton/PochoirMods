@@ -1,0 +1,60 @@
+{-
+ ----------------------------------------------------------------------------------
+ -  Copyright (C) 2010  Massachusetts Institute of Technology
+ -  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
+ - 		                Charles E. Leiserson <cel@mit.edu>
+ - 	 
+ -   This program is free software: you can redistribute it and/or modify
+ -   it under the terms of the GNU General Public License as published by
+ -   the Free Software Foundation, either version 3 of the License, or
+ -   (at your option) any later version.
+ -
+ -   This program is distributed in the hope that it will be useful,
+ -   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ -   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ -   GNU General Public License for more details.
+ -
+ -   You should have received a copy of the GNU General Public License
+ -   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -
+ -   Suggestsions:                  yuantang@csail.mit.edu
+ -   Bugs:                          yuantang@csail.mit.edu
+ -
+ --------------------------------------------------------------------------------
+ -}
+
+module PParser2 where
+{- modules for 2nd pass parsers -}
+
+import Text.ParserCombinators.Parsec
+import Control.Monad
+
+import PBasicParser
+import PData
+import qualified Data.Map as Map
+
+pToken1 :: GenParser Char ParserState String
+pToken1 = do reserved "Pochoir_SArray"
+             (l_type, l_rank) <- angles pDeclStatic <?> "Pochoir_SArray static parameters"
+             l_arrayDecl <- commaSep1 pDeclDynamic
+             char ';'
+             l_state <- getState
+             return (concat $ 
+                   map (outputSArray (l_type, l_rank) (pArray l_state)) l_arrayDecl)
+             -- return ("Pochoir_SArray <" ++ show l_type ++ ", " ++ show l_rank ++ "> " ++ pShowArrayDynamicDecl l_arrayDecl ++ ";\n")
+      <|> do ch <- anyChar
+             return [ch]
+      <?> "line"
+
+outputSArray :: (PType, Int) -> Map.Map PName PArray -> (PName, [Int]) -> String
+outputSArray (l_type, l_rank) m_array (l_array, l_dims) =
+    case Map.lookup l_array m_array of
+        Nothing -> breakline ++ "Pochoir_SArray <" ++ 
+                    show l_type ++ ", " ++ show l_rank ++ "> " ++ 
+                    pShowArrayItem (l_array, l_dims) ++ ";" 
+        Just l_pArray -> breakline ++ "Pochoir_SArray <" ++ 
+                    show l_type ++ ", " ++ show l_rank ++ 
+                    ", " ++ show (max 2 $ 1+aToggle l_pArray) ++ "> " ++ 
+                    pShowArrayItem (l_array, l_dims) ++ ";" 
+
+

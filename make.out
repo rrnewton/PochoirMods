@@ -1,0 +1,7 @@
+ghc -o pp -O --make PMain.hs
+[1 of 5] Compiling PData            ( PData.hs, PData.o )
+[2 of 5] Compiling PBasicParser     ( PBasicParser.hs, PBasicParser.o )
+
+PBasicParser.hs:147:52:
+    Not in scope: type constructor or class `PDim'
+make: *** [pp] Error 1
