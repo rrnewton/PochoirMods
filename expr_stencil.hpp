@@ -30,7 +30,7 @@
 #include "expr_array.hpp"
 #include "expr_iter.hpp"
 
-/* assuming there won't be more than 10 Pochoir_SArray in one Pochoir_Stencil object! */
+/* assuming there won't be more than 10 Pochoir_Array in one Pochoir_Stencil object! */
 #define ARRAY_SIZE 10
 template <typename T, int N_RANK, int TOGGLE=2>
 class Pochoir_Stencil {
@@ -40,10 +40,10 @@ class Pochoir_Stencil {
         int stride_[N_RANK];
         int logic_size_[N_RANK];
         int timestep_;
-        Pochoir_SArray<T, N_RANK, TOGGLE> ** arr_list_;
-        typedef T (*BValue_1D)(Pochoir_SArray<T, 1> &, int, int);
-        typedef T (*BValue_2D)(Pochoir_SArray<T, 2> &, int, int, int);
-        typedef T (*BValue_3D)(Pochoir_SArray<T, 3> &, int, int, int, int);
+        Pochoir_Array<T, N_RANK, TOGGLE> ** arr_list_;
+        typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
+        typedef T (*BValue_2D)(Pochoir_Array<T, 2> &, int, int, int);
+        typedef T (*BValue_3D)(Pochoir_Array<T, 3> &, int, int, int, int);
         int arr_len_;
         int arr_idx_;
     public:
@@ -53,23 +53,23 @@ class Pochoir_Stencil {
             grid_.x0[i] = grid_.x1[i] = grid_.dx0[i] = grid_.dx1[i] = 0;
         }
         timestep_ = 0;
-        arr_list_ = (Pochoir_SArray<T, N_RANK, TOGGLE>**)calloc(ARRAY_SIZE, sizeof(Pochoir_SArray<T, N_RANK, TOGGLE>*));
+        arr_list_ = (Pochoir_Array<T, N_RANK, TOGGLE>**)calloc(ARRAY_SIZE, sizeof(Pochoir_Array<T, N_RANK, TOGGLE>*));
         arr_len_ = 0;
         arr_idx_ = 0;
     }
     /* currently, we just compute the slope[] out of the shape[] */
     /* We get the grid_info out of arrayInUse */
-    void registerArrayInUse(Pochoir_SArray<T, N_RANK, TOGGLE> & arr);
+    void registerArrayInUse(Pochoir_Array<T, N_RANK, TOGGLE> & arr);
     template <size_t N_SIZE>
     void registerShape(Pochoir_Shape_info<N_RANK> (& shape)[N_SIZE]);
-    /* register boundary value function with corresponding Pochoir_SArray object directly */
-    void registerBoundaryFn(Pochoir_SArray<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
+    /* register boundary value function with corresponding Pochoir_Array object directly */
+    void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
         arr.registerBV(_bv1);
     } 
-    void registerBoundaryFn(Pochoir_SArray<T, 2, TOGGLE> & arr, BValue_2D _bv2) {
+    void registerBoundaryFn(Pochoir_Array<T, 2, TOGGLE> & arr, BValue_2D _bv2) {
         arr.registerBV(_bv2);
     } 
-    void registerBoundaryFn(Pochoir_SArray<T, 3, TOGGLE> & arr, BValue_3D _bv3) {
+    void registerBoundaryFn(Pochoir_Array<T, 3, TOGGLE> & arr, BValue_3D _bv3) {
         arr.registerBV(_bv3);
     } 
     template <typename Range>
@@ -94,7 +94,7 @@ class Pochoir_Stencil {
 };
 
 template <typename T, int N_RANK, int TOGGLE>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerArrayInUse(Pochoir_SArray<T, N_RANK, TOGGLE> & arr) {
+void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerArrayInUse(Pochoir_Array<T, N_RANK, TOGGLE> & arr) {
     arr_list_[arr_idx_] = &(arr);
     ++arr_idx_; ++arr_len_;
 }

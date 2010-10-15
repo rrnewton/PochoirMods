@@ -26,8 +26,10 @@ endif
 endif
 pp : ${PP_FILE} 
 	ghc -o pp -O --make PMain.hs
+tb_spec : tb_spec.cpp ${POCHOIR_HEADER} 
+	${CC} -o tb_spec ${CFLAGS} tb_spec.cpp 
 pp_spec : pp_spec.cpp ${POCHOIR_HEADER} 
-	./pp -split-obase pp_spec.cpp
+	./pp -split-shadow pp_spec.cpp
 	${CC} -o pp_spec ${CFLAGS} pp_spec.cpp 
 	${CC} -o pp_spec_pochoir ${CFLAGS} pp_spec_pochoir.cpp 
 clean: 

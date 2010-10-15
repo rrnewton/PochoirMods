@@ -29,7 +29,7 @@ using namespace std;
 #define SIMPLE 0
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
-#define N_SIZE 555
+#define N_SIZE 2555
 #define T_SIZE 555
 #define TOLERANCE (1e-6)
 
@@ -89,8 +89,8 @@ int main(void)
 	int t;
 	struct timeval start, end;
 	/* data structure of Pochoir - row major */
-	Pochoir_SArray<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
-	Pochoir_SArray<double, N_RANK-1> c(N_SIZE), d(N_SIZE);
+	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
+	Pochoir_Array<double, N_RANK-1> c(N_SIZE), d(N_SIZE);
     Pochoir_Stencil<double, N_RANK> heat_2D;
     Pochoir_Stencil<double, N_RANK-1> heat_1D;
     Pochoir_uRange I(0, N_SIZE-1), J(0, N_SIZE-1), K(0, N_SIZE-1);
@@ -143,7 +143,7 @@ int main(void)
 
     Pochoir_obase_fn_2D(heat_2D_obase_fn, t0, t1, grid)
         grid_info<2> l_grid = grid;
-        /* this iterator is also a proxy for Pochoir_SArray */
+        /* this iterator is also a proxy for Pochoir_Array */
         Pochoir_Iterator<double, 2> iter0(a);
         Pochoir_Iterator<double, 2> iter1(a);
         int gap1;
@@ -223,9 +223,9 @@ int main(void)
 
 	gettimeofday(&start, 0);
 #if 1
-#if 0
-    heat_1D.run(T_SIZE, heat_1D_fn);
-    heat_2D.run(T_SIZE, heat_2D_fn);
+#if 1
+    heat_1D.run(T_SIZE, heat_1D_interior_fn, heat_1D_fn);
+    heat_2D.run(T_SIZE, heat_2D_interior_fn, heat_2D_fn);
 #else
     {
         interior_shadow<double, 1> c_shadow(c);
@@ -258,12 +258,12 @@ int main(void)
 
 	gettimeofday(&start, 0);
     for (int t = 0; t < T_SIZE; ++t) {
-	for (int i = 0; i <= N_SIZE-1; ++i) {
-	for (int j = 0; j <= N_SIZE-1; ++j) {
-        b(t+1, i, j) = 0.01 + b(t, i-1, j+1);
+	cilk_for (int i = 1; i <= N_SIZE-2; ++i) {
+	for (int j = 1; j <= N_SIZE-2; ++j) {
+        b.interior(t+1, i, j) = 0.01 + b.interior(t, i-1, j+1);
 	} } }
 	for (int t = 0; t < T_SIZE; ++t) {
-	for (int i = 0; i <= N_SIZE-1; ++i) {
+	cilk_for (int i = 0; i <= N_SIZE-1; ++i) {
         d(t+1, i) = 0.01 + d(t, i-1);
 #if DEBUG
         printf("d(%d, %d) = 0.01 + d(%d, %d)\t", t+1, i, t, i-1);
@@ -291,7 +291,7 @@ int main(void)
 	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
     Pochoir_obase_fn_2D(heat_2D_obase_fn, t0, t1, grid)
         grid_info<2> l_grid = grid;
-        /* this iterator is also a proxy for Pochoir_SArray */
+        /* this iterator is also a proxy for Pochoir_Array */
         Pochoir_Iterator<double, 2> iter0(a), iter1(a), iter2(a), iter3(a), iter4(a), iter5(a);
         int gap1;
         const int l_stride0 = a.stride(0), l_stride1 = a.stride(1);
@@ -374,10 +374,10 @@ int main(void)
     heat_1D.registerDomain(J);
 
 	gettimeofday(&start, 0);
-#if 1
 #if 0
-    heat_1D.run(T_SIZE, heat_1D_fn);
-    heat_2D.run(T_SIZE, heat_2D_fn);
+#if 1
+    heat_1D.run(T_SIZE, heat_1D_interior_fn, heat_1D_fn);
+    heat_2D.run(T_SIZE, heat_2D_interior_fn, heat_2D_fn);
 #else
         {
         interior_shadow<double, 1> c_shadow(c);
@@ -409,11 +409,11 @@ int main(void)
 
 	gettimeofday(&start, 0);
 	for (int t = 0; t < T_SIZE; ++t) {
-    for (int i = 0; i <= N_SIZE-1; ++i) {
-	for (int k = 0; k <= N_SIZE-1; ++k) {
-        b(t+1, i, k) = 0.125 * (b(t, i+1, k) - 2.0 * b(t, i, k) + b(t, i-1, k)) + 0.125 * (b(t, i, k+1) - 2.0 * b(t, i, k) + b(t, i, k-1)) + b(t, i, k); } } }
+    cilk_for (int i = 1; i <= N_SIZE-2; ++i) {
+	for (int k = 1; k <= N_SIZE-2; ++k) {
+        b.interior(t+1, i, k) = 0.125 * (b.interior(t, i+1, k) - 2.0 * b.interior(t, i, k) + b.interior(t, i-1, k)) + 0.125 * (b.interior(t, i, k+1) - 2.0 * b.interior(t, i, k) + b.interior(t, i, k-1)) + b.interior(t, i, k); } } }
 	for (int t = 0; t < T_SIZE; ++t) {
-    for (int i = 0; i <= N_SIZE-1; ++i) {
+    cilk_for (int i = 0; i <= N_SIZE-1; ++i) {
         /* conditional instruction is more expensive than modulo operation!!! */
 #if 0
         int idx0 = i;
@@ -431,8 +431,8 @@ int main(void)
 	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
 
 	t = T_SIZE;
-	for (int i = 0; i <= N_SIZE-1; ++i) {
-	for (int j = 0; j <= N_SIZE-1; ++j) {
+	for (int i = 1; i <= N_SIZE-2; ++i) {
+	for (int j = 1; j <= N_SIZE-2; ++j) {
 		check_result(t, i, j, a(t, i, j), b(t, i, j));
 	} } 
 	for (int i = 0; i <= N_SIZE-1; ++i) {

@@ -27,16 +27,16 @@
 
 #include "expr_common.hpp"
 //#include "expr_array.hpp"
-template <typename T, int N_RANK, int TOGGLE> class Pochoir_SArray;
+template <typename T, int N_RANK, int TOGGLE> class Pochoir_Array;
 
 template <typename T, int N_RANK, int TOGGLE=2>
 class interior_shadow {
     private:
-        Pochoir_SArray<T, N_RANK, TOGGLE> & arr_;
+        Pochoir_Array<T, N_RANK, TOGGLE> & arr_;
     public:
-        explicit interior_shadow(Pochoir_SArray<T, N_RANK, TOGGLE> & _arr) : arr_(_arr) {}
+        explicit interior_shadow(Pochoir_Array<T, N_RANK, TOGGLE> & _arr) : arr_(_arr) {}
         explicit interior_shadow(interior_shadow<T, N_RANK, TOGGLE> & _shadow) : arr_(_shadow.getArray()) {}
-        Pochoir_SArray<T, N_RANK, TOGGLE> & getArray() { return arr_; }
+        Pochoir_Array<T, N_RANK, TOGGLE> & getArray() { return arr_; }
         inline T & operator() (int _t, int _i) {
             return arr_.interior(_t, _i);
         }
@@ -55,10 +55,10 @@ class Pochoir_Iterator {
      * For unsafe access, we leave it to the index version!
      */
     private:
-        Pochoir_SArray<T, N_RANK, TOGGLE> & arr_;
+        Pochoir_Array<T, N_RANK, TOGGLE> & arr_;
         T * curr_;
     public:
-        explicit Pochoir_Iterator(Pochoir_SArray<T, N_RANK, TOGGLE> & _arr) : arr_(_arr) {
+        explicit Pochoir_Iterator(Pochoir_Array<T, N_RANK, TOGGLE> & _arr) : arr_(_arr) {
             curr_ = arr_.view()->data();
         }
 

@@ -127,28 +127,28 @@ size_t ArraySize (Pochoir_Shape_info<N_RANK> (& arr)[N]) { return N; }
 #if 1
 #define Pochoir_Boundary_Declare_1D(name, arr, t, i) \
     template <typename T> \
-    T name (Pochoir_SArray<T, 1> & arr, int t, int i) 
+    T name (Pochoir_Array<T, 1> & arr, int t, int i) 
 
 #define Pochoir_Boundary_Declare_2D(name, arr, t, i, j) \
     template <typename T> \
-    T name (Pochoir_SArray<T, 2> & arr, int t, int i, int j)
+    T name (Pochoir_Array<T, 2> & arr, int t, int i, int j)
 
 #define Pochoir_Boundary_Declare_3D(name, arr, t, i, j, k) \
     template <typename T> \
-    T name (Pochoir_SArray<T, 3> & arr, int t, int i, int j, int k)
+    T name (Pochoir_Array<T, 3> & arr, int t, int i, int j, int k)
 #endif
 
 #define Pochoir_Boundary_1D(name, arr, t, i) \
     template <typename T> \
-    T name (Pochoir_SArray<T, 1> & arr, int t, int i) { 
+    T name (Pochoir_Array<T, 1> & arr, int t, int i) { 
 
 #define Pochoir_Boundary_2D(name, arr, t, i, j) \
     template <typename T> \
-    T name (Pochoir_SArray<T, 2> & arr, int t, int i, int j) { 
+    T name (Pochoir_Array<T, 2> & arr, int t, int i, int j) { 
 
 #define Pochoir_Boundary_3D(name, arr, t, i, j, k) \
     template <typename T> \
-    T name (Pochoir_SArray<T, 3> & arr, int t, int i, int j, int k) { 
+    T name (Pochoir_Array<T, 3> & arr, int t, int i, int j, int k) { 
 
 #define Pochoir_Boundary_end }
 

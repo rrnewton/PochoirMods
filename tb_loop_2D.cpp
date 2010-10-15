@@ -54,7 +54,7 @@ int main(int argc, char * argv[])
     T_SIZE = StrToInt(argv[2]);
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
-	Pochoir_SArray<double, N_RANK> b(N_SIZE, N_SIZE);
+	Pochoir_Array<double, N_RANK> b(N_SIZE, N_SIZE);
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {

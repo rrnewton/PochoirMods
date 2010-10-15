@@ -36,7 +36,7 @@ using namespace std;
 #define SIMPLE 0
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
-#define N_SIZE 555
+#define N_SIZE 2555
 #define T_SIZE 555
 #define TOLERANCE (1e-6)
 
@@ -96,8 +96,8 @@ int main(void)
 	int t;
 	struct timeval start, end;
 	/* data structure of Pochoir - row major */
-	Pochoir_SArray<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
-	Pochoir_SArray<double, N_RANK-1> c(N_SIZE), d(N_SIZE);
+	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
+	Pochoir_Array<double, N_RANK-1> c(N_SIZE), d(N_SIZE);
     Pochoir_Stencil<double, N_RANK> heat_2D;
     Pochoir_Stencil<double, N_RANK-1> heat_1D;
     Pochoir_uRange I(0, N_SIZE-1), J(0, N_SIZE-1), K(0, N_SIZE-1);

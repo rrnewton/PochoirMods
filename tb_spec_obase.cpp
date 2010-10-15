@@ -113,8 +113,8 @@ int main(void)
 	int t;
 	struct timeval start, end;
 	/* data structure of Pochoir - row major */
-	Pochoir_SArray<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
-	Pochoir_SArray<double, N_RANK-1> c(N_SIZE), d(N_SIZE);
+	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
+	Pochoir_Array<double, N_RANK-1> c(N_SIZE), d(N_SIZE);
     Pochoir_Stencil<double, N_RANK> heat_2D;
     Pochoir_Stencil<double, N_RANK-1> heat_1D;
     Pochoir_uRange I(0, N_SIZE-1), J(0, N_SIZE-1), K(0, N_SIZE-1);
@@ -167,7 +167,7 @@ int main(void)
 
     Pochoir_obase_fn_2D(heat_2D_obase_fn, t0, t1, grid)
         grid_info<2> l_grid = grid;
-        /* this iterator is also a proxy for Pochoir_SArray */
+        /* this iterator is also a proxy for Pochoir_Array */
         Pochoir_Iterator<double, 2> iter0(a);
         Pochoir_Iterator<double, 2> iter1(a);
         int gap1;
@@ -299,7 +299,7 @@ int main(void)
 	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
     Pochoir_obase_fn_2D(heat_2D_obase_fn, t0, t1, grid)
         grid_info<2> l_grid = grid;
-        /* this iterator is also a proxy for Pochoir_SArray */
+        /* this iterator is also a proxy for Pochoir_Array */
         Pochoir_Iterator<double, 2> iter0(a), iter1(a), iter2(a), iter3(a), iter4(a), iter5(a);
         int gap1;
         const int l_stride0 = a.stride(0), l_stride1 = a.stride(1);

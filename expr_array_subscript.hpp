@@ -113,7 +113,7 @@ class Storage {
 };
 
 template <typename T, T_dim N_RANK, T_dim TOGGLE=2>
-class Pochoir_SArray {
+class Pochoir_Array {
 	private:
 		Storage<T> * view_; // real storage of elements
         T * data_; /* begining data pointer of view_, reserved for iterator! */
@@ -123,9 +123,9 @@ class Pochoir_SArray {
 		size_info stride_; // stride of each dimension
 		int total_size_;
         int slope_[N_RANK];
-        typedef T (*BValue_1D)(Pochoir_SArray<T, 1> &, int, int);
-        typedef T (*BValue_2D)(Pochoir_SArray<T, 2> &, int, int, int);
-        typedef T (*BValue_3D)(Pochoir_SArray<T, 3> &, int, int, int, int);
+        typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
+        typedef T (*BValue_2D)(Pochoir_Array<T, 2> &, int, int, int);
+        typedef T (*BValue_3D)(Pochoir_Array<T, 3> &, int, int, int, int);
         BValue_1D bv1_;
         BValue_2D bv2_;
         BValue_3D bv3_;
@@ -134,7 +134,7 @@ class Pochoir_SArray {
          * - Following dimensions for constructors are spatial dimension
          * - all spatial dimensions are row-majored
          */
-        explicit Pochoir_SArray (int sz0) {
+        explicit Pochoir_Array (int sz0) {
             logic_size_[0] = phys_size_[0] = sz0;
             stride_[0] = 1; 
             total_size_ = sz0;
@@ -147,7 +147,7 @@ class Pochoir_SArray {
             data_ = view_->data();
         }
 
-		explicit Pochoir_SArray (int sz1, int sz0) {
+		explicit Pochoir_Array (int sz1, int sz0) {
 			logic_size_[1] = sz1; logic_size_[0] = sz0; 
 			phys_size_[1] = sz1; phys_size_[0] = sz0; 
 			stride_[1] = sz0; stride_[0] = 1; 
@@ -161,7 +161,7 @@ class Pochoir_SArray {
             data_ = view_->data();
 		}
 
-		explicit Pochoir_SArray (int sz2, int sz1, int sz0) {
+		explicit Pochoir_Array (int sz2, int sz1, int sz0) {
 			logic_size_[2] = sz2; logic_size_[1] = sz1; logic_size_[0] = sz0; 
 			phys_size_[2] = sz2; phys_size_[1] = sz1; phys_size_[0] = sz0; 
 			stride_[0] = 1;  
@@ -183,7 +183,7 @@ class Pochoir_SArray {
 		/* Copy constructor -- create another view of the
 		 * same array
 		 */
-		Pochoir_SArray (Pochoir_SArray<T, N_RANK, TOGGLE> const & orig) {
+		Pochoir_Array (Pochoir_Array<T, N_RANK, TOGGLE> const & orig) {
 			total_size_ = orig.total_size();
 			for (T_dim i = 0; i < N_RANK; ++i) {
 				phys_size_[i] = orig.phys_size(i);
@@ -191,12 +191,12 @@ class Pochoir_SArray {
 				stride_[i] = orig.stride(i);
 			}
 			view_ = NULL;
-			view_ = const_cast<Pochoir_SArray<T, N_RANK, TOGGLE> &>(orig).view();
+			view_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).view();
 			view_->inc_ref();
             /* We also get the BValue function pointer from orig */
-            bv1_ = const_cast<Pochoir_SArray<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
-            bv2_ = const_cast<Pochoir_SArray<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
-            bv3_ = const_cast<Pochoir_SArray<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
+            bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
+            bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
+            bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
             for (int i = 0; i < N_RANK; ++i) {
                 slope_[i] = 0;
             }
@@ -204,7 +204,7 @@ class Pochoir_SArray {
 		}
 
         /* assignment operator for vector<> */
-		Pochoir_SArray<T, N_RANK, TOGGLE> & operator= (Pochoir_SArray<T, N_RANK, TOGGLE> const & orig) {
+		Pochoir_Array<T, N_RANK, TOGGLE> & operator= (Pochoir_Array<T, N_RANK, TOGGLE> const & orig) {
 			total_size_ = orig.total_size();
 			for (T_dim i = 0; i < N_RANK; ++i) {
 				phys_size_[i] = orig.phys_size(i);
@@ -212,12 +212,12 @@ class Pochoir_SArray {
 				stride_[i] = orig.stride(i);
 			}
 			view_ = NULL;
-			view_ = const_cast<Pochoir_SArray<T, N_RANK, TOGGLE> &>(orig).view();
+			view_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).view();
 			view_->inc_ref();
             /* We also get the BValue function pointer from orig */
-            bv1_ = const_cast<Pochoir_SArray<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
-            bv2_ = const_cast<Pochoir_SArray<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
-            bv3_ = const_cast<Pochoir_SArray<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
+            bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
+            bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
+            bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
             for (int i = 0; i < N_RANK; ++i) {
                 slope_[i] = 0;
             }
@@ -226,7 +226,7 @@ class Pochoir_SArray {
 		}
 
 		/* destructor : free memory */
-		~Pochoir_SArray() {
+		~Pochoir_Array() {
 			view_->dec_ref();
 		}
 
@@ -311,7 +311,7 @@ class Pochoir_SArray {
         }
 
         /* 
-         * orig_value() is reserved for "ostream" : cout << Pochoir_SArray
+         * orig_value() is reserved for "ostream" : cout << Pochoir_Array
          */
         inline T orig_value (int _timestep, size_info & _idx) {
             bool l_boundary = check_boundary(_idx);
@@ -493,17 +493,17 @@ class Pochoir_SArray {
 		}
 
 		template <typename T2, T_dim N2>
-		friend std::ostream& operator<<(std::ostream& os, Pochoir_SArray<T2, N2> const & x); 
+		friend std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x); 
 };
 
 template<typename T2, T_dim N2>
-std::ostream& operator<<(std::ostream& os, Pochoir_SArray<T2, N2> const & x) { 
+std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x) { 
 	typedef int size_info[N2];
 	size_info l_index, l_head_index, l_tail_index;
 	bool done = false, line_break = false;
 	T_dim i = 0;
 
-	os << " Pochoir_SArray : "; 
+	os << " Pochoir_Array : "; 
 	for (T_dim i = 0; i < N2; ++i) {
 		l_index[i] = 0;
 		l_head_index[i] = 0;
@@ -514,10 +514,10 @@ std::ostream& operator<<(std::ostream& os, Pochoir_SArray<T2, N2> const & x) {
 
 	while (!done) {
 		T2 x0, x1;
-		x0 = const_cast<Pochoir_SArray<T2, N2> &>(x).orig_value(0, l_index);
-		x1 = const_cast<Pochoir_SArray<T2, N2> &>(x).orig_value(1, l_index);
+		x0 = const_cast<Pochoir_Array<T2, N2> &>(x).orig_value(0, l_index);
+		x1 = const_cast<Pochoir_Array<T2, N2> &>(x).orig_value(1, l_index);
 		os << std::setw(9) << x0 << " (" << x1 << ")" << " "; 
-		done = const_cast<Pochoir_SArray<T2, N2> &>(x).update_index(l_index, line_break, l_head_index, l_tail_index);
+		done = const_cast<Pochoir_Array<T2, N2> &>(x).update_index(l_index, line_break, l_head_index, l_tail_index);
 		if (line_break) {
 			os << std::endl;
 			line_break = false;
