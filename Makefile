@@ -15,7 +15,8 @@ ifeq (${DEBUG}, 1)
 CFLAGS := -DDEBUG -O0 -g3 -std=c++0x -include cilk_stub.h -I${INTEL_CILK_HEADER}
 #CFLAGS := -DDEBUG -O0 -g3 -std=c++0x -I${INTEL_CILK_HEADER}
 else
-CFLAGS := -O3 -DNDEBUG -std=c++0x -Wall -Werror -xSSE4.2 -ipo -I${INTEL_CILK_HEADER} 
+# CFLAGS := -O3 -DNDEBUG -std=c++0x -Wall -Werror -xSSE4.2 -ipo -I${INTEL_CILK_HEADER} 
+CFLAGS := -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo -I${INTEL_CILK_HEADER} 
 endif
 else
 ifeq (${DEBUG}, 1)
@@ -26,10 +27,30 @@ endif
 endif
 pp : ${PP_FILE} 
 	ghc -o pp -O --make PMain.hs
+pp_iter : pp_iter.cpp ${POCHOIR_HEADER} 
+	./pp -split-obase pp_iter.cpp
+	${CC} -o pp_iter ${CFLAGS} pp_iter.cpp 
+	${CC} -o pp_iter_pochoir ${CFLAGS} pp_iter_pochoir.cpp 
 tb_spec : tb_spec.cpp ${POCHOIR_HEADER} 
 	${CC} -o tb_spec ${CFLAGS} tb_spec.cpp 
+pp_col : pp_col.cpp ${POCHOIR_HEADER} 
+	./pp -split-obase pp_col.cpp
+	${CC} -o pp_col ${CFLAGS} pp_col.cpp 
+	${CC} -o pp_col_pochoir ${CFLAGS} pp_col_pochoir.cpp 
+3dfd : tb_3dfd.cpp ${POCHOIR_HEADER} 
+	./pp -split-obase tb_3dfd.cpp
+	${CC} -o 3dfd ${CFLAGS} tb_3dfd.cpp 
+	${CC} -o 3dfd_pochoir ${CFLAGS} tb_3dfd_pochoir.cpp 
+life : tb_life.cpp ${POCHOIR_HEADER} 
+	./pp -split-obase tb_life.cpp
+	${CC} -o life ${CFLAGS} tb_life.cpp 
+	${CC} -o life_pochoir ${CFLAGS} tb_life_pochoir.cpp 
+heat_2D : tb_heat_2D_NP.cpp ${POCHOIR_HEADER} 
+	./pp -split-macro-shadow tb_heat_2D_NP.cpp
+	${CC} -o heat_2D ${CFLAGS} tb_heat_2D_NP.cpp 
+	${CC} -o heat_2D_pochoir ${CFLAGS} tb_heat_2D_NP_pochoir.cpp 
 pp_spec : pp_spec.cpp ${POCHOIR_HEADER} 
-	./pp -split-shadow pp_spec.cpp
+	./pp -split-obase pp_spec.cpp
 	${CC} -o pp_spec ${CFLAGS} pp_spec.cpp 
 	${CC} -o pp_spec_pochoir ${CFLAGS} pp_spec_pochoir.cpp 
 clean: 

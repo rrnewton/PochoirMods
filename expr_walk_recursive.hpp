@@ -63,7 +63,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_serial(int t0, int t1, Grid_info 
     Grid_info l_grid;
 
     for (int i = 0; i < N_RANK; ++i) {
-        can_cut[i] = (2 * (grid.x1[i] - grid.x0[i]) + (grid.dx1[i] - grid.dx0[i]) * lt >= 4 * slope_[i] * lt) && (grid.x1[i] - grid.x0[i] > dx_recursive_);
+        can_cut[i] = (2 * (grid.x1[i] - grid.x0[i]) + (grid.dx1[i] - grid.dx0[i]) * lt >= 4 * slope_[i] * lt) && (grid.x1[i] - grid.x0[i] > dx_recursive_[i]);
         /* if all lb[i] < thres[i] && lt <= dt_recursive, 
            we have nothing to cut!
          */
@@ -78,7 +78,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_serial(int t0, int t1, Grid_info 
         return;
     } else  {
 		/* N_RANK-1 because we exclude the time dimension here */
-        for (int i = 0; i < N_RANK && !cut_yet; ++i) {
+        for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
             if (can_cut[i]) {
                 l_grid = grid;
                 int xm = (2 * (grid.x0[i] + grid.x1[i]) + (2 * slope_[i] + grid.dx0[i] + grid.dx1[i]) * lt) / 4;
@@ -123,6 +123,98 @@ inline void Algorithm<N_RANK, Grid_info>::walk_serial(int t0, int t1, Grid_info 
 
 /* walk_adaptive() is just for interior region */
 template <int N_RANK, typename Grid_info> template <typename F>
+inline void Algorithm<N_RANK, Grid_info>::walk_bicut(int t0, int t1, Grid_info const grid, F const & f)
+{
+	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
+	   for the rest cut into that dimension, cut into as many as we can!
+	 */
+	int lt = t1 - t0;
+	index_info lb, thres;
+	Grid_info l_grid;
+
+	for (int i = 0; i < N_RANK; ++i) {
+		lb[i] = grid.x1[i] - grid.x0[i];
+		thres[i] = 2 * (2 * slope_[i] * lt);
+	}	
+
+	for (int i = N_RANK-1; i >= 0; --i) {
+		if (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]) { 
+			l_grid = grid;
+			const int sep = (int)lb[i]/2;
+			const int r = 2;
+#if DEBUG
+			printf("initial_cut = %s, lb[%d] = %d, sep = %d, r = %d\n", initial_cut(i) ? "True" : "False", i, lb[i], sep, r);
+#endif
+			l_grid.x0[i] = grid.x0[i];
+			l_grid.dx0[i] = slope_[i];
+			l_grid.x1[i] = grid.x0[i] + sep;
+			l_grid.dx1[i] = -slope_[i];
+			cilk_spawn walk_bicut(t0, t1, l_grid, f);
+
+			l_grid.x0[i] = grid.x0[i] + sep;
+			l_grid.dx0[i] = slope_[i];
+			l_grid.x1[i] = grid.x1[i];
+			l_grid.dx1[i] = -slope_[i];
+			cilk_spawn walk_bicut(t0, t1, l_grid, f);
+#if DEBUG
+//			print_sync(stdout);
+#endif
+			cilk_sync;
+			if (grid.dx0[i] != slope_[i]) {
+				l_grid.x0[i] = grid.x0[i]; l_grid.dx0[i] = grid.dx0[i];
+				l_grid.x1[i] = grid.x0[i]; l_grid.dx1[i] = slope_[i];
+				cilk_spawn walk_bicut(t0, t1, l_grid, f);
+			}
+
+			l_grid.x0[i] = grid.x0[i] + sep;
+			l_grid.dx0[i] = -slope_[i];
+			l_grid.x1[i] = grid.x0[i] + sep;
+			l_grid.dx1[i] = slope_[i];
+			cilk_spawn walk_bicut(t0, t1, l_grid, f);
+
+			if (grid.dx1[i] != -slope_[i]) {
+				l_grid.x0[i] = grid.x1[i]; l_grid.dx0[i] = -slope_[i];
+				l_grid.x1[i] = grid.x1[i]; l_grid.dx1[i] = grid.dx1[i];
+				cilk_spawn walk_bicut(t0, t1, l_grid, f);
+			}
+#if DEBUG
+			printf("%s:%d cut into %d dim\n", __FUNCTION__, __LINE__, i);
+			fflush(stdout);
+#endif
+            return;
+		}/* end if */
+	} /* end for */
+	if (lt > dt_recursive_) {
+		int halflt = lt / 2;
+		l_grid = grid;
+		walk_bicut(t0, t0+halflt, l_grid, f);
+#if DEBUG
+//		print_sync(stdout);
+#endif
+		for (int i = 0; i < N_RANK; ++i) {
+			l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
+			l_grid.dx0[i] = grid.dx0[i];
+			l_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
+			l_grid.dx1[i] = grid.dx1[i];
+		}
+		walk_bicut(t0+halflt, t1, l_grid, f);
+#if DEBUG
+		printf("%s:%d cut into time dim\n", __FUNCTION__, __LINE__);
+		fflush(stdout);
+#endif
+        return;
+	}
+    /* base case */
+#if DEBUG
+    printf("call Adaptive! ");
+	print_grid(stdout, t0, t1, grid);
+#endif
+	base_case_kernel(t0, t1, grid, f);
+	return;
+}
+
+/* walk_adaptive() is just for interior region */
+template <int N_RANK, typename Grid_info> template <typename F>
 inline void Algorithm<N_RANK, Grid_info>::walk_adaptive(int t0, int t1, Grid_info const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
@@ -139,7 +231,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_adaptive(int t0, int t1, Grid_inf
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
 		thres[i] = (initial_cut(i)) ? N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
-		base_cube = base_cube && (lb[i] <= dx_recursive_ || lb[i] < thres[i]); 
+		base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
 //		base_cube = base_cube && (lb[i] < thres[i]); 
 	}	
 	if (base_cube) {
@@ -150,8 +242,8 @@ inline void Algorithm<N_RANK, Grid_info>::walk_adaptive(int t0, int t1, Grid_inf
 		base_case_kernel(t0, t1, grid, f);
 		return;
 	} else  {
-		for (int i = 0; i < N_RANK && !cut_yet; ++i) {
-			if (lb[i] >= thres[i] && lb[i] > dx_recursive_) { 
+		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
+			if (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]) { 
 //			if (lb[i] >= thres[i]) { 
 				l_grid = grid;
 				int sep = (initial_cut(i)) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
@@ -233,6 +325,153 @@ static int count_internal = 0;
 
 /* walk_ncores_boundary_p() will be called for -split-shadow mode */
 template <int N_RANK, typename Grid_info> template <typename F, typename BF>
+inline void Algorithm<N_RANK, Grid_info>::walk_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+{
+	/* cut into exact N_CORES pieces */
+	/* Indirect memory access is expensive */
+	int lt = t1 - t0;
+	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
+	bool can_cut = false, call_boundary = false;
+	index_info lb, thres;
+    Grid_info l_father_grid = grid, l_son_grid;
+    bool l_touch_boundary[N_RANK];
+
+	for (int i = 0; i < N_RANK; ++i) {
+        l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
+		lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
+		thres[i] = 2 * (2 * slope_[i] * lt);
+		call_boundary |= l_touch_boundary[i];
+	}	
+
+	for (int i = N_RANK-1; i >= 0; --i) {
+		can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
+		if (can_cut) { 
+			l_son_grid = l_father_grid;
+            int sep = (int)lb[i]/2;
+            int r = 2;
+			int l_start = (l_father_grid.x0[i]);
+			int l_end = (l_father_grid.x1[i]);
+
+			l_son_grid.x0[i] = l_start;
+			l_son_grid.dx0[i] = slope_[i];
+			l_son_grid.x1[i] = l_start + sep;
+			l_son_grid.dx1[i] = -slope_[i];
+            if (call_boundary) {
+                cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+            } else {
+                cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+            }
+
+			l_son_grid.x0[i] = l_start + sep;
+			l_son_grid.dx0[i] = slope_[i];
+			l_son_grid.x1[i] = l_end;
+			l_son_grid.dx1[i] = -slope_[i];
+            if (call_boundary) {
+                walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+            } else {
+                walk_bicut(t0, t1, l_son_grid, f);
+            }
+#if DEBUG
+			print_sync(stdout);
+#endif
+			cilk_sync;
+
+			l_son_grid.x0[i] = l_start + sep;
+			l_son_grid.dx0[i] = -slope_[i];
+			l_son_grid.x1[i] = l_start + sep;
+			l_son_grid.dx1[i] = slope_[i];
+            if (call_boundary) {
+                cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+            } else {
+                cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+            }
+
+			if (l_start == initial_grid_.x0[i] && l_end == initial_grid_.x1[i]) {
+        //        printf("merge triagles!\n");
+				l_son_grid.x0[i] = l_end;
+				l_son_grid.dx0[i] = -slope_[i];
+				l_son_grid.x1[i] = l_end;
+				l_son_grid.dx1[i] = slope_[i];
+                if (call_boundary) {
+                    cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                } else {
+                    cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+                }
+			} else {
+				if (l_father_grid.dx0[i] != slope_[i]) {
+					l_son_grid.x0[i] = l_start; 
+					l_son_grid.dx0[i] = l_father_grid.dx0[i];
+					l_son_grid.x1[i] = l_start; 
+					l_son_grid.dx1[i] = slope_[i];
+                    if (call_boundary) {
+                        cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                    } else {
+                        cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+                    }
+				}
+				if (l_father_grid.dx1[i] != -slope_[i]) {
+					l_son_grid.x0[i] = l_end; 
+					l_son_grid.dx0[i] = -slope_[i];
+					l_son_grid.x1[i] = l_end; 
+					l_son_grid.dx1[i] = l_father_grid.dx1[i];
+                    if (call_boundary) {
+                        cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                    } else {
+                        cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+                    }
+				}
+			}
+	        return;
+		}/* end if */
+	} /* end for */
+	if (lt > dt_recursive_) {
+		int halflt = lt / 2;
+		l_son_grid = l_father_grid;
+        if (call_boundary) {
+            walk_bicut_boundary_p(t0, t0+halflt, l_son_grid, f, bf);
+        } else {
+            walk_bicut(t0, t0+halflt, l_son_grid, f);
+        }
+#if DEBUG
+		print_sync(stdout);
+#endif
+		for (int i = 0; i < N_RANK; ++i) {
+			l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
+			l_son_grid.dx0[i] = l_father_grid.dx0[i];
+			l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
+			l_son_grid.dx1[i] = l_father_grid.dx1[i];
+		}
+        if (call_boundary) { 
+            walk_bicut_boundary_p(t0+halflt, t1, l_son_grid, f, bf);
+        } else {
+            walk_bicut(t0+halflt, t1, l_son_grid, f);
+        }
+	    return;
+	} 
+    // base cube
+	if (call_boundary) {
+        /* for periodic stencils, all elements falling into boundary region
+         * requires special treatment of 'BF' (usually requires modulo operation
+         * to wrap-up the index)
+         */
+#if DEBUG
+        printf("call Boundary! ");
+        print_grid(stdout, t0, t1, l_father_grid);
+#endif
+		base_case_kernel(t0, t1, l_father_grid, bf);
+    } else {
+#if DEBUG
+        printf("call Interior! ");
+	    print_grid(stdout, t0, t1, l_father_grid);
+#endif
+	    base_case_kernel(t0, t1, l_father_grid, f);
+    }
+    return;
+}
+
+
+/* walk_ncores_boundary_p() will be called for -split-shadow mode */
+template <int N_RANK, typename Grid_info> template <typename F, typename BF>
 inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
@@ -252,7 +491,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1,
 		if (l_touch_boundary[i])
 			base_cube = base_cube && (lb[i] <= dx_recursive_boundary_[i] || lb[i] < thres[i]); 
 		else 
-			base_cube = base_cube && (lb[i] <= dx_recursive_ || lb[i] < thres[i]); 
+			base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
 	}	
 
 	if (base_cube) {
@@ -275,8 +514,8 @@ inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1,
         }
 		return;
 	} else  {
-		for (int i = 0; i < N_RANK && !cut_yet; ++i) {
-			can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_);
+		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
+			can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
 			if (can_cut) { 
 				l_son_grid = l_father_grid;
                 int sep = (initial_cut(i)) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
@@ -388,6 +627,97 @@ inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1,
 
 /* this is for interior region */
 template <int N_RANK, typename Grid_info> template <typename F>
+inline void Algorithm<N_RANK, Grid_info>::obase_bicut(int t0, int t1, Grid_info const grid, F const & f)
+{
+	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
+	   for the rest cut into that dimension, cut into as many as we can!
+	 */
+	int lt = t1 - t0;
+	index_info lb, thres;
+	Grid_info l_grid;
+
+	for (int i = 0; i < N_RANK; ++i) {
+		lb[i] = grid.x1[i] - grid.x0[i];
+		thres[i] = 2 * (2 * slope_[i] * lt);
+	}	
+	for (int i = N_RANK-1; i >= 0; --i) {
+		if (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]) { 
+			l_grid = grid;
+			int sep = (int)lb[i]/2;
+			int r = 2;
+#if DEBUG
+			printf("initial_cut = %s, lb[%d] = %d, sep = %d, r = %d\n", initial_cut(i) ? "True" : "False", i, lb[i], sep, r);
+#endif
+			l_grid.x0[i] = grid.x0[i];
+			l_grid.dx0[i] = slope_[i];
+			l_grid.x1[i] = grid.x0[i] + sep;
+			l_grid.dx1[i] = -slope_[i];
+			cilk_spawn obase_bicut(t0, t1, l_grid, f);
+
+			l_grid.x0[i] = grid.x0[i] + sep;
+			l_grid.dx0[i] = slope_[i];
+			l_grid.x1[i] = grid.x1[i];
+			l_grid.dx1[i] = -slope_[i];
+			cilk_spawn obase_bicut(t0, t1, l_grid, f);
+#if DEBUG
+//			print_sync(stdout);
+#endif
+			cilk_sync;
+			if (grid.dx0[i] != slope_[i]) {
+				l_grid.x0[i] = grid.x0[i]; l_grid.dx0[i] = grid.dx0[i];
+				l_grid.x1[i] = grid.x0[i]; l_grid.dx1[i] = slope_[i];
+				cilk_spawn obase_bicut(t0, t1, l_grid, f);
+			}
+
+			l_grid.x0[i] = grid.x0[i] + sep;
+			l_grid.dx0[i] = -slope_[i];
+			l_grid.x1[i] = grid.x0[i] + sep;
+			l_grid.dx1[i] = slope_[i];
+			cilk_spawn obase_bicut(t0, t1, l_grid, f);
+
+			if (grid.dx1[i] != -slope_[i]) {
+				l_grid.x0[i] = grid.x1[i]; l_grid.dx0[i] = -slope_[i];
+				l_grid.x1[i] = grid.x1[i]; l_grid.dx1[i] = grid.dx1[i];
+				cilk_spawn obase_bicut(t0, t1, l_grid, f);
+			}
+#if DEBUG
+			printf("%s:%d cut into %d dim\n", __FUNCTION__, __LINE__, i);
+			fflush(stdout);
+#endif
+            return;
+		}/* end if */
+	} /* end for */
+	if (lt > dt_recursive_) {
+		int halflt = lt / 2;
+		l_grid = grid;
+		obase_bicut(t0, t0+halflt, l_grid, f);
+#if DEBUG
+//		print_sync(stdout);
+#endif
+		for (int i = 0; i < N_RANK; ++i) {
+			l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
+			l_grid.dx0[i] = grid.dx0[i];
+			l_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
+			l_grid.dx1[i] = grid.dx1[i];
+		}
+		obase_bicut(t0+halflt, t1, l_grid, f);
+#if DEBUG 
+		printf("%s:%d cut into time dim\n", __FUNCTION__, __LINE__);
+		fflush(stdout);
+#endif
+        return;
+	}
+#if DEBUG
+    printf("call obase_bicut! ");
+    print_grid(stdout, t0, t1, grid);
+#endif
+	f(t0, t1, grid);
+	return;
+}
+
+
+/* this is for interior region */
+template <int N_RANK, typename Grid_info> template <typename F>
 inline void Algorithm<N_RANK, Grid_info>::obase_adaptive(int t0, int t1, Grid_info const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
@@ -404,7 +734,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_adaptive(int t0, int t1, Grid_in
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
 		thres[i] = (initial_cut(i)) ? N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
-		base_cube = base_cube && (lb[i] <= dx_recursive_ || lb[i] < thres[i]); 
+		base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
 	}	
 	if (base_cube) {
 #if DEBUG
@@ -414,8 +744,8 @@ inline void Algorithm<N_RANK, Grid_info>::obase_adaptive(int t0, int t1, Grid_in
 		f(t0, t1, grid);
 		return;
 	} else  {
-		for (int i = 0; i < N_RANK && !cut_yet; ++i) {
-			if (lb[i] >= thres[i] && lb[i] > dx_recursive_) { 
+		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
+			if (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]) { 
 				l_grid = grid;
 				int sep = (initial_cut(i)) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
 				int r = (initial_cut(i)) ? N_CORES : (lb[i]/sep);
@@ -491,6 +821,102 @@ inline void Algorithm<N_RANK, Grid_info>::obase_adaptive(int t0, int t1, Grid_in
 
 /* this is the version for executable spec!!! */
 template <int N_RANK, typename Grid_info> template <typename BF>
+inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf)
+{
+	/* cut into exact N_CORES pieces */
+	/* Indirect memory access is expensive */
+	int lt = t1 - t0;
+	bool can_cut = false, call_boundary = false;
+	index_info lb, thres;
+    Grid_info l_father_grid = grid, l_son_grid;
+    bool l_touch_boundary[N_RANK];
+
+	for (int i = 0; i < N_RANK; ++i) {
+        l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
+		lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
+		thres[i] = 2 * (2 * slope_[i] * lt);
+		call_boundary |= l_touch_boundary[i];
+	}	
+
+	for (int i = N_RANK-1; i >= 0; --i) {
+		can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
+		if (can_cut) { 
+			l_son_grid = l_father_grid;
+            int sep = (int)lb[i]/2;
+            int r = 2;
+			int l_start = (l_father_grid.x0[i]);
+			int l_end = (l_father_grid.x1[i]);
+			int j;
+
+			l_son_grid.x0[i] = l_start;
+			l_son_grid.dx0[i] = slope_[i];
+			l_son_grid.x1[i] = l_start + sep;
+			l_son_grid.dx1[i] = -slope_[i];
+            cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+
+			l_son_grid.x0[i] = l_start + sep * j;
+			l_son_grid.dx0[i] = slope_[i];
+			l_son_grid.x1[i] = l_end;
+			l_son_grid.dx1[i] = -slope_[i];
+            obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+#if DEBUG
+			print_sync(stdout);
+#endif
+			cilk_sync;
+			l_son_grid.x0[i] = l_start + sep;
+			l_son_grid.dx0[i] = -slope_[i];
+			l_son_grid.x1[i] = l_start + sep;
+			l_son_grid.dx1[i] = slope_[i];
+            cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+			if (l_start == initial_grid_.x0[i] && l_end == initial_grid_.x1[i]) {
+        //        printf("merge triagles!\n");
+				l_son_grid.x0[i] = l_end;
+				l_son_grid.dx0[i] = -slope_[i];
+				l_son_grid.x1[i] = l_end;
+				l_son_grid.dx1[i] = slope_[i];
+                cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+			} else {
+				if (l_father_grid.dx0[i] != slope_[i]) {
+					l_son_grid.x0[i] = l_start; 
+					l_son_grid.dx0[i] = l_father_grid.dx0[i];
+					l_son_grid.x1[i] = l_start; 
+					l_son_grid.dx1[i] = slope_[i];
+                    cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+				}
+				if (l_father_grid.dx1[i] != -slope_[i]) {
+					l_son_grid.x0[i] = l_end; 
+					l_son_grid.dx0[i] = -slope_[i];
+					l_son_grid.x1[i] = l_end; 
+					l_son_grid.dx1[i] = l_father_grid.dx1[i];
+                    cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+				}
+			}
+            return;
+		}/* end if */
+	} /* end for */
+	if (lt > dt_recursive_) {
+		int halflt = lt / 2;
+		l_son_grid = l_father_grid;
+        obase_bicut_boundary_p(t0, t0+halflt, l_son_grid, bf);
+#if DEBUG
+		print_sync(stdout);
+#endif
+		for (int i = 0; i < N_RANK; ++i) {
+			l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
+			l_son_grid.dx0[i] = l_father_grid.dx0[i];
+			l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
+			l_son_grid.dx1[i] = l_father_grid.dx1[i];
+		}
+        obase_bicut_boundary_p(t0+halflt, t1, l_son_grid, bf);
+        return;
+	}
+	base_case_kernel(t0, t1, l_father_grid, bf);
+	return;
+}
+
+
+/* this is the version for executable spec!!! */
+template <int N_RANK, typename Grid_info> template <typename BF>
 inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
@@ -509,7 +935,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 		if (l_touch_boundary[i])
 			base_cube = base_cube && (lb[i] <= dx_recursive_boundary_[i] || lb[i] < thres[i]); 
 		else 
-			base_cube = base_cube && (lb[i] <= dx_recursive_ || lb[i] < thres[i]); 
+			base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
 		call_boundary |= l_touch_boundary[i];
 	}	
 
@@ -517,8 +943,8 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 		base_case_kernel(t0, t1, l_father_grid, bf);
 		return;
 	} else  {
-		for (int i = 0; i < N_RANK && !cut_yet; ++i) {
-			can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_);
+		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
+			can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
 			if (can_cut) { 
 				l_son_grid = l_father_grid;
                 int sep = (initial_cut(i)) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
@@ -599,6 +1025,150 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 
 /* this is for optimizing base case!!! */
 template <int N_RANK, typename Grid_info> template <typename F, typename BF>
+inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+{
+	/* cut into exact N_CORES pieces */
+	/* Indirect memory access is expensive */
+	int lt = t1 - t0;
+	bool can_cut = false, call_boundary = false;
+	index_info lb, thres;
+    Grid_info l_father_grid = grid, l_son_grid;
+    bool l_touch_boundary[N_RANK];
+
+	for (int i = 0; i < N_RANK; ++i) {
+        l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
+		lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
+		thres[i] = 2 * (2 * slope_[i] * lt);
+		call_boundary |= l_touch_boundary[i];
+	}	
+
+	for (int i = N_RANK-1; i >= 0; --i) {
+		can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
+		if (can_cut) { 
+            l_son_grid = l_father_grid;
+            int sep = (int)lb[i]/2;
+            int r = 2;
+			int l_start = (l_father_grid.x0[i]);
+			int l_end = (l_father_grid.x1[i]);
+
+			l_son_grid.x0[i] = l_start;
+			l_son_grid.dx0[i] = slope_[i];
+			l_son_grid.x1[i] = l_start + sep;
+			l_son_grid.dx1[i] = -slope_[i];
+            if (call_boundary) {
+                cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+            } else {
+                cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+            }
+
+			l_son_grid.x0[i] = l_start + sep;
+			l_son_grid.dx0[i] = slope_[i];
+			l_son_grid.x1[i] = l_end;
+			l_son_grid.dx1[i] = -slope_[i];
+            if (call_boundary) {
+                obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+            } else {
+                obase_bicut(t0, t1, l_son_grid, f);
+            }
+#if DEBUG
+			print_sync(stdout);
+#endif
+			cilk_sync;
+
+			l_son_grid.x0[i] = l_start + sep;
+			l_son_grid.dx0[i] = -slope_[i];
+			l_son_grid.x1[i] = l_start + sep;
+			l_son_grid.dx1[i] = slope_[i];
+            if (call_boundary) {
+                cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+            } else {
+                cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+            }
+
+			if (l_start == initial_grid_.x0[i] && l_end == initial_grid_.x1[i]) {
+        //        printf("merge triagles!\n");
+				l_son_grid.x0[i] = l_end;
+				l_son_grid.dx0[i] = -slope_[i];
+				l_son_grid.x1[i] = l_end;
+				l_son_grid.dx1[i] = slope_[i];
+                if (call_boundary) {
+                    cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                } else {
+                    cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+                }
+			} else {
+				if (l_father_grid.dx0[i] != slope_[i]) {
+					l_son_grid.x0[i] = l_start; 
+					l_son_grid.dx0[i] = l_father_grid.dx0[i];
+					l_son_grid.x1[i] = l_start; 
+					l_son_grid.dx1[i] = slope_[i];
+                    if (call_boundary) {
+                        cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                    } else {
+                        cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+                    }
+				}
+				if (l_father_grid.dx1[i] != -slope_[i]) {
+					l_son_grid.x0[i] = l_end; 
+					l_son_grid.dx0[i] = -slope_[i];
+					l_son_grid.x1[i] = l_end; 
+					l_son_grid.dx1[i] = l_father_grid.dx1[i];
+                    if (call_boundary) {
+                        cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                    } else {
+                        cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+                    }
+				}
+			}
+            return;
+		}/* end if */
+	} /* end for */
+	if (lt > dt_recursive_) {
+		int halflt = lt / 2;
+		l_son_grid = l_father_grid;
+        if (call_boundary) {
+            obase_bicut_boundary_p(t0, t0+halflt, l_son_grid, f, bf);
+        } else {
+            obase_bicut(t0, t0+halflt, l_son_grid, f);
+        }
+#if DEBUG
+		print_sync(stdout);
+#endif
+		for (int i = 0; i < N_RANK; ++i) {
+			l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
+			l_son_grid.dx0[i] = l_father_grid.dx0[i];
+			l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
+			l_son_grid.dx1[i] = l_father_grid.dx1[i];
+		}
+        if (call_boundary) { 
+            obase_bicut_boundary_p(t0+halflt, t1, l_son_grid, f, bf);
+        } else {
+            obase_bicut(t0+halflt, t1, l_son_grid, f);
+        }
+        return;
+	}
+	if (call_boundary) {
+        /* for periodic stencils, all elements falling within boundary region
+         * requires special treatment 'BF' (usually requires modulo operation)
+        */
+#if DEBUG
+	    printf("call Boundary! ");
+        print_grid(stdout, t0, t1, l_father_grid);
+#endif
+		//bf(t0, t1, grid);
+		base_case_kernel(t0, t1, l_father_grid, bf);
+    } else {
+#if DEBUG
+        printf("call Interior! ");
+		print_grid(stdout, t0, t1, l_father_grid);
+#endif
+		f(t0, t1, l_father_grid);
+    }
+	return;
+}
+
+/* this is for optimizing base case!!! */
+template <int N_RANK, typename Grid_info> template <typename F, typename BF>
 inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
@@ -617,7 +1187,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 		if (l_touch_boundary[i])
 			base_cube = base_cube && (lb[i] <= dx_recursive_boundary_[i] || lb[i] < thres[i]); 
 		else 
-			base_cube = base_cube && (lb[i] <= dx_recursive_ || lb[i] < thres[i]); 
+			base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
 		call_boundary |= l_touch_boundary[i];
 	}	
 
@@ -641,8 +1211,8 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
         }
 		return;
 	} else  {
-		for (int i = 0; i < N_RANK && !cut_yet; ++i) {
-			can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_);
+		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
+			can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
 			if (can_cut) { 
                 l_son_grid = l_father_grid;
                 int sep = (initial_cut(i)) ? lb[i]/N_CORES : (2 * slope_[i] * lt);

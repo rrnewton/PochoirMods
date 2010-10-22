@@ -35,16 +35,14 @@
 
 using namespace std;
 #define SIMPLE 1
-/* N_RANK includes both time and space dimensions */
 #define N_RANK 2
 #define N_SIZE 555
 #define T_SIZE 555
-
 void check_result(int t, int j, int i, bool a, bool b)
 {
 	if (a == b) {
 //		printf("a(%d, %d, %d) == b(%d, %d, %d) == %s : passed!\n", t, j, i, t, j, i, a ? "True" : "False");
-	} else {
+} else {
 		printf("a(%d, %d, %d) = %s, b(%d, %d, %d) = %s : FAILED!\n", t, j, i, a ? "True" : "False", t, j, i, b ? "True" : "False");
 	}
 
@@ -74,14 +72,15 @@ int main(void)
 	int t;
 	struct timeval start, end;
 	/* data structure of Pochoir - row major */
-	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
-    Pochoir_Stencil <bool, N_RANK> life_2D;
-	Pochoir_uRange I(0, N_SIZE-1), J(0, N_SIZE-1);
-    Pochoir_Shape_info<2> life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
+	
+	Pochoir_Array <bool, 2, 2> a(555, 555), b(555, 555);
 
-    life_2D.registerBoundaryFn(a, life_bv_2D);
-    // b.registerBV(life_bv_2D);
+	Pochoir_Stencil <bool, 2> life_2D;
 
+	Pochoir_uRange I(0, 555 - 1), J(0, 555 - 1);
+
+	Pochoir_Shape_info <2> life_shape_2D [9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
+life_2D.registerBoundaryFn(a, life_bv_2D);
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
 #if DEBUG 
@@ -98,39 +97,87 @@ int main(void)
     printf("Game of Life : %d x %d, %d time steps\n", N_SIZE, N_SIZE, T_SIZE);
 
     Pochoir_kernel_2D(life_2D_fn, t, i, j)
-    int neighbors = a(t, i-1, j-1) + a(t, i-1, j) + a(t, i-1, j+1) +
-                    a(t, i, j-1)                  + a(t, i, j+1) +
-                    a(t, i+1, j-1) + a(t, i+1, j) + a(t, i+1, j+1);
-    if (a(t, i, j) == true && neighbors < 2)
-        a(t+1, i, j) = true;
-    else if (a(t, i, j) == true && neighbors > 3) 
-        a(t+1, i, j) = false;
-    else if (a(t, i, j) == true && (neighbors == 2 || neighbors == 3)) {
-        a(t+1, i, j) = a(t, i, j);
-    } else if (a(t, i, j) == false && neighbors == 3) 
-        a(t+1, i, j) = true;
-    Pochoir_kernel_end
-
-    life_2D.registerArrayInUse(a);
-    life_2D.registerShape(life_shape_2D);
+	int neighbors = a(t, i - 1, j - 1) + a(t, i - 1, j) + a(t, i - 1, j + 1) + a(t, i, j - 1) + a(t, i, j + 1) + a(t, i + 1, j - 1) + a(t, i + 1, j) + a(t, i + 1, j + 1);
+	if (a(t, i, j) == true && neighbors < 2)
+	a(t + 1, i, j) = true;
+	else if (a(t, i, j) == true && neighbors > 3)
+	{
+	a(t + 1, i, j) = false;
+	}
+	else if (a(t, i, j) == true && (neighbors == 2 || neighbors == 3))
+	{
+	a(t + 1, i, j) = a(t, i, j);
+	}
+	else if (a(t, i, j) == false && neighbors == 3)
+	a(t + 1, i, j) = true;
+	Pochoir_kernel_end
+	life_2D.registerArrayInUse (a);
+	life_2D.registerShape(life_shape_2D);
     life_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
-    life_2D.run(T_SIZE, life_2D_fn);
+    
+	Pochoir_obase_fn_2D(pointer_life_2D_fn, t0, t1, grid)
+	grid_info<2> l_grid = grid;
+	bool * pt_a_1;
+	bool * pt_a_0;
+	
+	bool * a_base = a.data();
+	const int l_a_total_size = a.total_size();
+	int gap_a_1, gap_a_0;
+	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
+
+	for (int t = t0; t < t1; ++t) { 
+	pt_a_0 = a_base + ((t) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_1 = a_base + ((t + 1) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	
+	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
+	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,
+	pt_a_0 += gap_a_1, 
+	pt_a_1 += gap_a_1) {
+	#pragma ivdep
+	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j,
+	++pt_a_0, 
+	++pt_a_1) {
+	
+	int neighbors = pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (-1)] + pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (1)] + pt_a_0[l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_0 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (1)];
+	if (pt_a_0[0] == true && neighbors < 2)
+	pt_a_1[0] = true;
+	else if (pt_a_0[0] == true && neighbors > 3)
+	{
+	pt_a_1[0] = false;
+	}
+	else if (pt_a_0[0] == true && (neighbors == 2 || neighbors == 3))
+	{
+	pt_a_1[0] = pt_a_0[0];
+	}
+	else if (pt_a_0[0] == false && neighbors == 3)
+	pt_a_1[0] = true;
+	} } /* end for (sub-trapezoid) */ 
+	/* Adjust sub-trapezoid! */
+	for (int i = 0; i < 2; ++i) {
+		l_grid.x0[i] += l_grid.dx0[i]; l_grid.x1[i] += l_grid.dx1[i];
+	}
+	} /* end for t */
+	Pochoir_kernel_end
+
+	life_2D.run_obase(555, pointer_life_2D_fn, life_2D_fn);
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
 
 	gettimeofday(&start, 0);
-	for (int t = 0; t < T_SIZE; ++t) {
+    // we can handle the boundary condition either by register a boundary function
+for (int t = 0; t < T_SIZE; ++t) {
 	cilk_for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
         /* Periodic version */
-	size_t idx0 = (i + N_SIZE - 1) % N_SIZE;
-	size_t idx1 = (j + N_SIZE - 1) % N_SIZE;
-	size_t idx2 = (j + N_SIZE) % N_SIZE;
-	size_t idx3 = (j + N_SIZE + 1) % N_SIZE;
-	size_t idx4 = (i + N_SIZE) % N_SIZE;
-	size_t idx5 = (i + N_SIZE + 1) % N_SIZE;
+    /* for idx5, i+N_SIZE+1 can be larger than 2 * N_SIZE, so we can NOT use pmod */
+	size_t idx0 = (i + N_SIZE - 1) % ( N_SIZE);
+	size_t idx1 = (j + N_SIZE - 1) % ( N_SIZE);
+	size_t idx2 = (j + N_SIZE) % ( N_SIZE);
+	size_t idx3 = (j + N_SIZE + 1) % ( N_SIZE);
+	size_t idx4 = (i + N_SIZE) % ( N_SIZE);
+	size_t idx5 = (i + N_SIZE + 1) % ( N_SIZE);
 	int neighbors = b.interior(t, idx0, idx1) + b.interior(t, idx0, idx2) + b.interior(t, idx0, idx3) + b.interior(t, idx4, idx1) + b.interior(t, idx4, idx3) + b.interior(t, idx5, idx1) + b.interior(t, idx5, idx2) + b.interior(t, idx5, idx3);
 	if (b.interior(t, idx4, idx2) == true && neighbors < 2)
 	b.interior(t + 1, idx4, idx2) = true;
@@ -152,3 +199,4 @@ int main(void)
 
 	return 0;
 }
+

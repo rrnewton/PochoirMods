@@ -34,27 +34,27 @@ import PData
 import qualified Data.Map as Map
 
 pToken1 :: GenParser Char ParserState String
-pToken1 = do reserved "Pochoir_SArray"
-             (l_type, l_rank) <- angles pDeclStatic <?> "Pochoir_SArray static parameters"
-             l_arrayDecl <- commaSep1 pDeclDynamic
-             char ';'
+pToken1 = do reserved "Pochoir_Array"
+             (l_type, l_rank, l_toggle) <- angles pDeclStatic <?> "Pochoir_Array static parameters"
+             l_arrayDecl <- commaSep1 pDeclDynamic <?> "Pochoir_Array Dynamic parameters"
+             semi 
              l_state <- getState
              return (concat $ 
-                   map (outputSArray (l_type, l_rank) (pArray l_state)) l_arrayDecl)
-             -- return ("Pochoir_SArray <" ++ show l_type ++ ", " ++ show l_rank ++ "> " ++ pShowArrayDynamicDecl l_arrayDecl ++ ";\n")
+                   map (outputSArray (l_type, l_rank, l_toggle) (pArray l_state)) l_arrayDecl)
+             -- return ("Pochoir_Array <" ++ show l_type ++ ", " ++ show l_rank ++ "> " ++ pShowArrayDynamicDecl l_arrayDecl ++ ";\n")
       <|> do ch <- anyChar
              return [ch]
       <?> "line"
 
-outputSArray :: (PType, Int) -> Map.Map PName PArray -> (PName, [Int]) -> String
-outputSArray (l_type, l_rank) m_array (l_array, l_dims) =
+outputSArray :: (PType, Int, Int) -> Map.Map PName PArray -> (PName, [DimExpr]) -> String
+outputSArray (l_type, l_rank, l_toggle) m_array (l_array, l_dims) =
     case Map.lookup l_array m_array of
-        Nothing -> breakline ++ "Pochoir_SArray <" ++ 
+        Nothing -> breakline ++ "Pochoir_Array <" ++ 
                     show l_type ++ ", " ++ show l_rank ++ "> " ++ 
                     pShowArrayItem (l_array, l_dims) ++ ";" 
-        Just l_pArray -> breakline ++ "Pochoir_SArray <" ++ 
+        Just l_pArray -> breakline ++ "Pochoir_Array <" ++ 
                     show l_type ++ ", " ++ show l_rank ++ 
-                    ", " ++ show (max 2 $ 1+aToggle l_pArray) ++ "> " ++ 
+                    ", " ++ show (max l_toggle $ 1+aToggle l_pArray) ++ "> " ++ 
                     pShowArrayItem (l_array, l_dims) ++ ";" 
 
 

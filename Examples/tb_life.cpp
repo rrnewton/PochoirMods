@@ -80,7 +80,6 @@ int main(void)
     Pochoir_Shape_info<2> life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
 
     life_2D.registerBoundaryFn(a, life_bv_2D);
-    // b.registerBV(life_bv_2D);
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -103,9 +102,9 @@ int main(void)
                     a(t, i+1, j-1) + a(t, i+1, j) + a(t, i+1, j+1);
     if (a(t, i, j) == true && neighbors < 2)
         a(t+1, i, j) = true;
-    else if (a(t, i, j) == true && neighbors > 3) 
+    else if (a(t, i, j) == true && neighbors > 3) { 
         a(t+1, i, j) = false;
-    else if (a(t, i, j) == true && (neighbors == 2 || neighbors == 3)) {
+    } else if (a(t, i, j) == true && (neighbors == 2 || neighbors == 3)) {
         a(t+1, i, j) = a(t, i, j);
     } else if (a(t, i, j) == false && neighbors == 3) 
         a(t+1, i, j) = true;
@@ -121,16 +120,20 @@ int main(void)
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
 
 	gettimeofday(&start, 0);
+    // we can handle the boundary condition either by register a boundary function
+    // or using following explicit modulo operation
+    // b.registerBV(life_bv_2D);
 	for (int t = 0; t < T_SIZE; ++t) {
 	cilk_for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
         /* Periodic version */
-	size_t idx0 = (i + N_SIZE - 1) % N_SIZE;
-	size_t idx1 = (j + N_SIZE - 1) % N_SIZE;
-	size_t idx2 = (j + N_SIZE) % N_SIZE;
-	size_t idx3 = (j + N_SIZE + 1) % N_SIZE;
-	size_t idx4 = (i + N_SIZE) % N_SIZE;
-	size_t idx5 = (i + N_SIZE + 1) % N_SIZE;
+    /* for idx5, i+N_SIZE+1 can be larger than 2 * N_SIZE, so we can NOT use pmod */
+	size_t idx0 = (i + N_SIZE - 1) % ( N_SIZE);
+	size_t idx1 = (j + N_SIZE - 1) % ( N_SIZE);
+	size_t idx2 = (j + N_SIZE) % ( N_SIZE);
+	size_t idx3 = (j + N_SIZE + 1) % ( N_SIZE);
+	size_t idx4 = (i + N_SIZE) % ( N_SIZE);
+	size_t idx5 = (i + N_SIZE + 1) % ( N_SIZE);
 	int neighbors = b.interior(t, idx0, idx1) + b.interior(t, idx0, idx2) + b.interior(t, idx0, idx3) + b.interior(t, idx4, idx1) + b.interior(t, idx4, idx3) + b.interior(t, idx5, idx1) + b.interior(t, idx5, idx2) + b.interior(t, idx5, idx3);
 	if (b.interior(t, idx4, idx2) == true && neighbors < 2)
 	b.interior(t + 1, idx4, idx2) = true;

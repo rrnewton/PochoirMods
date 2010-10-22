@@ -36,7 +36,7 @@ using namespace std;
 #define SIMPLE 0
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
-#define N_SIZE 2555
+#define N_SIZE 555 
 #define T_SIZE 555
 #define TOLERANCE (1e-6)
 
@@ -84,7 +84,7 @@ void check_result(int t, int i, double a, double b)
          * so the following code to set boundary index and
          * boundary rvalue is not necessary!!! 
          */
-        if (i <= 0 || i >= N_SIZE-1 || j <= 0 || j >= N_SIZE-1)
+        if (i <= 0 || i >= arr.size(1)-1 || j <= 0 || j >= arr.size(0)-1)
             return 0;
         else
             return arr.get(t, i, j);

@@ -62,6 +62,10 @@ class Pochoir_Iterator {
             curr_ = arr_.view()->data();
         }
 
+        inline void set(int _t, int _i, int _j, int _k) {
+            curr_ = arr_.pointer(_t, _i, _j, _k);
+        }
+
         inline void set(int _t, int _i, int _j) {
             curr_ = arr_.pointer(_t, _i, _j);
         }
@@ -90,6 +94,12 @@ class Pochoir_Iterator {
         inline Pochoir_Iterator<T, N_RANK> & operator= (T const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = rhs;
+            return *this;
+        }
+
+        inline Pochoir_Iterator<T, N_RANK> & operator= (Pochoir_Iterator<T, N_RANK> const & rhs) {
+            /* overloaded assignment, for reference appears on the left side of '=' */
+            *curr_ = *rhs;
             return *this;
         }
 

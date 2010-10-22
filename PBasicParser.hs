@@ -49,7 +49,7 @@ lexer = Token.makeTokenParser (javaStyle
                reservedOpNames = ["*", "/", "+", "-", "!", "&&", "||", "=", ">", ">=", 
                                   "<", "<=", "==", "+=", "-=", "*=", "/=", "&=", "|=",
                                   "<<=", ">>=", "^=", "++", "--"],
-               reservedNames = ["Pochoir_SArray", "Pochoir_Stencil", "Pochoir_uRange", 
+               reservedNames = ["Pochoir_Array", "Pochoir_Stencil", "Pochoir_uRange", 
                                 "Pochoir_Shape_info", "Pochoir_pRange", 
                                 "Pochoir_kernel_1D", "Pochoir_kernel_2D", 
                                 "Pochoir_kernel_3D", "Pochoir_kernel_end",
@@ -103,8 +103,13 @@ ppStencil l_id l_stencil l_state =
            l_array <- parens identifier
            semi
            case Map.lookup l_array $ pArray l_state of
-               Nothing -> return (l_id ++ ".registerArrayInUse(" ++ l_array ++ ") : ERROR!!!" ++ breakline)
+               Nothing -> return (l_id ++ ".registerArrayInUse(" ++ l_array ++ "); /* ERROR!!! */" ++ breakline)
                Just l_pArray -> registerArrayInUse l_id l_array l_pArray
+    <|> do try $ pMember "registerBoundaryFn"
+           l_boundaryParams <- parens $ commaSep1 identifier
+           semi
+           updateState $ updateStencilBoundary l_id True
+           return (l_id ++ ".registerBoundaryFn(" ++ (concat $ intersperse ", " l_boundaryParams) ++ ");" ++ breakline)
     <|> do try $ pMember "run"
            (l_tstep, l_func) <- parens pStencilRun
            semi
@@ -113,28 +118,88 @@ ppStencil l_id l_stencil l_state =
                                    l_tstep ++ ", " ++ l_func ++ ");" ++ breakline ++ 
                                    "}" ++ breakline)
                Just l_kernel -> 
-                    if (pObase l_state == False) 
-                        then pSplitShadow (l_id, l_tstep, l_kernel, l_stencil)
-                        else pSplitObase  (l_id, l_tstep, l_kernel, l_stencil)
+                    case pMode l_state of
+                        PTypeShadow -> pSplitTypeShadow (l_id, l_tstep, l_kernel, l_stencil)
+                        PMacroShadow -> pSplitMacroShadow (l_id, l_tstep, l_kernel, l_stencil)
+                        PIter -> pSplitIter  (l_id, l_tstep, l_kernel, l_stencil)
+                        PInterior -> pSplitInterior (l_id, l_tstep, l_kernel, l_stencil)
+                        PPointer -> pSplitPointer (l_id, l_tstep, l_kernel, l_stencil)
     <|> do return (l_id)
 
-pSplitShadow :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
-pSplitShadow (l_id, l_tstep, l_kernel, l_stencil) = 
+pSplitTypeShadow :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
+pSplitTypeShadow (l_id, l_tstep, l_kernel, l_stencil) = 
     let shadowKernel = pShowKernel shadowKernelName l_kernel 
         oldKernelName = kName l_kernel
-        shadowKernelName = "shadow_interior_" ++ oldKernelName
+        shadowKernelName = "interior_type_shadow_" ++ oldKernelName
         shadowArrayInUse = pShowShadowArrayInUse $ sArrayInUse l_stencil
-    in return ("{" ++ shadowArrayInUse ++
+    in  return ("{" ++ shadowArrayInUse ++
                shadowKernel ++ breakline ++ l_id ++ ".run(" ++ 
                l_tstep ++ ", " ++ shadowKernelName ++ ", " ++ 
                oldKernelName ++ ");" ++ breakline ++ "}" ++ breakline)
 
-pSplitObase :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
-pSplitObase (l_id, l_tstep, l_kernel, l_stencil) = 
+pSplitMacroShadow :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
+pSplitMacroShadow (l_id, l_tstep, l_kernel, l_stencil) = 
+    let shadowKernel = pShowKernel shadowKernelName l_kernel 
+        oldKernelName = kName l_kernel
+        shadowKernelName = "interior_macro_shadow_" ++ oldKernelName
+        shadowArrayInUse = pDefMacroArrayInUse (sArrayInUse l_stencil) (kParams l_kernel)
+        unshadowArrayInUse = pUndefMacroArrayInUse (sArrayInUse l_stencil) (kParams l_kernel)
+    in  return ("{" ++ breakline ++ shadowArrayInUse ++
+               shadowKernel ++ breakline ++ unshadowArrayInUse ++ 
+               l_id ++ ".run(" ++ l_tstep ++ ", " ++ shadowKernelName ++ ", " ++ 
+               oldKernelName ++ ");" ++ breakline ++ "}" ++ breakline)
+
+pSplitInterior :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
+pSplitInterior (l_id, l_tstep, l_kernel, l_stencil) =
+    let oldKernelName = kName l_kernel
+        interiorKernelName = "interior_" ++ oldKernelName
+        interiorStmts = transStmts (kStmt l_kernel)
+                            $ transInterior $ getArrayName $ sArrayInUse l_stencil
+        interiorKernel = PKernel { kName = interiorKernelName,
+                                   kParams = kParams l_kernel,
+                                   kStmt = interiorStmts,
+                                   kIter = kIter l_kernel 
+                                  }
+        showInteriorKernel = pShowKernel interiorKernelName interiorKernel
+    in  return (showInteriorKernel ++ l_id ++ ".run(" ++
+                l_tstep ++ ", " ++ interiorKernelName ++ ", " ++ 
+                oldKernelName ++ ");" ++ breakline ++ breakline)
+        
+transInterior :: [PName] -> Expr -> Expr
+transInterior l_arrayInUse (PVAR v dL) =
+    if elem v l_arrayInUse == True then PVAR (v ++ ".interior") dL
+                                   else PVAR v dL
+transInterior l_arrayInUse e = e
+
+getArrayName :: [PArray] -> [PName]
+getArrayName [] = []
+getArrayName (a:as) = (aName a) : (getArrayName as)
+
+pSplitIter :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
+pSplitIter (l_id, l_tstep, l_kernel, l_stencil) = 
     do let oldKernelName = kName l_kernel 
        let obaseKernelName = "obase_" ++ oldKernelName 
+       let regBound = sRegBound l_stencil
        let obaseKernel = pShowObaseKernel obaseKernelName l_kernel 
-       return (obaseKernel ++ breakline ++ l_id ++ ".run_obase(" ++ l_tstep ++ ", " ++ obaseKernelName ++ ", " ++ oldKernelName ++ ");" ++ breakline)
+       let runKernel = 
+            if regBound then obaseKernelName ++ ", " ++ oldKernelName
+            -- if the boundary function is NOT registered, we guess user are using 
+            -- zero-padding. Note: there's no zero-padding for Periodic stencils
+                        else obaseKernelName
+       return (obaseKernel ++ breakline ++ l_id ++ ".run_obase(" ++ l_tstep ++ ", " ++ runKernel ++ ");" ++ breakline)
+
+pSplitPointer :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
+pSplitPointer (l_id, l_tstep, l_kernel, l_stencil) =
+    let oldKernelName = kName l_kernel
+        newKernelName = "pointer_" ++ oldKernelName
+        regBound = sRegBound l_stencil
+        newKernel = pShowPointerKernel newKernelName l_kernel
+        runKernel = 
+            if regBound then newKernelName ++ ", " ++ oldKernelName
+            -- if the boundary function is NOT registered, we guess user are using 
+            -- zero-padding. Note: there's no zero-padding for Periodic stencils
+                        else newKernelName 
+    in  return (newKernel ++ breakline ++ l_id ++ ".run_obase(" ++ l_tstep ++ ", " ++ runKernel ++ ");" ++ breakline)
 
 pStencilRun :: GenParser Char ParserState (String, String)
 pStencilRun = 
@@ -157,20 +222,32 @@ updateStencilArray l_id l_pArray parserState =
                 else Nothing
     in  parserState { pStencil = Map.updateWithKey f l_id $ pStencil parserState }
 
--- pDeclStatic <type, rank>
-pDeclStatic :: GenParser Char ParserState (PType, PValue)
+updateStencilBoundary :: String -> Bool -> ParserState -> ParserState
+updateStencilBoundary l_id l_regBound parserState =
+    let f k x =
+            if sName x == l_id
+                then Just $ x { sRegBound = l_regBound }
+                else Nothing
+    in  parserState { pStencil = Map.updateWithKey f l_id $ pStencil parserState }
+
+-- pDeclStatic <type, rank, toggle>
+pDeclStatic :: GenParser Char ParserState (PType, PValue, PValue)
 pDeclStatic = do l_type <- pType 
                  comma
+                 -- exprDeclDim is something has to be known at compile-time
                  l_rank <- exprDeclDim
-                 return (l_type, l_rank)
+                 l_toggle <- option 2 (comma >> exprDeclDim)
+                 return (l_type, l_rank, l_toggle)
 
 pDeclStaticNum :: GenParser Char ParserState (PValue)
 pDeclStaticNum = do l_rank <- exprDeclDim
                     return (l_rank)
 
-pDeclDynamic :: GenParser Char ParserState (PName, [Int])
+pDeclDynamic :: GenParser Char ParserState (PName, [DimExpr])
 pDeclDynamic = do l_name <- identifier
-                  l_dims <- parens (commaSep1 exprDeclDim)
+--                  l_dims <- parens (commaSep1 exprDeclDim)
+                  -- exprStmtDim is something might be known at run-time
+                  l_dims <- parens (commaSep1 exprStmtDim)
                   return (l_name, l_dims)
 
 ppShape :: GenParser Char ParserState [Int]
@@ -186,12 +263,13 @@ pStubStatement = do stmt <- manyTill anyChar $ try eol
  - new version : return the expr (syntax tree) instead of string
  -}
 pStatement :: GenParser Char ParserState Stmt
-pStatement = do l_stmts <- try $ braces ( many pStatement )
+pStatement = do symbol "{"
+                l_stmts <- manyTill pStatement (try $ symbol "}")
                 return (BRACES l_stmts)
          <|> do l_decl <- try pType
-                l_expr <- exprStmt 
+                l_exprs <- commaSep1 exprStmt 
                 semi
-                return (DEXPR l_decl l_expr)
+                return (DEXPR l_decl l_exprs)
          <|> do reserved "if"
                 l_boolExpr <- exprStmt
                 l_trueBranch <- pStatement
@@ -203,7 +281,7 @@ pStatement = do l_stmts <- try $ braces ( many pStatement )
                 return (SWITCH l_boolExpr l_cases)
          <|> do reserved "while"
                 l_boolExpr <- exprStmt
-                l_stmts <- braces (many pStatement)
+                l_stmts <- pStatement
                 return (WHILE l_boolExpr l_stmts)
          <|> do reserved "do"
                 l_stmts <- braces (many pStatement)
@@ -245,8 +323,8 @@ pObaseParam = do reserved "Obase"
                   
 pForExpr :: GenParser Char ParserState Stmt
 pForExpr =  do l_decl <- try pType
-               l_expr <- exprStmt 
-               return (DEXPR l_decl l_expr)
+               l_exprs <- commaSep1 exprStmt 
+               return (DEXPR l_decl l_exprs)
         <|> do l_expr <- exprStmt
                return (EXPR l_expr)
         <|> do whiteSpace
@@ -327,7 +405,8 @@ tableStmtDim = [
          where bop str fop assoc = Infix ((reservedOp str >> return (DimDuo fop)) <?> "operator") assoc
 
 termStmtDim :: GenParser Char ParserState DimExpr
-termStmtDim = do try (parens exprStmtDim)
+termStmtDim = do e <- try (parens exprStmtDim)
+                 return (DimParen e)
           <|> do literal_dim <- try (identifier)
                  l_state <- getState
                  -- check whether it's an effective Range name
@@ -381,17 +460,24 @@ termStmt =  do l_expr <- try (parens exprStmt)
                return (BOOL "true") 
         <|> do reserved "false"
                return (BOOL "false")
-        <|> do 
-              {- there should be only 1 term on the left side of '=',
-               - any form like 'a + b = c' is meaningless
-               -}
-               literal_var <- try (identifier)
-               l_dims <- option [] (parens (commaSep1 exprStmtDim))
-               returnArrayTerm literal_var l_dims
+        <|> do try pParenTermStmt
+        <|> do try pBracketTermStmt
+        <|> do try pPlainVarTermStmt
         <?> "term statement"
 
-returnArrayTerm :: PName -> [DimExpr] -> GenParser Char ParserState Expr
-returnArrayTerm l_var [] = return (VAR l_var)
-returnArrayTerm l_var dL@(d:ds) = return (PVAR l_var dL)
+pParenTermStmt :: GenParser Char ParserState Expr
+pParenTermStmt =
+    do l_var <- try identifier
+       l_dims <- parens (commaSep1 exprStmtDim)
+       return (PVAR l_var l_dims)
 
+pBracketTermStmt :: GenParser Char ParserState Expr
+pBracketTermStmt =
+    do l_var <- try identifier
+       l_dim <- brackets exprStmtDim
+       return (BVAR l_var l_dim)
 
+pPlainVarTermStmt :: GenParser Char ParserState Expr
+pPlainVarTermStmt =
+    do l_var <- try identifier
+       return (VAR l_var)

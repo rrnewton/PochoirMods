@@ -82,7 +82,7 @@ void check_result(int t, int i, double a, double b)
          * so the following code to set boundary index and
          * boundary rvalue is not necessary!!! 
          */
-        if (i <= 0 || i >= N_SIZE-1 || j <= 0 || j >= N_SIZE-1)
+        if (i <= 0 || i >= arr.size(1)-1 || j <= 0 || j >= arr.size(0)-1)
             return 0;
         else
             return arr.get(t, i, j);
@@ -95,10 +95,10 @@ int main(void)
 	struct timeval start, end;
 	/* data structure of Pochoir - row major */
 	
-	Pochoir_SArray <double, 2, 2> a(555, 555);
-	Pochoir_SArray <double, 2, 2> b(555, 555);
-	Pochoir_SArray <double, 1, 2> c(555);
-	Pochoir_SArray <double, 1, 2> d(555);
+	Pochoir_Array <double, 2, 2> a(555, 555);
+	Pochoir_Array <double, 2, 2> b(555, 555);
+	Pochoir_Array <double, 1, 2> c(555);
+	Pochoir_Array <double, 1, 2> d(555);
 	Pochoir_Stencil <double, 2> heat_2D;
 	Pochoir_Stencil <double, 1> heat_1D;
 	Pochoir_uRange I(0, 554), J(0, 554), K(0, 554);

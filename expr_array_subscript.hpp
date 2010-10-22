@@ -234,6 +234,7 @@ class Pochoir_Array {
 			return view_;
 		}
 
+        inline T * data() { return data_; }
         /* return the function pointer which generates the boundary value! */
         BValue_1D bv_1D(void) { return bv1_; }
         BValue_2D bv_2D(void) { return bv2_; }
@@ -329,11 +330,7 @@ class Pochoir_Array {
 #endif
             /* the highest dimension is time dimension! */
             int l_idx = cal_index<N_RANK>(_idx, stride_) + toggle_base<TOGGLE>(_timestep) * total_size_;
-#if BIT_TRICK
-            return select(set_boundary, l_bvalue, (*view_)[l_idx]);
-#else
             return (set_boundary) ? l_bvalue : (*view_)[l_idx];
-#endif
         }
 
 		/* index operator() for the format of a(i, j, k) 
@@ -360,7 +357,7 @@ class Pochoir_Array {
 		}
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary_3D(_idx3, _idx2, _idx1, _idx0);
+            bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
             T l_bvalue = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : 0;
             bool set_boundary = (l_boundary && bv3_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
@@ -384,7 +381,7 @@ class Pochoir_Array {
 		}
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = check_boundary_3D(_idx3, _idx2, _idx1, _idx0);
+            bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
             T l_bvalue = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : 0;
             bool set_boundary = (l_boundary && bv3_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;

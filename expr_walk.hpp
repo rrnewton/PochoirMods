@@ -41,6 +41,22 @@ struct meta_grid {
 };
 
 template <typename Grid_info, typename F>
+struct meta_grid <3, Grid_info, F>{
+	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
+		for (int i = grid.x0[2]; i < grid.x1[2]; ++i) {
+            int new_i = pmod_lu(i, initial_grid.x0[2], initial_grid.x1[2]);
+			for (int j = grid.x0[1]; j < grid.x1[1]; ++j) {
+                int new_j = pmod_lu(j, initial_grid.x0[1], initial_grid.x1[1]);
+        for (int k = grid.x0[0]; k < grid.x1[0]; ++k) {
+            int new_k = pmod_lu(k, initial_grid.x0[0], initial_grid.x1[0]);
+                f(t, new_i, new_j, new_k);
+        }
+			}
+		}
+	} 
+};
+
+template <typename Grid_info, typename F>
 struct meta_grid <2, Grid_info, F>{
 	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
 		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
@@ -52,6 +68,7 @@ struct meta_grid <2, Grid_info, F>{
 		}
 	} 
 };
+
 template <typename Grid_info, typename F>
 struct meta_grid <1, Grid_info, F>{
 	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
@@ -81,9 +98,10 @@ struct Algorithm {
          * to maximize the performance and reduce the region that
          * needs special treatment
         */
-        const int dx_recursive_;
+        int dx_recursive_[N_RANK];
         int dx_recursive_boundary_[N_RANK];
         const int dt_recursive_;
+        const int dt_recursive_boundary_;
         int N_CORES;
 	public:
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
@@ -98,13 +116,16 @@ struct Algorithm {
     bool boundarySet, initialGridSet, slopeSet;
 
     /* constructor */
-    Algorithm (int const _slope[]) : dx_recursive_(100), dt_recursive_(5) {
+    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
             ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
         }
+        for (int i = N_RANK-1; i > 0; --i)
+            dx_recursive_[i] = 3;
+        dx_recursive_[0] = 1000;
         boundarySet = false;
         initialGridSet = false;
         slopeSet = true;
@@ -113,7 +134,7 @@ struct Algorithm {
 #else
         N_CORES = __cilkrts_get_nworkers();
 #endif
-        cout << " N_CORES = " << N_CORES << endl;
+//        cout << " N_CORES = " << N_CORES << endl;
 
     }
     /* README!!!: set_initial_grid()/set_stride() must be called before call to 
@@ -134,15 +155,25 @@ struct Algorithm {
     /* all recursion-based algorithm */
     template <typename F> 
     inline void walk_adaptive(int t0, int t1, Grid_info const grid, F const & f);
+    template <typename F> 
+    inline void walk_bicut(int t0, int t1, Grid_info const grid, F const & f);
     /* recursive algorithm for obase */
     template <typename F> 
     inline void obase_adaptive(int t0, int t1, Grid_info const grid, F const & f);
+    template <typename F> 
+    inline void obase_bicut(int t0, int t1, Grid_info const grid, F const & f);
     template <typename F, typename BF> 
     inline void walk_ncores_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf);
+    template <typename F, typename BF> 
+    inline void walk_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf);
     template <typename BF> 
     inline void obase_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf);
+    template <typename BF> 
+    inline void obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf);
     template <typename F, typename BF> 
     inline void obase_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf);
+    template <typename F, typename BF> 
+    inline void obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf);
 
     /* all loop-based algorithm */
     template <typename F> 

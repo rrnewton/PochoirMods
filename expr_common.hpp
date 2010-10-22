@@ -30,6 +30,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cstdlib>
+#include <string>
 
 #if 0
 #define cilk_spawn 
@@ -110,13 +111,13 @@ size_t ArraySize (Pochoir_Shape_info<N_RANK> (& arr)[N]) { return N; }
 #define Pochoir_kernel_end };
 
 #define Pochoir_obase_fn_1D(name, t0, t1, grid) \
-    auto name = [&](int t0, int t1, grid_info<1> grid) {
+    auto name = [&](int t0, int t1, grid_info<1> const & grid) {
 
 #define Pochoir_obase_fn_2D(name, t0, t1, grid) \
-    auto name = [&](int t0, int t1, grid_info<2> grid) {
+    auto name = [&](int t0, int t1, grid_info<2> const & grid) {
 
 #define Pochoir_obase_fn_3D(name, t0, t1, grid) \
-    auto name = [&](int t0, int t1, grid_info<3> grid) {
+    auto name = [&](int t0, int t1, grid_info<3> const & grid) {
 
 /* - these function templates are for computing boundary values, currently
  *   icc doesn't support capturing the lambda function by function objects,
