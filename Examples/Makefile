@@ -10,10 +10,12 @@ CC=icc
 ifeq (${CC}, icc)
 ifeq (${DEBUG}, 1)
 CFLAGS := -DDEBUG -O0 -g3 -std=c++0x -include cilk_stub.h -I${INTEL_CILK_HEADER} -I${POCHOIR_LIB}
+PPFLAGS := -DDEBUG -g3 -std=c++0x -include cilk_stub.h -I${INTEL_CILK_HEADER} -I${POCHOIR_LIB}
 #CFLAGS := -DDEBUG -O0 -g3 -std=c++0x -I${INTEL_CILK_HEADER}
 else
 # CFLAGS := -O3 -DNDEBUG -std=c++0x -Wall -Werror -xSSE4.2 -ipo -I${INTEL_CILK_HEADER} 
 CFLAGS := -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo -I${INTEL_CILK_HEADER} -I${POCHOIR_LIB}
+PPFLAGS := -DNDEBUG -std=c++0x -Wall -Werror -ipo -I${INTEL_CILK_HEADER} -I${POCHOIR_LIB}
 endif
 else
 ifeq (${DEBUG}, 1)
@@ -25,9 +27,10 @@ endif
 pp : ${PP_FILE} 
 	ghc -o pp -O --make PMain.hs
 3dfd : tb_3dfd.cpp
-	./pp tb_3dfd.cpp
+#	${CC} -E -C ${PPFLAGS} tb_3dfd.cpp &> tb_3dfd_E.cpp
+#	./pp tb_3dfd_E.cpp
 	${CC} -o 3dfd ${CFLAGS} tb_3dfd.cpp
-	${CC} -o 3dfd_pochoir ${CFLAGS} tb_3dfd_pochoir.cpp
+#	${CC} -o 3dfd_pochoir ${CFLAGS} tb_3dfd_E_pochoir.cpp
 life : tb_life.cpp
 	./pp tb_life.cpp
 	${CC} -o life ${CFLAGS} tb_life.cpp

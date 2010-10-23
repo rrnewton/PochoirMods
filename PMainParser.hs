@@ -54,6 +54,7 @@ pToken =
     <|> try pParsePochoirKernel1D
     <|> try pParsePochoirKernel2D
     <|> try pParsePochoirKernel3D
+    <|> try pParsePochoirAutoKernel
     <|> try pParsePochoirStencilMember
     <|> do ch <- anyChar
            return [ch]
@@ -118,6 +119,11 @@ pParsePochoirKernel3D =
     do reserved "Pochoir_kernel_3D"
        pPochoirKernel
 
+pParsePochoirAutoKernel :: GenParser Char ParserState String
+pParsePochoirAutoKernel =
+    do reserved "auto"
+       pPochoirAutoKernel
+
 pParsePochoirStencilMember :: GenParser Char ParserState String
 pParsePochoirStencilMember =
     do l_id <- try (pIdentifier)
@@ -152,6 +158,25 @@ pPochoirKernel =
                          kStmt = exprStmts, kIter = l_revIters }
         updateState $ updatePKernel l_kernel
         return (pShowKernel (kName l_kernel) l_kernel)
+
+pPochoirAutoKernel :: GenParser Char ParserState String
+pPochoirAutoKernel =
+    do l_kernel_name <- identifier
+       reservedOp "="
+       symbol "[&]"
+       l_kernel_params <- parens $ commaSep1 (reserved "int" >> identifier)
+       symbol "{"
+       exprStmts <- manyTill pStatement (try $ reserved "};")
+       l_state <- getState
+       let l_iters =
+                   if pMode l_state == PIter
+                       then getFromStmts getIter (pArray l_state) exprStmts
+                       else getFromStmts (getPointer $ l_kernel_params) (pArray l_state) exprStmts
+       let l_revIters = transIterN 0 l_iters
+       let l_kernel = PKernel { kName = l_kernel_name, kParams = l_kernel_params,
+                                kStmt = exprStmts, kIter = l_revIters }
+       updateState $ updatePKernel l_kernel
+       return (pShowAutoKernel l_kernel_name l_kernel) 
 
 getIter :: PArray -> Expr -> [Iter]
 getIter arrayInUse (PVAR v dL) =

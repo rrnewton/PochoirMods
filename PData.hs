@@ -361,6 +361,15 @@ pShowKernel l_name l_kernel = "Pochoir_kernel_" ++ show dim ++ "D(" ++ l_name ++
     breakline ++ "Pochoir_kernel_end" ++ breakline
         where dim = length (kParams l_kernel) - 1
 
+-- AutoKernel is a de-sugared kernel
+pShowAutoKernel :: String -> PKernel -> String
+pShowAutoKernel l_name l_kernel = 
+    let l_params = zipWith (++) (repeat "int ") (kParams l_kernel)
+    in  "auto " ++ l_name ++ " = [&] (" ++ 
+        pShowKernelParams l_params ++ ") {" ++ breakline ++
+        show (kStmt l_kernel) ++
+        breakline ++ "};" ++ breakline
+
 pShowKernelParams :: [String] -> String
 pShowKernelParams l_kernel_params = concat $ intersperse ", " l_kernel_params
 
@@ -370,8 +379,8 @@ pShowObaseKernel l_name l_kernel =
         l_iter = kIter l_kernel
         l_array = unionArrayIter l_iter
         l_t = head $ kParams l_kernel
-    in  breakline ++ "Pochoir_obase_fn_" ++ show l_rank ++ 
-        "D(" ++ l_name ++ ", t0, t1, grid)" ++
+    in  breakline ++ "auto " ++ l_name ++ " = [&] (" ++
+        "int t0, int t1, grid_info<" ++ show l_rank ++ "> const & grid) {" ++ 
         breakline ++ "grid_info<" ++ show l_rank ++ "> l_grid = grid;" ++
         pShowIters l_iter ++ breakline ++ "int " ++ 
         concat (intersperse ", " (map (getArrayGaps (l_rank-1)) l_array)) ++ ";" ++
@@ -380,7 +389,7 @@ pShowObaseKernel l_name l_kernel =
         pShowIterSet l_iter (kParams l_kernel)++
         breakline ++ pShowObaseForHeader l_rank l_iter (tail $ kParams l_kernel) ++
         breakline ++ pShowObaseStmt l_kernel ++ breakline ++ pShowObaseForTail l_rank ++
-        pShowObaseTail l_rank ++ breakline ++ "Pochoir_kernel_end\n"
+        pShowObaseTail l_rank ++ breakline ++ "};\n"
 
 pShowPointerKernel :: String -> PKernel -> String
 pShowPointerKernel l_name l_kernel = 
@@ -388,19 +397,18 @@ pShowPointerKernel l_name l_kernel =
         l_iter = kIter l_kernel
         l_array = unionArrayIter l_iter
         l_t = head $ kParams l_kernel
-    in  breakline ++ "Pochoir_obase_fn_" ++ show l_rank ++ 
-        "D(" ++ l_name ++ ", t0, t1, grid)" ++
+    in  breakline ++ "auto " ++ l_name ++ " = [&] (" ++
+        "int t0, int t1, grid_info<" ++ show l_rank ++ "> const & grid) {" ++ 
         breakline ++ "grid_info<" ++ show l_rank ++ "> l_grid = grid;" ++
         pShowPointers l_iter ++ breakline ++ 
-        pShowArrayInfo l_array ++ 
-        "int " ++ 
+        pShowArrayInfo l_array ++ "int " ++ 
         concat (intersperse ", " (map (getArrayGaps (l_rank-1)) l_array)) ++ ";" ++
         breakline ++ pShowStrides l_rank l_array ++ breakline ++
         "for (int " ++ l_t ++ " = t0; " ++ l_t ++ " < t1; ++" ++ l_t ++ ") { " ++ 
         pShowPointerSet l_iter (kParams l_kernel)++
         breakline ++ pShowPointerForHeader l_rank l_iter (tail $ kParams l_kernel) ++
         breakline ++ pShowPointerStmt l_kernel ++ breakline ++ pShowObaseForTail l_rank ++
-        pShowObaseTail l_rank ++ breakline ++ "Pochoir_kernel_end\n"
+        pShowObaseTail l_rank ++ breakline ++ "};\n"
 
 pShowPragma :: String
 pShowPragma = "#pragma ivdep"

@@ -100,7 +100,7 @@ size_t ArraySize (Pochoir_Shape_info<N_RANK> (& arr)[N]) { return N; }
  * the original 'f'/'bf'
  */
 #define Pochoir_kernel_1D(name, t, i) \
-    auto name = [&](int t, int i) {
+    auto name = [&](int t, int i) { 
 
 #define Pochoir_kernel_2D(name, t, i, j) \
     auto name = [&](int t, int i, int j) {
@@ -108,7 +108,7 @@ size_t ArraySize (Pochoir_Shape_info<N_RANK> (& arr)[N]) { return N; }
 #define Pochoir_kernel_3D(name, t, i, j, k) \
     auto name = [&](int t, int i, int j, int k) {
 
-#define Pochoir_kernel_end };
+#define Pochoir_kernel_end }; 
 
 #define Pochoir_obase_fn_1D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<1> const & grid) {

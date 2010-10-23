@@ -53,6 +53,7 @@ lexer = Token.makeTokenParser (javaStyle
                                 "Pochoir_Shape_info", "Pochoir_pRange", 
                                 "Pochoir_kernel_1D", "Pochoir_kernel_2D", 
                                 "Pochoir_kernel_3D", "Pochoir_kernel_end",
+                                "auto", "};", 
                                 "Pochoir_Boundary_1D", "Pochoir_Boundary_2D",
                                 "Pochoir_Boundary_3D", "Pochoir_Boundary_end",
                                 "#define", "int", "float", "double", "bool", "true", "false",

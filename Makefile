@@ -25,8 +25,8 @@ else
 CFLAGS := -O3 -DNDEBUG -std=c++0x ${OPT_FLAGS}
 endif
 endif
-pp : ${PP_FILE} 
-	ghc -o pp -O --make PMain.hs
+pochoir : ${PP_FILE} 
+	ghc -o pochoir -O --make PMain.hs
 pp_iter : pp_iter.cpp ${POCHOIR_HEADER} 
 	./pp -split-obase pp_iter.cpp
 	${CC} -o pp_iter ${CFLAGS} pp_iter.cpp 

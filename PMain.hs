@@ -51,34 +51,53 @@ main = do args <- getArgs
           whilst (mode == PError) $ do
              putStrLn ("command line argument error" ++ concat args)
              exitFailure
-          let outFile = rename inFile
-          putStrLn ("inFile = " ++ inFile ++ "; outFile = " ++ outFile)
-          inh <- openFile inFile ReadMode
+          cilkHeaderPath <- catch (getEnv "CILK_HEADER_PATH")(\e -> return "EnvError")
+          whilst (cilkHeaderPath == "EnvError") $ do
+             putStrLn ("Environment variable CILK_HEADER_PATH is NOT set")
+             exitFailure
+          pochoirLibPath <- catch (getEnv "POCHOIR_LIB_PATH")(\e -> return "EnvError")
+          whilst (pochoirLibPath == "EnvError") $ do
+             putStrLn ("Environment variable POCHOIR_LIB_PATH is NOT set")
+             exitFailure
+          let envPath = ["-I" ++ cilkHeaderPath] ++ ["-I" ++ pochoirLibPath]
+          let iccPPFile = getPPFile inFile
+          let iccPPArgs = if debug == False
+                then iccPPFlags ++ envPath ++ [inFile]
+                else iccDebugPPFlags ++ envPath ++ [inFile] 
+          putStrLn ("inFile = " ++ inFile ++ "; icc preprocessed File = " ++ iccPPFile)
+          rawSystem icc iccPPArgs
+          let outFile = rename iccPPFile "_pochoir"
+          putStrLn ("inFile = " ++ iccPPFile ++ "; Pochoir outFile = " ++ outFile)
+          inh <- openFile iccPPFile ReadMode
           outh <- openFile outFile WriteMode
           pProcess mode inh outh
           hClose inh
           hClose outh
---          let objInFile  = getObjFile inFile
---          let iccInFileArgs = if debug == False 
---                then objInFile ++ iccFlags ++ [inFile]
---                else objInFile ++ iccDebugFlags ++ [inFile]
---          putStrLn (icc ++ " " ++ concat (intersperse " " iccInFileArgs))
---          rawSystem icc iccInFileArgs
---          let objOutFile = getObjFile outFile
---          let iccOutFileArgs = if debug == False 
---                then objOutFile ++ iccFlags ++ [outFile]
---                else objOutFile ++ iccDebugFlags ++ [outFile]
---          putStrLn (icc ++ " " ++ concat (intersperse " " iccOutFileArgs))
---          rawSystem icc iccOutFileArgs
---          whilst (showFile == False) $ do
---             removeFile outFile
+          let objInFile  = getObjFile inFile
+          let iccInFileArgs = if debug == False 
+                then objInFile ++ iccFlags ++ envPath ++ [inFile]
+                else objInFile ++ iccDebugFlags ++ envPath ++ [inFile]
+          putStrLn (icc ++ " " ++ concat (intersperse " " iccInFileArgs))
+          rawSystem icc iccInFileArgs
+          let objOutFile = getObjFile outFile
+          let iccOutFileArgs = if debug == False 
+                then objOutFile ++ iccFlags ++ envPath ++ [outFile]
+                else objOutFile ++ iccDebugFlags ++ envPath ++ [outFile]
+          putStrLn (icc ++ " " ++ concat (intersperse " " iccOutFileArgs))
+          rawSystem icc iccOutFileArgs
+          whilst (showFile == False) $ do
+             removeFile outFile
 
 whilst :: Bool -> IO () -> IO ()
 whilst True action = action
 whilst False action = return () 
 
-rename :: String -> String
-rename fname = name ++ "_pochoir" ++ suffix
+rename :: String -> String -> String
+rename fname pSuffix = name ++ pSuffix ++ ".cpp"
+    where (name, suffix) = break ('.' ==) fname
+
+getPPFile :: String -> String
+getPPFile fname = name ++ ".i"
     where (name, suffix) = break ('.' ==) fname
 
 getObjFile :: String -> [String]
@@ -89,9 +108,13 @@ pInitState = ParserState { pMode = PPointer, pState = Unrelated, pMacro = Map.em
 
 icc = "icc"
 
-iccFlags = ["-O3", "-DNDEBUG", "-std=c++0x", "-Wall", "-Werror", "-ipo", "-I/opt/intel/composerxe-2011.0.048/compiler/include/cilk", "-I/home/yuantang/Git/Pochoir/ExecSpec_refine/"]
+iccFlags = ["-O3", "-DNDEBUG", "-std=c++0x", "-Wall", "-Werror", "-ipo"]
 
-iccDebugFlags = ["-DDEBUG", "-O0", "-g3", "-std=c++0x", "-include", "cilk_stub.h", "-I/opt/intel/composerxe-2011.0.048/compiler/include/cilk", "-I/home/yuantang/Git/Pochoir/ExecSpec_refine/"]
+iccPPFlags = ["-P", "-C", "-DNDEBUG", "-std=c++0x", "-Wall", "-Werror", "-ipo"]
+
+iccDebugFlags = ["-DDEBUG", "-O0", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
+
+iccDebugPPFlags = ["-P", "-C", "-DDEBUG", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
 
 parseArgs :: (String, PMode, Bool, Bool) -> [String] -> (String, PMode, Bool, Bool)
 parseArgs (inFile, mode, debug, showFile) aL 
@@ -124,11 +147,17 @@ parseArgs (inFile, mode, debug, showFile) aL
             aL' = delete "-debug" aL
         in  parseArgs (inFile, mode, l_debug, showFile) aL'
     | null aL == False =
-        let l_file = head aL
+        let l_file = findCPP aL
         in  (l_file, mode, debug, showFile)
     | otherwise = 
         let l_mode = PError
         in  (inFile, mode, debug, showFile)
+
+findCPP :: [String] -> String
+findCPP [] = ""
+findCPP (a:as)  
+    | isSuffixOf ".cpp" a || isSuffixOf ".cxx" a = a
+    | otherwise = findCPP as
 
 printUsage :: IO ()
 printUsage = 
