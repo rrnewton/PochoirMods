@@ -40,10 +40,13 @@ import PMainParser
 
 main :: IO ()
 main = do args <- getArgs
-          whilst (null args == True) $ do
+          whilst (null args) $ do
              printUsage
              exitFailure
           let (inFile, mode, debug, showFile) = parseArgs ("", PPointer, False, True) args
+          whilst (mode == PHelp) $ do
+             printUsage
+             exitFailure
           fileExist <- doesFileExist inFile
           whilst (not fileExist) $ do
              putStrLn (inFile ++ " doesn't exist!")
@@ -118,6 +121,9 @@ iccDebugPPFlags = ["-P", "-C", "-DDEBUG", "-g3", "-std=c++0x", "-include", "cilk
 
 parseArgs :: (String, PMode, Bool, Bool) -> [String] -> (String, PMode, Bool, Bool)
 parseArgs (inFile, mode, debug, showFile) aL 
+    | elem "-help" aL =
+        let l_mode = PHelp
+        in  (inFile, l_mode, debug, showFile)
     | elem "-split-type-shadow" aL = 
         let l_mode = PTypeShadow
             aL' = delete "-split-type-shadow" aL
@@ -169,7 +175,7 @@ printUsage =
        putStrLn ("pp -split-iter $filename : " ++ breakline ++ 
                "split the interior and boundary region, and using iterators to optimize the base case")
        putStrLn ("pp -split-pointer $filename : " ++ breakline ++ 
-               "Default : split the interior and boundary region, and using C-style pointer to optimize the base case")
+               "Default Mode : split the interior and boundary region, and using C-style pointer to optimize the base case")
 
 pProcess :: PMode -> Handle -> Handle -> IO ()
 pProcess mode inh outh = 
