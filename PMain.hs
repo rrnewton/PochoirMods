@@ -168,13 +168,13 @@ findCPP (a:as)
 printUsage :: IO ()
 printUsage = 
     do putStrLn ("Usage: ")
-       putStrLn ("pp -split-type-shadow $filename : " ++ breakline ++ 
+       putStrLn ("pochoir -split-type-shadow $filename : " ++ breakline ++ 
                "using type tricks to split the interior and boundary regions")
-       putStrLn ("pp -split-macro-shadow $filename : " ++ breakline ++ 
+       putStrLn ("pochoir -split-macro-shadow $filename : " ++ breakline ++ 
                "using macro tricks to split the interior and boundary regions")
-       putStrLn ("pp -split-iter $filename : " ++ breakline ++ 
+       putStrLn ("pochoir -split-iter $filename : " ++ breakline ++ 
                "split the interior and boundary region, and using iterators to optimize the base case")
-       putStrLn ("pp -split-pointer $filename : " ++ breakline ++ 
+       putStrLn ("pochoir -split-pointer $filename : " ++ breakline ++ 
                "Default Mode : split the interior and boundary region, and using C-style pointer to optimize the base case")
 
 pProcess :: PMode -> Handle -> Handle -> IO ()
