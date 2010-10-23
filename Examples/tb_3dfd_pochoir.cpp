@@ -1,3 +1,28 @@
+/*
+ **********************************************************************************
+ *  Copyright (C) 2010  Massachusetts Institute of Technology
+ *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
+ *                      Charles E. Leiserson <cel@mit.edu>
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *   Suggestsions:                  yuantang@csail.mit.edu
+ *   Bugs:                          yuantang@csail.mit.edu
+ *
+ *********************************************************************************
+ */
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -395,7 +420,9 @@ A = new float*[2];
   double stop;
 	
   ///////////////////////////////////////////////                                                                      
-init_variables();
+#if 0
+  
+  init_variables();
   start = getseconds();
   
   /* this is loop based version */
@@ -408,7 +435,7 @@ init_variables();
 stop = getseconds(); 
   //copy_A_to_B();
 print_summary("base", stop - start);
-  
+#endif
   ///////////////////////////////////////////////
 init_variables();
   // verify_A_and_B();

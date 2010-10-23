@@ -335,6 +335,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut_boundary_p(int t0, int t1, 
 	index_info lb, thres;
     Grid_info l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
+    int l_dt_stop;
 
 	for (int i = 0; i < N_RANK; ++i) {
         l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
@@ -424,7 +425,11 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut_boundary_p(int t0, int t1, 
 	        return;
 		}/* end if */
 	} /* end for */
-	if (lt > dt_recursive_) {
+    if (call_boundary)
+        l_dt_stop = dt_recursive_boundary_;
+    else
+        l_dt_stop = dt_recursive_;
+	if (lt > l_dt_stop) {
 		int halflt = lt / 2;
 		l_son_grid = l_father_grid;
         if (call_boundary) {
@@ -1034,6 +1039,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
 	index_info lb, thres;
     Grid_info l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
+    int l_dt_stop;
 
 	for (int i = 0; i < N_RANK; ++i) {
         l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
@@ -1046,7 +1052,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
 		can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
 		if (can_cut) { 
             l_son_grid = l_father_grid;
-            int sep = (int)lb[i]/2;
+            int sep = lb[i]/2;
             int r = 2;
 			int l_start = (l_father_grid.x0[i]);
 			int l_end = (l_father_grid.x1[i]);
@@ -1122,8 +1128,13 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
 			}
             return;
 		}/* end if */
-	} /* end for */
-	if (lt > dt_recursive_) {
+	} /* end for */    
+    if (call_boundary)
+        l_dt_stop = dt_recursive_boundary_;
+    else
+        l_dt_stop = dt_recursive_;
+
+	if (lt > l_dt_stop) {
 		int halflt = lt / 2;
 		l_son_grid = l_father_grid;
         if (call_boundary) {
