@@ -27,7 +27,7 @@ module Main where
 
 import System
 import IO hiding (try) -- "try" is also defined in Parsec
-import List
+import Data.List
 --import System.FilePath
 import System.Directory (doesFileExist, removeFile)
 import System.Cmd (rawSystem)
@@ -80,13 +80,13 @@ main = do args <- getArgs
           let iccInFileArgs = if debug == False 
                 then objInFile ++ iccFlags ++ envPath ++ [inFile]
                 else objInFile ++ iccDebugFlags ++ envPath ++ [inFile]
-          putStrLn (icc ++ " " ++ concat (intersperse " " iccInFileArgs))
+          putStrLn (icc ++ " " ++ intercalate " " iccInFileArgs)
           rawSystem icc iccInFileArgs
           let objOutFile = getObjFile outFile
           let iccOutFileArgs = if debug == False 
                 then objOutFile ++ iccFlags ++ envPath ++ [outFile]
                 else objOutFile ++ iccDebugFlags ++ envPath ++ [outFile]
-          putStrLn (icc ++ " " ++ concat (intersperse " " iccOutFileArgs))
+          putStrLn (icc ++ " " ++ intercalate " " iccOutFileArgs)
           rawSystem icc iccOutFileArgs
           whilst (showFile == False) $ do
              removeFile outFile

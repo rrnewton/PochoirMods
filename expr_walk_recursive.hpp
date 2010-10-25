@@ -36,16 +36,16 @@
 template <int N_RANK, typename Grid_info>
 inline bool Algorithm<N_RANK, Grid_info>::touch_boundary(int i, int lt, Grid_info & grid) 
 {
-    bool interior;
-    if (grid.x0[i] > uub_boundary[i] 
-     && grid.x0[i] + grid.dx0[i] * lt > uub_boundary[i]) {
+    bool interior = false;
+    if (grid.x0[i] >= uub_boundary[i] 
+     && grid.x0[i] + grid.dx0[i] * lt >= uub_boundary[i]) {
         interior = true;
         grid.x0[i] -= initial_length_[i];
         grid.x1[i] -= initial_length_[i];
     } else if (grid.x1[i] < ulb_boundary[i] 
             && grid.x1[i] + grid.dx1[i] * lt < ulb_boundary[i]
-            && grid.x0[i] > lub_boundary[i]
-            && grid.x0[i] + grid.dx0[i] * lt > lub_boundary[i]) {
+            && grid.x0[i] >= lub_boundary[i]
+            && grid.x0[i] + grid.dx0[i] * lt >= lub_boundary[i]) {
         interior = true;
     } else {
         interior = false;
@@ -143,7 +143,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut(int t0, int t1, Grid_info c
 			const int sep = (int)lb[i]/2;
 			const int r = 2;
 #if DEBUG
-			printf("initial_cut = %s, lb[%d] = %d, sep = %d, r = %d\n", initial_cut(i) ? "True" : "False", i, lb[i], sep, r);
+//			printf("initial_cut = %s, lb[%d] = %d, sep = %d, r = %d\n", initial_cut(i) ? "True" : "False", i, lb[i], sep, r);
 #endif
 			l_grid.x0[i] = grid.x0[i];
 			l_grid.dx0[i] = slope_[i];
@@ -199,15 +199,15 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut(int t0, int t1, Grid_info c
 		}
 		walk_bicut(t0+halflt, t1, l_grid, f);
 #if DEBUG
-		printf("%s:%d cut into time dim\n", __FUNCTION__, __LINE__);
+//		printf("%s:%d cut into time dim\n", __FUNCTION__, __LINE__);
 		fflush(stdout);
 #endif
         return;
 	}
     /* base case */
 #if DEBUG
-    printf("call Adaptive! ");
-	print_grid(stdout, t0, t1, grid);
+//    printf("call Adaptive! ");
+//	  print_grid(stdout, t0, t1, grid);
 #endif
 	base_case_kernel(t0, t1, grid, f);
 	return;
@@ -865,7 +865,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
 			l_son_grid.dx1[i] = -slope_[i];
             obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
 #if DEBUG
-			print_sync(stdout);
+//			print_sync(stdout);
 #endif
 			cilk_sync;
 			l_son_grid.x0[i] = l_start + sep;
@@ -904,7 +904,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
 		l_son_grid = l_father_grid;
         obase_bicut_boundary_p(t0, t0+halflt, l_son_grid, bf);
 #if DEBUG
-		print_sync(stdout);
+//		print_sync(stdout);
 #endif
 		for (int i = 0; i < N_RANK; ++i) {
 			l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
@@ -1076,9 +1076,6 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
             } else {
                 obase_bicut(t0, t1, l_son_grid, f);
             }
-#if DEBUG
-			print_sync(stdout);
-#endif
 			cilk_sync;
 
 			l_son_grid.x0[i] = l_start + sep;
@@ -1142,9 +1139,6 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
         } else {
             obase_bicut(t0, t0+halflt, l_son_grid, f);
         }
-#if DEBUG
-		print_sync(stdout);
-#endif
 		for (int i = 0; i < N_RANK; ++i) {
 			l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
 			l_son_grid.dx0[i] = l_father_grid.dx0[i];

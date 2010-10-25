@@ -141,7 +141,7 @@ class SProxy {
              */
             
             value_ = rhs;
-            set_boundary_ = false;
+//            set_boundary_ = false;
             return *this;
         }
 
@@ -155,8 +155,8 @@ class SProxy {
          */
         inline SProxy & operator=(SProxy const & rhs) {
             value_ = rhs.value();
-            set_boundary_ = rhs.set_boundary();
-            bvalue_ = rhs.bvalue();
+//            set_boundary_ = rhs.set_boundary();
+//            bvalue_ = rhs.bvalue();
             return *this;
         }
 };

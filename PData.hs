@@ -172,7 +172,7 @@ instance Show Stmt where
     show BREAK = "break;"
     show (EXPR expr) = show expr ++ ";"
     show (DEXPR declType es) = show declType ++ " " ++ 
-                                (concat $ intersperse ", " $ map show es) ++ ";"
+                                (intercalate ", " $ map show es) ++ ";"
     show (BRACES tL@(t:ts)) = "{" ++ showList tL "" ++ breakline ++ "}"
     show (IF expr l_stmt NOP) = "if " ++ show expr ++ 
         breakline ++ show l_stmt 
@@ -371,7 +371,7 @@ pShowAutoKernel l_name l_kernel =
         breakline ++ "};" ++ breakline
 
 pShowKernelParams :: [String] -> String
-pShowKernelParams l_kernel_params = concat $ intersperse ", " l_kernel_params
+pShowKernelParams l_kernel_params = intercalate ", " l_kernel_params
 
 pShowObaseKernel :: String -> PKernel -> String
 pShowObaseKernel l_name l_kernel = 
@@ -383,7 +383,7 @@ pShowObaseKernel l_name l_kernel =
         "int t0, int t1, grid_info<" ++ show l_rank ++ "> const & grid) {" ++ 
         breakline ++ "grid_info<" ++ show l_rank ++ "> l_grid = grid;" ++
         pShowIters l_iter ++ breakline ++ "int " ++ 
-        concat (intersperse ", " (map (getArrayGaps (l_rank-1)) l_array)) ++ ";" ++
+        intercalate ", " (map (getArrayGaps (l_rank-1)) l_array) ++ ";" ++
         breakline ++ pShowStrides l_rank l_array ++ breakline ++
         "for (int " ++ l_t ++ " = t0; " ++ l_t ++ " < t1; ++" ++ l_t ++ ") { " ++ 
         pShowIterSet l_iter (kParams l_kernel)++
@@ -402,7 +402,7 @@ pShowPointerKernel l_name l_kernel =
         breakline ++ "grid_info<" ++ show l_rank ++ "> l_grid = grid;" ++
         pShowPointers l_iter ++ breakline ++ 
         pShowArrayInfo l_array ++ "int " ++ 
-        concat (intersperse ", " (map (getArrayGaps (l_rank-1)) l_array)) ++ ";" ++
+        intercalate ", " (map (getArrayGaps (l_rank-1)) l_array) ++ ";" ++
         breakline ++ pShowStrides l_rank l_array ++ breakline ++
         "for (int " ++ l_t ++ " = t0; " ++ l_t ++ " < t1; ++" ++ l_t ++ ") { " ++ 
         pShowPointerSet l_iter (kParams l_kernel)++
@@ -499,7 +499,7 @@ pShowPointerSet iL@(i:is) l_kernelParams = concat $ map pShowPointerSetTerm iL
                     pGetArrayStrideList (length l_kernelParams - 1) l_arrayName
                 l_transDimList = tail $ pShowTransDim dim l_kernelParams
                 l_arraySpaceOffset = 
-                    concat $ intersperse " + " $ zipWith pCombineDim l_transDimList l_arrayStrideList
+                    intercalate " + " $ zipWith pCombineDim l_transDimList l_arrayStrideList
                 l_arrayTimeOffset = (pGetTimeOffset (aToggle array - 1) (head dim)) ++ 
                                     " * " ++ l_arrayTotalSize
             in  breakline ++ iterName ++ " = " ++ l_arrayBaseName ++ " + " ++ 
@@ -534,7 +534,7 @@ pTransDim n r dL@(d:ds) pL@(p:ps) = pTransDimTerm n r d p : pTransDim (n+1) r ds
         
 pShowStrides :: Int -> [PArray] -> String
 pShowStrides n aL = "const int " ++ getStrides n aL ++ ";\n"
-    where getStrides n aL@(a:as) = concat . intersperse ", " $ concat $ map (getStride n) aL
+    where getStrides n aL@(a:as) = intercalate ", " $ concat $ map (getStride n) aL
           getStride 1 a = let r = 0 
                           in  ["l_stride_" ++ (aName a) ++ "_" ++ show r ++
                               " = " ++ (aName a) ++ ".stride(" ++ show r ++ ")"]
@@ -579,16 +579,14 @@ pShowObaseTail n =
 pShowObaseForHeader :: Int -> [Iter] -> [PName] -> String
 pShowObaseForHeader 1 iL pL = 
                            breakline ++ pShowForHeader 0 (unionArrayIter iL) pL ++ 
-                           breakline ++ concat (
-                                   intersperse (", " ++ breakline) 
-                                        (map ((++) "++" . getIterName) iL)) ++ ") {"
+                           breakline ++ intercalate (", " ++ breakline) 
+                                        (map ((++) "++" . getIterName) iL) ++ ") {"
 pShowObaseForHeader n iL pL = 
                            breakline ++ pShowForHeader (n-1) (unionArrayIter iL) pL ++ 
-                           breakline ++ concat (
-                                   intersperse (", " ++ breakline) 
+                           breakline ++ intercalate (", " ++ breakline) 
                                      (zipWith wrapIterInc
                                         (map (getArrayGap (n-1)) (getArrayIter iL))
-                                        (map getIterName iL))) ++ 
+                                        (map getIterName iL)) ++ 
                            ") {" ++ pShowObaseForHeader (n-1) iL pL
     where wrapIterInc gap iter = iter ++ ".inc(" ++ gap ++ ")"
 
@@ -597,16 +595,14 @@ pShowPointerForHeader :: Int -> [Iter] -> [PName] -> String
 pShowPointerForHeader 1 iL pL = 
                            breakline ++ pShowPragma ++
                            breakline ++ pShowForHeader 0 (unionArrayIter iL) pL ++ 
-                           breakline ++ concat (
-                                   intersperse (", " ++ breakline) 
-                                        (map ((++) "++" . getIterName) iL)) ++ ") {"
+                           breakline ++ intercalate (", " ++ breakline) 
+                                        (map ((++) "++" . getIterName) iL) ++ ") {"
 pShowPointerForHeader n iL pL = 
                            breakline ++ pShowForHeader (n-1) (unionArrayIter iL) pL ++ 
-                           breakline ++ concat (
-                                   intersperse (", " ++ breakline) 
+                           breakline ++ intercalate (", " ++ breakline) 
                                      (zipWith wrapIterInc
                                         (map (getArrayGap (n-1)) (getArrayIter iL))
-                                        (map getIterName iL))) ++ 
+                                        (map getIterName iL)) ++ 
                            ") {" ++ pShowPointerForHeader (n-1) iL pL
     where wrapIterInc gap iter = iter ++ " += " ++ gap 
 

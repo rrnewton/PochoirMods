@@ -29328,16 +29328,16 @@ inline void Algorithm<N_RANK, Grid_info>::base_case_kernel(int t0, int t1, Grid_
 template <int N_RANK, typename Grid_info>
 inline bool Algorithm<N_RANK, Grid_info>::touch_boundary(int i, int lt, Grid_info & grid) 
 {
-    bool interior;
-    if (grid.x0[i] > uub_boundary[i] 
-     && grid.x0[i] + grid.dx0[i] * lt > uub_boundary[i]) {
+    bool interior = false;
+    if (grid.x0[i] >= uub_boundary[i] 
+     && grid.x0[i] + grid.dx0[i] * lt >= uub_boundary[i]) {
         interior = true;
         grid.x0[i] -= initial_length_[i];
         grid.x1[i] -= initial_length_[i];
     } else if (grid.x1[i] < ulb_boundary[i] 
             && grid.x1[i] + grid.dx1[i] * lt < ulb_boundary[i]
-            && grid.x0[i] > lub_boundary[i]
-            && grid.x0[i] + grid.dx0[i] * lt > lub_boundary[i]) {
+            && grid.x0[i] >= lub_boundary[i]
+            && grid.x0[i] + grid.dx0[i] * lt >= lub_boundary[i]) {
         interior = true;
     } else {
         interior = false;
@@ -31125,8 +31125,8 @@ class SProxy {
              */
             
             value_ = rhs;
-            set_boundary_ = false;
-            return *this;
+//            set_boundary_ = false;
+return *this;
         }
 
         inline T & value() { return value_; }
@@ -31139,9 +31139,8 @@ class SProxy {
          */
         inline SProxy & operator=(SProxy const & rhs) {
             value_ = rhs.value();
-            set_boundary_ = rhs.set_boundary();
-            bvalue_ = rhs.bvalue();
-            return *this;
+//            set_boundary_ = rhs.set_boundary();
+return *this;
         }
 };
 
@@ -31353,9 +31352,10 @@ int total_size_;
         BValue_2D bv_2D(void) { return bv2_; }
         BValue_3D bv_3D(void) { return bv3_; }
 
-        void registerBV(BValue_1D _bv1) { bv1_ = _bv1; }
-        void registerBV(BValue_2D _bv2) { bv2_ = _bv2; }
-        void registerBV(BValue_3D _bv3) { bv3_ = _bv3; }
+        /* guarantee that only one version of boundary function is registered ! */
+        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = __null; bv3_ = __null; }
+        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = __null; bv3_ = __null; }
+        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = __null; bv2_ = __null; }
 
         void unregisterBV(void) { bv1_ = __null;  bv2_ = __null; bv3_ = __null; }
 
@@ -31403,27 +31403,26 @@ int total_size_;
         inline bool check_boundary(size_info const & _idx) const {
             bool touch_boundary = false;
             for (int i = 0; i < N_RANK; ++i) {
-                touch_boundary |= (_idx[i] < 0 + slope_[i] 
-                                || _idx[i] > logic_size_[i]-1-slope_[i]);
+                touch_boundary |= (_idx[i] < 0 
+                                || _idx[i] > logic_size_[i]-1);
             }
             return touch_boundary;
         }
 
         inline bool check_boundary(int _idx1, int _idx0) {
-            return (_idx0 < 0 + slope_[0] || _idx0 > logic_size_[0]-1-slope_[0]);
+            return (_idx0 < 0 || _idx0 > logic_size_[0]-1);
         }
 
         inline bool check_boundary(int _idx2, int _idx1, int _idx0) {
-            return (_idx0 < 0 + slope_[0] || _idx0 > logic_size_[0]-1-slope_[0] 
-                 || _idx1 < 0 + slope_[1] || _idx1 > logic_size_[1]-1-slope_[1]); 
+            return (_idx0 < 0 || _idx0 > logic_size_[0]-1 
+                 || _idx1 < 0 || _idx1 > logic_size_[1]-1); 
         }
 
         inline bool check_boundary(int _idx3, int _idx2, int _idx1, int _idx0) {
-            return (_idx0 < 0 + slope_[0] || _idx0 > logic_size_[0]-1-slope_[0] 
-                 || _idx1 < 0 + slope_[1] || _idx1 > logic_size_[1]-1-slope_[1] 
-                 || _idx2 < 0 + slope_[2] || _idx2 > logic_size_[2]-1-slope_[2]); 
+            return (_idx0 < 0 || _idx0 > logic_size_[0]-1 
+                 || _idx1 < 0 || _idx1 > logic_size_[1]-1 
+                 || _idx2 < 0 || _idx2 > logic_size_[2]-1); 
         }
-
         /* 
          * orig_value() is reserved for "ostream" : cout << Pochoir_Array
          */
@@ -31431,6 +31430,16 @@ int total_size_;
             bool l_boundary = check_boundary(_idx);
             bool set_boundary = false;
             T l_bvalue = 0;
+            if (l_boundary && bv1_ != __null) {
+                l_bvalue = bv1_(*this, _timestep, _idx[0]);
+                set_boundary = true;
+            } else if (l_boundary && bv2_ != __null) {
+                l_bvalue = bv2_(*this, _timestep, _idx[1], _idx[0]);
+                set_boundary = true;
+            } else if (l_boundary && bv3_ != __null) {
+                l_bvalue = bv3_(*this, _timestep, _idx[2], _idx[1], _idx[0]);
+                set_boundary = true;
+            }
             /* the highest dimension is time dimension! */
             int l_idx = cal_index<N_RANK>(_idx, stride_) + toggle_base<TOGGLE>(_timestep) * total_size_;
             return (set_boundary) ? l_bvalue : (*view_)[l_idx];

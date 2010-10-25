@@ -37,7 +37,7 @@ using namespace std;
 #define SIMPLE 0
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
-#define N_SIZE 555 
+#define N_SIZE 555
 #define T_SIZE 555
 #define TOLERANCE (1e-6)
 
@@ -71,7 +71,7 @@ int main(void)
 	/* data structure of Pochoir - row major */
 	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
     Pochoir_Stencil<double, N_RANK> heat_2D;
-    Pochoir_uRange I(0, N_SIZE-1), J(0, N_SIZE-1);
+    Pochoir_uRange I(1, N_SIZE-2), J(1, N_SIZE-2);
     Pochoir_Shape_info<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
 
     heat_2D.registerBoundaryFn(a, heat_bv_2D);

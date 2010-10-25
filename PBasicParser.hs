@@ -110,7 +110,7 @@ ppStencil l_id l_stencil l_state =
            l_boundaryParams <- parens $ commaSep1 identifier
            semi
            updateState $ updateStencilBoundary l_id True
-           return (l_id ++ ".registerBoundaryFn(" ++ (concat $ intersperse ", " l_boundaryParams) ++ ");" ++ breakline)
+           return (l_id ++ ".registerBoundaryFn(" ++ (intercalate ", " l_boundaryParams) ++ ");" ++ breakline)
     <|> do try $ pMember "run"
            (l_tstep, l_func) <- parens pStencilRun
            semi
@@ -129,7 +129,7 @@ ppStencil l_id l_stencil l_state =
 
 pSplitTypeShadow :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
 pSplitTypeShadow (l_id, l_tstep, l_kernel, l_stencil) = 
-    let shadowKernel = pShowKernel shadowKernelName l_kernel 
+    let shadowKernel = pShowAutoKernel shadowKernelName l_kernel 
         oldKernelName = kName l_kernel
         shadowKernelName = "interior_type_shadow_" ++ oldKernelName
         shadowArrayInUse = pShowShadowArrayInUse $ sArrayInUse l_stencil
@@ -140,7 +140,7 @@ pSplitTypeShadow (l_id, l_tstep, l_kernel, l_stencil) =
 
 pSplitMacroShadow :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
 pSplitMacroShadow (l_id, l_tstep, l_kernel, l_stencil) = 
-    let shadowKernel = pShowKernel shadowKernelName l_kernel 
+    let shadowKernel = pShowAutoKernel shadowKernelName l_kernel 
         oldKernelName = kName l_kernel
         shadowKernelName = "interior_macro_shadow_" ++ oldKernelName
         shadowArrayInUse = pDefMacroArrayInUse (sArrayInUse l_stencil) (kParams l_kernel)
@@ -161,7 +161,7 @@ pSplitInterior (l_id, l_tstep, l_kernel, l_stencil) =
                                    kStmt = interiorStmts,
                                    kIter = kIter l_kernel 
                                   }
-        showInteriorKernel = pShowKernel interiorKernelName interiorKernel
+        showInteriorKernel = pShowAutoKernel interiorKernelName interiorKernel
     in  return (showInteriorKernel ++ l_id ++ ".run(" ++
                 l_tstep ++ ", " ++ interiorKernelName ++ ", " ++ 
                 oldKernelName ++ ");" ++ breakline ++ breakline)
