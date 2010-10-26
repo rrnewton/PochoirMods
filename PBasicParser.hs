@@ -264,46 +264,82 @@ pStubStatement = do stmt <- manyTill anyChar $ try eol
  - new version : return the expr (syntax tree) instead of string
  -}
 pStatement :: GenParser Char ParserState Stmt
-pStatement = do symbol "{"
-                l_stmts <- manyTill pStatement (try $ symbol "}")
-                return (BRACES l_stmts)
-         <|> do l_decl <- try pType
-                l_exprs <- commaSep1 exprStmt 
-                semi
-                return (DEXPR l_decl l_exprs)
-         <|> do reserved "if"
-                l_boolExpr <- exprStmt
-                l_trueBranch <- pStatement
-                l_falseBranch <- option NOP pElseBranch
-                return (IF l_boolExpr l_trueBranch l_falseBranch)
-         <|> do reserved "switch"
-                l_boolExpr <- exprStmt
-                l_cases <- braces (many pCase)
-                return (SWITCH l_boolExpr l_cases)
-         <|> do reserved "while"
-                l_boolExpr <- exprStmt
-                l_stmts <- pStatement
-                return (WHILE l_boolExpr l_stmts)
-         <|> do reserved "do"
-                l_stmts <- braces (many pStatement)
-                reserved "while"
-                l_expr <- exprStmt
-                semi
-                return (DO l_expr l_stmts)
-         <|> do reserved "for"
-                l_exprs <- parens $ semiSep1 (commaSep pForExpr)
-                l_stmt <- pStatement
-                return (FOR l_exprs l_stmt)
-         <|> do {- C++ comments are filtered by exprStmt -}
-                l_expr <- try exprStmt
-                semi
-                return (EXPR l_expr)
-         <|> do semi
-                return NOP
-          -- pStubStatement scan in everything else except the "Pochoir_kernel_end"
-         <|> pStubStatement
+pStatement = try pParenStmt 
+         <|> try pDeclLocalStmt
+         <|> try pIfStmt
+         <|> try pSwitchStmt
+         <|> try pWhileStmt
+         <|> try pDoStmt
+         <|> try pForStmt
+         <|> try pExprStmt
+         <|> try pNOPStmt
+          -- pStubStatement scan in everything else except the "Pochoir_kernel_end" or "};"
+         <|> try pStubStatement
          <?> "Statement"
 
+pNOPStmt :: GenParser Char ParserState Stmt
+pNOPStmt =
+    do semi
+       return NOP
+
+pExprStmt :: GenParser Char ParserState Stmt
+pExprStmt =
+    do {- C++ comments are filtered by exprStmt -}
+       l_expr <- try exprStmt
+       semi
+       return (EXPR l_expr)
+
+pForStmt :: GenParser Char ParserState Stmt
+pForStmt = 
+    do reserved "for"
+       l_exprs <- parens $ semiSep1 (commaSep pForExpr)
+       l_stmt <- pStatement
+       return (FOR l_exprs l_stmt)
+
+pDoStmt :: GenParser Char ParserState Stmt
+pDoStmt =
+    do reserved "do"
+       l_stmts <- braces (many pStatement)
+       reserved "while"
+       l_expr <- exprStmt
+       semi
+       return (DO l_expr l_stmts)
+
+pWhileStmt :: GenParser Char ParserState Stmt
+pWhileStmt =
+    do reserved "while"
+       l_boolExpr <- exprStmt
+       l_stmts <- pStatement
+       return (WHILE l_boolExpr l_stmts)
+
+pParenStmt :: GenParser Char ParserState Stmt
+pParenStmt =
+    do symbol "{"
+       l_stmts <- manyTill pStatement (try $ symbol "}")
+       return (BRACES l_stmts)
+
+pDeclLocalStmt :: GenParser Char ParserState Stmt
+pDeclLocalStmt =
+    do l_decl <- try pType
+       l_exprs <- commaSep1 exprStmt 
+       semi
+       return (DEXPR l_decl l_exprs)
+
+pIfStmt :: GenParser Char ParserState Stmt
+pIfStmt =
+    do reserved "if"
+       l_boolExpr <- exprStmt
+       l_trueBranch <- pStatement
+       l_falseBranch <- option NOP pElseBranch
+       return (IF l_boolExpr l_trueBranch l_falseBranch)
+
+pSwitchStmt :: GenParser Char ParserState Stmt
+pSwitchStmt =
+    do reserved "switch"
+       l_boolExpr <- exprStmt
+       l_cases <- braces (many pCase)
+       return (SWITCH l_boolExpr l_cases)
+ 
 pParams :: GenParser Char ParserState (RegionT, Bool)
 pParams = do l_regionT <- pRegionParam
              option "" comma
