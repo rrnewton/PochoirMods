@@ -31,7 +31,7 @@
 #include "util_time.hpp"
 //#include "tbb/blocked_range.h"
 
-#include "pochoir.hpp"
+#include <pochoir.hpp>
 
 using namespace std;
 

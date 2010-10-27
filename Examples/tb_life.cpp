@@ -31,7 +31,7 @@
 #include <sys/time.h>
 #include <cmath>
 
-#include "pochoir.hpp"
+#include <pochoir.hpp>
 
 using namespace std;
 #define SIMPLE 1
