@@ -1,5 +1,5 @@
-TB_PP_FILE := tb_expr_pochoir.cpp
-POCHOIR_HEADER := expr_array.hpp expr_walk.hpp expr_range.hpp expr_common.hpp expr_stencil.hpp expr_wrapper.hpp expr_iter.hpp expr_walk_recursive.hpp expr_walk_loops.hpp
+TB_PP_FILE := tb_pochoir_pochoir.cpp
+POCHOIR_HEADER := pochoir_array.hpp pochoir_walk.hpp pochoir_range.hpp pochoir_common.hpp pochoir_stencil.hpp pochoir_wrapper.hpp pochoir_iter.hpp pochoir_walk_recursive.hpp pochoir_walk_loops.hpp
 PP_FILE := PMain.hs PMainParser.hs PBasicParser.hs PData.hs PParser2.hs
 BLITZ_HOME := /home/yuantang/tool_dest/blitz_install
 BLITZ_HEADER := ${BLITZ_HOME}/include/

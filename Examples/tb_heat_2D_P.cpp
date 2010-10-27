@@ -31,14 +31,14 @@
 #include <sys/time.h>
 #include <cmath>
 
-#include "expr_stencil.hpp"
+#include "pochoir.hpp"
 
 using namespace std;
 #define SIMPLE 0
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
-#define N_SIZE 555 
-#define T_SIZE 555
+// #define N_SIZE 555 
+// #define T_SIZE 555
 #define TOLERANCE (1e-6)
 
 void check_result(int t, int j, int i, double a, double b)
@@ -70,19 +70,25 @@ void check_result(int t, int j, int i, double a, double b)
         return arr.get(t, new_i, new_j);
     Pochoir_Boundary_end
 
-int main(void)
+int main(int argc, char * argv[])
 {
 	const int BASE = 1024;
 	int t;
 	struct timeval start, end;
+    int N_SIZE = 0, T_SIZE = 0;
+
+    if (argc < 3) {
+        printf("argc < 3, quit! \n");
+        exit(1);
+    }
+    N_SIZE = StrToInt(argv[1]);
+    T_SIZE = StrToInt(argv[2]);
+    printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
 	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
     Pochoir_Stencil<double, N_RANK> heat_2D;
     Pochoir_uRange I(0, N_SIZE-1), J(0, N_SIZE-1);
     Pochoir_Shape_info<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
-
-    heat_2D.registerBoundaryFn(a, heat_bv_2D);
-    b.registerBV(heat_bv_2D);
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -113,6 +119,7 @@ int main(void)
      * the boundary region and when to call the user supplied boundary
      * value function
      */
+    heat_2D.registerBoundaryFn(a, heat_bv_2D);
     heat_2D.registerArrayInUse(a);
     heat_2D.registerShape(heat_shape_2D);
     heat_2D.registerDomain(I, J);
@@ -123,6 +130,7 @@ int main(void)
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
 
     b.registerShape(heat_shape_2D);
+    b.registerBV(heat_bv_2D);
 
 	gettimeofday(&start, 0);
     /* cilk_for + zero-padding */

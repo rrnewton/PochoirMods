@@ -48,8 +48,6 @@ main = do args <- getArgs
           whilst (mode == PHelp) $ do
              printUsage
              exitFailure
---          fileExist <- doesFileExist inFile
---          dirExist <- doesDirectoryExist inDir
           fileExist <- doesFileExist $ inDir ++ inFile
           whilst (not fileExist) $ do
              putStrLn (inDir ++ inFile ++ " doesn't exist!")

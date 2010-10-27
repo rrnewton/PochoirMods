@@ -30482,6 +30482,7 @@ l_son_grid.x0[i] = l_end;
 
 
 
+
 template <int N_RANK, typename Grid_info> template <typename F>
 inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_mp(int dim, int t0, int t1, Grid_info const grid, F const & f)
 {
@@ -30743,6 +30744,7 @@ inline void Algorithm<N_RANK, Grid_info>::cut_time(algor_type algor, int t0, int
 		return;
 	}
 }
+
 
 /* serial_loops() is not necessary because we can call base_case_kernel() to 
  * mimic the same behavior of serial_loops()
@@ -31010,7 +31012,7 @@ algor.set_initial_grid(l_grid);
  ********************************************************************************/
 
 
-//#include "expr_array.hpp"
+//#include "pochoir_array.hpp"
 template <typename T, int N_RANK, int TOGGLE> class Pochoir_Array;
 
 template <typename T, int N_RANK, int TOGGLE=2>
@@ -31835,7 +31837,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF
 
 using namespace std;
 /* N_RANK includes both time and space dimensions */
-
+// #define N_SIZE 555
 void check_result(int t, int j, int i, bool a, bool b)
 {
 	if (a == b) {
@@ -31865,29 +31867,38 @@ void check_result(int t, int j, int i, bool a, bool b)
         return arr.get(t, new_i, new_j);
     }
 
-int main(void)
+int main(int argc, char * argv[])
 {
 	int t;
 	struct timeval start, end;
+    int N_SIZE = 0, T_SIZE = 0;
+
+    if (argc < 3) {
+        printf("argc < 3, quit! \n");
+        exit(1);
+    }
+    N_SIZE = StrToInt(argv[1]);
+    T_SIZE = StrToInt(argv[2]);
+    printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
 	
-	Pochoir_Array <bool, 2, 2> a(555, 555), b(555, 555);
+	Pochoir_Array <bool, 2, 2> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
 
 	Pochoir_Stencil <bool, 2> life_2D;
 
-	Pochoir_uRange I(0, 555 - 1), J(0, 555 - 1);
+	Pochoir_uRange I(0, N_SIZE - 1), J(0, N_SIZE - 1);
 
 	Pochoir_Shape_info <2> life_shape_2D [9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
 life_2D.registerBoundaryFn(a, life_bv_2D);
-	for (int i = 0; i < 555; ++i) {
-	for (int j = 0; j < 555; ++j) {
+	for (int i = 0; i < N_SIZE; ++i) {
+	for (int j = 0; j < N_SIZE; ++j) {
 		a(0, i, j) = (rand() & 0x1) ? true : false;
 		a(1, i, j) = 0; 
         b(0, i, j) = a(0, i, j);
         b(1, i, j) = 0;
 	} }
 
-    printf("Game of Life : %d x %d, %d time steps\n", 555, 555, 555);
+    printf("Game of Life : %d x %d, %d time steps\n", N_SIZE, N_SIZE, T_SIZE);
 
     auto life_2D_fn = [&] (int t, int i, int j) {
 	
@@ -31955,23 +31966,23 @@ life_2D.registerBoundaryFn(a, life_bv_2D);
 	} /* end for t */
 	};
 
-	life_2D.run_obase(555, pointer_life_2D_fn, life_2D_fn);
+	life_2D.run_obase(T_SIZE, pointer_life_2D_fn, life_2D_fn);
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
 
 	gettimeofday(&start, 0);
     // we can handle the boundary condition either by register a boundary function
-for (int t = 0; t < 555; ++t) {
-	_Cilk_for (int i = 0; i < 555; ++i) {
-	for (int j = 0; j < 555; ++j) {
+for (int t = 0; t < T_SIZE; ++t) {
+	_Cilk_for (int i = 0; i < N_SIZE; ++i) {
+	for (int j = 0; j < N_SIZE; ++j) {
         /* Periodic version */
     /* for idx5, i+N_SIZE+1 can be larger than 2 * N_SIZE, so we can NOT use pmod */
-	size_t idx0 = (i + 555 - 1) % ( 555);
-	size_t idx1 = (j + 555 - 1) % ( 555);
-	size_t idx2 = (j + 555) % ( 555);
-	size_t idx3 = (j + 555 + 1) % ( 555);
-	size_t idx4 = (i + 555) % ( 555);
-	size_t idx5 = (i + 555 + 1) % ( 555);
+	size_t idx0 = (i + N_SIZE - 1) % ( N_SIZE);
+	size_t idx1 = (j + N_SIZE - 1) % ( N_SIZE);
+	size_t idx2 = (j + N_SIZE) % ( N_SIZE);
+	size_t idx3 = (j + N_SIZE + 1) % ( N_SIZE);
+	size_t idx4 = (i + N_SIZE) % ( N_SIZE);
+	size_t idx5 = (i + N_SIZE + 1) % ( N_SIZE);
 	int neighbors = b.interior(t, idx0, idx1) + b.interior(t, idx0, idx2) + b.interior(t, idx0, idx3) + b.interior(t, idx4, idx1) + b.interior(t, idx4, idx3) + b.interior(t, idx5, idx1) + b.interior(t, idx5, idx2) + b.interior(t, idx5, idx3);
 	if (b.interior(t, idx4, idx2) == true && neighbors < 2)
 	b.interior(t + 1, idx4, idx2) = true;
@@ -31985,9 +31996,9 @@ for (int t = 0; t < 555; ++t) {
 	gettimeofday(&end, 0);
 	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
 
-	t = 555;
-	for (int i = 0; i < 555; ++i) {
-	for (int j = 0; j < 555; ++j) {
+	t = T_SIZE;
+	for (int i = 0; i < N_SIZE; ++i) {
+	for (int j = 0; j < N_SIZE; ++j) {
 		check_result(t, i, j, a(t, i, j), b(t, i, j));
 	} } 
 

@@ -30482,6 +30482,7 @@ l_son_grid.x0[i] = l_end;
 
 
 
+
 template <int N_RANK, typename Grid_info> template <typename F>
 inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_mp(int dim, int t0, int t1, Grid_info const grid, F const & f)
 {
@@ -30743,6 +30744,7 @@ inline void Algorithm<N_RANK, Grid_info>::cut_time(algor_type algor, int t0, int
 		return;
 	}
 }
+
 
 /* serial_loops() is not necessary because we can call base_case_kernel() to 
  * mimic the same behavior of serial_loops()
@@ -31010,7 +31012,7 @@ algor.set_initial_grid(l_grid);
  ********************************************************************************/
 
 
-//#include "expr_array.hpp"
+//#include "pochoir_array.hpp"
 template <typename T, int N_RANK, int TOGGLE> class Pochoir_Array;
 
 template <typename T, int N_RANK, int TOGGLE=2>
@@ -31835,7 +31837,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF
 
 using namespace std;
 /* N_RANK includes both time and space dimensions */
-
+// #define N_SIZE 555
 void check_result(int t, int j, int i, double a, double b)
 {
 	if (abs(a - b) < (1e-6)) {
@@ -31858,25 +31860,33 @@ void check_result(int t, int j, int i, double a, double b)
             return arr.get(t, i, j);
     }
 
-int main(void)
+int main(int argc, char * argv[])
 {
 	const int BASE = 1024;
 	int t;
 	struct timeval start, end;
+    int N_SIZE = 0, T_SIZE = 0;
+
+    if (argc < 3) {
+        printf("argc < 3, quit! \n");
+        exit(1);
+    }
+    N_SIZE = StrToInt(argv[1]);
+    T_SIZE = StrToInt(argv[2]);
+    printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
 	
-	Pochoir_Array <double, 2, 2> a(555, 555), b(555, 555);
+	Pochoir_Array <double, 2, 2> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
 
 	Pochoir_Stencil <double, 2> heat_2D;
 
-	Pochoir_uRange I(1, 555 - 2), J(1, 555 - 2);
+	Pochoir_uRange I(1, N_SIZE - 2), J(1, N_SIZE - 2);
 
 	Pochoir_Shape_info <2> heat_shape_2D [5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
-heat_2D.registerBoundaryFn(a, heat_bv_2D);
-	for (int i = 0; i < 555; ++i) {
-	for (int j = 0; j < 555; ++j) {
-        if (i == 0 || i == 555-1
-            || j == 0 || j == 555-1) {
+for (int i = 0; i < N_SIZE; ++i) {
+	for (int j = 0; j < N_SIZE; ++j) {
+        if (i == 0 || i == N_SIZE-1
+            || j == 0 || j == N_SIZE-1) {
             a(0, i, j) = a(1, i, j) = 0;
         } else {
             a(0, i, j) = 1.0 * (rand() % BASE); 
@@ -31891,6 +31901,7 @@ heat_2D.registerBoundaryFn(a, heat_bv_2D);
 	
 	a(t + 1, i, j) = 0.125 * (a(t, i + 1, j) - 2.0 * a(t, i, j) + a(t, i - 1, j)) + 0.125 * (a(t, i, j + 1) - 2.0 * a(t, i, j) + a(t, i, j - 1)) + a(t, i, j);
 	};
+	heat_2D.registerBoundaryFn(a, heat_bv_2D);
 	heat_2D.registerArrayInUse (a);
 	heat_2D.registerShape(heat_shape_2D);
     heat_2D.registerDomain(I, J);
@@ -31929,7 +31940,7 @@ heat_2D.registerBoundaryFn(a, heat_bv_2D);
 	} /* end for t */
 	};
 
-	heat_2D.run_obase(555, pointer_heat_2D_fn, heat_2D_fn);
+	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn, heat_2D_fn);
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
 
@@ -31937,16 +31948,16 @@ heat_2D.registerBoundaryFn(a, heat_bv_2D);
 
 	gettimeofday(&start, 0);
     /* cilk_for + zero-padding */
-	for (int t = 0; t < 555; ++t) {
-    _Cilk_for (int i = 1; i <= 555-2; ++i) {
-	for (int j = 1; j <= 555-2; ++j) {
+	for (int t = 0; t < T_SIZE; ++t) {
+    _Cilk_for (int i = 1; i <= N_SIZE-2; ++i) {
+	for (int j = 1; j <= N_SIZE-2; ++j) {
         b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); } } }
 	gettimeofday(&end, 0);
 	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
 
-	t = 555;
-	for (int i = 1; i <= 555-2; ++i) {
-	for (int j = 1; j <= 555-2; ++j) {
+	t = T_SIZE;
+	for (int i = 1; i <= N_SIZE-2; ++i) {
+	for (int j = 1; j <= N_SIZE-2; ++j) {
 		check_result(t, i, j, a.interior(t, i, j), b.interior(t, i, j));
 	} } 
 

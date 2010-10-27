@@ -5125,7 +5125,57 @@ extern int futimesat (int __fd, __const char *__file,
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ **********************************************************************************
+ *  Copyright (C) 2010  Massachusetts Institute of Technology
+ *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
+ *                      Charles E. Leiserson <cel@mit.edu>
+ *   
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *   Suggestsions:                  yuantang@csail.mit.edu
+ *   Bugs:                          yuantang@csail.mit.edu
+ *
+ *********************************************************************************
+ */
+
+
+
+/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	ISO C99 Standard: 7.23 Date and time	<time.h>
+ */
+
+
+
 extern "C" {
 
 
@@ -15031,8 +15081,7 @@ static inline double getseconds()
 {
      return getticks() * 1.0e-6;
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
+//#include "tbb/blocked_range.h"
 #pragma GCC system_header
 
 // -*- C++ -*- forwarding header.
@@ -37263,6 +37312,7 @@ l_son_grid.x0[i] = l_end;
 
 
 
+
 template <int N_RANK, typename Grid_info> template <typename F>
 inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_mp(int dim, int t0, int t1, Grid_info const grid, F const & f)
 {
@@ -37524,6 +37574,7 @@ inline void Algorithm<N_RANK, Grid_info>::cut_time(algor_type algor, int t0, int
 		return;
 	}
 }
+
 
 /* serial_loops() is not necessary because we can call base_case_kernel() to 
  * mimic the same behavior of serial_loops()
@@ -37791,7 +37842,7 @@ algor.set_initial_grid(l_grid);
  ********************************************************************************/
 
 
-//#include "expr_array.hpp"
+//#include "pochoir_array.hpp"
 template <typename T, int N_RANK, int TOGGLE> class Pochoir_Array;
 
 template <typename T, int N_RANK, int TOGGLE=2>
@@ -38627,7 +38678,6 @@ static const int dt_threshold = 3;
 static const int dx_threshold = 1000;
 static const int dyz_threshold = 3;
 int N_CORES=2;
-int initial_x, initial_y, initial_z;
 
 float **A;
 
@@ -38903,10 +38953,6 @@ void init_variables()
       }
     N_CORES = ((2) > (__cilkrts_get_nworkers()) ? (2) : (__cilkrts_get_nworkers()));
     printf("N_CORES = %d\n", N_CORES);
-    initial_x = Nx - ds - ds;
-    initial_y = Ny - ds - ds;
-    initial_z = Nz - ds - ds;
-
 }
 
 template <typename T_Array>
@@ -38944,12 +38990,6 @@ void init_pochoir_array(T_Array & arr)
 	arr(1, z, y, x) = r;
 	vsqref(x, y, z) = 0.001f;
   }
-    N_CORES = __cilkrts_get_nworkers();
-    printf("N_CORES = %d\n", N_CORES);
-    initial_x = Nx - ds - ds;
-    initial_y = Ny - ds - ds;
-    initial_z = Nz - ds - ds;
-
 }
 void print_summary(char *header, double interval) {
   /* print timing information */
@@ -39052,8 +39092,6 @@ int main(int argc, char *argv[])
 fd_3D.registerArrayInUse (pa);
 	fd_3D.registerShape(fd_shape_3D);
   fd_3D.registerDomain(I, J, K);
-
-  float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
 
   auto fd_3D_fn = [&] (int t, int i, int j, int k) {
 	

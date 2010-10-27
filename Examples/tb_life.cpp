@@ -31,14 +31,14 @@
 #include <sys/time.h>
 #include <cmath>
 
-#include "expr_stencil.hpp"
+#include "pochoir.hpp"
 
 using namespace std;
 #define SIMPLE 1
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
-#define N_SIZE 555
-#define T_SIZE 555
+// #define N_SIZE 555
+// #define T_SIZE 555
 
 void check_result(int t, int j, int i, bool a, bool b)
 {
@@ -69,10 +69,19 @@ void check_result(int t, int j, int i, bool a, bool b)
         return arr.get(t, new_i, new_j);
     Pochoir_Boundary_end
 
-int main(void)
+int main(int argc, char * argv[])
 {
 	int t;
 	struct timeval start, end;
+    int N_SIZE = 0, T_SIZE = 0;
+
+    if (argc < 3) {
+        printf("argc < 3, quit! \n");
+        exit(1);
+    }
+    N_SIZE = StrToInt(argv[1]);
+    T_SIZE = StrToInt(argv[2]);
+    printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
 	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
     Pochoir_Stencil <bool, N_RANK> life_2D;

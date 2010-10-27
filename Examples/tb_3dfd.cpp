@@ -28,10 +28,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <sys/time.h>
-#include "util_time.h"
+#include "util_time.hpp"
 //#include "tbb/blocked_range.h"
 
-#include "expr_stencil.hpp"
+#include "pochoir.hpp"
 
 using namespace std;
 
@@ -46,7 +46,6 @@ static const int dt_threshold = 3;
 static const int dx_threshold = 1000;
 static const int dyz_threshold = 3;
 int N_CORES=2;
-int initial_x, initial_y, initial_z;
 
 float **A;
 
@@ -324,10 +323,6 @@ void init_variables()
       }
     N_CORES = max(2, __cilkrts_get_nworkers());
     printf("N_CORES = %d\n", N_CORES);
-    initial_x = Nx - ds - ds;
-    initial_y = Ny - ds - ds;
-    initial_z = Nz - ds - ds;
-
 }
 
 template <typename T_Array>
@@ -365,12 +360,6 @@ void init_pochoir_array(T_Array & arr)
 	arr(1, z, y, x) = r;
 	vsqref(x, y, z) = 0.001f;
   }
-    N_CORES = __cilkrts_get_nworkers();
-    printf("N_CORES = %d\n", N_CORES);
-    initial_x = Nx - ds - ds;
-    initial_y = Ny - ds - ds;
-    initial_z = Nz - ds - ds;
-
 }
 void print_summary(char *header, double interval) {
   /* print timing information */
@@ -495,8 +484,6 @@ int main(int argc, char *argv[])
   fd_3D.registerArrayInUse(pa);
   fd_3D.registerShape(fd_shape_3D);
   fd_3D.registerDomain(I, J, K);
-
-  float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
 
   Pochoir_kernel_3D(fd_3D_fn, t, i, j, k)
     float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
