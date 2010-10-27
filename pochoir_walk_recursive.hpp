@@ -23,11 +23,11 @@
  *********************************************************************************
  */
 
-#ifndef EXPR_WALK_RECURSIVE_HPP
-#define EXPR_WALK_RECURSIVE_HPP
+#ifndef POCHOIR_WALK_RECURSIVE_HPP
+#define POCHOIR_WALK_RECURSIVE_HPP
 
-#include "expr_common.hpp"
-#include "expr_walk.hpp"
+#include "pochoir_common.hpp"
+#include "pochoir_walk.hpp"
 
 #define initial_cut(i) (lb[i] == initial_length_[i])
 /* grid.x1[i] >= initial_grid_.x1[i] - stride_[i] - slope_[i] 
@@ -1329,4 +1329,4 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 }
 
 
-#endif /* EXPR_WALK_RECURSIVE_HPP */
+#endif /* POCHOIR_WALK_RECURSIVE_HPP */

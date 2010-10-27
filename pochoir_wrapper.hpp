@@ -22,18 +22,18 @@
  *
  ********************************************************************************/
 
-#ifndef EXPR_WRAPPER_H
-#define EXPR_WRAPPER_H
+#ifndef POCHOIR_WRAPPER_H
+#define POCHOIR_WRAPPER_H
 
 #if DEBUG
 #include <cstdio>
 #endif
 
-#include "expr_common.hpp"
-#include "expr_range.hpp"
-#include "expr_walk.hpp"
-#include "expr_walk_recursive.hpp"
-#include "expr_walk_loops.hpp"
+#include "pochoir_common.hpp"
+#include "pochoir_range.hpp"
+#include "pochoir_walk.hpp"
+#include "pochoir_walk_recursive.hpp"
+#include "pochoir_walk_loops.hpp"
 
 /* serial_loops() is not necessary because we can call base_case_kernel() to 
  * mimic the same behavior of serial_loops()
@@ -288,4 +288,4 @@ void obase_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_
     algor.obase_boundary_p(l_t0, l_t1, l_grid, f, bf);
 }
 
-#endif /* EXPR_WRAPPER_H */
+#endif /* POCHOIR_WRAPPER_H */

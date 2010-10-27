@@ -22,8 +22,8 @@
  *
  ********************************************************************************/
 
-#ifndef EXPR_SHADOW_HPP
-#define EXPR_SHADOW_HPP
+#ifndef POCHOIR_SHADOW_HPP
+#define POCHOIR_SHADOW_HPP
 
 #include <iostream>
 

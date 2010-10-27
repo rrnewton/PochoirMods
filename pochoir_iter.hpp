@@ -22,11 +22,11 @@
  *
  ********************************************************************************/
 
-#ifndef EXPR_ITER_HPP
-#define EXPR_ITER_HPP
+#ifndef POCHOIR_ITER_HPP
+#define POCHOIR_ITER_HPP
 
-#include "expr_common.hpp"
-//#include "expr_array.hpp"
+#include "pochoir_common.hpp"
+//#include "pochoir_array.hpp"
 template <typename T, int N_RANK, int TOGGLE> class Pochoir_Array;
 
 template <typename T, int N_RANK, int TOGGLE=2>

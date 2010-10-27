@@ -23,8 +23,8 @@
  *********************************************************************************
  */
 
-#ifndef EXPR_COMMON_H
-#define EXPR_COMMON_H
+#ifndef POCHOIR_COMMON_H
+#define POCHOIR_COMMON_H
 
 #include <sys/time.h>
 #include <cstdio>
@@ -153,4 +153,4 @@ size_t ArraySize (Pochoir_Shape_info<N_RANK> (& arr)[N]) { return N; }
 
 #define Pochoir_Boundary_end }
 
-#endif /* EXPR_COMMON_H */
+#endif /* POCHOIR_COMMON_H */

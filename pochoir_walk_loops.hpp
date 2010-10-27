@@ -23,7 +23,10 @@
  *********************************************************************************
  */
 
-#include "expr_walk.hpp"
+#ifndef EXPR_WALK_LOOPS_H
+#define EXPR_WALK_LOOPS_H
+
+#include "pochoir_walk.hpp"
 
 #define MAX(a, b) ((a) >= (b) ? (a) : (b))
 
@@ -326,3 +329,5 @@ inline void Algorithm<N_RANK, Grid_info>::cut_time(algor_type algor, int t0, int
 		return;
 	}
 }
+
+#endif /* EXPR_WALK_LOOPS_H */

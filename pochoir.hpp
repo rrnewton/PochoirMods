@@ -26,9 +26,9 @@
 #ifndef EXPR_STENCIL_HPP
 #define EXPR_STENCIL_HPP
 
-#include "expr_common.hpp"
-#include "expr_array.hpp"
-#include "expr_iter.hpp"
+#include "pochoir_common.hpp"
+#include "pochoir_array.hpp"
+#include "pochoir_iter.hpp"
 
 /* assuming there won't be more than 10 Pochoir_Array in one Pochoir_Stencil object! */
 #define ARRAY_SIZE 10

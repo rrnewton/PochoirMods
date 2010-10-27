@@ -22,17 +22,17 @@
  *
  ********************************************************************************/
 
-#ifndef EXPR_ARRAY_H
-#define EXPR_ARRAY_H
+#ifndef POCHOIR_ARRAY_H
+#define POCHOIR_ARRAY_H
 #include <iostream>
 #include <iomanip>
 #include <cstdio>
 #include <cstdlib>
 
-#include "expr_range.hpp"
-#include "expr_common.hpp"
-#include "expr_wrapper.hpp"
-#include "expr_iter.hpp"
+#include "pochoir_range.hpp"
+#include "pochoir_common.hpp"
+#include "pochoir_wrapper.hpp"
+#include "pochoir_iter.hpp"
 
 using namespace std;
 
@@ -548,4 +548,4 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x) {
 	}
 	return os; 
 }
-#endif // EXPR_ARRAY_H
+#endif // POCHOIR_ARRAY_H

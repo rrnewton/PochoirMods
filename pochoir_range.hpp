@@ -22,8 +22,8 @@
  *
  ********************************************************************************/
 
-#ifndef EXPR_RANGE_H
-#define EXPR_RANGE_H
+#ifndef POCHOIR_RANGE_H
+#define POCHOIR_RANGE_H
 
 #include <cstddef>
 #include <cassert>
@@ -181,4 +181,4 @@ std::ostream& operator<<(std::ostream& os, Pochoir_uRange const & range)
 }
 #endif
 
-#endif /* EXPR_RANGE_H */
+#endif /* POCHOIR_RANGE_H */

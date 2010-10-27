@@ -22,8 +22,8 @@
  *
  ********************************************************************************/
 
-#ifndef EXPR_WALK_H
-#define EXPR_WALK_H
+#ifndef POCHOIR_WALK_H
+#define POCHOIR_WALK_H
 
 #include <cstdlib>
 #include <cstdio>
@@ -31,7 +31,7 @@
 #include <iostream>
 #include <cilk.h>
 #include <cilk_api.h>
-#include "expr_common.hpp"
+#include "pochoir_common.hpp"
 
 using namespace std;
 
@@ -354,4 +354,4 @@ void Algorithm<N_RANK, Grid_info>::print_region(int t, int const head[], int con
 }
 
 #endif /* end if DEBUG */
-#endif /* EXPR_WALK_H */
+#endif /* POCHOIR_WALK_H */
