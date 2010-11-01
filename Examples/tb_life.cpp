@@ -34,7 +34,7 @@
 #include <pochoir.hpp>
 
 using namespace std;
-#define SIMPLE 1
+#define TIMES 3
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
 // #define N_SIZE 555
@@ -124,14 +124,17 @@ int main(int argc, char * argv[])
     life_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
-    life_2D.run(T_SIZE, life_2D_fn);
+    for (int times = 0; times < TIMES; ++times) {
+        life_2D.run(T_SIZE, life_2D_fn);
+    }
 	gettimeofday(&end, 0);
-	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
 
 	gettimeofday(&start, 0);
     // we can handle the boundary condition either by register a boundary function
     // or using following explicit modulo operation
     // b.registerBV(life_bv_2D);
+    for (int times = 0; times < TIMES; ++times) {
 	for (int t = 0; t < T_SIZE; ++t) {
 	cilk_for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -153,8 +156,9 @@ int main(int argc, char * argv[])
 	else if (b.interior(t, idx4, idx2) == false && neighbors == 3)
 	b.interior(t + 1, idx4, idx2) = true;
 	} } }
+    }
 	gettimeofday(&end, 0);
-	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) / TIMES << "ms" << std::endl;
 
 	t = T_SIZE;
 	for (int i = 0; i < N_SIZE; ++i) {

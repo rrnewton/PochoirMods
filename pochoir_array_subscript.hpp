@@ -57,10 +57,12 @@ inline int toggle_base<4>(int const & _idx0) {
     return (_idx0 & 0x11);
 }
 
+#if 0
 template <>
 inline int toggle_base<3>(int const & _idx0) {
     return (_idx0 & 0x10);
 }
+#endif
 
 template <>
 inline int toggle_base<2>(int const & _idx0) {

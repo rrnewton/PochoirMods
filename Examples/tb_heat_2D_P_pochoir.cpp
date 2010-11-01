@@ -31796,7 +31796,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.walk_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.walk_ncores_boundary_p(0, timestep, grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
@@ -31812,8 +31812,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
         arr_list_[i]->set_logic_size(logic_size_);
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.obase_bicut(0, timestep, grid_, f);
-//    algor.obase_adaptive(0, timestep, grid_, f);
+algor.obase_adaptive(0, timestep, grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -31831,7 +31830,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.obase_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.obase_boundary_p(0, timestep, grid_, f, bf);
 }
 
 
@@ -31914,7 +31913,8 @@ for (int i = 0; i < N_SIZE; ++i) {
     heat_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
-    
+    for (int times = 0; times < 3; ++times) {
+        
 	auto pointer_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
 	double * pt_a_1;
@@ -31948,20 +31948,23 @@ for (int i = 0; i < N_SIZE; ++i) {
 	};
 
 	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn, heat_2D_fn);
+	}
 	gettimeofday(&end, 0);
-	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
 
     b.registerShape(heat_shape_2D);
     b.registerBV(heat_bv_2D);
 
 	gettimeofday(&start, 0);
+    for (int times = 0; times < 3; ++times) {
     /* cilk_for + zero-padding */
 	for (int t = 0; t < T_SIZE; ++t) {
     _Cilk_for (int i = 0; i <= N_SIZE-1; ++i) {
 	for (int j = 0; j <= N_SIZE-1; ++j) {
         b(t+1, i, j) = 0.125 * (b(t, i+1, j) - 2.0 * b(t, i, j) + b(t, i-1, j)) + 0.125 * (b(t, i, j+1) - 2.0 * b(t, i, j) + b(t, i, j-1)) + b(t, i, j); } } }
+    }
 	gettimeofday(&end, 0);
-	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
 
 	t = T_SIZE;
 	for (int i = 0; i <= N_SIZE-1; ++i) {

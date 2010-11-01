@@ -38626,7 +38626,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.walk_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.walk_ncores_boundary_p(0, timestep, grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
@@ -38642,8 +38642,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
         arr_list_[i]->set_logic_size(logic_size_);
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.obase_bicut(0, timestep, grid_, f);
-//    algor.obase_adaptive(0, timestep, grid_, f);
+algor.obase_adaptive(0, timestep, grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -38661,7 +38660,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.obase_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.obase_boundary_p(0, timestep, grid_, f, bf);
 }
 
 
@@ -39042,6 +39041,20 @@ A = new float*[2];
   double stop;
 	
   ///////////////////////////////////////////////                                                                      
+init_variables();
+  start = getseconds();
+  
+  /* this is loop based version */
+  loop_opt3(0, T,
+            ds, Nx - ds, 
+            ds, Ny - ds,
+            ds, Nz - ds);
+  
+  //basecase(0, T,
+stop = getseconds(); 
+  //copy_A_to_B();
+print_summary("base", stop - start);
+  ///////////////////////////////////////////////
 init_variables();
   // verify_A_and_B();
 start = getseconds();

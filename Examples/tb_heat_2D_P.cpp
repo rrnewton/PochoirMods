@@ -34,7 +34,7 @@
 #include <pochoir.hpp>
 
 using namespace std;
-#define SIMPLE 0
+#define TIMES 3
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
 // #define N_SIZE 555 
@@ -125,21 +125,25 @@ int main(int argc, char * argv[])
     heat_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
-    heat_2D.run(T_SIZE, heat_2D_fn);
+    for (int times = 0; times < TIMES; ++times) {
+        heat_2D.run(T_SIZE, heat_2D_fn);
+    }
 	gettimeofday(&end, 0);
-	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
 
     b.registerShape(heat_shape_2D);
     b.registerBV(heat_bv_2D);
 
 	gettimeofday(&start, 0);
+    for (int times = 0; times < TIMES; ++times) {
     /* cilk_for + zero-padding */
 	for (int t = 0; t < T_SIZE; ++t) {
     cilk_for (int i = 0; i <= N_SIZE-1; ++i) {
 	for (int j = 0; j <= N_SIZE-1; ++j) {
         b(t+1, i, j) = 0.125 * (b(t, i+1, j) - 2.0 * b(t, i, j) + b(t, i-1, j)) + 0.125 * (b(t, i, j+1) - 2.0 * b(t, i, j) + b(t, i, j-1)) + b(t, i, j); } } }
+    }
 	gettimeofday(&end, 0);
-	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
 
 	t = T_SIZE;
 	for (int i = 0; i <= N_SIZE-1; ++i) {

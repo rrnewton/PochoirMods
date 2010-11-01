@@ -29,7 +29,7 @@
 #include "pochoir_common.hpp"
 #include "pochoir_array.hpp"
 #include "pochoir_iter.hpp"
-
+#define BICUT 1
 /* assuming there won't be more than 10 Pochoir_Array in one Pochoir_Stencil object! */
 #define ARRAY_SIZE 10
 template <typename T, int N_RANK, int TOGGLE=2>
@@ -190,7 +190,11 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
+#if BICUT
     algor.walk_bicut_boundary_p(0, timestep, grid_, f, bf);
+#else
+    algor.walk_ncores_boundary_p(0, timestep, grid_, f, bf);
+#endif
 }
 
 /* obase for zero-padded area! */
@@ -206,8 +210,11 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
         arr_list_[i]->set_logic_size(logic_size_);
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
+#if BICUT
     algor.obase_bicut(0, timestep, grid_, f);
-//    algor.obase_adaptive(0, timestep, grid_, f);
+#else
+    algor.obase_adaptive(0, timestep, grid_, f);
+#endif
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -225,7 +232,11 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
+#if BICUT
     algor.obase_bicut_boundary_p(0, timestep, grid_, f, bf);
+#else
+    algor.obase_boundary_p(0, timestep, grid_, f, bf);
+#endif
 }
 
 #endif

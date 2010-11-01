@@ -31796,7 +31796,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.walk_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.walk_ncores_boundary_p(0, timestep, grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
@@ -31812,8 +31812,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
         arr_list_[i]->set_logic_size(logic_size_);
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.obase_bicut(0, timestep, grid_, f);
-//    algor.obase_adaptive(0, timestep, grid_, f);
+algor.obase_adaptive(0, timestep, grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -31831,7 +31830,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.obase_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.obase_boundary_p(0, timestep, grid_, f, bf);
 }
 
 
@@ -31921,43 +31920,72 @@ life_2D.registerBoundaryFn(a, life_bv_2D);
     life_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
-    
-	auto pointer_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
+    for (int times = 0; times < 3; ++times) {
+        
+	auto obase_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
-	bool * pt_a_1;
-	bool * pt_a_0;
-	
-	bool * a_base = a.data();
-	const int l_a_total_size = a.total_size();
+	Pochoir_Iterator<bool, 2> iter0(a);
+	Pochoir_Iterator<bool, 2> iter1(a);
+	Pochoir_Iterator<bool, 2> iter2(a);
+	Pochoir_Iterator<bool, 2> iter3(a);
+	Pochoir_Iterator<bool, 2> iter4(a);
+	Pochoir_Iterator<bool, 2> iter5(a);
+	Pochoir_Iterator<bool, 2> iter6(a);
+	Pochoir_Iterator<bool, 2> iter7(a);
+	Pochoir_Iterator<bool, 2> iter8(a);
+	Pochoir_Iterator<bool, 2> iter9(a);
 	int gap_a_1, gap_a_0;
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_a_0 = a_base + ((t) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
-	pt_a_1 = a_base + ((t + 1) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	iter0.set(t, l_grid.x0[1] - 1, l_grid.x0[0] - 1);
+	iter1.set(t, l_grid.x0[1] - 1, l_grid.x0[0]);
+	iter2.set(t, l_grid.x0[1] - 1, l_grid.x0[0] + 1);
+	iter3.set(t, l_grid.x0[1], l_grid.x0[0] - 1);
+	iter4.set(t, l_grid.x0[1], l_grid.x0[0] + 1);
+	iter5.set(t, l_grid.x0[1] + 1, l_grid.x0[0] - 1);
+	iter6.set(t, l_grid.x0[1] + 1, l_grid.x0[0]);
+	iter7.set(t, l_grid.x0[1] + 1, l_grid.x0[0] + 1);
+	iter8.set(t, l_grid.x0[1], l_grid.x0[0]);
+	iter9.set(t + 1, l_grid.x0[1], l_grid.x0[0]);
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,
-	pt_a_0 += gap_a_1, 
-	pt_a_1 += gap_a_1) {
-	#pragma ivdep
+	iter0.inc(gap_a_1), 
+	iter1.inc(gap_a_1), 
+	iter2.inc(gap_a_1), 
+	iter3.inc(gap_a_1), 
+	iter4.inc(gap_a_1), 
+	iter5.inc(gap_a_1), 
+	iter6.inc(gap_a_1), 
+	iter7.inc(gap_a_1), 
+	iter8.inc(gap_a_1), 
+	iter9.inc(gap_a_1)) {
 	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j,
-	++pt_a_0, 
-	++pt_a_1) {
+	++iter0, 
+	++iter1, 
+	++iter2, 
+	++iter3, 
+	++iter4, 
+	++iter5, 
+	++iter6, 
+	++iter7, 
+	++iter8, 
+	++iter9) {
 	
-	int neighbors = pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (-1)] + pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (1)] + pt_a_0[l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_0 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (1)];
-	if (pt_a_0[0] == true && neighbors < 2)
-	pt_a_1[0] = true;
-	else if (pt_a_0[0] == true && neighbors > 3)
+	int neighbors = iter0 + iter1 + iter2 + iter3 + iter4 + iter5 + iter6 + iter7;
+	if (iter8 == true && neighbors < 2)
+	iter9 = true;
+	else if (iter8 == true && neighbors > 3)
 	{
-	pt_a_1[0] = false;
+	iter9 = false;
 	}
-	else if (pt_a_0[0] == true && (neighbors == 2 || neighbors == 3))
+	else if (iter8 == true && (neighbors == 2 || neighbors == 3))
 	{
-	pt_a_1[0] = pt_a_0[0];
+	iter9 = iter8;
 	}
-	else if (pt_a_0[0] == false && neighbors == 3)
-	pt_a_1[0] = true;
+	else if (iter8 == false && neighbors == 3)
+	iter9 = true;
 	} } /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
 	for (int i = 0; i < 2; ++i) {
@@ -31966,13 +31994,15 @@ life_2D.registerBoundaryFn(a, life_bv_2D);
 	} /* end for t */
 	};
 
-	life_2D.run_obase(T_SIZE, pointer_life_2D_fn, life_2D_fn);
+	life_2D.run_obase(T_SIZE, obase_life_2D_fn, life_2D_fn);
+	}
 	gettimeofday(&end, 0);
-	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
 
 	gettimeofday(&start, 0);
     // we can handle the boundary condition either by register a boundary function
-for (int t = 0; t < T_SIZE; ++t) {
+for (int times = 0; times < 3; ++times) {
+	for (int t = 0; t < T_SIZE; ++t) {
 	_Cilk_for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
         /* Periodic version */
@@ -31993,8 +32023,9 @@ for (int t = 0; t < T_SIZE; ++t) {
 	else if (b.interior(t, idx4, idx2) == false && neighbors == 3)
 	b.interior(t + 1, idx4, idx2) = true;
 	} } }
+    }
 	gettimeofday(&end, 0);
-	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) / 3 << "ms" << std::endl;
 
 	t = T_SIZE;
 	for (int i = 0; i < N_SIZE; ++i) {

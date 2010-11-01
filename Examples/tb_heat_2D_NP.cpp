@@ -34,7 +34,7 @@
 #include <pochoir.hpp>
 
 using namespace std;
-#define SIMPLE 0
+#define TIMES 3
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
 // #define N_SIZE 555
@@ -112,26 +112,30 @@ int main(int argc, char * argv[])
      * the boundary region and when to call the user supplied boundary
      * value function
      */
-    heat_2D.registerBoundaryFn(a, heat_bv_2D);
+//    heat_2D.registerBoundaryFn(a, heat_bv_2D);
     heat_2D.registerArrayInUse(a);
     heat_2D.registerShape(heat_shape_2D);
     heat_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
-    heat_2D.run(T_SIZE, heat_2D_fn);
+    for (int times = 0; times < TIMES; ++times) {
+        heat_2D.run(T_SIZE, heat_2D_fn);
+    }
 	gettimeofday(&end, 0);
-	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
 
     b.registerShape(heat_shape_2D);
 
 	gettimeofday(&start, 0);
     /* cilk_for + zero-padding */
+    for (int times = 0; times < TIMES; ++times) {
 	for (int t = 0; t < T_SIZE; ++t) {
     cilk_for (int i = 1; i <= N_SIZE-2; ++i) {
 	for (int j = 1; j <= N_SIZE-2; ++j) {
         b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); } } }
+    }
 	gettimeofday(&end, 0);
-	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
 
 	t = T_SIZE;
 	for (int i = 1; i <= N_SIZE-2; ++i) {

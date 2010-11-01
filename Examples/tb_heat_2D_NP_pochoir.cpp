@@ -31636,7 +31636,6 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x) {
 	}
 	return os; 
 }
-
 /* assuming there won't be more than 10 Pochoir_Array in one Pochoir_Stencil object! */
 template <typename T, int N_RANK, int TOGGLE=2>
 class Pochoir_Stencil {
@@ -31813,7 +31812,6 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
 algor.obase_bicut(0, timestep, grid_, f);
-//    algor.obase_adaptive(0, timestep, grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -31901,13 +31899,13 @@ for (int i = 0; i < N_SIZE; ++i) {
 	
 	a(t + 1, i, j) = 0.125 * (a(t, i + 1, j) - 2.0 * a(t, i, j) + a(t, i - 1, j)) + 0.125 * (a(t, i, j + 1) - 2.0 * a(t, i, j) + a(t, i, j - 1)) + a(t, i, j);
 	};
-	heat_2D.registerBoundaryFn(a, heat_bv_2D);
 	heat_2D.registerArrayInUse (a);
 	heat_2D.registerShape(heat_shape_2D);
     heat_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
-    
+    for (int times = 0; times < 3; ++times) {
+        
 	auto pointer_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
 	double * pt_a_1;
@@ -31940,20 +31938,23 @@ for (int i = 0; i < N_SIZE; ++i) {
 	} /* end for t */
 	};
 
-	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn, heat_2D_fn);
+	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn);
+	}
 	gettimeofday(&end, 0);
-	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
 
     b.registerShape(heat_shape_2D);
 
 	gettimeofday(&start, 0);
     /* cilk_for + zero-padding */
+    for (int times = 0; times < 3; ++times) {
 	for (int t = 0; t < T_SIZE; ++t) {
     _Cilk_for (int i = 1; i <= N_SIZE-2; ++i) {
 	for (int j = 1; j <= N_SIZE-2; ++j) {
         b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); } } }
+    }
 	gettimeofday(&end, 0);
-	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) << "ms" << std::endl;
+	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
 
 	t = T_SIZE;
 	for (int i = 1; i <= N_SIZE-2; ++i) {
