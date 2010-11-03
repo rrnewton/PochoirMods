@@ -35552,22 +35552,23 @@ class Pochoir_pRange {
 };
 
 /* unit-stride Range */
-class Pochoir_uRange {
+class Pochoir_Domain {
 	protected:
 		int first_, last_;
 		int index_, shift_;
 
 	public:
-		Pochoir_uRange() : first_(0), last_(0), index_(0), shift_(0) { }
+		Pochoir_Domain() : first_(0), last_(0), index_(0), shift_(0) { }
 
-		Pochoir_uRange(Pochoir_uRange const & r) {
+		Pochoir_Domain(Pochoir_Domain const & r) {
 			first_ = r.first();
 			last_ = r.last();
 			index_ = first_;
 			shift_ = r.shift();
 		}
 
-		Pochoir_uRange(int first, int last, int shift=0)
+        /* Now Pochoir_Domain is of [a, b) */
+		Pochoir_Domain(int first, int last, int shift=0)
 			: first_(first), last_(last), index_(first), shift_(shift) {}
 
 		int first() const { 
@@ -35586,8 +35587,9 @@ class Pochoir_uRange {
 			return shift_;
 		}
 
+        /* Now Pochoir_Domain is of [a, b) */
 		inline int size() const {
-			return (last_ - first_ + 1);
+			return (last_ - first_);
 		}
 
 		bool isUnitStride() const { 
@@ -35595,13 +35597,13 @@ class Pochoir_uRange {
 		}
 
 		/* We don't change the original 'range' */
-		inline Pochoir_uRange const operator-(int shift) const { 
-			return Pochoir_uRange(first_ - shift, last_ - shift, shift); 
+		inline Pochoir_Domain const operator-(int shift) const { 
+			return Pochoir_Domain(first_ - shift, last_ - shift, shift); 
 		}
 
 		/* We don't change the original 'range' */
-		inline Pochoir_uRange const operator+(int shift) const { 
-			return Pochoir_uRange(first_ + shift, last_ + shift, shift); 
+		inline Pochoir_Domain const operator+(int shift) const { 
+			return Pochoir_Domain(first_ + shift, last_ + shift, shift); 
 		}
 
 		inline int operator() (int _idx) const {
@@ -35612,7 +35614,7 @@ class Pochoir_uRange {
 			return (first_ + _idx);
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, Pochoir_uRange const & range);
+		friend std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range);
 };
 
 std::ostream& operator<<(std::ostream& os, Pochoir_pRange const & range)
@@ -35623,9 +35625,9 @@ std::ostream& operator<<(std::ostream& os, Pochoir_pRange const & range)
 	return os;
 }
 
-std::ostream& operator<<(std::ostream& os, Pochoir_uRange const & range)
+std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 {
-	os << "Pochoir_uRange(" 
+	os << "Pochoir_Domain(" 
 		<< range.first() << "," << range.last() << "," << range.stride() << ")" 
 		<< std::endl;
 	return os;
@@ -37580,7 +37582,7 @@ inline void Algorithm<N_RANK, Grid_info>::cut_time(algor_type algor, int t0, int
  * mimic the same behavior of serial_loops()
  */
 template <typename F>
-void serial_loops(Pochoir_uRange _tR, Pochoir_uRange _iR, Pochoir_uRange _jR, F const & f) { 
+void serial_loops(Pochoir_Domain _tR, Pochoir_Domain _iR, Pochoir_Domain _jR, F const & f) { 
     size_t t_first = _tR.first(), t_last = _tR.last(), t_stride = _tR.stride();
     size_t i_first = _iR.first(), i_last = _iR.last(), i_stride = _iR.stride();
     size_t j_first = _jR.first(), j_last = _jR.last(), j_stride = _jR.stride(); 
@@ -37592,7 +37594,7 @@ void serial_loops(Pochoir_uRange _tR, Pochoir_uRange _iR, Pochoir_uRange _jR, F 
 } 
 
 template <typename F>
-void serial_loops(Pochoir_uRange _tR, Pochoir_uRange _iR, F const & f) { 
+void serial_loops(Pochoir_Domain _tR, Pochoir_Domain _iR, F const & f) { 
     size_t t_first = _tR.first(), t_last = _tR.last(), t_stride = _tR.stride();
     size_t i_first = _iR.first(), i_last = _iR.last(), i_stride = _iR.stride();
     for (size_t t = t_first; t <= t_last ; t += t_stride) {
@@ -37603,7 +37605,7 @@ void serial_loops(Pochoir_uRange _tR, Pochoir_uRange _iR, F const & f) {
 
 /* these are for those fall in full effective region and dont have any boundary conditions */
 template <typename F>
-void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const f) {
+void pochoir(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const f) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -37621,7 +37623,7 @@ algor.set_initial_grid(l_grid);
 }
 
 template <typename F>
-void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const f) {
+void pochoir(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const f) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -37638,7 +37640,7 @@ algor.set_initial_grid(l_grid);
 
 /* Non-periodic: F is for internal region, and BF is for boundary condition processing */
 template <typename F, typename BF>
-void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const & f, BF const & bf) {
+void pochoir(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -37656,7 +37658,7 @@ algor.set_initial_grid(l_grid);
 }
 
 template <typename F, typename BF>
-void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const & f, BF const & bf) {
+void pochoir(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -37676,7 +37678,7 @@ algor.set_initial_grid(l_grid);
  * and just use one parameter to distinguish them???
  */
 template <typename F, typename BF>
-void pochoir_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const & f, BF const & bf) {
+void pochoir_p(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -37694,7 +37696,7 @@ algor.set_initial_grid(l_grid);
 }
 
 template <typename F, typename BF>
-void pochoir_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const & f, BF const & bf) {
+void pochoir_p(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -37711,7 +37713,7 @@ algor.set_initial_grid(l_grid);
 
 /* these are for those fall in full effective region and dont have any boundary conditions */
 template <typename F>
-void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const f) {
+void obase(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const f) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -37729,7 +37731,7 @@ algor.set_initial_grid(l_grid);
 }
 
 template <typename F>
-void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const f) {
+void obase(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const f) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -37746,7 +37748,7 @@ algor.set_initial_grid(l_grid);
 
 /* Non-periodic: F is for internal region, and BF is for boundary condition processing */
 template <typename F, typename BF>
-void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const & f, BF const & bf) {
+void obase(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -37764,7 +37766,7 @@ algor.set_initial_grid(l_grid);
 }
 
 template <typename F, typename BF>
-void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const & f, BF const & bf) {
+void obase(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -37784,7 +37786,7 @@ algor.set_initial_grid(l_grid);
  * and just use one parameter to distinguish them???
  */
 template <typename F, typename BF>
-void obase_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const & f, BF const & bf) {
+void obase_p(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -37802,7 +37804,7 @@ algor.set_initial_grid(l_grid);
 }
 
 template <typename F, typename BF>
-void obase_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const & f, BF const & bf) {
+void obase_p(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -38001,10 +38003,6 @@ inline int toggle_base<4>(int const & _idx0) {
     return (_idx0 & 0x11);
 }
 
-template <>
-inline int toggle_base<3>(int const & _idx0) {
-    return (_idx0 & 0x10);
-}
 
 template <>
 inline int toggle_base<2>(int const & _idx0) {
@@ -38466,10 +38464,9 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x) {
 	}
 	return os; 
 }
-
-/* assuming there won't be more than 10 Pochoir_Array in one Pochoir_Stencil object! */
+/* assuming there won't be more than 10 Pochoir_Array in one Pochoir object! */
 template <typename T, int N_RANK, int TOGGLE=2>
-class Pochoir_Stencil {
+class Pochoir {
     private:
         int slope_[N_RANK];
         grid_info<N_RANK> grid_;
@@ -38483,7 +38480,7 @@ class Pochoir_Stencil {
         int arr_len_;
         int arr_idx_;
     public:
-    Pochoir_Stencil() {
+    Pochoir() {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = 0;
             grid_.x0[i] = grid_.x1[i] = grid_.dx0[i] = grid_.dx1[i] = 0;
@@ -38495,7 +38492,7 @@ class Pochoir_Stencil {
     }
     /* currently, we just compute the slope[] out of the shape[] */
     /* We get the grid_info out of arrayInUse */
-    void registerArrayInUse(Pochoir_Array<T, N_RANK, TOGGLE> & arr);
+    void registerArray(Pochoir_Array<T, N_RANK, TOGGLE> & arr);
     template <size_t N_SIZE>
     void registerShape(Pochoir_Shape_info<N_RANK> (& shape)[N_SIZE]);
     /* register boundary value function with corresponding Pochoir_Array object directly */
@@ -38530,13 +38527,13 @@ class Pochoir_Stencil {
 };
 
 template <typename T, int N_RANK, int TOGGLE>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerArrayInUse(Pochoir_Array<T, N_RANK, TOGGLE> & arr) {
+void Pochoir<T, N_RANK, TOGGLE>::registerArray(Pochoir_Array<T, N_RANK, TOGGLE> & arr) {
     arr_list_[arr_idx_] = &(arr);
     ++arr_idx_; ++arr_len_;
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <size_t N_SIZE>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape_info<N_RANK> (& shape)[N_SIZE]) {
+void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape_info<N_RANK> (& shape)[N_SIZE]) {
     /* currently we just get the slope_[] out of the shape[] */
     int l_min_time_shift=0, l_max_time_shift=0, time_slope=0;
     for (int i = 0; i < N_SIZE; ++i) {
@@ -38555,7 +38552,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape_info<N_RANK
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j, Range const & r_k) {
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j, Range const & r_k) {
     grid_.x0[2] = r_i.first();
     grid_.x1[2] = r_i.first() + r_i.size();
     grid_.x0[1] = r_j.first();
@@ -38569,7 +38566,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j) {
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j) {
     grid_.x0[1] = r_i.first();
     grid_.x1[1] = r_i.first() + r_i.size();
     grid_.x0[0] = r_j.first();
@@ -38580,7 +38577,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i) {
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i) {
     grid_.x0[0] = r_i.first();
     grid_.x1[0] = r_i.first() + r_i.size();
     logic_size_[0] = r_i.size();
@@ -38589,7 +38586,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i) {
 
 /* Executable Spec */
 template <typename T, int N_RANK, int TOGGLE> template <typename BF>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
+void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -38613,7 +38610,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
 
 /* safe/non-safe ExecSpec */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
+void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
     Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -38626,12 +38623,12 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.walk_ncores_boundary_p(0, timestep, grid_, f, bf);
+    algor.walk_bicut_boundary_p(0, timestep, grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
 template <typename T, int N_RANK, int TOGGLE> template <typename F>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
+void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -38642,12 +38639,12 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
         arr_list_[i]->set_logic_size(logic_size_);
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.obase_adaptive(0, timestep, grid_, f);
+algor.obase_bicut(0, timestep, grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
-void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const & bf) {
+void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const & bf) {
     Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -38660,7 +38657,7 @@ void Pochoir_Stencil<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.obase_boundary_p(0, timestep, grid_, f, bf);
+    algor.obase_bicut_boundary_p(0, timestep, grid_, f, bf);
 }
 
 
@@ -39097,12 +39094,13 @@ int main(int argc, char *argv[])
   
 	Pochoir_Array <float, 3, 2> pa(Nz, Ny, Nx);
 
-	Pochoir_Stencil <float, 3> fd_3D;
+	Pochoir <float, 3> fd_3D;
 
-	Pochoir_uRange I(0 + ds, Nx - 1 - ds), J(0 + ds, Ny - 1 - ds), K(0 + ds, Nz - 1 - ds);
+	Pochoir_Domain I(0 + ds, Nx - 1 - ds), J(0 + ds, Ny - 1 - ds), K(0 + ds, Nz - 1 - ds);
+Pochoir_Shape_info<3> fd_shape_3D[26] = {{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 1}, {0, 0, 0, -1}, {0, 0, 1, 0}, {0, 0, -1, 0}, {0, 1, 0, 0}, {0, -1, 0, 0}, {0, 0, 0, 2}, {0, 0, 0, -2}, {0, 0, 2, 0}, {0, 0, -2, 0}, {0, 2, 0, 0}, {0, -2, 0, 0}, {0, 0, 0, 3}, {0, 0, 0, -3}, {0, 0, 3, 0}, {0, 0, -3, 0}, {0, 3, 0, 0}, {0, -3, 0, 0}, {0, 0, 0, 4}, {0, 0, 0, -4}, {0, 0, 4, 0}, {0, 0, -4, 0}, {0, 4, 0, 0}, {0, -4, 0, 0}};
 
-	Pochoir_Shape_info <3> fd_shape_3D [26] = {{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 1}, {0, 0, 0, -1}, {0, 0, 1, 0}, {0, 0, -1, 0}, {0, 1, 0, 0}, {0, -1, 0, 0}, {0, 0, 0, 2}, {0, 0, 0, -2}, {0, 0, 2, 0}, {0, 0, -2, 0}, {0, 2, 0, 0}, {0, -2, 0, 0}, {0, 0, 0, 3}, {0, 0, 0, -3}, {0, 0, 3, 0}, {0, 0, -3, 0}, {0, 3, 0, 0}, {0, -3, 0, 0}, {0, 0, 0, 4}, {0, 0, 0, -4}, {0, 0, 4, 0}, {0, 0, -4, 0}, {0, 4, 0, 0}, {0, -4, 0, 0}};
-fd_3D.registerArrayInUse (pa);
+//  fd_3D.registerBoundaryFn(pa, fd_bv_3D);
+fd_3D.registerArray (pa);
 	fd_3D.registerShape(fd_shape_3D);
   fd_3D.registerDomain(I, J, K);
 

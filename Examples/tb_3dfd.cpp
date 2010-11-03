@@ -476,12 +476,12 @@ int main(int argc, char *argv[])
 
   Pochoir_Array<float, 3> pa(Nz, Ny, Nx);
 
-  Pochoir_Stencil<float, 3> fd_3D;
-  Pochoir_uRange I(0+ds, Nx-1-ds), J(0+ds, Ny-1-ds), K(0+ds, Nz-1-ds);
+  Pochoir<float, 3> fd_3D;
+  Pochoir_Domain I(0+ds, Nx-ds), J(0+ds, Ny-ds), K(0+ds, Nz-ds);
   Pochoir_Shape_info<3> fd_shape_3D[26] = {{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 1}, {0, 0, 0, -1}, {0, 0, 1, 0}, {0, 0, -1, 0}, {0, 1, 0, 0}, {0, -1, 0, 0}, {0, 0, 0, 2}, {0, 0, 0, -2}, {0, 0, 2, 0}, {0, 0, -2, 0}, {0, 2, 0, 0}, {0, -2, 0, 0}, {0, 0, 0, 3}, {0, 0, 0, -3}, {0, 0, 3, 0}, {0, 0, -3, 0}, {0, 3, 0, 0}, {0, -3, 0, 0}, {0, 0, 0, 4}, {0, 0, 0, -4}, {0, 0, 4, 0}, {0, 0, -4, 0}, {0, 4, 0, 0}, {0, -4, 0, 0}};
 
 //  fd_3D.registerBoundaryFn(pa, fd_bv_3D);
-  fd_3D.registerArrayInUse(pa);
+  fd_3D.registerArray(pa);
   fd_3D.registerShape(fd_shape_3D);
   fd_3D.registerDomain(I, J, K);
 

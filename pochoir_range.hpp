@@ -100,22 +100,23 @@ class Pochoir_pRange {
 };
 
 /* unit-stride Range */
-class Pochoir_uRange {
+class Pochoir_Domain {
 	protected:
 		int first_, last_;
 		int index_, shift_;
 
 	public:
-		Pochoir_uRange() : first_(0), last_(0), index_(0), shift_(0) { }
+		Pochoir_Domain() : first_(0), last_(0), index_(0), shift_(0) { }
 
-		Pochoir_uRange(Pochoir_uRange const & r) {
+		Pochoir_Domain(Pochoir_Domain const & r) {
 			first_ = r.first();
 			last_ = r.last();
 			index_ = first_;
 			shift_ = r.shift();
 		}
 
-		Pochoir_uRange(int first, int last, int shift=0)
+        /* Now Pochoir_Domain is of [a, b) */
+		Pochoir_Domain(int first, int last, int shift=0)
 			: first_(first), last_(last), index_(first), shift_(shift) {}
 
 		int first() const { 
@@ -134,8 +135,9 @@ class Pochoir_uRange {
 			return shift_;
 		}
 
+        /* Now Pochoir_Domain is of [a, b) */
 		inline int size() const {
-			return (last_ - first_ + 1);
+			return (last_ - first_);
 		}
 
 		bool isUnitStride() const { 
@@ -143,13 +145,13 @@ class Pochoir_uRange {
 		}
 
 		/* We don't change the original 'range' */
-		inline Pochoir_uRange const operator-(int shift) const { 
-			return Pochoir_uRange(first_ - shift, last_ - shift, shift); 
+		inline Pochoir_Domain const operator-(int shift) const { 
+			return Pochoir_Domain(first_ - shift, last_ - shift, shift); 
 		}
 
 		/* We don't change the original 'range' */
-		inline Pochoir_uRange const operator+(int shift) const { 
-			return Pochoir_uRange(first_ + shift, last_ + shift, shift); 
+		inline Pochoir_Domain const operator+(int shift) const { 
+			return Pochoir_Domain(first_ + shift, last_ + shift, shift); 
 		}
 
 		inline int operator() (int _idx) const {
@@ -160,7 +162,7 @@ class Pochoir_uRange {
 			return (first_ + _idx);
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, Pochoir_uRange const & range);
+		friend std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range);
 };
 
 std::ostream& operator<<(std::ostream& os, Pochoir_pRange const & range)
@@ -172,9 +174,9 @@ std::ostream& operator<<(std::ostream& os, Pochoir_pRange const & range)
 }
 
 #if 1
-std::ostream& operator<<(std::ostream& os, Pochoir_uRange const & range)
+std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 {
-	os << "Pochoir_uRange(" 
+	os << "Pochoir_Domain(" 
 		<< range.first() << "," << range.last() << "," << range.stride() << ")" 
 		<< std::endl;
 	return os;

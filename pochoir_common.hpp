@@ -86,7 +86,7 @@ struct grid_info {
 };
 
 template <int N_RANK>
-struct Pochoir_Shape_info {
+struct Pochoir_Shape {
     /* N_RANK + 1 because we probably have to include the time dimension
      * to correctly calculate the slope[]
      */
@@ -94,7 +94,7 @@ struct Pochoir_Shape_info {
 };
  
 template <int N_RANK, size_t N>
-size_t ArraySize (Pochoir_Shape_info<N_RANK> (& arr)[N]) { return N; }
+size_t ArraySize (Pochoir_Shape<N_RANK> (& arr)[N]) { return N; }
 
 /* these lambda functions are for computing internal/boundary region,
  * the original 'f'/'bf'

@@ -49,8 +49,8 @@ lexer = Token.makeTokenParser (javaStyle
                reservedOpNames = ["*", "/", "+", "-", "!", "&&", "||", "=", ">", ">=", 
                                   "<", "<=", "==", "+=", "-=", "*=", "/=", "&=", "|=",
                                   "<<=", ">>=", "^=", "++", "--"],
-               reservedNames = ["Pochoir_Array", "Pochoir_Stencil", "Pochoir_uRange", 
-                                "Pochoir_Shape_info", "Pochoir_pRange", 
+               reservedNames = ["Pochoir_Array", "Pochoir", "Pochoir_Domain", 
+                                "Pochoir", "Pochoir_pRange", 
                                 "Pochoir_kernel_1D", "Pochoir_kernel_2D", 
                                 "Pochoir_kernel_3D", "Pochoir_kernel_end",
                                 "auto", "};", 
@@ -100,12 +100,12 @@ pMember l_memFunc =
 
 ppStencil :: String -> PStencil -> ParserState -> GenParser Char ParserState String
 ppStencil l_id l_stencil l_state = 
-        do try $ pMember "registerArrayInUse"
+        do try $ pMember "registerArray"
            l_array <- parens identifier
            semi
            case Map.lookup l_array $ pArray l_state of
-               Nothing -> return (l_id ++ ".registerArrayInUse(" ++ l_array ++ "); /* ERROR!!! */" ++ breakline)
-               Just l_pArray -> registerArrayInUse l_id l_array l_pArray
+               Nothing -> return (l_id ++ ".registerArray(" ++ l_array ++ "); /* ERROR!!! */" ++ breakline)
+               Just l_pArray -> registerArray l_id l_array l_pArray
     <|> do try $ pMember "registerBoundaryFn"
            l_boundaryParams <- parens $ commaSep1 identifier
            semi
@@ -210,10 +210,10 @@ pStencilRun =
            return (show l_tstep, l_func)
     <?> "Stencil Run Parameters"
 
-registerArrayInUse :: String -> String -> PArray -> GenParser Char ParserState String
-registerArrayInUse l_id l_array l_pArray =
+registerArray :: String -> String -> PArray -> GenParser Char ParserState String
+registerArray l_id l_array l_pArray =
     do updateState $ updateStencilArray l_id l_pArray
-       return (l_id ++ ".registerArrayInUse (" ++ l_array ++ ");" ++ breakline)
+       return (l_id ++ ".registerArray (" ++ l_array ++ ");" ++ breakline)
 
 updateStencilArray :: String -> PArray -> ParserState -> ParserState
 updateStencilArray l_id l_pArray parserState =

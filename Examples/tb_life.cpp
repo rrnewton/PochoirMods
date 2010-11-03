@@ -84,9 +84,9 @@ int main(int argc, char * argv[])
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
 	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
-    Pochoir_Stencil <bool, N_RANK> life_2D;
-	Pochoir_uRange I(0, N_SIZE-1), J(0, N_SIZE-1);
-    Pochoir_Shape_info<2> life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
+    Pochoir <bool, N_RANK> life_2D;
+	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
+    Pochoir_Shape<2> life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
 
     life_2D.registerBoundaryFn(a, life_bv_2D);
 
@@ -119,7 +119,7 @@ int main(int argc, char * argv[])
         a(t+1, i, j) = true;
     Pochoir_kernel_end
 
-    life_2D.registerArrayInUse(a);
+    life_2D.registerArray(a);
     life_2D.registerShape(life_shape_2D);
     life_2D.registerDomain(I, J);
 

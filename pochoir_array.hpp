@@ -260,7 +260,7 @@ class Pochoir_Array {
         }
 
         template <size_t N_SIZE>
-        void registerShape(Pochoir_Shape_info<N_RANK> (& shape)[N_SIZE]) {
+        void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
             /* currently we just get the slope_[] out of the shape[] */
             int l_min_time_shift=0, l_max_time_shift=0, time_slope=0;
             for (int i = 0; i < N_SIZE; ++i) {

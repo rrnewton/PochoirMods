@@ -77,16 +77,16 @@ pParsePochoirArray =
 
 pParsePochoirStencil :: GenParser Char ParserState String
 pParsePochoirStencil = 
-    do reserved "Pochoir_Stencil"
+    do reserved "Pochoir"
        (l_type, l_rank, l_toggle) <- angles pDeclStatic 
        l_stencils <- commaSep1 identifier 
        semi
        updateState $ updatePStencil $ transPStencil (l_type, l_rank) l_stencils
-       return (breakline ++ "Pochoir_Stencil <" ++ show l_type ++ ", " ++ show l_rank ++ "> " ++ pShowListIdentifiers l_stencils ++ ";\n")
+       return (breakline ++ "Pochoir <" ++ show l_type ++ ", " ++ show l_rank ++ "> " ++ pShowListIdentifiers l_stencils ++ ";\n")
 
 pParsePochoirShapeInfo :: GenParser Char ParserState String
 pParsePochoirShapeInfo = 
-    do reserved "Pochoir_Shape_info"
+    do reserved "Pochoir_Shape"
        l_rank <- angles pDeclStaticNum
        l_name <- identifier
        l_len <- brackets pDeclStaticNum
@@ -94,15 +94,15 @@ pParsePochoirShapeInfo =
        l_shapes <- braces (commaSep1 ppShape)
        semi
        updateState $ updatePShape (l_name, l_rank, l_len, l_shapes)
-       return (breakline ++ "Pochoir_Shape_info <" ++ show l_rank ++ "> " ++ l_name ++ " [" ++ show l_len ++ "] = " ++ pShowShapes l_shapes ++ ";\n")
+       return (breakline ++ "Pochoir_Shape <" ++ show l_rank ++ "> " ++ l_name ++ " [" ++ show l_len ++ "] = " ++ pShowShapes l_shapes ++ ";\n")
 
 pParsePochoirURange :: GenParser Char ParserState String
 pParsePochoirURange =
-    do reserved "Pochoir_uRange"
+    do reserved "Pochoir_Domain"
        l_rangeDecl <- commaSep1 pDeclDynamic
        semi
        updateState $ updatePRange $ transURange l_rangeDecl
-       return (breakline ++ "Pochoir_uRange " ++ pShowArrayDynamicDecl l_rangeDecl ++ ";\n")
+       return (breakline ++ "Pochoir_Domain " ++ pShowArrayDynamicDecl l_rangeDecl ++ ";\n")
 
 pParsePochoirKernel1D :: GenParser Char ParserState String
 pParsePochoirKernel1D =

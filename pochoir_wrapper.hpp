@@ -39,7 +39,7 @@
  * mimic the same behavior of serial_loops()
  */
 template <typename F>
-void serial_loops(Pochoir_uRange _tR, Pochoir_uRange _iR, Pochoir_uRange _jR, F const & f) { 
+void serial_loops(Pochoir_Domain _tR, Pochoir_Domain _iR, Pochoir_Domain _jR, F const & f) { 
     size_t t_first = _tR.first(), t_last = _tR.last(), t_stride = _tR.stride();
     size_t i_first = _iR.first(), i_last = _iR.last(), i_stride = _iR.stride();
     size_t j_first = _jR.first(), j_last = _jR.last(), j_stride = _jR.stride(); 
@@ -51,7 +51,7 @@ void serial_loops(Pochoir_uRange _tR, Pochoir_uRange _iR, Pochoir_uRange _jR, F 
 } 
 
 template <typename F>
-void serial_loops(Pochoir_uRange _tR, Pochoir_uRange _iR, F const & f) { 
+void serial_loops(Pochoir_Domain _tR, Pochoir_Domain _iR, F const & f) { 
     size_t t_first = _tR.first(), t_last = _tR.last(), t_stride = _tR.stride();
     size_t i_first = _iR.first(), i_last = _iR.last(), i_stride = _iR.stride();
     for (size_t t = t_first; t <= t_last ; t += t_stride) {
@@ -62,7 +62,7 @@ void serial_loops(Pochoir_uRange _tR, Pochoir_uRange _iR, F const & f) {
 
 /* these are for those fall in full effective region and dont have any boundary conditions */
 template <typename F>
-void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const f) {
+void pochoir(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const f) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -81,7 +81,7 @@ void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRa
 }
 
 template <typename F>
-void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const f) {
+void pochoir(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const f) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -99,7 +99,7 @@ void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_
 
 /* Non-periodic: F is for internal region, and BF is for boundary condition processing */
 template <typename F, typename BF>
-void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const & f, BF const & bf) {
+void pochoir(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -118,7 +118,7 @@ void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRa
 }
 
 template <typename F, typename BF>
-void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const & f, BF const & bf) {
+void pochoir(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -139,7 +139,7 @@ void pochoir(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_
  * and just use one parameter to distinguish them???
  */
 template <typename F, typename BF>
-void pochoir_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const & f, BF const & bf) {
+void pochoir_p(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -158,7 +158,7 @@ void pochoir_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_u
 }
 
 template <typename F, typename BF>
-void pochoir_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const & f, BF const & bf) {
+void pochoir_p(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -176,7 +176,7 @@ void pochoir_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const siz
 
 /* these are for those fall in full effective region and dont have any boundary conditions */
 template <typename F>
-void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const f) {
+void obase(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const f) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -195,7 +195,7 @@ void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRang
 }
 
 template <typename F>
-void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const f) {
+void obase(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const f) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -213,7 +213,7 @@ void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t 
 
 /* Non-periodic: F is for internal region, and BF is for boundary condition processing */
 template <typename F, typename BF>
-void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const & f, BF const & bf) {
+void obase(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -232,7 +232,7 @@ void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRang
 }
 
 template <typename F, typename BF>
-void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const & f, BF const & bf) {
+void obase(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;
@@ -253,7 +253,7 @@ void obase(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t 
  * and just use one parameter to distinguish them???
  */
 template <typename F, typename BF>
-void obase_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRange const & _jR, const size_t _slope[], F const & f, BF const & bf) {
+void obase_p(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, Pochoir_Domain const & _jR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     grid_info_2 l_grid;
     Algorithm<3, grid_info_2> algor(_slope);
@@ -272,7 +272,7 @@ void obase_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, Pochoir_uRa
 }
 
 template <typename F, typename BF>
-void obase_p(Pochoir_uRange const & _tR, Pochoir_uRange const & _iR, const size_t _slope[], F const & f, BF const & bf) {
+void obase_p(Pochoir_Domain const & _tR, Pochoir_Domain const & _iR, const size_t _slope[], F const & f, BF const & bf) {
 	size_t l_t0 = _tR.first(), l_t1 = _tR.last();
     Algorithm<2, grid_info_1> algor(_slope);
     grid_info_1 l_grid;

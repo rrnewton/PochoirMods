@@ -86,9 +86,9 @@ int main(int argc, char * argv[])
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
 	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
-    Pochoir_Stencil<double, N_RANK> heat_2D;
-    Pochoir_uRange I(0, N_SIZE-1), J(0, N_SIZE-1);
-    Pochoir_Shape_info<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
+    Pochoir<double, N_RANK> heat_2D;
+    Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
+    Pochoir_Shape<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -120,7 +120,7 @@ int main(int argc, char * argv[])
      * value function
      */
     heat_2D.registerBoundaryFn(a, heat_bv_2D);
-    heat_2D.registerArrayInUse(a);
+    heat_2D.registerArray(a);
     heat_2D.registerShape(heat_shape_2D);
     heat_2D.registerDomain(I, J);
 
