@@ -42,9 +42,9 @@ class Pochoir {
         int time_shift_;
         int timestep_;
         Pochoir_Array<T, N_RANK, TOGGLE> ** arr_list_;
-        typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
-        typedef T (*BValue_2D)(Pochoir_Array<T, 2> &, int, int, int);
-        typedef T (*BValue_3D)(Pochoir_Array<T, 3> &, int, int, int, int);
+        typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
+        typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
+        typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
         int arr_len_;
         int arr_idx_;
     public:

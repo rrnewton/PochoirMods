@@ -31235,9 +31235,9 @@ size_info phys_size_; // physical of elements in each dimension
 size_info stride_; // stride of each dimension
 int total_size_;
         int slope_[N_RANK];
-        typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
-        typedef T (*BValue_2D)(Pochoir_Array<T, 2> &, int, int, int);
-        typedef T (*BValue_3D)(Pochoir_Array<T, 3> &, int, int, int, int);
+        typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
+        typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
+        typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
         BValue_1D bv1_;
         BValue_2D bv2_;
         BValue_3D bv3_;
@@ -31645,9 +31645,9 @@ class Pochoir {
         int time_shift_;
         int timestep_;
         Pochoir_Array<T, N_RANK, TOGGLE> ** arr_list_;
-        typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
-        typedef T (*BValue_2D)(Pochoir_Array<T, 2> &, int, int, int);
-        typedef T (*BValue_3D)(Pochoir_Array<T, 3> &, int, int, int, int);
+        typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
+        typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
+        typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
         int arr_len_;
         int arr_idx_;
     public:
@@ -31850,7 +31850,7 @@ void check_result(int t, int j, int i, double a, double b)
 
 }
 
-    template <typename T> T heat_bv_2D (Pochoir_Array<T, 2> & arr, int t, int i, int j) {
+    template <typename T, int TOGGLE> T heat_bv_2D (Pochoir_Array<T, 2, TOGGLE> & arr, int t, int i, int j) {
         /* this is non-periodic boundary value */
         /* we already shrinked by using range I, J, K,
          * so the following code to set boundary index and
@@ -31880,7 +31880,7 @@ int main(int argc, char * argv[])
 	
 	Pochoir_Array <double, 2, 2> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
 
-	Pochoir <double, 2> heat_2D;
+	Pochoir <double, 2, 2> heat_2D;
 
 	Pochoir_Domain I(1, N_SIZE - 1), J(1, N_SIZE - 1);
 
@@ -31921,8 +31921,8 @@ for (int i = 0; i < N_SIZE; ++i) {
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_a_0 = a_base + ((t + 1) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
-	pt_a_1 = a_base + ((t) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_0 = a_base + ((t + 1) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_1 = a_base + ((t) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,

@@ -60,7 +60,7 @@ inline int toggle_base<4>(int const & _idx0) {
 #if 0
 template <>
 inline int toggle_base<3>(int const & _idx0) {
-    return (_idx0 & 0x10);
+    return (_idx0 % 3);
 }
 #endif
 
@@ -125,9 +125,9 @@ class Pochoir_Array {
 		size_info stride_; // stride of each dimension
 		int total_size_;
         int slope_[N_RANK];
-        typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
-        typedef T (*BValue_2D)(Pochoir_Array<T, 2> &, int, int, int);
-        typedef T (*BValue_3D)(Pochoir_Array<T, 3> &, int, int, int, int);
+        typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
+        typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
+        typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
         BValue_1D bv1_;
         BValue_2D bv2_;
         BValue_3D bv3_;

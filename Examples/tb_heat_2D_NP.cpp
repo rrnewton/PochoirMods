@@ -78,8 +78,8 @@ int main(int argc, char * argv[])
     T_SIZE = StrToInt(argv[2]);
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
-	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
-    Pochoir<double, N_RANK> heat_2D;
+	Pochoir_Array<double, N_RANK, 2> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
+    Pochoir<double, N_RANK, 2> heat_2D;
     Pochoir_Domain I(1, N_SIZE-1), J(1, N_SIZE-1);
 #if 1
     Pochoir_Shape<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};

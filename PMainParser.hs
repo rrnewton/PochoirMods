@@ -81,8 +81,8 @@ pParsePochoirStencil =
        (l_type, l_rank, l_toggle) <- angles pDeclStatic 
        l_stencils <- commaSep1 identifier 
        semi
-       updateState $ updatePStencil $ transPStencil (l_type, l_rank) l_stencils
-       return (breakline ++ "Pochoir <" ++ show l_type ++ ", " ++ show l_rank ++ "> " ++ pShowListIdentifiers l_stencils ++ ";\n")
+       updateState $ updatePStencil $ transPStencil (l_type, l_rank, l_toggle) l_stencils
+       return (breakline ++ "Pochoir <" ++ show l_type ++ ", " ++ show l_rank ++ ", " ++ show l_toggle ++ "> " ++ pShowListIdentifiers l_stencils ++ ";\n")
 
 pParsePochoirShapeInfo :: GenParser Char ParserState String
 pParsePochoirShapeInfo = 
@@ -276,9 +276,9 @@ transPArray (l_type, l_rank, l_toggle) (p:ps) =
         l_dims = snd p
     in  (l_name, PArray {aName = l_name, aType = l_type, aRank = l_rank, aDims = l_dims, aMaxShift = 0, aToggle = l_toggle}) : transPArray (l_type, l_rank, l_toggle) ps
 
-transPStencil :: (PType, Int) -> [PName] -> [(PName, PStencil)]
-transPStencil (l_type, l_rank) [] = []
-transPStencil (l_type, l_rank) (p:ps) = (p, PStencil {sName = p, sType = l_type, sRank = l_rank, sArrayInUse = [], sRegBound = False}) : transPStencil (l_type, l_rank) ps
+transPStencil :: (PType, Int, Int) -> [PName] -> [(PName, PStencil)]
+transPStencil (l_type, l_rank, l_toggle) [] = []
+transPStencil (l_type, l_rank, l_toggle) (p:ps) = (p, PStencil {sName = p, sType = l_type, sRank = l_rank, sToggle = l_toggle, sArrayInUse = [], sRegBound = False}) : transPStencil (l_type, l_rank, l_toggle) ps
 
 transURange :: [(PName, [DimExpr])] -> [(PName, PRange)]
 transURange [] = []

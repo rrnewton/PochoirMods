@@ -64,6 +64,7 @@ data PStencil = PStencil {
     sName :: PName,
     sType :: PType,
     sRank :: Int,
+    sToggle :: Int,
     sArrayInUse :: [PArray],
     sRegBound :: Bool
 } deriving Show
@@ -500,13 +501,16 @@ pShowPointerSet iL@(i:is) l_kernelParams = concat $ map pShowPointerSetTerm iL
                 l_transDimList = tail $ pShowTransDim dim l_kernelParams
                 l_arraySpaceOffset = 
                     intercalate " + " $ zipWith pCombineDim l_transDimList l_arrayStrideList
-                l_arrayTimeOffset = (pGetTimeOffset (aToggle array - 1) (head dim)) ++ 
+                l_arrayTimeOffset = (pGetTimeOffset (aToggle array) (head dim)) ++ 
                                     " * " ++ l_arrayTotalSize
             in  breakline ++ iterName ++ " = " ++ l_arrayBaseName ++ " + " ++ 
                 l_arrayTimeOffset ++ " + " ++ l_arraySpaceOffset ++ ";" 
 
 pGetTimeOffset :: Int -> DimExpr -> String
-pGetTimeOffset toggle tDim = "((" ++ show tDim ++ ")" ++ " & " ++ show toggle ++ ")"
+pGetTimeOffset toggle tDim 
+    | toggle == 2 = "((" ++ show tDim ++ ")" ++ " & 0x1" ++ ")"
+    | toggle == 4 = "((" ++ show tDim ++ ")" ++ " & 0x11" ++ ")"
+    | otherwise = "((" ++ show tDim ++ ") % " ++ show toggle ++ ")"
 
 pCombineDim :: DimExpr -> String -> String
 -- l_stride_pa_0 may NOT necessary be "1", 
