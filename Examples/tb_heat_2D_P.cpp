@@ -88,7 +88,11 @@ int main(int argc, char * argv[])
 	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
     Pochoir<double, N_RANK> heat_2D;
     Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
+#if 0
     Pochoir_Shape<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
+#else
+    Pochoir_Shape<2> heat_shape_2D[5] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
+#endif
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -110,7 +114,11 @@ int main(int argc, char * argv[])
 
 	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
     Pochoir_kernel_2D(heat_2D_fn, t, i, j)
+#if 0
 	    a(t+1, i, j) = 0.125 * (a(t, i+1, j) - 2.0 * a(t, i, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) - 2.0 * a(t, i, j) + a(t, i, j-1)) + a(t, i, j);
+#else
+	    a(t, i, j) = 0.125 * (a(t-1, i+1, j) - 2.0 * a(t-1, i, j) + a(t-1, i-1, j)) + 0.125 * (a(t-1, i, j+1) - 2.0 * a(t-1, i, j) + a(t-1, i, j-1)) + a(t-1, i, j);
+#endif
     Pochoir_kernel_end
 
     /* we have to bind arrayInUse and Shape together 

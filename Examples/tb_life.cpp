@@ -86,7 +86,11 @@ int main(int argc, char * argv[])
 	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
     Pochoir <bool, N_RANK> life_2D;
 	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
+#if 0
     Pochoir_Shape<2> life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
+#else
+    Pochoir_Shape<2> life_shape_2D[9] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, 1}, {-1, 0, -1}, {-1, 1, 1}, {-1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}};
+#endif
 
     life_2D.registerBoundaryFn(a, life_bv_2D);
 
@@ -106,6 +110,7 @@ int main(int argc, char * argv[])
     printf("Game of Life : %d x %d, %d time steps\n", N_SIZE, N_SIZE, T_SIZE);
 
     Pochoir_kernel_2D(life_2D_fn, t, i, j)
+#if 0
     int neighbors = a(t, i-1, j-1) + a(t, i-1, j) + a(t, i-1, j+1) +
                     a(t, i, j-1)                  + a(t, i, j+1) +
                     a(t, i+1, j-1) + a(t, i+1, j) + a(t, i+1, j+1);
@@ -117,6 +122,19 @@ int main(int argc, char * argv[])
         a(t+1, i, j) = a(t, i, j);
     } else if (a(t, i, j) == false && neighbors == 3) 
         a(t+1, i, j) = true;
+#else
+    int neighbors = a(t-1, i-1, j-1) + a(t-1, i-1, j) + a(t-1, i-1, j+1) +
+                    a(t-1, i, j-1)                  + a(t-1, i, j+1) +
+                    a(t-1, i+1, j-1) + a(t-1, i+1, j) + a(t-1, i+1, j+1);
+    if (a(t-1, i, j) == true && neighbors < 2)
+        a(t, i, j) = true;
+    else if (a(t-1, i, j) == true && neighbors > 3) { 
+        a(t, i, j) = false;
+    } else if (a(t-1, i, j) == true && (neighbors == 2 || neighbors == 3)) {
+        a(t, i, j) = a(t-1, i, j);
+    } else if (a(t-1, i, j) == false && neighbors == 3) 
+        a(t, i, j) = true;
+#endif
     Pochoir_kernel_end
 
     life_2D.registerArray(a);

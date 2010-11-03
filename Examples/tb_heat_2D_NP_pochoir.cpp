@@ -31642,6 +31642,7 @@ class Pochoir {
         grid_info<N_RANK> grid_;
         int stride_[N_RANK];
         int logic_size_[N_RANK];
+        int time_shift_;
         int timestep_;
         Pochoir_Array<T, N_RANK, TOGGLE> ** arr_list_;
         typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
@@ -31668,19 +31669,22 @@ class Pochoir {
     /* register boundary value function with corresponding Pochoir_Array object directly */
     void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
         arr.registerBV(_bv1);
+        registerArray(arr);
     } 
     void registerBoundaryFn(Pochoir_Array<T, 2, TOGGLE> & arr, BValue_2D _bv2) {
         arr.registerBV(_bv2);
+        registerArray(arr);
     } 
     void registerBoundaryFn(Pochoir_Array<T, 3, TOGGLE> & arr, BValue_3D _bv3) {
         arr.registerBV(_bv3);
+        registerArray(arr);
     } 
-    template <typename Range>
-    void registerDomain(Range const & i);
-    template <typename Range>
-    void registerDomain(Range const & i, Range const & j);
-    template <typename Range>
-    void registerDomain(Range const & i, Range const & j, Range const & k);
+    template <typename Domain>
+    void registerDomain(Domain const & i);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k);
 
     /* Executable Spec */
     template <typename BF>
@@ -31716,13 +31720,15 @@ void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N
         }
     }
     time_slope = l_max_time_shift - l_min_time_shift;
-    for (int i = 0; i < N_RANK; ++i) {
+    time_shift_ = 0 - l_min_time_shift;
+//    cout << "time_shift_ = " << time_shift_ << endl;
+for (int i = 0; i < N_RANK; ++i) {
         slope_[i] = (int)ceil((float)slope_[i]/time_slope);
     }
 }
 
-template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j, Range const & r_k) {
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k) {
     grid_.x0[2] = r_i.first();
     grid_.x1[2] = r_i.first() + r_i.size();
     grid_.x0[1] = r_j.first();
@@ -31735,8 +31741,8 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const &
     stride_[0] = r_k.stride();
 }
 
-template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j) {
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j) {
     grid_.x0[1] = r_i.first();
     grid_.x1[1] = r_i.first() + r_i.size();
     grid_.x0[0] = r_j.first();
@@ -31746,8 +31752,8 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const &
     stride_[0] = r_j.stride();
 }
 
-template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i) {
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i) {
     grid_.x0[0] = r_i.first();
     grid_.x1[0] = r_i.first() + r_i.size();
     logic_size_[0] = r_i.size();
@@ -31771,7 +31777,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
-    algor.base_case_kernel(0, timestep, grid_, bf);
+    algor.base_case_kernel(0 + time_shift_, timestep + time_shift_, grid_, bf);
     /* obase_boundary_p() is a parallel divide-and-conquer algorithm, which checks
      * boundary for every point
      */
@@ -31793,7 +31799,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.walk_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
@@ -31809,7 +31815,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
         arr_list_[i]->set_logic_size(logic_size_);
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.obase_bicut(0, timestep, grid_, f);
+algor.obase_bicut(0+time_shift_, timestep+time_shift_, grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -31827,7 +31833,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.obase_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 }
 
 

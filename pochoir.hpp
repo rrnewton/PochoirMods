@@ -39,6 +39,7 @@ class Pochoir {
         grid_info<N_RANK> grid_;
         int stride_[N_RANK];
         int logic_size_[N_RANK];
+        int time_shift_;
         int timestep_;
         Pochoir_Array<T, N_RANK, TOGGLE> ** arr_list_;
         typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
@@ -116,6 +117,8 @@ void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N
         }
     }
     time_slope = l_max_time_shift - l_min_time_shift;
+    time_shift_ = 0 - l_min_time_shift;
+//    cout << "time_shift_ = " << time_shift_ << endl;
     for (int i = 0; i < N_RANK; ++i) {
         slope_[i] = (int)ceil((float)slope_[i]/time_slope);
     }
@@ -171,7 +174,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
-    algor.base_case_kernel(0, timestep, grid_, bf);
+    algor.base_case_kernel(0 + time_shift_, timestep + time_shift_, grid_, bf);
     /* obase_boundary_p() is a parallel divide-and-conquer algorithm, which checks
      * boundary for every point
      */
@@ -194,9 +197,9 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
         arr_list_[i]->set_logic_size(logic_size_);
     }
 #if BICUT
-    algor.walk_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 #else
-    algor.walk_ncores_boundary_p(0, timestep, grid_, f, bf);
+    algor.walk_ncores_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 #endif
 }
 
@@ -214,9 +217,9 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
 #if BICUT
-    algor.obase_bicut(0, timestep, grid_, f);
+    algor.obase_bicut(0+time_shift_, timestep+time_shift_, grid_, f);
 #else
-    algor.obase_adaptive(0, timestep, grid_, f);
+    algor.obase_adaptive(0+time_shift_, timestep+time_shift_, grid_, f);
 #endif
 }
 
@@ -236,9 +239,9 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
         arr_list_[i]->set_logic_size(logic_size_);
     }
 #if BICUT
-    algor.obase_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 #else
-    algor.obase_boundary_p(0, timestep, grid_, f, bf);
+    algor.obase_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 #endif
 }
 

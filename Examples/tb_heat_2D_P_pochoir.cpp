@@ -31642,6 +31642,7 @@ class Pochoir {
         grid_info<N_RANK> grid_;
         int stride_[N_RANK];
         int logic_size_[N_RANK];
+        int time_shift_;
         int timestep_;
         Pochoir_Array<T, N_RANK, TOGGLE> ** arr_list_;
         typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
@@ -31719,7 +31720,9 @@ void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N
         }
     }
     time_slope = l_max_time_shift - l_min_time_shift;
-    for (int i = 0; i < N_RANK; ++i) {
+    time_shift_ = 0 - l_min_time_shift;
+//    cout << "time_shift_ = " << time_shift_ << endl;
+for (int i = 0; i < N_RANK; ++i) {
         slope_[i] = (int)ceil((float)slope_[i]/time_slope);
     }
 }
@@ -31774,7 +31777,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
-    algor.base_case_kernel(0, timestep, grid_, bf);
+    algor.base_case_kernel(0 + time_shift_, timestep + time_shift_, grid_, bf);
     /* obase_boundary_p() is a parallel divide-and-conquer algorithm, which checks
      * boundary for every point
      */
@@ -31796,7 +31799,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.walk_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
@@ -31812,7 +31815,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
         arr_list_[i]->set_logic_size(logic_size_);
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.obase_bicut(0, timestep, grid_, f);
+algor.obase_bicut(0+time_shift_, timestep+time_shift_, grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -31830,7 +31833,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.obase_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 }
 
 
@@ -31888,7 +31891,7 @@ int main(int argc, char * argv[])
 
 	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 
-	Pochoir_Shape <2> heat_shape_2D [5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
+	Pochoir_Shape <2> heat_shape_2D [5] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
 for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
         if (i == 0 || i == N_SIZE-1
@@ -31905,7 +31908,7 @@ for (int i = 0; i < N_SIZE; ++i) {
 	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
     auto heat_2D_fn = [&] (int t, int i, int j) {
 	
-	a(t + 1, i, j) = 0.125 * (a(t, i + 1, j) - 2.0 * a(t, i, j) + a(t, i - 1, j)) + 0.125 * (a(t, i, j + 1) - 2.0 * a(t, i, j) + a(t, i, j - 1)) + a(t, i, j);
+	a(t, i, j) = 0.125 * (a(t - 1, i + 1, j) - 2.0 * a(t - 1, i, j) + a(t - 1, i - 1, j)) + 0.125 * (a(t - 1, i, j + 1) - 2.0 * a(t - 1, i, j) + a(t - 1, i, j - 1)) + a(t - 1, i, j);
 	};
 	heat_2D.registerBoundaryFn(a, heat_bv_2D);
 	heat_2D.registerShape(heat_shape_2D);
@@ -31925,8 +31928,8 @@ for (int i = 0; i < N_SIZE; ++i) {
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_a_0 = a_base + ((t + 1) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
-	pt_a_1 = a_base + ((t) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_0 = a_base + ((t) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_1 = a_base + ((t - 1) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,

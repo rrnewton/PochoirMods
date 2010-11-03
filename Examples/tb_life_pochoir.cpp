@@ -31642,6 +31642,7 @@ class Pochoir {
         grid_info<N_RANK> grid_;
         int stride_[N_RANK];
         int logic_size_[N_RANK];
+        int time_shift_;
         int timestep_;
         Pochoir_Array<T, N_RANK, TOGGLE> ** arr_list_;
         typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
@@ -31668,19 +31669,22 @@ class Pochoir {
     /* register boundary value function with corresponding Pochoir_Array object directly */
     void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
         arr.registerBV(_bv1);
+        registerArray(arr);
     } 
     void registerBoundaryFn(Pochoir_Array<T, 2, TOGGLE> & arr, BValue_2D _bv2) {
         arr.registerBV(_bv2);
+        registerArray(arr);
     } 
     void registerBoundaryFn(Pochoir_Array<T, 3, TOGGLE> & arr, BValue_3D _bv3) {
         arr.registerBV(_bv3);
+        registerArray(arr);
     } 
-    template <typename Range>
-    void registerDomain(Range const & i);
-    template <typename Range>
-    void registerDomain(Range const & i, Range const & j);
-    template <typename Range>
-    void registerDomain(Range const & i, Range const & j, Range const & k);
+    template <typename Domain>
+    void registerDomain(Domain const & i);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k);
 
     /* Executable Spec */
     template <typename BF>
@@ -31716,13 +31720,15 @@ void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N
         }
     }
     time_slope = l_max_time_shift - l_min_time_shift;
-    for (int i = 0; i < N_RANK; ++i) {
+    time_shift_ = 0 - l_min_time_shift;
+//    cout << "time_shift_ = " << time_shift_ << endl;
+for (int i = 0; i < N_RANK; ++i) {
         slope_[i] = (int)ceil((float)slope_[i]/time_slope);
     }
 }
 
-template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j, Range const & r_k) {
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k) {
     grid_.x0[2] = r_i.first();
     grid_.x1[2] = r_i.first() + r_i.size();
     grid_.x0[1] = r_j.first();
@@ -31735,8 +31741,8 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const &
     stride_[0] = r_k.stride();
 }
 
-template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j) {
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j) {
     grid_.x0[1] = r_i.first();
     grid_.x1[1] = r_i.first() + r_i.size();
     grid_.x0[0] = r_j.first();
@@ -31746,8 +31752,8 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const &
     stride_[0] = r_j.stride();
 }
 
-template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i) {
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i) {
     grid_.x0[0] = r_i.first();
     grid_.x1[0] = r_i.first() + r_i.size();
     logic_size_[0] = r_i.size();
@@ -31771,7 +31777,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
-    algor.base_case_kernel(0, timestep, grid_, bf);
+    algor.base_case_kernel(0 + time_shift_, timestep + time_shift_, grid_, bf);
     /* obase_boundary_p() is a parallel divide-and-conquer algorithm, which checks
      * boundary for every point
      */
@@ -31793,7 +31799,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.walk_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
@@ -31809,7 +31815,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
         arr_list_[i]->set_logic_size(logic_size_);
     }
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.obase_bicut(0, timestep, grid_, f);
+algor.obase_bicut(0+time_shift_, timestep+time_shift_, grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -31827,7 +31833,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
-    algor.obase_bicut_boundary_p(0, timestep, grid_, f, bf);
+    algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 }
 
 
@@ -31884,7 +31890,7 @@ int main(int argc, char * argv[])
 
 	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 
-	Pochoir_Shape <2> life_shape_2D [9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
+	Pochoir_Shape <2> life_shape_2D [9] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, 1}, {-1, 0, -1}, {-1, 1, 1}, {-1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}};
 life_2D.registerBoundaryFn(a, life_bv_2D);
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -31898,19 +31904,19 @@ life_2D.registerBoundaryFn(a, life_bv_2D);
 
     auto life_2D_fn = [&] (int t, int i, int j) {
 	
-	int neighbors = a(t, i - 1, j - 1) + a(t, i - 1, j) + a(t, i - 1, j + 1) + a(t, i, j - 1) + a(t, i, j + 1) + a(t, i + 1, j - 1) + a(t, i + 1, j) + a(t, i + 1, j + 1);
-	if (a(t, i, j) == true && neighbors < 2)
-	a(t + 1, i, j) = true;
-	else if (a(t, i, j) == true && neighbors > 3)
+	int neighbors = a(t - 1, i - 1, j - 1) + a(t - 1, i - 1, j) + a(t - 1, i - 1, j + 1) + a(t - 1, i, j - 1) + a(t - 1, i, j + 1) + a(t - 1, i + 1, j - 1) + a(t - 1, i + 1, j) + a(t - 1, i + 1, j + 1);
+	if (a(t - 1, i, j) == true && neighbors < 2)
+	a(t, i, j) = true;
+	else if (a(t - 1, i, j) == true && neighbors > 3)
 	{
-	a(t + 1, i, j) = false;
+	a(t, i, j) = false;
 	}
-	else if (a(t, i, j) == true && (neighbors == 2 || neighbors == 3))
+	else if (a(t - 1, i, j) == true && (neighbors == 2 || neighbors == 3))
 	{
-	a(t + 1, i, j) = a(t, i, j);
+	a(t, i, j) = a(t - 1, i, j);
 	}
-	else if (a(t, i, j) == false && neighbors == 3)
-	a(t + 1, i, j) = true;
+	else if (a(t - 1, i, j) == false && neighbors == 3)
+	a(t, i, j) = true;
 	};
 	life_2D.registerArray (a);
 	life_2D.registerShape(life_shape_2D);
@@ -31930,8 +31936,8 @@ life_2D.registerBoundaryFn(a, life_bv_2D);
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_a_0 = a_base + ((t) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
-	pt_a_1 = a_base + ((t + 1) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_0 = a_base + ((t - 1) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_1 = a_base + ((t) & 1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,
