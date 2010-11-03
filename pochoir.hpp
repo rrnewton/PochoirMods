@@ -65,19 +65,22 @@ class Pochoir {
     /* register boundary value function with corresponding Pochoir_Array object directly */
     void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
         arr.registerBV(_bv1);
+        registerArray(arr);
     } 
     void registerBoundaryFn(Pochoir_Array<T, 2, TOGGLE> & arr, BValue_2D _bv2) {
         arr.registerBV(_bv2);
+        registerArray(arr);
     } 
     void registerBoundaryFn(Pochoir_Array<T, 3, TOGGLE> & arr, BValue_3D _bv3) {
         arr.registerBV(_bv3);
+        registerArray(arr);
     } 
-    template <typename Range>
-    void registerDomain(Range const & i);
-    template <typename Range>
-    void registerDomain(Range const & i, Range const & j);
-    template <typename Range>
-    void registerDomain(Range const & i, Range const & j, Range const & k);
+    template <typename Domain>
+    void registerDomain(Domain const & i);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k);
 
     /* Executable Spec */
     template <typename BF>
@@ -118,8 +121,8 @@ void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N
     }
 }
 
-template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j, Range const & r_k) {
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k) {
     grid_.x0[2] = r_i.first();
     grid_.x1[2] = r_i.first() + r_i.size();
     grid_.x0[1] = r_j.first();
@@ -132,8 +135,8 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const &
     stride_[0] = r_k.stride();
 }
 
-template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const & r_j) {
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j) {
     grid_.x0[1] = r_i.first();
     grid_.x1[1] = r_i.first() + r_i.size();
     grid_.x0[0] = r_j.first();
@@ -143,8 +146,8 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i, Range const &
     stride_[0] = r_j.stride();
 }
 
-template <typename T, int N_RANK, int TOGGLE> template <typename Range>
-void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Range const & r_i) {
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i) {
     grid_.x0[0] = r_i.first();
     grid_.x1[0] = r_i.first() + r_i.size();
     logic_size_[0] = r_i.size();

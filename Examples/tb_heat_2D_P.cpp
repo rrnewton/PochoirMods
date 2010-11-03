@@ -120,7 +120,7 @@ int main(int argc, char * argv[])
      * value function
      */
     heat_2D.registerBoundaryFn(a, heat_bv_2D);
-    heat_2D.registerArray(a);
+//    heat_2D.registerArray(a);
     heat_2D.registerShape(heat_shape_2D);
     heat_2D.registerDomain(I, J);
 
