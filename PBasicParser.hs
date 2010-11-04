@@ -104,13 +104,18 @@ ppStencil l_id l_stencil l_state =
            l_array <- parens identifier
            semi
            case Map.lookup l_array $ pArray l_state of
-               Nothing -> return (l_id ++ ".registerArray(" ++ l_array ++ "); /* ERROR!!! */" ++ breakline)
+               Nothing -> return (l_id ++ ".registerArray(" ++ l_array ++ 
+                                  "); /* ERROR!!! */" ++ breakline)
                Just l_pArray -> registerArray l_id l_array l_pArray
     <|> do try $ pMember "registerBoundaryFn"
            l_boundaryParams <- parens $ commaSep1 identifier
            semi
-           updateState $ updateStencilBoundary l_id True
-           return (l_id ++ ".registerBoundaryFn(" ++ (intercalate ", " l_boundaryParams) ++ ");" ++ breakline)
+           let l_array = head l_boundaryParams
+           let l_bdry = head $ tail l_boundaryParams 
+           case Map.lookup l_array $ pArray l_state of
+               Nothing -> return (l_id ++ ".registerBoundaryFn(" ++ l_array ++ ", " ++ 
+                                  l_bdry ++ "); /* ERROR!!! */" ++ breakline)
+               Just l_pArray -> registerBoundaryFn l_id l_boundaryParams l_pArray
     <|> do try $ pMember "run"
            (l_tstep, l_func) <- parens pStencilRun
            semi
@@ -209,6 +214,12 @@ pStencilRun =
            l_func <- identifier
            return (show l_tstep, l_func)
     <?> "Stencil Run Parameters"
+
+registerBoundaryFn :: String -> [String] -> PArray -> GenParser Char ParserState String 
+registerBoundaryFn l_id l_boundaryParams l_pArray =
+    do updateState $ updateStencilArray l_id l_pArray
+       updateState $ updateStencilBoundary l_id True
+       return (l_id ++ ".registerBoundaryFn(" ++ (intercalate ", " l_boundaryParams) ++ ");" ++ breakline)
 
 registerArray :: String -> String -> PArray -> GenParser Char ParserState String
 registerArray l_id l_array l_pArray =
