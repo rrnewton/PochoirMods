@@ -47,6 +47,7 @@ class Pochoir {
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
         int arr_len_;
         int arr_idx_;
+        bool regArrayFlag, regBdryFlag, regDomainFlag, regShapeFlag;
     public:
     Pochoir() {
         for (int i = 0; i < N_RANK; ++i) {
@@ -57,6 +58,7 @@ class Pochoir {
         arr_list_ = (Pochoir_Array<T, N_RANK, TOGGLE>**)calloc(ARRAY_SIZE, sizeof(Pochoir_Array<T, N_RANK, TOGGLE>*));
         arr_len_ = 0;
         arr_idx_ = 0;
+        regArrayFlag = regDomainFlag = regShapeFlag = false;
     }
     /* currently, we just compute the slope[] out of the shape[] */
     /* We get the grid_info out of arrayInUse */
@@ -83,6 +85,8 @@ class Pochoir {
     template <typename Domain>
     void registerDomain(Domain const & i, Domain const & j, Domain const & k);
 
+    void checkFlag(bool flag, char const * str);
+    void checkFlags(void);
     /* Executable Spec */
     template <typename BF>
     void run(int timestep, BF const & bf);
@@ -98,9 +102,25 @@ class Pochoir {
 };
 
 template <typename T, int N_RANK, int TOGGLE>
+void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
+    if (!flag) {
+        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", __FILE__, __FUNCTION__, __LINE__, str);
+        exit(1);
+    }
+}
+template <typename T, int N_RANK, int TOGGLE>
+void Pochoir<T, N_RANK, TOGGLE>::checkFlags(void) {
+    checkFlag(regArrayFlag, "Array");
+    checkFlag(regDomainFlag, "Domain");
+    checkFlag(regShapeFlag, "Shape");
+    return;
+}
+
+template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::registerArray(Pochoir_Array<T, N_RANK, TOGGLE> & arr) {
     arr_list_[arr_idx_] = &(arr);
     ++arr_idx_; ++arr_len_;
+    regArrayFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <size_t N_SIZE>
@@ -122,6 +142,7 @@ void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N
     for (int i = 0; i < N_RANK; ++i) {
         slope_[i] = (int)ceil((float)slope_[i]/time_slope);
     }
+    regShapeFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
@@ -136,6 +157,7 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const
     stride_[2] = r_i.stride();
     stride_[1] = r_j.stride();
     stride_[0] = r_k.stride();
+    regDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
@@ -147,6 +169,7 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const
     logic_size_[1] = r_i.size(); logic_size_[0] = r_j.size();
     stride_[1] = r_i.stride();
     stride_[0] = r_j.stride();
+    regDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
@@ -155,6 +178,7 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i) {
     grid_.x1[0] = r_i.first() + r_i.size();
     logic_size_[0] = r_i.size();
     stride_[0] = r_i.stride();
+    regDomainFlag = true;
 }
 
 /* Executable Spec */
@@ -174,6 +198,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
+    checkFlags();
     algor.base_case_kernel(0 + time_shift_, timestep + time_shift_, grid_, bf);
     /* obase_boundary_p() is a parallel divide-and-conquer algorithm, which checks
      * boundary for every point
@@ -196,6 +221,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
+    checkFlags();
 #if BICUT
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 #else
@@ -215,6 +241,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
+    checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
 #if BICUT
     algor.obase_bicut(0+time_shift_, timestep+time_shift_, grid_, f);
@@ -238,6 +265,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
         arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->set_logic_size(logic_size_);
     }
+    checkFlags();
 #if BICUT
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
 #else

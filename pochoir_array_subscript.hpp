@@ -259,6 +259,8 @@ class Pochoir_Array {
                 logic_size_[i] = _size[i]; 
         }
 
+#if 0
+        /* We should prevent user from calling this function directly! */
         template <size_t N_SIZE>
         void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
             /* currently we just get the slope_[] out of the shape[] */
@@ -277,7 +279,7 @@ class Pochoir_Array {
                 slope_[i] = (int)ceil((float)slope_[i]/time_slope);
             }
         }
-
+#endif
 		/* return size */
 		int phys_size(T_dim _dim) const { return phys_size_[_dim]; }
 		int logic_size(T_dim _dim) const { return logic_size_[_dim]; }

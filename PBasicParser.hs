@@ -47,8 +47,8 @@ lexer = Token.makeTokenParser (javaStyle
                identLetter = alphaNum <|> oneOf "_'", 
                nestedComments = True,
                reservedOpNames = ["*", "/", "+", "-", "!", "&&", "||", "=", ">", ">=", 
-                                  "<", "<=", "==", "+=", "-=", "*=", "/=", "&=", "|=",
-                                  "<<=", ">>=", "^=", "++", "--"],
+                                  "<", "<=", "==", "!=", "+=", "-=", "*=", "&=", "|=", 
+                                  "<<=", ">>=", "^=", "++", "--", "?", ":"],
                reservedNames = ["Pochoir_Array", "Pochoir", "Pochoir_Domain", 
                                 "Pochoir", "Pochoir_pRange", 
                                 "Pochoir_kernel_1D", "Pochoir_kernel_2D", 
@@ -449,7 +449,8 @@ exprStmtDim = buildExpressionParser tableStmtDim termStmtDim <?> "ExprStmtDim"
 
 tableStmtDim = [
          [bop "*" "*" AssocLeft, bop "/" "/" AssocLeft],
-         [bop "+" "+" AssocLeft, bop "-" "-" AssocLeft]]
+         [bop "+" "+" AssocLeft, bop "-" "-" AssocLeft],
+         [bop "==" "==" AssocLeft, bop "!=" "!=" AssocLeft]]
          where bop str fop assoc = Infix ((reservedOp str >> return (DimDuo fop)) <?> "operator") assoc
 
 termStmtDim :: GenParser Char ParserState DimExpr
@@ -481,8 +482,10 @@ tableStmt = [[Prefix (reservedOp "-" >> return (Uno "-")),
          [op "+" "+" AssocLeft, op "-" "-" AssocLeft],
          [op ">" ">" AssocLeft, op "<" "<" AssocLeft,
           op ">=" ">=" AssocLeft, op "<=" "<=" AssocLeft,
-          op "==" "==" AssocLeft],
+          op "==" "==" AssocLeft, op "!=" "!=" AssocLeft],
          [op "&&" "&&" AssocLeft, op "||" "||" AssocLeft],
+         [op ":" ":" AssocLeft],
+         [op "?" "?" AssocLeft],
          [Infix (reservedOp "=" >> return (Duo "=")) AssocLeft,
           Infix (reservedOp "/=" >> return (Duo "/=")) AssocLeft,
           Infix (reservedOp "*=" >> return (Duo "*=")) AssocLeft,
@@ -510,8 +513,21 @@ termStmt =  do l_expr <- try (parens exprStmt)
                return (BOOL "false")
         <|> do try pParenTermStmt
         <|> do try pBracketTermStmt
+        <|> do try pBExprTermStmt
         <|> do try pPlainVarTermStmt
+--        <|> do try pCondTermStmt
         <?> "term statement"
+
+{-
+pCondTermStmt :: GenParser Char ParserState Expr
+pCondTermStmt =
+    do l_cond <- try exprStmt
+       reservedOp "?"
+       l_trueExpr <- try exprStmt
+       reservedOp ":"
+       l_falseExpr <- try exprStmt
+       return (COND l_cond l_trueExpr l_falseExpr)
+-}
 
 pParenTermStmt :: GenParser Char ParserState Expr
 pParenTermStmt =
@@ -524,6 +540,12 @@ pBracketTermStmt =
     do l_var <- try identifier
        l_dim <- brackets exprStmtDim
        return (BVAR l_var l_dim)
+
+pBExprTermStmt :: GenParser Char ParserState Expr
+pBExprTermStmt =
+    do l_var <- try identifier
+       l_expr <- brackets exprStmt
+       return (BExprVAR l_var l_expr)
 
 pPlainVarTermStmt :: GenParser Char ParserState Expr
 pPlainVarTermStmt =

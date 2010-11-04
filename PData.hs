@@ -105,6 +105,7 @@ data Expr = VAR String
           | PVAR String [DimExpr]
           -- BVAR : v[a]
           | BVAR String DimExpr
+          | BExprVAR String Expr
           -- Uno is prefix unary operator
           | Uno Uop Expr
           -- PostUno is postfix unary operator
@@ -148,6 +149,7 @@ instance Show Expr where
     show (VAR str) = str
     show (PVAR a xList@(x:xs)) = a ++ "(" ++ showList xList "" ++ ")"
     show (BVAR a x) = a ++ "[" ++ show x ++ "]"
+    show (BExprVAR a e) = a ++ "[" ++ show e ++ "]"
     show (Uno uop expr) = uop ++ show expr 
     show (PostUno uop expr) = show expr ++ uop
     show (Duo bop lexpr rexpr) = show lexpr ++ " " ++ bop ++ " " ++ show rexpr
@@ -306,6 +308,7 @@ transStmts l_stmts@(a:as) l_action = transStmt a : transStmts as l_action
           -- if it's in the form of BVAR, then the user must have already done some
           -- manual transformation on its source, we just leave them untouched!
           transExpr (BVAR v dim) = BVAR v dim
+          transExpr (BExprVAR v e) = BExprVAR v $ transExpr e
           transExpr (PVAR v dL) = l_action (PVAR v dL)
           transExpr (Uno uop e) = Uno uop $ transExpr e
           transExpr (PostUno uop e) = PostUno uop $ transExpr e
