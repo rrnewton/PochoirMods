@@ -47,7 +47,7 @@ class Pochoir {
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
         int arr_len_;
         int arr_idx_;
-        bool regArrayFlag, regBdryFlag, regDomainFlag, regShapeFlag;
+        bool regArrayFlag, regDomainFlag, regShapeFlag;
     public:
     Pochoir() {
         for (int i = 0; i < N_RANK; ++i) {
@@ -194,12 +194,12 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
         arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->set_logic_size(logic_size_);
+        arr_list_[i]->registerDomain(grid_);
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
     checkFlags();
-    algor.base_case_kernel(0 + time_shift_, timestep + time_shift_, grid_, bf);
+    algor.base_case_kernel_boundary(0 + time_shift_, timestep + time_shift_, grid_, bf);
     /* obase_boundary_p() is a parallel divide-and-conquer algorithm, which checks
      * boundary for every point
      */
@@ -219,7 +219,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
         arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->set_logic_size(logic_size_);
+        arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
 #if BICUT
@@ -239,7 +239,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
         arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->set_logic_size(logic_size_);
+        arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
@@ -263,7 +263,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
         arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->set_logic_size(logic_size_);
+        arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
 #if BICUT

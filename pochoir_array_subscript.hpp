@@ -121,6 +121,7 @@ class Pochoir_Array {
         T * data_; /* begining data pointer of view_, reserved for iterator! */
 		typedef int size_info[N_RANK];
 		size_info logic_size_; // logical of elements in each dimension
+		size_info logic_start_, logic_end_; 
 		size_info phys_size_; // physical of elements in each dimension
 		size_info stride_; // stride of each dimension
 		int total_size_;
@@ -254,12 +255,22 @@ class Pochoir_Array {
                 slope_[i] = _slope[i];
         }
 
+        void registerDomain(grid_info<N_RANK> initial_grid) {
+            for (int i = 0; i < N_RANK; ++i) {
+                logic_start_[i] = initial_grid.x0[i];
+                logic_end_[i] = initial_grid.x1[i];
+                logic_size_[i] = initial_grid.x1[i] - initial_grid.x0[i];
+            }
+        }
+
+#if 0
 		void set_logic_size(int const _size[]) { 
             for (int i = 0; i < N_RANK; ++i) 
                 logic_size_[i] = _size[i]; 
         }
+#endif
 
-#if 0
+#if 1
         /* We should prevent user from calling this function directly! */
         template <size_t N_SIZE>
         void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
@@ -320,26 +331,27 @@ class Pochoir_Array {
         inline bool check_boundary(size_info const & _idx) const {
             bool touch_boundary = false;
             for (int i = 0; i < N_RANK; ++i) {
-                touch_boundary |= (_idx[i] < 0 
-                                || _idx[i] > logic_size_[i]-1);
+                touch_boundary |= (_idx[i] < logic_start_[i]
+                                || _idx[i] >= logic_end_[i]);
             }
             return touch_boundary;
         }
 
         inline bool check_boundary(int _idx1, int _idx0) {
-            return (_idx0 < 0 || _idx0 > logic_size_[0]-1);
+            return (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0]);
         }
 
         inline bool check_boundary(int _idx2, int _idx1, int _idx0) {
-            return (_idx0 < 0 || _idx0 > logic_size_[0]-1 
-                 || _idx1 < 0 || _idx1 > logic_size_[1]-1); 
+            return (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0]
+                 || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1]);
         }
 
         inline bool check_boundary(int _idx3, int _idx2, int _idx1, int _idx0) {
-            return (_idx0 < 0 || _idx0 > logic_size_[0]-1 
-                 || _idx1 < 0 || _idx1 > logic_size_[1]-1 
-                 || _idx2 < 0 || _idx2 > logic_size_[2]-1); 
+            return (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0]
+                 || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1]
+                 || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2]);
         }
+
 #endif
         /* 
          * orig_value() is reserved for "ostream" : cout << Pochoir_Array

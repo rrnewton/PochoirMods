@@ -74,7 +74,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_serial(int t0, int t1, Grid_info 
 #if DEBUG
         print_grid(stdout, t0, t1, grid);
 #endif
-        base_case_kernel(t0, t1, grid, f);
+        base_case_kernel_boundary(t0, t1, grid, f);
         return;
     } else  {
 		/* N_RANK-1 because we exclude the time dimension here */
@@ -209,7 +209,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut(int t0, int t1, Grid_info c
 //    printf("call Adaptive! ");
 //	  print_grid(stdout, t0, t1, grid);
 #endif
-	base_case_kernel(t0, t1, grid, f);
+	base_case_kernel_interior(t0, t1, grid, f);
 	return;
 }
 
@@ -239,7 +239,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_adaptive(int t0, int t1, Grid_inf
         printf("call Adaptive! ");
 		print_grid(stdout, t0, t1, grid);
 #endif
-		base_case_kernel(t0, t1, grid, f);
+		base_case_kernel_interior(t0, t1, grid, f);
 		return;
 	} else  {
 		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
@@ -463,13 +463,13 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut_boundary_p(int t0, int t1, 
         printf("call Boundary! ");
         print_grid(stdout, t0, t1, l_father_grid);
 #endif
-		base_case_kernel(t0, t1, l_father_grid, bf);
+		base_case_kernel_boundary(t0, t1, l_father_grid, bf);
     } else {
 #if DEBUG
         printf("call Interior! ");
 	    print_grid(stdout, t0, t1, l_father_grid);
 #endif
-	    base_case_kernel(t0, t1, l_father_grid, f);
+	    base_case_kernel_interior(t0, t1, l_father_grid, f);
     }
     return;
 }
@@ -509,13 +509,13 @@ inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1,
 	        printf("call Boundary! ");
             print_grid(stdout, t0, t1, l_father_grid);
 #endif
-			base_case_kernel(t0, t1, l_father_grid, bf);
+			base_case_kernel_boundary(t0, t1, l_father_grid, bf);
         } else {
 #if DEBUG
             printf("call Interior! ");
 	    	print_grid(stdout, t0, t1, l_father_grid);
 #endif
-			base_case_kernel(t0, t1, l_father_grid, f);
+			base_case_kernel_interior(t0, t1, l_father_grid, f);
         }
 		return;
 	} else  {
@@ -915,7 +915,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
         obase_bicut_boundary_p(t0+halflt, t1, l_son_grid, bf);
         return;
 	}
-	base_case_kernel(t0, t1, l_father_grid, bf);
+	base_case_kernel_boundary(t0, t1, l_father_grid, bf);
 	return;
 }
 
@@ -945,7 +945,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 	}	
 
 	if (base_cube) {
-		base_case_kernel(t0, t1, l_father_grid, bf);
+		base_case_kernel_boundary(t0, t1, l_father_grid, bf);
 		return;
 	} else  {
 		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
@@ -1161,7 +1161,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
         print_grid(stdout, t0, t1, l_father_grid);
 #endif
 		//bf(t0, t1, grid);
-		base_case_kernel(t0, t1, l_father_grid, bf);
+		base_case_kernel_boundary(t0, t1, l_father_grid, bf);
     } else {
 #if DEBUG
         printf("call Interior! ");
@@ -1206,7 +1206,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
             print_grid(stdout, t0, t1, l_father_grid);
 #endif
 			//bf(t0, t1, grid);
-			base_case_kernel(t0, t1, l_father_grid, bf);
+			base_case_kernel_boundary(t0, t1, l_father_grid, bf);
         } else {
 #if DEBUG
             printf("call Interior! ");

@@ -35,21 +35,64 @@
 
 using namespace std;
 
-template <T_dim N_RANK, typename Grid_info, typename F>
-struct meta_grid {
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f); 
+template <T_dim N_RANK, typename Grid_info, typename BF>
+struct meta_grid_boundary {
+	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, BF const & bf); 
 };
 
-template <typename Grid_info, typename F>
-struct meta_grid <3, Grid_info, F>{
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
+template <typename Grid_info, typename BF>
+struct meta_grid_boundary <3, Grid_info, BF>{
+	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
 		for (int i = grid.x0[2]; i < grid.x1[2]; ++i) {
             int new_i = pmod_lu(i, initial_grid.x0[2], initial_grid.x1[2]);
 			for (int j = grid.x0[1]; j < grid.x1[1]; ++j) {
                 int new_j = pmod_lu(j, initial_grid.x0[1], initial_grid.x1[1]);
         for (int k = grid.x0[0]; k < grid.x1[0]; ++k) {
             int new_k = pmod_lu(k, initial_grid.x0[0], initial_grid.x1[0]);
-                f(t, new_i, new_j, new_k);
+                bf(t, new_i, new_j, new_k);
+        }
+			}
+		}
+	} 
+};
+
+template <typename Grid_info, typename BF>
+struct meta_grid_boundary <2, Grid_info, BF>{
+	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, BF const & bf) {
+		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
+            int new_i = pmod_lu(i, initial_grid.x0[1], initial_grid.x1[1]);
+			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
+                int new_j = pmod_lu(j, initial_grid.x0[0], initial_grid.x1[0]);
+                bf(t, new_i, new_j);
+			}
+		}
+	} 
+};
+
+template <typename Grid_info, typename BF>
+struct meta_grid_boundary <1, Grid_info, BF>{
+	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, BF const & bf) {
+		for (int i = grid.x0[0]; i < grid.x1[0]; ++i) {
+            int new_i = pmod_lu(i, initial_grid.x0[0], initial_grid.x1[0]);
+		    bf(t, new_i);
+        }
+	} 
+};
+
+template <T_dim N_RANK, typename Grid_info, typename F>
+struct meta_grid_interior {
+	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f); 
+};
+
+template <typename Grid_info, typename F>
+struct meta_grid_interior <3, Grid_info, F>{
+	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[2]; i < grid.x1[2]; ++i) {
+			for (int j = grid.x0[1]; j < grid.x1[1]; ++j) {
+        for (int k = grid.x0[0]; k < grid.x1[0]; ++k) {
+                f(t, i, j, k);
         }
 			}
 		}
@@ -57,24 +100,21 @@ struct meta_grid <3, Grid_info, F>{
 };
 
 template <typename Grid_info, typename F>
-struct meta_grid <2, Grid_info, F>{
+struct meta_grid_interior <2, Grid_info, F>{
 	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
 		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
-            int new_i = pmod_lu(i, initial_grid.x0[1], initial_grid.x1[1]);
 			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
-                int new_j = pmod_lu(j, initial_grid.x0[0], initial_grid.x1[0]);
-                f(t, new_i, new_j);
+                f(t, i, j);
 			}
 		}
 	} 
 };
 
 template <typename Grid_info, typename F>
-struct meta_grid <1, Grid_info, F>{
+struct meta_grid_interior <1, Grid_info, F>{
 	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
 		for (int i = grid.x0[0]; i < grid.x1[0]; ++i) {
-            int new_i = pmod_lu(i, initial_grid.x0[0], initial_grid.x1[0]);
-		    f(t, new_i);
+		    f(t, i);
         }
 	} 
 };
@@ -148,7 +188,9 @@ struct Algorithm {
     void set_slope(int const slope[]);
     inline bool touch_boundary(int i, int lt, Grid_info & grid);
     template <typename F> 
-	inline void base_case_kernel(int t0, int t1, Grid_info const grid, F const & f);
+	inline void base_case_kernel_interior(int t0, int t1, Grid_info const grid, F const & f);
+    template <typename BF> 
+	inline void base_case_kernel_boundary(int t0, int t1, Grid_info const grid, BF const & bf);
     template <typename F> 
 	inline void walk_serial(int t0, int t1, Grid_info const grid, F const & f);
 
@@ -240,11 +282,25 @@ void Algorithm<N_RANK, Grid_info>::set_slope(int const slope[])
 }
 
 template <T_dim N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::base_case_kernel(int t0, int t1, Grid_info const grid, F const & f) {
+inline void Algorithm<N_RANK, Grid_info>::base_case_kernel_interior(int t0, int t1, Grid_info const grid, F const & f) {
 	Grid_info l_grid = grid;
 	for (int t = t0; t < t1; ++t) {
 		/* execute one single time step */
-		meta_grid<N_RANK, Grid_info, F>::single_step(t, l_grid, initial_grid_, f);
+		meta_grid_interior<N_RANK, Grid_info, F>::single_step(t, l_grid, initial_grid_, f);
+
+		/* because the shape is trapezoid! */
+		for (int i = 0; i < N_RANK; ++i) {
+			l_grid.x0[i] += l_grid.dx0[i]; l_grid.x1[i] += l_grid.dx1[i];
+		}
+	}
+}
+
+template <T_dim N_RANK, typename Grid_info> template <typename BF>
+inline void Algorithm<N_RANK, Grid_info>::base_case_kernel_boundary(int t0, int t1, Grid_info const grid, BF const & bf) {
+	Grid_info l_grid = grid;
+	for (int t = t0; t < t1; ++t) {
+		/* execute one single time step */
+		meta_grid_boundary<N_RANK, Grid_info, BF>::single_step(t, l_grid, initial_grid_, bf);
 
 		/* because the shape is trapezoid! */
 		for (int i = 0; i < N_RANK; ++i) {
