@@ -85,7 +85,7 @@ int main(int argc, char * argv[])
 	/* data structure of Pochoir - row major */
 	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
     Pochoir <bool, N_RANK> life_2D;
-	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
+//	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 #if 0
     Pochoir_Shape<2> life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
 #else
@@ -137,9 +137,9 @@ int main(int argc, char * argv[])
 #endif
     Pochoir_kernel_end
 
-    life_2D.registerArray(a);
+//    life_2D.registerArray(a);
     life_2D.registerShape(life_shape_2D);
-    life_2D.registerDomain(I, J);
+//    life_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
     for (int times = 0; times < TIMES; ++times) {

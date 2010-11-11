@@ -87,7 +87,7 @@ int main(int argc, char * argv[])
 	/* data structure of Pochoir - row major */
 	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
     Pochoir<double, N_RANK> heat_2D;
-    Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
+//    Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 #if 0
     Pochoir_Shape<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
 #else
@@ -130,7 +130,7 @@ int main(int argc, char * argv[])
     heat_2D.registerBoundaryFn(a, heat_bv_2D);
 //    heat_2D.registerArray(a);
     heat_2D.registerShape(heat_shape_2D);
-    heat_2D.registerDomain(I, J);
+//    heat_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
     for (int times = 0; times < TIMES; ++times) {

@@ -139,6 +139,7 @@ class Pochoir_Array {
          */
         explicit Pochoir_Array (int sz0) {
             logic_size_[0] = phys_size_[0] = sz0;
+            logic_start_[0] = 0; logic_end_[0] = sz0;
             stride_[0] = 1; 
             total_size_ = sz0;
             view_ = NULL;
@@ -153,6 +154,8 @@ class Pochoir_Array {
 		explicit Pochoir_Array (int sz1, int sz0) {
 			logic_size_[1] = sz1; logic_size_[0] = sz0; 
 			phys_size_[1] = sz1; phys_size_[0] = sz0; 
+            logic_start_[0] = 0; logic_end_[0] = sz0;
+            logic_start_[1] = 0; logic_end_[1] = sz1;
 			stride_[1] = sz0; stride_[0] = 1; 
 			total_size_ = phys_size_[0] * phys_size_[1];
 			view_ = NULL;
@@ -167,6 +170,9 @@ class Pochoir_Array {
 		explicit Pochoir_Array (int sz2, int sz1, int sz0) {
 			logic_size_[2] = sz2; logic_size_[1] = sz1; logic_size_[0] = sz0; 
 			phys_size_[2] = sz2; phys_size_[1] = sz1; phys_size_[0] = sz0; 
+            logic_start_[0] = 0; logic_end_[0] = sz0;
+            logic_start_[1] = 0; logic_end_[1] = sz1;
+            logic_start_[2] = 0; logic_end_[2] = sz2;
 			stride_[0] = 1;  
 			total_size_ = phys_size_[2];
 			for (T_dim i = 0; i < 2; ++i) {
@@ -192,6 +198,7 @@ class Pochoir_Array {
 				phys_size_[i] = orig.phys_size(i);
 				logic_size_[i] = orig.logic_size(i);
 				stride_[i] = orig.stride(i);
+                logic_start_[i] = 0; logic_end_[i] = logic_size_[i];
 			}
 			view_ = NULL;
 			view_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).view();

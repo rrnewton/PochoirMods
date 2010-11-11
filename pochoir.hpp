@@ -48,6 +48,10 @@ class Pochoir {
         int arr_len_;
         int arr_idx_;
         bool regArrayFlag, regDomainFlag, regShapeFlag;
+        void checkFlag(bool flag, char const * str);
+        void checkFlags(void);
+        void getDomainFromArray(void);
+
     public:
     Pochoir() {
         for (int i = 0; i < N_RANK; ++i) {
@@ -65,6 +69,15 @@ class Pochoir {
     void registerArray(Pochoir_Array<T, N_RANK, TOGGLE> & arr);
     template <size_t N_SIZE>
     void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]);
+
+    /* We should still keep the registerDomain for zero-padding!!! */
+    template <typename Domain>
+    void registerDomain(Domain const & i);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k);
+
     /* register boundary value function with corresponding Pochoir_Array object directly */
     void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
         arr.registerBV(_bv1);
@@ -78,15 +91,6 @@ class Pochoir {
         arr.registerBV(_bv3);
         registerArray(arr);
     } 
-    template <typename Domain>
-    void registerDomain(Domain const & i);
-    template <typename Domain>
-    void registerDomain(Domain const & i, Domain const & j);
-    template <typename Domain>
-    void registerDomain(Domain const & i, Domain const & j, Domain const & k);
-
-    void checkFlag(bool flag, char const * str);
-    void checkFlags(void);
     /* Executable Spec */
     template <typename BF>
     void run(int timestep, BF const & bf);
@@ -108,12 +112,38 @@ void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
         exit(1);
     }
 }
+
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlags(void) {
     checkFlag(regArrayFlag, "Array");
     checkFlag(regDomainFlag, "Domain");
     checkFlag(regShapeFlag, "Shape");
     return;
+}
+
+template <typename T, int N_RANK, int TOGGLE> 
+void Pochoir<T, N_RANK, TOGGLE>::getDomainFromArray(void) {
+    if (arr_len_ == 0) {
+        printf("No Pochoir_Array registered! Quit!\n");
+        exit(1);
+    }
+    /* get the initial grid */
+    for (int i = 0; i < N_RANK; ++i) {
+        grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
+        logic_size_[i] = arr_list_[0]->size(i);
+        stride_[i] = 1;
+    }
+
+    /* check the consistency of all engaged Pochoir_Array */
+    for (int i = 1; i < arr_len_; ++i) {
+        for (int j = 0; j < N_RANK; ++j) {
+            if (arr_list_[i]->size(j) != grid_.x1[j]) {
+                printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
+                exit(1);
+            }
+        }
+    }
+    regDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE>
@@ -184,13 +214,14 @@ void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i) {
 /* Executable Spec */
 template <typename T, int N_RANK, int TOGGLE> template <typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
-    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
-    algor.set_initial_grid(grid_);
-    algor.set_stride(stride_);
-    algor.set_logic_size(logic_size_);
     /* this version uses 'f' to compute interior region, 
      * and 'bf' to compute boundary region
      */
+    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    getDomainFromArray();
+    algor.set_initial_grid(grid_);
+    algor.set_stride(stride_);
+    algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
         arr_list_[i]->registerSlope(slope_);
@@ -210,6 +241,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
     Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
     algor.set_logic_size(logic_size_);
@@ -233,6 +265,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
 template <typename T, int N_RANK, int TOGGLE> template <typename F>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
     algor.set_logic_size(logic_size_);
@@ -254,6 +287,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const & bf) {
     Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
     algor.set_logic_size(logic_size_);
