@@ -31,6 +31,7 @@ import Control.Monad
 
 import PBasicParser
 import PParser2
+import PUtils
 import PData
 import qualified Data.Map as Map
 
@@ -50,7 +51,7 @@ pToken =
     <|> try pParsePochoirArray
     <|> try pParsePochoirStencil
     <|> try pParsePochoirShapeInfo
-    <|> try pParsePochoirURange
+    <|> try pParsePochoirDomain
     <|> try pParsePochoirKernel1D
     <|> try pParsePochoirKernel2D
     <|> try pParsePochoirKernel3D
@@ -70,19 +71,37 @@ pParsePochoirArray :: GenParser Char ParserState String
 pParsePochoirArray =
     do reserved "Pochoir_Array"
        (l_type, l_rank, l_toggle) <- angles pDeclStatic
-       l_arrayDecl <- commaSep1 pDeclDynamic
-       semi
+       l_arrayDecl0 <- pDeclDynamic
+--       let l_arrayDecl = [l_arrayDecl0]
+--     'many' does NOT have the semantic of rolling back when the parser fails!!!
+       l_arrayDecl1 <- many $ try $ comma >> pDeclDynamic 
+       l_delim <- pDelim 
+       let l_arrayDecl = [l_arrayDecl0] ++ l_arrayDecl1
+--       l_arrayDecl <- commaSep1 pDeclDynamic
+--       semi
        updateState $ updatePArray $ transPArray (l_type, l_rank, l_toggle) l_arrayDecl
-       return (breakline ++ "Pochoir_Array <" ++ show l_type ++ ", " ++ show l_rank ++ ", " ++ show l_toggle ++ "> " ++ pShowArrayDynamicDecl l_arrayDecl ++ ";\n")
+       return (breakline ++ "/* Known*/ Pochoir_Array <" ++ show l_type ++ 
+               ", " ++ show l_rank ++ ", " ++ show l_toggle ++ "> " ++ 
+               pShowArrayDynamicDecl l_arrayDecl ++ l_delim)
+       -- ++ ";\n")
 
 pParsePochoirStencil :: GenParser Char ParserState String
 pParsePochoirStencil = 
     do reserved "Pochoir"
        (l_type, l_rank, l_toggle) <- angles pDeclStatic 
-       l_stencils <- commaSep1 identifier 
-       semi
+       l_stencil0 <- pDeclDynamic
+       l_stencil1 <- many $ try $ comma >> pDeclDynamic
+       l_delim <- pDelim
+       let l_rawStencils = [l_stencil0] ++ l_stencil1
+       let l_stencils = [pSecond l_stencil0] ++ map pSecond l_stencil1
+--       l_stencils <- commaSep1 identifier 
+--       semi
        updateState $ updatePStencil $ transPStencil (l_type, l_rank, l_toggle) l_stencils
-       return (breakline ++ "Pochoir <" ++ show l_type ++ ", " ++ show l_rank ++ ", " ++ show l_toggle ++ "> " ++ pShowListIdentifiers l_stencils ++ ";\n")
+       return (breakline ++ "/* Known */ Pochoir <" ++ show l_type ++ ", " ++ show l_rank ++ 
+               ", " ++ show l_toggle ++ "> " ++ pShowArrayDynamicDecl l_rawStencils ++ 
+               l_delim)
+--               ", " ++ show l_toggle ++ "> " ++ pShowListIdentifiers l_stencils ++ 
+--               ";\n")
 
 pParsePochoirShapeInfo :: GenParser Char ParserState String
 pParsePochoirShapeInfo = 
@@ -96,10 +115,12 @@ pParsePochoirShapeInfo =
        updateState $ updatePShape (l_name, l_rank, l_len, l_shapes)
        return (breakline ++ "Pochoir_Shape <" ++ show l_rank ++ "> " ++ l_name ++ " [" ++ show l_len ++ "] = " ++ pShowShapes l_shapes ++ ";\n")
 
-pParsePochoirURange :: GenParser Char ParserState String
-pParsePochoirURange =
+pParsePochoirDomain :: GenParser Char ParserState String
+pParsePochoirDomain =
     do reserved "Pochoir_Domain"
-       l_rangeDecl <- commaSep1 pDeclDynamic
+       l_rangeDecl0 <- pDeclDynamic
+       l_rangeDecl1 <- many $ try $ comma >> pDeclDynamic
+       let l_rangeDecl = [l_rangeDecl0] ++ l_rangeDecl1
        semi
        updateState $ updatePRange $ transURange l_rangeDecl
        return (breakline ++ "Pochoir_Domain " ++ pShowArrayDynamicDecl l_rangeDecl ++ ";\n")
@@ -167,17 +188,20 @@ pPochoirAutoKernel =
        l_kernel_params <- parens $ commaSep1 (reserved "int" >> identifier)
        symbol "{"
        exprStmts <- manyTill pStatement (try $ reserved "};")
+{-
        l_state <- getState
        let l_iters =
                    if pMode l_state == PIter
                        then getFromStmts getIter (pArray l_state) exprStmts
                        else getFromStmts (getPointer $ l_kernel_params) (pArray l_state) exprStmts
        let l_revIters = transIterN 0 l_iters
+-}
        let l_kernel = PKernel { kName = l_kernel_name, kParams = l_kernel_params,
-                                kStmt = exprStmts, kIter = l_revIters }
+                                kStmt = exprStmts, kIter = [] }
        updateState $ updatePKernel l_kernel
        return (pShowAutoKernel l_kernel_name l_kernel) 
 
+{-
 getIter :: PArray -> Expr -> [Iter]
 getIter arrayInUse (PVAR v dL) =
     let iterName = "iter"
@@ -206,6 +230,7 @@ transDimExpr kL dL@(d:ds) = [d] ++ (transSpaceDimExpr ds)
 transIterN :: Int -> [Iter] -> [Iter]
 transIterN _ [] = []
 transIterN n ((name, array, dim):is) = (name ++ show n, array, dim) : (transIterN (n+1) is)
+-}
 
 pMacroValue :: String -> GenParser Char ParserState String
 pMacroValue l_name = 
@@ -218,6 +243,7 @@ pMacroValue l_name =
                  return ("#define " ++ l_name ++ " " ++ l_value ++ "\n")
           <?> "Macro Definition"
 
+{-
 updatePKernel :: PKernel -> ParserState -> ParserState
 updatePKernel l_kernel parserState =
     parserState { pKernel = Map.insert (kName l_kernel) l_kernel $ pKernel parserState }
@@ -233,7 +259,7 @@ updatePState pstate parserState
             && pState parserState == Unrelated) = parserState { pState = pstate }
     | pstate == Unrelated = parserState { pState = Unrelated }
     | otherwise = parserState { pState = PochoirError }
-
+-}
 {-
  - the 'ptr' won't pass the type checking stage,
  - because 'ptr' is not a (visible) constructor field name!!
@@ -242,6 +268,7 @@ updatePTable :: [a] -> b -> ParserState -> ParserState
 updatePTable ppvalue ptr parserState = 
     parserState { ptr = ppvalue ++ (ptr parserState) }
 -}
+{-
 updatePMacro :: (PName, PValue) -> ParserState -> ParserState
 updatePMacro (l_name, l_value) parserState =
     parserState { pMacro = Map.insert l_name l_value (pMacro parserState) }
@@ -269,22 +296,26 @@ updatePRange pL@(p:ps) parserState =
 pMapInsert :: (Ord k) => (k, a) -> Map.Map k a -> Map.Map k a
 pMapInsert (l_key, l_value) l_map = Map.insert l_key l_value l_map
 
-transPArray :: (PType, Int, Int) -> [(PName, [DimExpr])] -> [(PName, PArray)]
+pSecond (_, b, _) = b
+pThird (_, _, c) = c
+-}
+
+transPArray :: (PType, Int, Int) -> [([PName], PName, [DimExpr])] -> [(PName, PArray)]
 transPArray (l_type, l_rank, l_toggle) [] = []
 transPArray (l_type, l_rank, l_toggle) (p:ps) =
-    let l_name = fst p
-        l_dims = snd p
+    let l_name = pSecond p
+        l_dims = pThird p
     in  (l_name, PArray {aName = l_name, aType = l_type, aRank = l_rank, aDims = l_dims, aMaxShift = 0, aToggle = l_toggle}) : transPArray (l_type, l_rank, l_toggle) ps
 
 transPStencil :: (PType, Int, Int) -> [PName] -> [(PName, PStencil)]
 transPStencil (l_type, l_rank, l_toggle) [] = []
 transPStencil (l_type, l_rank, l_toggle) (p:ps) = (p, PStencil {sName = p, sType = l_type, sRank = l_rank, sToggle = l_toggle, sArrayInUse = [], sRegBound = False}) : transPStencil (l_type, l_rank, l_toggle) ps
 
-transURange :: [(PName, [DimExpr])] -> [(PName, PRange)]
+transURange :: [([PName], PName, [DimExpr])] -> [(PName, PRange)]
 transURange [] = []
 transURange (p:ps) = (l_name, PRange {rName = l_name, rFirst = l_first, rLast = l_last, rStride = DimINT 1}) : transURange ps
-    where l_name = fst p
-          l_first = head $ snd p
-          l_last = head . tail $ snd p
+    where l_name = pSecond p
+          l_first = head $ pThird p
+          l_last = head . tail $ pThird p
 
 

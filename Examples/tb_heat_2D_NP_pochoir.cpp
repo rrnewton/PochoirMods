@@ -31999,16 +31999,40 @@ for (int i = 0; i < N_SIZE; ++i) {
 
 	gettimeofday(&start, 0);
     for (int times = 0; times < 3; ++times) {
-        {
-	#define a(t, i, j) a.interior(t, i, j)
-	auto interior_macro_shadow_heat_2D_fn = [&] (int t, int i, int j) {
+        
+	auto pointer_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
+	grid_info<2> l_grid = grid;
+	double * pt_a_1;
+	double * pt_a_0;
 	
-	a(t + 1, i, j) = 0.125 * (a(t, i + 1, j) - 2.0 * a(t, i, j) + a(t, i - 1, j)) + 0.125 * (a(t, i, j + 1) - 2.0 * a(t, i, j) + a(t, i, j - 1)) + a(t, i, j);
-	};
+	double * a_base = a.data();
+	const int l_a_total_size = a.total_size();
+	int gap_a_1, gap_a_0;
+	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
+
+	for (int t = t0; t < t1; ++t) { 
+	pt_a_0 = a_base + ((t + 1) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_1 = a_base + ((t) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
 	
-	#undef a(t, i, j)
-	heat_2D.run(T_SIZE, interior_macro_shadow_heat_2D_fn, heat_2D_fn);
+	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
+	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,
+	pt_a_0 += gap_a_1, 
+	pt_a_1 += gap_a_1) {
+	#pragma ivdep
+	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j,
+	++pt_a_0, 
+	++pt_a_1) {
+	
+	pt_a_0[0] = 0.125 * (pt_a_1[l_stride_a_1 * (1)] - 2.0 * pt_a_1[0] + pt_a_1[l_stride_a_1 * (-1)]) + 0.125 * (pt_a_1[l_stride_a_0 * (1)] - 2.0 * pt_a_1[0] + pt_a_1[l_stride_a_0 * (-1)]) + pt_a_1[0];
+	} } /* end for (sub-trapezoid) */ 
+	/* Adjust sub-trapezoid! */
+	for (int i = 0; i < 2; ++i) {
+		l_grid.x0[i] += l_grid.dx0[i]; l_grid.x1[i] += l_grid.dx1[i];
 	}
+	} /* end for t */
+	};
+
+	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn);
 	}
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;

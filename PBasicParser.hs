@@ -35,6 +35,7 @@ import Data.Char
 import Data.List
 import qualified Data.Map as Map
 
+import PUtils
 import PData
 
 {- all the token parsers -}
@@ -48,12 +49,12 @@ lexer = Token.makeTokenParser (javaStyle
                nestedComments = True,
                reservedOpNames = ["*", "/", "+", "-", "!", "&&", "||", "=", ">", ">=", 
                                   "<", "<=", "==", "!=", "+=", "-=", "*=", "&=", "|=", 
-                                  "<<=", ">>=", "^=", "++", "--", "?", ":"],
+                                  "<<=", ">>=", "^=", "++", "--", "?", ":", "&"],
                reservedNames = ["Pochoir_Array", "Pochoir", "Pochoir_Domain", 
                                 "Pochoir", "Pochoir_pRange", 
                                 "Pochoir_kernel_1D", "Pochoir_kernel_2D", 
                                 "Pochoir_kernel_3D", "Pochoir_kernel_end",
-                                "auto", "};", 
+                                "auto", "};", "const", "volatile", 
                                 "Pochoir_Boundary_1D", "Pochoir_Boundary_2D",
                                 "Pochoir_Boundary_3D", "Pochoir_Boundary_end",
                                 "#define", "int", "float", "double", "bool", "true", "false",
@@ -92,6 +93,14 @@ pIdentifier = do l_start <- letter <|> char '_'
                  l_body <- many (alphaNum <|> char '_' <?> "Wrong Identifier")
                  return (l_start : l_body)
 
+pDelim :: GenParser Char ParserState String
+pDelim = do try comma
+            return ", "
+     <|> do try semi
+            return ";\n"
+     <|> do try $ symbol ")"
+            return ") "
+
 pMember :: String -> GenParser Char ParserState String
 pMember l_memFunc = 
     do l_start <- char '.'
@@ -104,8 +113,7 @@ ppStencil l_id l_stencil l_state =
            l_array <- parens identifier
            semi
            case Map.lookup l_array $ pArray l_state of
-               Nothing -> return (l_id ++ ".registerArray(" ++ l_array ++ 
-                                  "); /* ERROR!!! */" ++ breakline)
+               Nothing -> registerUndefinedArray l_id l_array l_stencil 
                Just l_pArray -> registerArray l_id l_array l_pArray
     <|> do try $ pMember "registerBoundaryFn"
            l_boundaryParams <- parens $ commaSep1 identifier
@@ -113,8 +121,7 @@ ppStencil l_id l_stencil l_state =
            let l_array = head l_boundaryParams
            let l_bdry = head $ tail l_boundaryParams 
            case Map.lookup l_array $ pArray l_state of
-               Nothing -> return (l_id ++ ".registerBoundaryFn(" ++ l_array ++ ", " ++ 
-                                  l_bdry ++ "); /* ERROR!!! */" ++ breakline)
+               Nothing -> registerUndefinedBoundaryFn l_id l_boundaryParams l_stencil
                Just l_pArray -> registerBoundaryFn l_id l_boundaryParams l_pArray
     <|> do try $ pMember "run"
            (l_tstep, l_func) <- parens pStencilRun
@@ -124,13 +131,34 @@ ppStencil l_id l_stencil l_state =
                                    l_tstep ++ ", " ++ l_func ++ ");" ++ breakline ++ 
                                    "}" ++ breakline)
                Just l_kernel -> 
-                    case pMode l_state of
-                        PTypeShadow -> pSplitTypeShadow (l_id, l_tstep, l_kernel, l_stencil)
-                        PMacroShadow -> pSplitMacroShadow (l_id, l_tstep, l_kernel, l_stencil)
-                        PIter -> pSplitIter  (l_id, l_tstep, l_kernel, l_stencil)
-                        PInterior -> pSplitInterior (l_id, l_tstep, l_kernel, l_stencil)
-                        PPointer -> pSplitPointer (l_id, l_tstep, l_kernel, l_stencil)
+                    let l_revKernel = transKernel l_kernel l_stencil $ pMode l_state
+                    in case pMode l_state of
+                            PTypeShadow -> 
+                                    pSplitTypeShadow (l_id, l_tstep, l_revKernel, l_stencil)
+                            PMacroShadow -> 
+                                    pSplitMacroShadow (l_id, l_tstep, l_revKernel, l_stencil)
+                            PIter -> pSplitIter  (l_id, l_tstep, l_revKernel, l_stencil)
+                            PInterior -> pSplitInterior (l_id, l_tstep, l_revKernel, l_stencil)
+                            PPointer -> pSplitPointer (l_id, l_tstep, l_revKernel, l_stencil)
     <|> do return (l_id)
+
+transKernel :: PKernel -> PStencil -> PMode -> PKernel
+transKernel l_kernel l_stencil l_mode =
+       let l_exprStmts = kStmt l_kernel
+           l_kernelParams = kParams l_kernel
+           l_iters =
+                   if l_mode == PIter
+                       then getFromStmts getIter (transArrayMap $ sArrayInUse l_stencil) l_exprStmts
+                       else getFromStmts (getPointer $ l_kernelParams) (transArrayMap $ sArrayInUse l_stencil) l_exprStmts
+           l_revIters = transIterN 0 l_iters
+       in  l_kernel { kIter = l_revIters }
+ 
+{-
+transArrayMap :: [PArray] -> Map.Map PName PArray
+transArrayMap aL = fromList $ transAssocList aL
+    where transAssocList [] = []
+          transAssocList aL@(a:as) = [(aName a, a)] ++ (transAssocList as)
+-}
 
 pSplitTypeShadow :: (String, String, PKernel, PStencil) -> GenParser Char ParserState String
 pSplitTypeShadow (l_id, l_tstep, l_kernel, l_stencil) = 
@@ -215,17 +243,48 @@ pStencilRun =
            return (show l_tstep, l_func)
     <?> "Stencil Run Parameters"
 
+registerUndefinedBoundaryFn :: String -> [String] -> PStencil -> GenParser Char ParserState String
+registerUndefinedBoundaryFn l_id l_boundaryParams l_stencil =
+    let l_arrayName = head l_boundaryParams
+        l_pArray = PArray {aName = l_arrayName,
+                           aType = sType l_stencil,
+                           aRank = sRank l_stencil,
+                           aDims = [],
+                           aMaxShift = 0,
+                           aToggle = sToggle l_stencil}
+    in do -- updateState $ updatePArray [(l_arrayName, l_pArray)]
+          -- updateState $ updateStencilArray l_id l_pArray
+          -- updateState $ updateStencilBoundary l_id True
+          return (l_id ++ ".registerBoundaryFn(" ++ (intercalate ", " l_boundaryParams) ++ 
+                  "); /* register Undefined Boundary Fn */" ++ breakline)
+
 registerBoundaryFn :: String -> [String] -> PArray -> GenParser Char ParserState String 
 registerBoundaryFn l_id l_boundaryParams l_pArray =
     do updateState $ updateStencilArray l_id l_pArray
        updateState $ updateStencilBoundary l_id True
-       return (l_id ++ ".registerBoundaryFn(" ++ (intercalate ", " l_boundaryParams) ++ ");" ++ breakline)
+       return (l_id ++ ".registerBoundaryFn(" ++ (intercalate ", " l_boundaryParams) ++ 
+               "); /* register Boundary Fn */" ++ breakline)
 
+registerUndefinedArray :: String -> String -> PStencil -> GenParser Char ParserState String
+registerUndefinedArray l_id l_arrayName l_stencil =
+    let l_pArray = PArray {aName = l_arrayName,
+                           aType = sType l_stencil,
+                           aRank = sRank l_stencil,
+                           aDims = [],
+                           aMaxShift = 0,
+                           aToggle = sToggle l_stencil}
+    in  do -- updateState $ updatePArray [(l_arrayName, l_pArray)]
+           -- updateState $ updateStencilArray l_id l_pArray 
+           return (l_id ++ ".registerArray (" ++ l_arrayName ++ 
+                   "); /* register Undefined Array */" ++ breakline)
+    
 registerArray :: String -> String -> PArray -> GenParser Char ParserState String
-registerArray l_id l_array l_pArray =
+registerArray l_id l_arrayName l_pArray =
     do updateState $ updateStencilArray l_id l_pArray
-       return (l_id ++ ".registerArray (" ++ l_array ++ ");" ++ breakline)
+       return (l_id ++ ".registerArray (" ++ l_arrayName ++ 
+               "); /* register Array */" ++ breakline)
 
+{-
 updateStencilArray :: String -> PArray -> ParserState -> ParserState
 updateStencilArray l_id l_pArray parserState =
     let f k x = 
@@ -241,6 +300,7 @@ updateStencilBoundary l_id l_regBound parserState =
                 then Just $ x { sRegBound = l_regBound }
                 else Nothing
     in  parserState { pStencil = Map.updateWithKey f l_id $ pStencil parserState }
+-}
 
 -- pDeclStatic <type, rank, toggle>
 pDeclStatic :: GenParser Char ParserState (PType, PValue, PValue)
@@ -255,12 +315,26 @@ pDeclStaticNum :: GenParser Char ParserState (PValue)
 pDeclStaticNum = do l_rank <- exprDeclDim
                     return (l_rank)
 
-pDeclDynamic :: GenParser Char ParserState (PName, [DimExpr])
-pDeclDynamic = do l_name <- identifier
+pDeclDynamic :: GenParser Char ParserState ([PName], PName, [DimExpr])
+pDeclDynamic = do l_qualifiers <- many cppQualifier
+                  l_name <- identifier
 --                  l_dims <- parens (commaSep1 exprDeclDim)
                   -- exprStmtDim is something might be known at run-time
-                  l_dims <- parens (commaSep1 exprStmtDim)
-                  return (l_name, l_dims)
+                  l_dims <- option [] (parens $ commaSep1 exprStmtDim)
+                  return (l_qualifiers, l_name, l_dims)
+
+cppQualifier :: GenParser Char ParserState PName
+cppQualifier = 
+       do reservedOp "*"
+          return "*"
+   <|> do reservedOp "&"
+          return "&"
+   <|> do reservedOp "&&"
+          return "&&"
+   <|> do reserved "const"
+          return "const"
+   <|> do reserved "volatile"
+          return "volatile"
 
 ppShape :: GenParser Char ParserState [Int]
 ppShape = do l_shape <- braces (commaSep1 $ integer >>= return . fromInteger)

@@ -32014,52 +32014,28 @@ life_2D.registerBoundaryFn(a, life_bv_2D);
 
 	gettimeofday(&start, 0);
     for (int times = 0; times < 3; ++times) {
-        
-	auto pointer_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
-	grid_info<2> l_grid = grid;
-	bool * pt_a_1;
-	bool * pt_a_0;
+        {
+	#define a(t, i, j) a.interior(t, i, j)
+	auto interior_macro_shadow_life_2D_fn = [&] (int t, int i, int j) {
 	
-	bool * a_base = a.data();
-	const int l_a_total_size = a.total_size();
-	int gap_a_1, gap_a_0;
-	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
-
-	for (int t = t0; t < t1; ++t) { 
-	pt_a_0 = a_base + ((t - 1) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
-	pt_a_1 = a_base + ((t) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
-	
-	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
-	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,
-	pt_a_0 += gap_a_1, 
-	pt_a_1 += gap_a_1) {
-	#pragma ivdep
-	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j,
-	++pt_a_0, 
-	++pt_a_1) {
-	
-	int neighbors = pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (-1)] + pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (1)] + pt_a_0[l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_0 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (1)];
-	if (pt_a_0[0] == true && neighbors < 2)
-	pt_a_1[0] = true;
-	else if (pt_a_0[0] == true && neighbors > 3)
+	int neighbors = a(t - 1, i - 1, j - 1) + a(t - 1, i - 1, j) + a(t - 1, i - 1, j + 1) + a(t - 1, i, j - 1) + a(t - 1, i, j + 1) + a(t - 1, i + 1, j - 1) + a(t - 1, i + 1, j) + a(t - 1, i + 1, j + 1);
+	if (a(t - 1, i, j) == true && neighbors < 2)
+	a(t, i, j) = true;
+	else if (a(t - 1, i, j) == true && neighbors > 3)
 	{
-	pt_a_1[0] = false;
+	a(t, i, j) = false;
 	}
-	else if (pt_a_0[0] == true && (neighbors == 2 || neighbors == 3))
+	else if (a(t - 1, i, j) == true && (neighbors == 2 || neighbors == 3))
 	{
-	pt_a_1[0] = pt_a_0[0];
+	a(t, i, j) = a(t - 1, i, j);
 	}
-	else if (pt_a_0[0] == false && neighbors == 3)
-	pt_a_1[0] = true;
-	} } /* end for (sub-trapezoid) */ 
-	/* Adjust sub-trapezoid! */
-	for (int i = 0; i < 2; ++i) {
-		l_grid.x0[i] += l_grid.dx0[i]; l_grid.x1[i] += l_grid.dx1[i];
-	}
-	} /* end for t */
+	else if (a(t - 1, i, j) == false && neighbors == 3)
+	a(t, i, j) = true;
 	};
-
-	life_2D.run_obase(T_SIZE, pointer_life_2D_fn, life_2D_fn);
+	
+	#undef a(t, i, j)
+	life_2D.run(T_SIZE, interior_macro_shadow_life_2D_fn, life_2D_fn);
+	}
 	}
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;

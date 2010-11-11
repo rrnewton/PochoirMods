@@ -428,6 +428,7 @@ pShowArrayInfo arrayInUse = foldr pShowArrayInfoItem "" arrayInUse
                 ".total_size();" ++ breakline
 
 pShowPointers :: [Iter] -> String
+pShowPointers [] = ""
 pShowPointers iL@(i:is) = foldr pShowPointer "" iL
     where pShowPointer (nameIter, arrayInUse, dL) str =
                 str ++ breakline ++ (show $ aType arrayInUse) ++ " * " ++ nameIter ++ ";"
@@ -494,6 +495,7 @@ pShowIterSet iL@(i:is) l_kernelParams = concat $ map pShowIterSetTerm iL
 
 -- PName : list of kernel parameters
 pShowPointerSet :: [Iter] -> [PName] -> String
+pShowPointerSet [] _ = ""
 pShowPointerSet iL@(i:is) l_kernelParams = concat $ map pShowPointerSetTerm iL
     where pShowPointerSetTerm (iterName, array, dim) = 
             let l_arrayName = aName array
@@ -540,7 +542,8 @@ pTransDim n r dL@(d:ds) pL@(p:ps) = pTransDimTerm n r d p : pTransDim (n+1) r ds
               DimDuo bop (pTransDimTerm n r e1 p) (pTransDimTerm n r e2 p)
         
 pShowStrides :: Int -> [PArray] -> String
-pShowStrides n aL = "const int " ++ getStrides n aL ++ ";\n"
+pShowStrides n [] = ""
+pShowStrides n aL@(a:as) = "const int " ++ getStrides n aL ++ ";\n"
     where getStrides n aL@(a:as) = intercalate ", " $ concat $ map (getStride n) aL
           getStride 1 a = let r = 0 
                           in  ["l_stride_" ++ (aName a) ++ "_" ++ show r ++
@@ -614,6 +617,7 @@ pShowPointerForHeader n iL pL =
     where wrapIterInc gap iter = iter ++ " += " ++ gap 
 
 pShowForHeader :: Int -> [PArray] -> [PName] -> String
+pShowForHeader i [] _ = ""
 pShowForHeader i aL@(a:as) pL = 
     let len_pL = length pL
         idx = pL !! (len_pL - 1 - i)
@@ -663,14 +667,15 @@ pShowListIdentifiers (n:ns) = n ++ pShowListIdentifiersL ns
     where pShowListIdentifiersL [] = ""
           pShowListIdentifiersL nL@(n:ns) = ", " ++ pShowListIdentifiers nL
 
-pShowArrayDynamicDecl :: [(PName, [DimExpr])] -> String
-pShowArrayDynamicDecl [] = ""
+pShowArrayDynamicDecl :: [([PName], PName, [DimExpr])] -> String
+pShowArrayDynamicDecl [] = " "
 pShowArrayDynamicDecl (p:ps) = pShowArrayItem p ++  pShowArrayDynamicDeclL ps
-    where pShowArrayDynamicDeclL [] = ""
+    where pShowArrayDynamicDeclL [] = " "
           pShowArrayDynamicDeclL qL@(q:qs) = ", " ++ pShowArrayDynamicDecl qL
 
-pShowArrayItem :: (PName, [DimExpr]) -> String
-pShowArrayItem (a, bL@(b:bs)) = a ++ pShowArrayDim bL
+pShowArrayItem :: ([PName], PName, [DimExpr]) -> String
+pShowArrayItem ([], a, bL) = a ++ pShowArrayDim bL
+pShowArrayItem (qL@(q:qs), a, bL) = intercalate " " qL ++ a ++ pShowArrayDim bL
 
 pShowArrayDim :: [DimExpr] -> String
 pShowArrayDim [] = ""

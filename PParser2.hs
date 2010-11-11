@@ -46,15 +46,15 @@ pToken1 = do reserved "Pochoir_Array"
              return [ch]
       <?> "line"
 
-outputSArray :: (PType, Int, Int) -> Map.Map PName PArray -> (PName, [DimExpr]) -> String
-outputSArray (l_type, l_rank, l_toggle) m_array (l_array, l_dims) =
+outputSArray :: (PType, Int, Int) -> Map.Map PName PArray -> ([PName], PName, [DimExpr]) -> String
+outputSArray (l_type, l_rank, l_toggle) m_array (l_qualifiers, l_array, l_dims) =
     case Map.lookup l_array m_array of
         Nothing -> breakline ++ "Pochoir_Array <" ++ 
-                    show l_type ++ ", " ++ show l_rank ++ "> " ++ 
-                    pShowArrayItem (l_array, l_dims) ++ ";" 
+                    show l_type ++ ", " ++ show l_rank ++ ", " ++ show l_toggle ++ 
+                    "> " ++ pShowArrayItem (l_qualifiers, l_array, l_dims) ++ ";" 
         Just l_pArray -> breakline ++ "Pochoir_Array <" ++ 
                     show l_type ++ ", " ++ show l_rank ++ 
                     ", " ++ show (max l_toggle $ 1+aToggle l_pArray) ++ "> " ++ 
-                    pShowArrayItem (l_array, l_dims) ++ ";" 
+                    pShowArrayItem (l_qualifiers, l_array, l_dims) ++ ";" 
 
 
