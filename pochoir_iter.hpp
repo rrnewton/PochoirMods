@@ -91,13 +91,13 @@ class Pochoir_Iterator {
             return *curr_;
         }
 
-        inline Pochoir_Iterator<T, N_RANK> & operator= (T const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (T const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = rhs;
             return *this;
         }
 
-        inline Pochoir_Iterator<T, N_RANK> & operator= (Pochoir_Iterator<T, N_RANK> const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (Pochoir_Iterator<T, N_RANK, TOGGLE> const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = *rhs;
             return *this;

@@ -334,7 +334,7 @@ pShowShadowArrayInUse aL@(a:as) =
                 l_toggle = aToggle a
                 l_name = aName a
                 pShowShadowHeader (l_type, l_rank, l_toggle) = "interior_shadow<" ++
-                    show l_type ++ ", " ++ show l_rank ++ "> "
+                    show l_type ++ ", " ++ show l_rank ++ ", " ++ show l_toggle ++ "> "
             in breakline ++ pShowShadowHeader (l_type, l_rank, l_toggle) ++ 
                 l_name ++ "_shadow(" ++ l_name ++ ");" ++
                 breakline ++ pShowShadowHeader (l_type, l_rank, l_toggle) ++
@@ -386,14 +386,18 @@ pShowObaseKernel l_name l_kernel =
     in  breakline ++ "auto " ++ l_name ++ " = [&] (" ++
         "int t0, int t1, grid_info<" ++ show l_rank ++ "> const & grid) {" ++ 
         breakline ++ "grid_info<" ++ show l_rank ++ "> l_grid = grid;" ++
-        pShowIters l_iter ++ breakline ++ "int " ++ 
-        intercalate ", " (map (getArrayGaps (l_rank-1)) l_array) ++ ";" ++
+        pShowIters l_iter ++ pShowArrayGaps l_rank l_array ++
         breakline ++ pShowStrides l_rank l_array ++ breakline ++
         "for (int " ++ l_t ++ " = t0; " ++ l_t ++ " < t1; ++" ++ l_t ++ ") { " ++ 
         pShowIterSet l_iter (kParams l_kernel)++
         breakline ++ pShowObaseForHeader l_rank l_iter (tail $ kParams l_kernel) ++
         breakline ++ pShowObaseStmt l_kernel ++ breakline ++ pShowObaseForTail l_rank ++
         pShowObaseTail l_rank ++ breakline ++ "};\n"
+
+pShowArrayGaps :: Int -> [PArray] -> String
+pShowArrayGaps _ [] = ""
+pShowArrayGaps l_rank l_array = breakline ++ "int " ++ 
+        intercalate ", " (map (getArrayGaps (l_rank-1)) l_array) ++ ";"
 
 pShowPointerKernel :: String -> PKernel -> String
 pShowPointerKernel l_name l_kernel = 
@@ -405,8 +409,7 @@ pShowPointerKernel l_name l_kernel =
         "int t0, int t1, grid_info<" ++ show l_rank ++ "> const & grid) {" ++ 
         breakline ++ "grid_info<" ++ show l_rank ++ "> l_grid = grid;" ++
         pShowPointers l_iter ++ breakline ++ 
-        pShowArrayInfo l_array ++ "int " ++ 
-        intercalate ", " (map (getArrayGaps (l_rank-1)) l_array) ++ ";" ++
+        pShowArrayInfo l_array ++ pShowArrayGaps l_rank l_array ++
         breakline ++ pShowStrides l_rank l_array ++ breakline ++
         "for (int " ++ l_t ++ " = t0; " ++ l_t ++ " < t1; ++" ++ l_t ++ ") { " ++ 
         pShowPointerSet l_iter (kParams l_kernel)++
@@ -418,6 +421,7 @@ pShowPragma :: String
 pShowPragma = "#pragma ivdep"
 
 pShowArrayInfo :: [PArray] -> String
+pShowArrayInfo [] = ""
 pShowArrayInfo arrayInUse = foldr pShowArrayInfoItem "" arrayInUse
     where pShowArrayInfoItem l_arrayItem str =
             let l_type = aType l_arrayItem
@@ -558,8 +562,10 @@ pShowIters [] = ""
 pShowIters ((l_name, l_array, l_dim):is) = 
     let l_type = aType l_array
         l_rank = aRank l_array
+        l_toggle = aToggle l_array
         l_arrayName = aName l_array
-    in breakline ++ "Pochoir_Iterator<" ++ show l_type ++ ", " ++ show l_rank ++ "> " ++
+    in breakline ++ "Pochoir_Iterator<" ++ show l_type ++ ", " ++ show l_rank ++ 
+       ", " ++ show l_toggle ++ "> " ++
        l_name ++ "(" ++ l_arrayName ++ ");" ++ pShowIters is   
 
 unionArrayIter :: [Iter] -> [PArray]
@@ -587,12 +593,15 @@ pShowObaseTail n =
 
 -- pL is the parameter list of original user supplied computing kernel
 pShowObaseForHeader :: Int -> [Iter] -> [PName] -> String
+pShowObaseForHeader _ _ [] = ""
 pShowObaseForHeader 1 iL pL = 
                            breakline ++ pShowForHeader 0 (unionArrayIter iL) pL ++ 
+                           pShowIterComma iL ++
                            breakline ++ intercalate (", " ++ breakline) 
                                         (map ((++) "++" . getIterName) iL) ++ ") {"
 pShowObaseForHeader n iL pL = 
                            breakline ++ pShowForHeader (n-1) (unionArrayIter iL) pL ++ 
+                           pShowIterComma iL ++
                            breakline ++ intercalate (", " ++ breakline) 
                                      (zipWith wrapIterInc
                                         (map (getArrayGap (n-1)) (getArrayIter iL))
@@ -602,13 +611,16 @@ pShowObaseForHeader n iL pL =
 
 -- pL is the parameter list of original user supplied computing kernel
 pShowPointerForHeader :: Int -> [Iter] -> [PName] -> String
+pShowPointerForHeader _ _ [] = ""
 pShowPointerForHeader 1 iL pL = 
                            breakline ++ pShowPragma ++
-                           breakline ++ pShowForHeader 0 (unionArrayIter iL) pL ++ 
+                           breakline ++ pShowForHeader 0 (unionArrayIter iL) pL ++  
+                           pShowIterComma iL ++
                            breakline ++ intercalate (", " ++ breakline) 
                                         (map ((++) "++" . getIterName) iL) ++ ") {"
 pShowPointerForHeader n iL pL = 
                            breakline ++ pShowForHeader (n-1) (unionArrayIter iL) pL ++ 
+                           pShowIterComma iL ++
                            breakline ++ intercalate (", " ++ breakline) 
                                      (zipWith wrapIterInc
                                         (map (getArrayGap (n-1)) (getArrayIter iL))
@@ -616,18 +628,23 @@ pShowPointerForHeader n iL pL =
                            ") {" ++ pShowPointerForHeader (n-1) iL pL
     where wrapIterInc gap iter = iter ++ " += " ++ gap 
 
+pShowIterComma :: [Iter] -> String
+pShowIterComma [] = ""
+pShowIterComma iL@(i:is) = ", "
+
 pShowForHeader :: Int -> [PArray] -> [PName] -> String
-pShowForHeader i [] _ = ""
-pShowForHeader i aL@(a:as) pL = 
+pShowForHeader i _ [] = ""
+pShowForHeader i aL pL = 
     let len_pL = length pL
         idx = pL !! (len_pL - 1 - i)
         l_rank = show i
     in  adjustGap i aL ++ "for (int " ++ idx ++ 
         " = l_grid.x0[" ++ l_rank ++
         "]; " ++ idx ++ " < l_grid.x1[" ++ l_rank ++ "]; ++" ++ 
-        idx ++ ","
+        idx 
                     
 adjustGap :: Int -> [PArray] -> String
+adjustGap i [] = ""
 adjustGap i aL@(a:as) = 
     if i > 0 then pShowAdjustGap i aL
              else ""

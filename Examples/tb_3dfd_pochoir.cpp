@@ -37965,13 +37965,13 @@ class Pochoir_Iterator {
             return *curr_;
         }
 
-        inline Pochoir_Iterator<T, N_RANK> & operator= (T const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (T const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = rhs;
             return *this;
         }
 
-        inline Pochoir_Iterator<T, N_RANK> & operator= (Pochoir_Iterator<T, N_RANK> const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (Pochoir_Iterator<T, N_RANK, TOGGLE> const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = *rhs;
             return *this;
@@ -38554,14 +38554,6 @@ class Pochoir {
         void checkFlags(void);
         void getDomainFromArray(void);
 
-        /* Disable the use of registerDomain ! */
-        template <typename Domain>
-        void registerDomain(Domain const & i);
-        template <typename Domain>
-        void registerDomain(Domain const & i, Domain const & j);
-        template <typename Domain>
-        void registerDomain(Domain const & i, Domain const & j, Domain const & k);
-
     public:
     Pochoir() {
         for (int i = 0; i < N_RANK; ++i) {
@@ -38579,6 +38571,15 @@ class Pochoir {
     void registerArray(Pochoir_Array<T, N_RANK, TOGGLE> & arr);
     template <size_t N_SIZE>
     void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]);
+
+    /* We should still keep the registerDomain for zero-padding!!! */
+    template <typename Domain>
+    void registerDomain(Domain const & i);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k);
+
     /* register boundary value function with corresponding Pochoir_Array object directly */
     void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
         arr.registerBV(_bv1);
@@ -38609,7 +38610,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine/pochoir.hpp", __FUNCTION__, 110, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine/pochoir.hpp", __FUNCTION__, 111, str);
         exit(1);
     }
 }
@@ -38624,27 +38625,29 @@ void Pochoir<T, N_RANK, TOGGLE>::checkFlags(void) {
 
 template <typename T, int N_RANK, int TOGGLE> 
 void Pochoir<T, N_RANK, TOGGLE>::getDomainFromArray(void) {
-    if (arr_len_ == 0) {
-        printf("No Pochoir_Array registered! Quit!\n");
-        exit(1);
-    }
-    /* get the initial grid */
-    for (int i = 0; i < N_RANK; ++i) {
-        grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
-        logic_size_[i] = arr_list_[0]->size(i);
-        stride_[i] = 1;
-    }
+    if (!regDomainFlag) {
+        if (arr_len_ == 0) {
+            printf("No Pochoir_Array registered! Quit!\n");
+            exit(1);
+        }
+        /* get the initial grid */
+        for (int i = 0; i < N_RANK; ++i) {
+            grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
+            logic_size_[i] = arr_list_[0]->size(i);
+            stride_[i] = 1;
+        }
 
-    /* check the consistency of all engaged Pochoir_Array */
-    for (int i = 1; i < arr_len_; ++i) {
-        for (int j = 0; j < N_RANK; ++j) {
-            if (arr_list_[i]->size(j) != grid_.x1[j]) {
-                printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
-                exit(1);
+        /* check the consistency of all engaged Pochoir_Array */
+        for (int i = 1; i < arr_len_; ++i) {
+            for (int j = 0; j < N_RANK; ++j) {
+                if (arr_list_[i]->size(j) != grid_.x1[j]) {
+                    printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
+                    exit(1);
+                }
             }
         }
+        regDomainFlag = true;
     }
-    regDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE>
@@ -39218,12 +39221,14 @@ int main(int argc, char *argv[])
 
 	/* Known */ Pochoir <float, 3, 2> fd_3D ;
 
+	Pochoir_Domain I(0 + ds, Nx - ds), J(0 + ds, Ny - ds), K(0 + ds, Nz - ds) ;
+
 	Pochoir_Shape <3> fd_shape_3D [26] = {{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 1}, {0, 0, 0, -1}, {0, 0, 1, 0}, {0, 0, -1, 0}, {0, 1, 0, 0}, {0, -1, 0, 0}, {0, 0, 0, 2}, {0, 0, 0, -2}, {0, 0, 2, 0}, {0, 0, -2, 0}, {0, 2, 0, 0}, {0, -2, 0, 0}, {0, 0, 0, 3}, {0, 0, 0, -3}, {0, 0, 3, 0}, {0, 0, -3, 0}, {0, 3, 0, 0}, {0, -3, 0, 0}, {0, 0, 0, 4}, {0, 0, 0, -4}, {0, 0, 4, 0}, {0, 0, -4, 0}, {0, 4, 0, 0}, {0, -4, 0, 0}};
-fd_3D.registerBoundaryFn(pa, fd_bv_3D); /* register Boundary Fn */
-	fd_3D.registerArray (pa); /* register Array */
+fd_3D.registerArray (pa); /* register Array */
 	fd_3D.registerShape(fd_shape_3D);
-//  fd_3D.registerDomain(I, J, K);
-auto fd_3D_fn = [&] (int t, int i, int j, int k) {
+  fd_3D.registerDomain(I, J, K);
+
+  auto fd_3D_fn = [&] (int t, int i, int j, int k) {
 	
 	float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
 	float div = c0 * pa(t, i, j, k) + c1 * ((pa(t, i, j, k + 1) + pa(t, i, j, k - 1)) + (pa(t, i, j + 1, k) + pa(t, i, j - 1, k)) + (pa(t, i + 1, j, k) + pa(t, i - 1, j, k))) + c2 * ((pa(t, i, j, k + 2) + pa(t, i, j, k - 2)) + (pa(t, i, j + 2, k) + pa(t, i, j - 2, k)) + (pa(t, i + 2, j, k) + pa(t, i - 2, j, k))) + c3 * ((pa(t, i, j, k + 3) + pa(t, i, j, k - 3)) + (pa(t, i, j + 3, k) + pa(t, i, j - 3, k)) + (pa(t, i + 3, j, k) + pa(t, i - 3, j, k))) + c4 * ((pa(t, i, j, k + 4) + pa(t, i, j, k - 4)) + (pa(t, i, j + 4, k) + pa(t, i, j - 4, k)) + (pa(t, i + 4, j, k) + pa(t, i - 4, j, k)));
@@ -39272,7 +39277,7 @@ auto fd_3D_fn = [&] (int t, int i, int j, int k) {
 	} /* end for t */
 	};
 
-	fd_3D.run_obase(T, pointer_fd_3D_fn, fd_3D_fn);
+	fd_3D.run_obase(T, pointer_fd_3D_fn);
 	stop = getseconds();
   print_summary("Pochoir", stop - start);
 

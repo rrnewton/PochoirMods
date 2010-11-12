@@ -123,27 +123,29 @@ void Pochoir<T, N_RANK, TOGGLE>::checkFlags(void) {
 
 template <typename T, int N_RANK, int TOGGLE> 
 void Pochoir<T, N_RANK, TOGGLE>::getDomainFromArray(void) {
-    if (arr_len_ == 0) {
-        printf("No Pochoir_Array registered! Quit!\n");
-        exit(1);
-    }
-    /* get the initial grid */
-    for (int i = 0; i < N_RANK; ++i) {
-        grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
-        logic_size_[i] = arr_list_[0]->size(i);
-        stride_[i] = 1;
-    }
+    if (!regDomainFlag) {
+        if (arr_len_ == 0) {
+            printf("No Pochoir_Array registered! Quit!\n");
+            exit(1);
+        }
+        /* get the initial grid */
+        for (int i = 0; i < N_RANK; ++i) {
+            grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
+            logic_size_[i] = arr_list_[0]->size(i);
+            stride_[i] = 1;
+        }
 
-    /* check the consistency of all engaged Pochoir_Array */
-    for (int i = 1; i < arr_len_; ++i) {
-        for (int j = 0; j < N_RANK; ++j) {
-            if (arr_list_[i]->size(j) != grid_.x1[j]) {
-                printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
-                exit(1);
+        /* check the consistency of all engaged Pochoir_Array */
+        for (int i = 1; i < arr_len_; ++i) {
+            for (int j = 0; j < N_RANK; ++j) {
+                if (arr_list_[i]->size(j) != grid_.x1[j]) {
+                    printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
+                    exit(1);
+                }
             }
         }
+        regDomainFlag = true;
     }
-    regDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE>

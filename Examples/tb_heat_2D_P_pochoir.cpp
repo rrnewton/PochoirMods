@@ -31135,13 +31135,13 @@ class Pochoir_Iterator {
             return *curr_;
         }
 
-        inline Pochoir_Iterator<T, N_RANK> & operator= (T const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (T const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = rhs;
             return *this;
         }
 
-        inline Pochoir_Iterator<T, N_RANK> & operator= (Pochoir_Iterator<T, N_RANK> const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (Pochoir_Iterator<T, N_RANK, TOGGLE> const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = *rhs;
             return *this;
@@ -31724,14 +31724,6 @@ class Pochoir {
         void checkFlags(void);
         void getDomainFromArray(void);
 
-        /* Disable the use of registerDomain ! */
-        template <typename Domain>
-        void registerDomain(Domain const & i);
-        template <typename Domain>
-        void registerDomain(Domain const & i, Domain const & j);
-        template <typename Domain>
-        void registerDomain(Domain const & i, Domain const & j, Domain const & k);
-
     public:
     Pochoir() {
         for (int i = 0; i < N_RANK; ++i) {
@@ -31749,6 +31741,15 @@ class Pochoir {
     void registerArray(Pochoir_Array<T, N_RANK, TOGGLE> & arr);
     template <size_t N_SIZE>
     void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]);
+
+    /* We should still keep the registerDomain for zero-padding!!! */
+    template <typename Domain>
+    void registerDomain(Domain const & i);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k);
+
     /* register boundary value function with corresponding Pochoir_Array object directly */
     void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
         arr.registerBV(_bv1);
@@ -31779,7 +31780,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine/pochoir.hpp", __FUNCTION__, 110, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine/pochoir.hpp", __FUNCTION__, 111, str);
         exit(1);
     }
 }
@@ -32044,30 +32045,42 @@ for (int i = 0; i < N_SIZE; ++i) {
 gettimeofday(&start, 0);
     for (int times = 0; times < 3; ++times) {
         
-	auto pointer_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
+	auto obase_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
-	double * pt_a_1;
-	double * pt_a_0;
-	
-	double * a_base = a.data();
-	const int l_a_total_size = a.total_size();
+	Pochoir_Iterator<double, 2, 2> iter0(a);
+	Pochoir_Iterator<double, 2, 2> iter1(a);
+	Pochoir_Iterator<double, 2, 2> iter2(a);
+	Pochoir_Iterator<double, 2, 2> iter3(a);
+	Pochoir_Iterator<double, 2, 2> iter4(a);
+	Pochoir_Iterator<double, 2, 2> iter5(a);
 	int gap_a_1, gap_a_0;
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_a_0 = a_base + ((t) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
-	pt_a_1 = a_base + ((t - 1) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	iter0.set(t, l_grid.x0[1], l_grid.x0[0]);
+	iter1.set(t - 1, l_grid.x0[1] + 1, l_grid.x0[0]);
+	iter2.set(t - 1, l_grid.x0[1], l_grid.x0[0]);
+	iter3.set(t - 1, l_grid.x0[1] - 1, l_grid.x0[0]);
+	iter4.set(t - 1, l_grid.x0[1], l_grid.x0[0] + 1);
+	iter5.set(t - 1, l_grid.x0[1], l_grid.x0[0] - 1);
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,
-	pt_a_0 += gap_a_1, 
-	pt_a_1 += gap_a_1) {
-	#pragma ivdep
+	iter0.inc(gap_a_1), 
+	iter1.inc(gap_a_1), 
+	iter2.inc(gap_a_1), 
+	iter3.inc(gap_a_1), 
+	iter4.inc(gap_a_1), 
+	iter5.inc(gap_a_1)) {
 	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j,
-	++pt_a_0, 
-	++pt_a_1) {
+	++iter0, 
+	++iter1, 
+	++iter2, 
+	++iter3, 
+	++iter4, 
+	++iter5) {
 	
-	pt_a_0[0] = 0.125 * (pt_a_1[l_stride_a_1 * (1)] - 2.0 * pt_a_1[0] + pt_a_1[l_stride_a_1 * (-1)]) + 0.125 * (pt_a_1[l_stride_a_0 * (1)] - 2.0 * pt_a_1[0] + pt_a_1[l_stride_a_0 * (-1)]) + pt_a_1[0];
+	iter0 = 0.125 * (iter1 - 2.0 * iter2 + iter3) + 0.125 * (iter4 - 2.0 * iter2 + iter5) + iter2;
 	} } /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
 	for (int i = 0; i < 2; ++i) {
@@ -32076,7 +32089,7 @@ gettimeofday(&start, 0);
 	} /* end for t */
 	};
 
-	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn, heat_2D_fn);
+	heat_2D.run_obase(T_SIZE, obase_heat_2D_fn, heat_2D_fn);
 	}
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;

@@ -31135,13 +31135,13 @@ class Pochoir_Iterator {
             return *curr_;
         }
 
-        inline Pochoir_Iterator<T, N_RANK> & operator= (T const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (T const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = rhs;
             return *this;
         }
 
-        inline Pochoir_Iterator<T, N_RANK> & operator= (Pochoir_Iterator<T, N_RANK> const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (Pochoir_Iterator<T, N_RANK, TOGGLE> const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = *rhs;
             return *this;
@@ -31724,14 +31724,6 @@ class Pochoir {
         void checkFlags(void);
         void getDomainFromArray(void);
 
-        /* Disable the use of registerDomain ! */
-        template <typename Domain>
-        void registerDomain(Domain const & i);
-        template <typename Domain>
-        void registerDomain(Domain const & i, Domain const & j);
-        template <typename Domain>
-        void registerDomain(Domain const & i, Domain const & j, Domain const & k);
-
     public:
     Pochoir() {
         for (int i = 0; i < N_RANK; ++i) {
@@ -31749,6 +31741,15 @@ class Pochoir {
     void registerArray(Pochoir_Array<T, N_RANK, TOGGLE> & arr);
     template <size_t N_SIZE>
     void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]);
+
+    /* We should still keep the registerDomain for zero-padding!!! */
+    template <typename Domain>
+    void registerDomain(Domain const & i);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k);
+
     /* register boundary value function with corresponding Pochoir_Array object directly */
     void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
         arr.registerBV(_bv1);
@@ -31779,7 +31780,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine/pochoir.hpp", __FUNCTION__, 110, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine/pochoir.hpp", __FUNCTION__, 111, str);
         exit(1);
     }
 }
@@ -31794,27 +31795,29 @@ void Pochoir<T, N_RANK, TOGGLE>::checkFlags(void) {
 
 template <typename T, int N_RANK, int TOGGLE> 
 void Pochoir<T, N_RANK, TOGGLE>::getDomainFromArray(void) {
-    if (arr_len_ == 0) {
-        printf("No Pochoir_Array registered! Quit!\n");
-        exit(1);
-    }
-    /* get the initial grid */
-    for (int i = 0; i < N_RANK; ++i) {
-        grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
-        logic_size_[i] = arr_list_[0]->size(i);
-        stride_[i] = 1;
-    }
+    if (!regDomainFlag) {
+        if (arr_len_ == 0) {
+            printf("No Pochoir_Array registered! Quit!\n");
+            exit(1);
+        }
+        /* get the initial grid */
+        for (int i = 0; i < N_RANK; ++i) {
+            grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
+            logic_size_[i] = arr_list_[0]->size(i);
+            stride_[i] = 1;
+        }
 
-    /* check the consistency of all engaged Pochoir_Array */
-    for (int i = 1; i < arr_len_; ++i) {
-        for (int j = 0; j < N_RANK; ++j) {
-            if (arr_list_[i]->size(j) != grid_.x1[j]) {
-                printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
-                exit(1);
+        /* check the consistency of all engaged Pochoir_Array */
+        for (int i = 1; i < arr_len_; ++i) {
+            for (int j = 0; j < N_RANK; ++j) {
+                if (arr_list_[i]->size(j) != grid_.x1[j]) {
+                    printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
+                    exit(1);
+                }
             }
         }
+        regDomainFlag = true;
     }
-    regDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE>
@@ -32022,6 +32025,8 @@ int main(int argc, char * argv[])
 
 	/* Known */ Pochoir <double, 2, 2> heat_2D ;
 
+	Pochoir_Domain I(1, N_SIZE - 1), J(1, N_SIZE - 1) ;
+
 	Pochoir_Shape <2> heat_shape_2D [5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
 for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -32041,10 +32046,11 @@ for (int i = 0; i < N_SIZE; ++i) {
 	
 	a(t + 1, i, j) = 0.125 * (a(t, i + 1, j) - 2.0 * a(t, i, j) + a(t, i - 1, j)) + 0.125 * (a(t, i, j + 1) - 2.0 * a(t, i, j) + a(t, i, j - 1)) + a(t, i, j);
 	};
-	heat_2D.registerBoundaryFn(a, heat_bv_2D); /* register Boundary Fn */
+	heat_2D.registerArray (a); /* register Array */
 	heat_2D.registerShape(heat_shape_2D);
-//    heat_2D.registerDomain(I, J);
-gettimeofday(&start, 0);
+    heat_2D.registerDomain(I, J);
+
+	gettimeofday(&start, 0);
     for (int times = 0; times < 1; ++times) {
         
 	auto pointer_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
@@ -32079,29 +32085,27 @@ gettimeofday(&start, 0);
 	} /* end for t */
 	};
 
-	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn, heat_2D_fn);
+	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn);
 	}
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/1 << "ms" << std::endl;
 
-    b.registerShape(heat_shape_2D);
-    b.registerBV(heat_bv_2D);
-
-	gettimeofday(&start, 0);
+//    b.registerShape(heat_shape_2D);
+gettimeofday(&start, 0);
     /* cilk_for + zero-padding */
     for (int times = 0; times < 1; ++times) {
 	for (int t = 0; t < T_SIZE; ++t) {
-    for (int i = 0; i < N_SIZE; ++i) {
-	for (int j = 0; j < N_SIZE; ++j) {
-        b(t+1, i, j) = 0.125 * (b(t, i+1, j) - 2.0 * b(t, i, j) + b(t, i-1, j)) + 0.125 * (b(t, i, j+1) - 2.0 * b(t, i, j) + b(t, i, j-1)) + b(t, i, j); 
+    _Cilk_for (int i = 1; i < N_SIZE-1; ++i) {
+	for (int j = 1; j < N_SIZE-1; ++j) {
+        b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); 
     } } }
     }
 	gettimeofday(&end, 0);
 	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/1 << "ms" << std::endl;
 
 	t = T_SIZE;
-	for (int i = 0; i < N_SIZE; ++i) {
-	for (int j = 0; j < N_SIZE; ++j) {
+	for (int i = 1; i < N_SIZE-1; ++i) {
+	for (int j = 1; j < N_SIZE-1; ++j) {
 		check_result(t, i, j, a.interior(t, i, j), b.interior(t, i, j));
 	} } 
 
