@@ -31291,7 +31291,6 @@ size_info logic_start_, logic_end_;
 		size_info phys_size_; // physical of elements in each dimension
 size_info stride_; // stride of each dimension
 int total_size_;
-        int slope_[N_RANK];
         typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
@@ -31311,9 +31310,6 @@ int total_size_;
             view_ = __null;
             view_ = new Storage<T>(TOGGLE * total_size_);
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
         }
 
@@ -31327,9 +31323,6 @@ int total_size_;
 			view_ = __null;
 			view_ = new Storage<T>(TOGGLE * total_size_) ;
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -31349,9 +31342,6 @@ int total_size_;
 			/* double the total_size_ because we are using toggle array */
 			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -31373,9 +31363,6 @@ int total_size_;
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -31394,9 +31381,6 @@ int total_size_;
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
             return *this;
 		}
@@ -31423,11 +31407,6 @@ int total_size_;
 
         void unregisterBV(void) { bv1_ = __null;  bv2_ = __null; bv3_ = __null; }
 
-        void registerSlope(int const _slope[]) {
-            for (int i = 0; i < N_RANK; ++i) 
-                slope_[i] = _slope[i];
-        }
-
         void registerDomain(grid_info<N_RANK> initial_grid) {
             for (int i = 0; i < N_RANK; ++i) {
                 logic_start_[i] = initial_grid.x0[i];
@@ -31437,25 +31416,6 @@ int total_size_;
         }
 
 
-        /* We should prevent user from calling this function directly! */
-        template <size_t N_SIZE>
-        void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
-            /* currently we just get the slope_[] out of the shape[] */
-            int l_min_time_shift=0, l_max_time_shift=0, time_slope=0;
-            for (int i = 0; i < N_SIZE; ++i) {
-                if (shape[i].shift[0] < l_min_time_shift)
-                    l_min_time_shift = shape[i].shift[0];
-                if (shape[i].shift[0] > l_max_time_shift)
-                    l_max_time_shift = shape[i].shift[0];
-                for (int r = 1; r < N_RANK+1; ++r) {
-                    slope_[N_RANK-r] = ((slope_[N_RANK-r]) > (abs(shape[i]. shift[r])) ? (slope_[N_RANK-r]) : (abs(shape[i]. shift[r])));
-                }
-            }
-            time_slope = l_max_time_shift - l_min_time_shift;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = (int)ceil((float)slope_[i]/time_slope);
-            }
-        }
 		/* return size */
 		int phys_size(T_dim _dim) const { return phys_size_[_dim]; }
 		int logic_size(T_dim _dim) const { return logic_size_[_dim]; }
@@ -31795,27 +31755,29 @@ void Pochoir<T, N_RANK, TOGGLE>::checkFlags(void) {
 
 template <typename T, int N_RANK, int TOGGLE> 
 void Pochoir<T, N_RANK, TOGGLE>::getDomainFromArray(void) {
-    if (arr_len_ == 0) {
-        printf("No Pochoir_Array registered! Quit!\n");
-        exit(1);
-    }
-    /* get the initial grid */
-    for (int i = 0; i < N_RANK; ++i) {
-        grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
-        logic_size_[i] = arr_list_[0]->size(i);
-        stride_[i] = 1;
-    }
+    if (!regDomainFlag) {
+        if (arr_len_ == 0) {
+            printf("No Pochoir_Array registered! Quit!\n");
+            exit(1);
+        }
+        /* get the initial grid */
+        for (int i = 0; i < N_RANK; ++i) {
+            grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
+            logic_size_[i] = arr_list_[0]->size(i);
+            stride_[i] = 1;
+        }
 
-    /* check the consistency of all engaged Pochoir_Array */
-    for (int i = 1; i < arr_len_; ++i) {
-        for (int j = 0; j < N_RANK; ++j) {
-            if (arr_list_[i]->size(j) != grid_.x1[j]) {
-                printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
-                exit(1);
+        /* check the consistency of all engaged Pochoir_Array */
+        for (int i = 1; i < arr_len_; ++i) {
+            for (int j = 0; j < N_RANK; ++j) {
+                if (arr_list_[i]->size(j) != grid_.x1[j]) {
+                    printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
+                    exit(1);
+                }
             }
         }
+        regDomainFlag = true;
     }
-    regDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE>
@@ -31896,8 +31858,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->registerDomain(grid_);
+//        arr_list_[i]->registerSlope(slope_);
+arr_list_[i]->registerDomain(grid_);
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
@@ -31922,8 +31884,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->registerDomain(grid_);
+//        arr_list_[i]->registerSlope(slope_);
+arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
@@ -31939,8 +31901,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->registerDomain(grid_);
+//        arr_list_[i]->registerSlope(slope_);
+arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
@@ -31960,8 +31922,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->registerDomain(grid_);
+//        arr_list_[i]->registerSlope(slope_);
+arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
@@ -32052,70 +32014,43 @@ life_2D.registerBoundaryFn(a, life_bv_2D); /* register Boundary Fn */
 gettimeofday(&start, 0);
     for (int times = 0; times < 3; ++times) {
         
-	auto obase_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
+	auto pointer_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
-	Pochoir_Iterator<bool, 2, 2> iter0(a);
-	Pochoir_Iterator<bool, 2, 2> iter1(a);
-	Pochoir_Iterator<bool, 2, 2> iter2(a);
-	Pochoir_Iterator<bool, 2, 2> iter3(a);
-	Pochoir_Iterator<bool, 2, 2> iter4(a);
-	Pochoir_Iterator<bool, 2, 2> iter5(a);
-	Pochoir_Iterator<bool, 2, 2> iter6(a);
-	Pochoir_Iterator<bool, 2, 2> iter7(a);
-	Pochoir_Iterator<bool, 2, 2> iter8(a);
-	Pochoir_Iterator<bool, 2, 2> iter9(a);
+	bool * pt_a_1;
+	bool * pt_a_0;
+	
+	bool * a_base = a.data();
+	const int l_a_total_size = a.total_size();
+	
 	int gap_a_1, gap_a_0;
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	iter0.set(t - 1, l_grid.x0[1] - 1, l_grid.x0[0] - 1);
-	iter1.set(t - 1, l_grid.x0[1] - 1, l_grid.x0[0]);
-	iter2.set(t - 1, l_grid.x0[1] - 1, l_grid.x0[0] + 1);
-	iter3.set(t - 1, l_grid.x0[1], l_grid.x0[0] - 1);
-	iter4.set(t - 1, l_grid.x0[1], l_grid.x0[0] + 1);
-	iter5.set(t - 1, l_grid.x0[1] + 1, l_grid.x0[0] - 1);
-	iter6.set(t - 1, l_grid.x0[1] + 1, l_grid.x0[0]);
-	iter7.set(t - 1, l_grid.x0[1] + 1, l_grid.x0[0] + 1);
-	iter8.set(t - 1, l_grid.x0[1], l_grid.x0[0]);
-	iter9.set(t, l_grid.x0[1], l_grid.x0[0]);
+	pt_a_0 = a_base + ((t - 1) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_1 = a_base + ((t) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
-	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,
-	iter0.inc(gap_a_1), 
-	iter1.inc(gap_a_1), 
-	iter2.inc(gap_a_1), 
-	iter3.inc(gap_a_1), 
-	iter4.inc(gap_a_1), 
-	iter5.inc(gap_a_1), 
-	iter6.inc(gap_a_1), 
-	iter7.inc(gap_a_1), 
-	iter8.inc(gap_a_1), 
-	iter9.inc(gap_a_1)) {
-	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j,
-	++iter0, 
-	++iter1, 
-	++iter2, 
-	++iter3, 
-	++iter4, 
-	++iter5, 
-	++iter6, 
-	++iter7, 
-	++iter8, 
-	++iter9) {
+	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i, 
+	pt_a_0 += gap_a_1, 
+	pt_a_1 += gap_a_1) {
+	#pragma ivdep
+	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j, 
+	++pt_a_0, 
+	++pt_a_1) {
 	
-	int neighbors = iter0 + iter1 + iter2 + iter3 + iter4 + iter5 + iter6 + iter7;
-	if (iter8 == true && neighbors < 2)
-	iter9 = true;
-	else if (iter8 == true && neighbors > 3)
+	int neighbors = pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (-1)] + pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (1)] + pt_a_0[l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_0 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (1)];
+	if (pt_a_0[0] == true && neighbors < 2)
+	pt_a_1[0] = true;
+	else if (pt_a_0[0] == true && neighbors > 3)
 	{
-	iter9 = false;
+	pt_a_1[0] = false;
 	}
-	else if (iter8 == true && (neighbors == 2 || neighbors == 3))
+	else if (pt_a_0[0] == true && (neighbors == 2 || neighbors == 3))
 	{
-	iter9 = iter8;
+	pt_a_1[0] = pt_a_0[0];
 	}
-	else if (iter8 == false && neighbors == 3)
-	iter9 = true;
+	else if (pt_a_0[0] == false && neighbors == 3)
+	pt_a_1[0] = true;
 	} } /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
 	for (int i = 0; i < 2; ++i) {
@@ -32124,7 +32059,7 @@ gettimeofday(&start, 0);
 	} /* end for t */
 	};
 
-	life_2D.run_obase(T_SIZE, obase_life_2D_fn, life_2D_fn);
+	life_2D.run_obase(T_SIZE, pointer_life_2D_fn, life_2D_fn);
 	}
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;

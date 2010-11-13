@@ -31423,10 +31423,6 @@ int total_size_;
 
         void unregisterBV(void) { bv1_ = __null;  bv2_ = __null; bv3_ = __null; }
 
-        void registerSlope(int const _slope[]) {
-            for (int i = 0; i < N_RANK; ++i) 
-                slope_[i] = _slope[i];
-        }
 
         void registerDomain(grid_info<N_RANK> initial_grid) {
             for (int i = 0; i < N_RANK; ++i) {
@@ -31437,25 +31433,6 @@ int total_size_;
         }
 
 
-        /* We should prevent user from calling this function directly! */
-        template <size_t N_SIZE>
-        void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
-            /* currently we just get the slope_[] out of the shape[] */
-            int l_min_time_shift=0, l_max_time_shift=0, time_slope=0;
-            for (int i = 0; i < N_SIZE; ++i) {
-                if (shape[i].shift[0] < l_min_time_shift)
-                    l_min_time_shift = shape[i].shift[0];
-                if (shape[i].shift[0] > l_max_time_shift)
-                    l_max_time_shift = shape[i].shift[0];
-                for (int r = 1; r < N_RANK+1; ++r) {
-                    slope_[N_RANK-r] = ((slope_[N_RANK-r]) > (abs(shape[i]. shift[r])) ? (slope_[N_RANK-r]) : (abs(shape[i]. shift[r])));
-                }
-            }
-            time_slope = l_max_time_shift - l_min_time_shift;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = (int)ceil((float)slope_[i]/time_slope);
-            }
-        }
 		/* return size */
 		int phys_size(T_dim _dim) const { return phys_size_[_dim]; }
 		int logic_size(T_dim _dim) const { return logic_size_[_dim]; }
@@ -31898,8 +31875,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->registerDomain(grid_);
+//        arr_list_[i]->registerSlope(slope_);
+arr_list_[i]->registerDomain(grid_);
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
@@ -31924,8 +31901,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->registerDomain(grid_);
+//        arr_list_[i]->registerSlope(slope_);
+arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
@@ -31941,8 +31918,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->registerDomain(grid_);
+//        arr_list_[i]->registerSlope(slope_);
+arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
@@ -31962,8 +31939,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
-        arr_list_[i]->registerDomain(grid_);
+//        arr_list_[i]->registerSlope(slope_);
+arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
@@ -32026,9 +32003,9 @@ int main(int argc, char * argv[])
 	/* Known */ Pochoir <double, 2, 2> heat_2D ;
 
 	Pochoir_Domain I(1, N_SIZE - 1), J(1, N_SIZE - 1) ;
+Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
 
-	Pochoir_Shape <2> heat_shape_2D [5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
-for (int i = 0; i < N_SIZE; ++i) {
+	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
         if (i == 0 || i == N_SIZE-1
             || j == 0 || j == N_SIZE-1) {
@@ -32051,7 +32028,7 @@ for (int i = 0; i < N_SIZE; ++i) {
     heat_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
-    for (int times = 0; times < 1; ++times) {
+    for (int times = 0; times < 3; ++times) {
         
 	auto pointer_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
@@ -32060,6 +32037,7 @@ for (int i = 0; i < N_SIZE; ++i) {
 	
 	double * a_base = a.data();
 	const int l_a_total_size = a.total_size();
+	
 	int gap_a_1, gap_a_0;
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
@@ -32068,11 +32046,11 @@ for (int i = 0; i < N_SIZE; ++i) {
 	pt_a_1 = a_base + ((t) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
-	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i,
+	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i, 
 	pt_a_0 += gap_a_1, 
 	pt_a_1 += gap_a_1) {
 	#pragma ivdep
-	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j,
+	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j, 
 	++pt_a_0, 
 	++pt_a_1) {
 	
@@ -32088,20 +32066,20 @@ for (int i = 0; i < N_SIZE; ++i) {
 	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn);
 	}
 	gettimeofday(&end, 0);
-	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/1 << "ms" << std::endl;
+	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
 
 //    b.registerShape(heat_shape_2D);
 gettimeofday(&start, 0);
     /* cilk_for + zero-padding */
-    for (int times = 0; times < 1; ++times) {
+    for (int times = 0; times < 3; ++times) {
 	for (int t = 0; t < T_SIZE; ++t) {
     _Cilk_for (int i = 1; i < N_SIZE-1; ++i) {
 	for (int j = 1; j < N_SIZE-1; ++j) {
-        b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); 
+       b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); 
     } } }
     }
 	gettimeofday(&end, 0);
-	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/1 << "ms" << std::endl;
+	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
 
 	t = T_SIZE;
 	for (int i = 1; i < N_SIZE-1; ++i) {

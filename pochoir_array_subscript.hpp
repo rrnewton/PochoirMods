@@ -125,7 +125,6 @@ class Pochoir_Array {
 		size_info phys_size_; // physical of elements in each dimension
 		size_info stride_; // stride of each dimension
 		int total_size_;
-        int slope_[N_RANK];
         typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
@@ -145,9 +144,6 @@ class Pochoir_Array {
             view_ = NULL;
             view_ = new Storage<T>(TOGGLE * total_size_);
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
         }
 
@@ -161,9 +157,6 @@ class Pochoir_Array {
 			view_ = NULL;
 			view_ = new Storage<T>(TOGGLE * total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -183,9 +176,6 @@ class Pochoir_Array {
 			/* double the total_size_ because we are using toggle array */
 			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -207,9 +197,6 @@ class Pochoir_Array {
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -228,9 +215,6 @@ class Pochoir_Array {
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
             return *this;
 		}
@@ -257,11 +241,6 @@ class Pochoir_Array {
 
         void unregisterBV(void) { bv1_ = NULL;  bv2_ = NULL; bv3_ = NULL; }
 
-        void registerSlope(int const _slope[]) {
-            for (int i = 0; i < N_RANK; ++i) 
-                slope_[i] = _slope[i];
-        }
-
         void registerDomain(grid_info<N_RANK> initial_grid) {
             for (int i = 0; i < N_RANK; ++i) {
                 logic_start_[i] = initial_grid.x0[i];
@@ -270,34 +249,6 @@ class Pochoir_Array {
             }
         }
 
-#if 0
-		void set_logic_size(int const _size[]) { 
-            for (int i = 0; i < N_RANK; ++i) 
-                logic_size_[i] = _size[i]; 
-        }
-#endif
-
-#if 1
-        /* We should prevent user from calling this function directly! */
-        template <size_t N_SIZE>
-        void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
-            /* currently we just get the slope_[] out of the shape[] */
-            int l_min_time_shift=0, l_max_time_shift=0, time_slope=0;
-            for (int i = 0; i < N_SIZE; ++i) {
-                if (shape[i].shift[0] < l_min_time_shift)
-                    l_min_time_shift = shape[i].shift[0];
-                if (shape[i].shift[0] > l_max_time_shift)
-                    l_max_time_shift = shape[i].shift[0];
-                for (int r = 1; r < N_RANK+1; ++r) {
-                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs(shape[i].shift[r]));
-                }
-            }
-            time_slope = l_max_time_shift - l_min_time_shift;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = (int)ceil((float)slope_[i]/time_slope);
-            }
-        }
-#endif
 		/* return size */
 		int phys_size(T_dim _dim) const { return phys_size_[_dim]; }
 		int logic_size(T_dim _dim) const { return logic_size_[_dim]; }
@@ -310,31 +261,6 @@ class Pochoir_Array {
 		/* return stride */
 		int stride (T_dim _dim) const { return stride_[_dim]; }
 
-#if 0
-        inline bool check_boundary(size_info const & _idx) const {
-            bool touch_boundary = false;
-            for (int i = 0; i < N_RANK; ++i) {
-                touch_boundary |= (_idx[i] < 0 + slope_[i] 
-                                || _idx[i] > logic_size_[i]-1-slope_[i]);
-            }
-            return touch_boundary;
-        }
-
-        inline bool check_boundary(int _idx1, int _idx0) {
-            return (_idx0 < 0 + slope_[0] || _idx0 > logic_size_[0]-1-slope_[0]);
-        }
-
-        inline bool check_boundary(int _idx2, int _idx1, int _idx0) {
-            return (_idx0 < 0 + slope_[0] || _idx0 > logic_size_[0]-1-slope_[0] 
-                 || _idx1 < 0 + slope_[1] || _idx1 > logic_size_[1]-1-slope_[1]); 
-        }
-
-        inline bool check_boundary(int _idx3, int _idx2, int _idx1, int _idx0) {
-            return (_idx0 < 0 + slope_[0] || _idx0 > logic_size_[0]-1-slope_[0] 
-                 || _idx1 < 0 + slope_[1] || _idx1 > logic_size_[1]-1-slope_[1] 
-                 || _idx2 < 0 + slope_[2] || _idx2 > logic_size_[2]-1-slope_[2]); 
-        }
-#else
         inline bool check_boundary(size_info const & _idx) const {
             bool touch_boundary = false;
             for (int i = 0; i < N_RANK; ++i) {
@@ -359,7 +285,6 @@ class Pochoir_Array {
                  || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2]);
         }
 
-#endif
         /* 
          * orig_value() is reserved for "ostream" : cout << Pochoir_Array
          */

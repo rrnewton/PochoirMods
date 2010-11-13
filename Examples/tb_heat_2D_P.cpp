@@ -139,7 +139,7 @@ int main(int argc, char * argv[])
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
 
-    b.registerShape(heat_shape_2D);
+//    b.registerShape(heat_shape_2D);
     b.registerBV(heat_bv_2D);
 
 	gettimeofday(&start, 0);

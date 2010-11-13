@@ -226,7 +226,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->registerDomain(grid_);
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
@@ -252,7 +251,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
@@ -273,7 +271,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
@@ -298,7 +295,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
