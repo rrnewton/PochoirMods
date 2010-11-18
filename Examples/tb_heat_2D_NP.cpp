@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
     Pochoir<double, N_RANK, 2> heat_2D;
     Pochoir_Domain I(1, N_SIZE-1), J(1, N_SIZE-1);
 #if 1
-    Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
+    Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, -1, -1}, {0, 0, -1}, {0, 0, 1}};
 #else
     Pochoir_Shape<2> heat_shape_2D[] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
 #endif
@@ -120,6 +120,7 @@ int main(int argc, char * argv[])
 #if DEBUG
        a(t+1, i, j) = a(t, i-1, j-1) + 0.01; 
 #else
+//       a(t+1, i, j) = a(t, i-1, j-1) + a(t, i, j-1) + 0.01; 
 	   a(t+1, i, j) = 0.125 * (a(t, i+1, j) - 2.0 * a(t, i, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) - 2.0 * a(t, i, j) + a(t, i, j-1)) + a(t, i, j);
 #endif
     Pochoir_kernel_end
@@ -154,6 +155,7 @@ int main(int argc, char * argv[])
 #if DEBUG
        b(t+1, i, j) = b(t, i-1, j-1) + 0.01; 
 #else
+//       b.interior(t+1, i, j) = b.interior(t, i-1, j-1) + b.interior(t, i, j-1) + 0.01; 
        b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); 
 #endif
     } } }
@@ -167,7 +169,7 @@ int main(int argc, char * argv[])
 		check_result(t, i, j, a.interior(t, i, j), b.interior(t, i, j));
 	} } 
 
-#if DEBUG
+#if 0
     printf("a = \n");
     print_array(a);
     printf("b = \n");

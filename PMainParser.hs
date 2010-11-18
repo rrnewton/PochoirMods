@@ -33,6 +33,7 @@ import PBasicParser
 import PParser2
 import PUtils
 import PData
+import PShow
 import qualified Data.Map as Map
 
 pParser :: GenParser Char ParserState String
@@ -188,49 +189,10 @@ pPochoirAutoKernel =
        l_kernel_params <- parens $ commaSep1 (reserved "int" >> identifier)
        symbol "{"
        exprStmts <- manyTill pStatement (try $ reserved "};")
-{-
-       l_state <- getState
-       let l_iters =
-                   if pMode l_state == PIter
-                       then getFromStmts getIter (pArray l_state) exprStmts
-                       else getFromStmts (getPointer $ l_kernel_params) (pArray l_state) exprStmts
-       let l_revIters = transIterN 0 l_iters
--}
        let l_kernel = PKernel { kName = l_kernel_name, kParams = l_kernel_params,
                                 kStmt = exprStmts, kIter = [] }
        updateState $ updatePKernel l_kernel
        return (pShowAutoKernel l_kernel_name l_kernel) 
-
-{-
-getIter :: PArray -> Expr -> [Iter]
-getIter arrayInUse (PVAR v dL) =
-    let iterName = "iter"
-    in  [(iterName, arrayInUse, dL)]
-getIter arrayInUse _ = []
-
-getPointer :: [PName] -> PArray -> Expr -> [Iter]
-getPointer kernelParams arrayInUse (PVAR v dL) =
-    let iterName = "pt_" ++ aName arrayInUse ++ "_"
-        dL' = transDimExpr kernelParams dL
-    in  [(iterName, arrayInUse, dL')]
-getPointer _ arrayInUse _ = []
-
-transDimExpr :: [PName] -> [DimExpr] -> [DimExpr]
-transDimExpr kL [] = []
-transDimExpr kL dL@(d:ds) = [d] ++ (transSpaceDimExpr ds)
-    where transSpaceDimExpr [] = []
-          transSpaceDimExpr (d:ds) = (transSpaceDimExprItem d) ++ (transSpaceDimExpr ds)
-          transSpaceDimExprItem (DimVAR v) =
-                        if elem v kL then [(DimVAR v)]
-                                     else []
-          transSpaceDimExprItem (DimDuo bop e1 e2) = 
-                        transSpaceDimExprItem e1 ++ transSpaceDimExprItem e2
-          transSpaceDimExprItem (DimINT n) = []
-
-transIterN :: Int -> [Iter] -> [Iter]
-transIterN _ [] = []
-transIterN n ((name, array, dim):is) = (name ++ show n, array, dim) : (transIterN (n+1) is)
--}
 
 pMacroValue :: String -> GenParser Char ParserState String
 pMacroValue l_name = 
@@ -242,63 +204,6 @@ pMacroValue l_name =
           <|> do l_value <- manyTill anyChar $ try eol
                  return ("#define " ++ l_name ++ " " ++ l_value ++ "\n")
           <?> "Macro Definition"
-
-{-
-updatePKernel :: PKernel -> ParserState -> ParserState
-updatePKernel l_kernel parserState =
-    parserState { pKernel = Map.insert (kName l_kernel) l_kernel $ pKernel parserState }
-
-updateObase :: PMode -> ParserState -> ParserState
-updateObase mode parserState = parserState { pMode = mode }
-
-updatePState :: PState -> ParserState -> ParserState
-updatePState pstate parserState 
-    | (pstate == PochoirBegin && pState parserState == Unrelated) = parserState { pState = PochoirBegin }
-    | (pstate == PochoirEnd && pState parserState == PochoirBegin) = parserState { pState = Unrelated }
-    | ((pstate == PochoirMacro || pstate == PochoirDeclArray || pstate == PochoirDeclRange) 
-            && pState parserState == Unrelated) = parserState { pState = pstate }
-    | pstate == Unrelated = parserState { pState = Unrelated }
-    | otherwise = parserState { pState = PochoirError }
--}
-{-
- - the 'ptr' won't pass the type checking stage,
- - because 'ptr' is not a (visible) constructor field name!!
- 
-updatePTable :: [a] -> b -> ParserState -> ParserState
-updatePTable ppvalue ptr parserState = 
-    parserState { ptr = ppvalue ++ (ptr parserState) }
--}
-{-
-updatePMacro :: (PName, PValue) -> ParserState -> ParserState
-updatePMacro (l_name, l_value) parserState =
-    parserState { pMacro = Map.insert l_name l_value (pMacro parserState) }
-
-updatePShape :: (PName, Int, PValue, [[Int]]) -> ParserState -> ParserState
-updatePShape (l_name, l_rank, l_len, l_shape) parserState =
-    let l_pShape = PShape {shapeName = l_name, shapeRank = l_rank, shapeLen = l_len, shape = l_shape}
-    in parserState { pShape = Map.insert l_name l_pShape (pShape parserState) }
-
-updatePArray :: [(PName, PArray)] -> ParserState -> ParserState
-updatePArray [] parserState = parserState
-updatePArray pL@(p:ps) parserState =
-    parserState { pArray = foldr pMapInsert (pArray parserState) pL }
-
-updatePStencil :: [(PName, PStencil)] -> ParserState -> ParserState
-updatePStencil [] parserState = parserState
-updatePStencil pL@(p:ps) parserState =
-    parserState { pStencil = foldr pMapInsert (pStencil parserState) pL }
-
-updatePRange :: [(PName, PRange)] -> ParserState -> ParserState
-updatePRange [] parserState = parserState
-updatePRange pL@(p:ps) parserState =
-    parserState { pRange = foldr pMapInsert (pRange parserState) pL }
-
-pMapInsert :: (Ord k) => (k, a) -> Map.Map k a -> Map.Map k a
-pMapInsert (l_key, l_value) l_map = Map.insert l_key l_value l_map
-
-pSecond (_, b, _) = b
-pThird (_, _, c) = c
--}
 
 transPArray :: (PType, Int, Int) -> [([PName], PName, [DimExpr])] -> [(PName, PArray)]
 transPArray (l_type, l_rank, l_toggle) [] = []

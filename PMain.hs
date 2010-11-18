@@ -113,7 +113,7 @@ getObjFile :: String -> String -> [String]
 getObjFile dir fname = ["-o"] ++ [dir++name]
     where (name, suffix) = break ('.' ==) fname 
 
-pInitState = ParserState { pMode = PPointer, pState = Unrelated, pMacro = Map.empty, pArray = Map.empty, pStencil = Map.empty, pShape = Map.empty, pRange = Map.empty, pKernel = Map.empty}
+pInitState = ParserState { pMode = POptPointer, pState = Unrelated, pMacro = Map.empty, pArray = Map.empty, pStencil = Map.empty, pShape = Map.empty, pRange = Map.empty, pKernel = Map.empty}
 
 icc = "icc"
 
@@ -133,6 +133,10 @@ parseArgs (inFile, inDir, mode, debug, showFile) aL
     | elem "-split-type-shadow" aL = 
         let l_mode = PTypeShadow
             aL' = delete "-split-type-shadow" aL
+        in  parseArgs (inFile, inDir, l_mode, debug, showFile) aL'
+    | elem "-split-opt-pointer" aL =
+        let l_mode = POptPointer
+            aL' = delete "-split-opt-pointer" aL
         in  parseArgs (inFile, inDir, l_mode, debug, showFile) aL'
     | elem "-split-pointer" aL =
         let l_mode = PPointer
@@ -185,6 +189,8 @@ printUsage =
                "using macro tricks to split the interior and boundary regions")
        putStrLn ("pochoir -split-iter $filename : " ++ breakline ++ 
                "split the interior and boundary region, and using iterators to optimize the base case")
+       putStrLn ("pochoir -split-opt-pointer $filename : " ++ breakline ++ 
+               "split the interior and boundary region, and using optimized C-style pointer to optimize the base case")
        putStrLn ("pochoir -split-pointer $filename : " ++ breakline ++ 
                "Default Mode : split the interior and boundary region, and using C-style pointer to optimize the base case")
 

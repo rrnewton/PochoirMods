@@ -31291,7 +31291,6 @@ size_info logic_start_, logic_end_;
 		size_info phys_size_; // physical of elements in each dimension
 size_info stride_; // stride of each dimension
 int total_size_;
-        int slope_[N_RANK];
         typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
@@ -31311,9 +31310,6 @@ int total_size_;
             view_ = __null;
             view_ = new Storage<T>(TOGGLE * total_size_);
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
         }
 
@@ -31327,9 +31323,6 @@ int total_size_;
 			view_ = __null;
 			view_ = new Storage<T>(TOGGLE * total_size_) ;
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -31349,9 +31342,6 @@ int total_size_;
 			/* double the total_size_ because we are using toggle array */
 			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -31373,9 +31363,6 @@ int total_size_;
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -31394,9 +31381,6 @@ int total_size_;
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
             return *this;
 		}
@@ -31423,7 +31407,6 @@ int total_size_;
 
         void unregisterBV(void) { bv1_ = __null;  bv2_ = __null; bv3_ = __null; }
 
-
         void registerDomain(grid_info<N_RANK> initial_grid) {
             for (int i = 0; i < N_RANK; ++i) {
                 logic_start_[i] = initial_grid.x0[i];
@@ -31431,7 +31414,6 @@ int total_size_;
                 logic_size_[i] = initial_grid.x1[i] - initial_grid.x0[i];
             }
         }
-
 
 		/* return size */
 		int phys_size(T_dim _dim) const { return phys_size_[_dim]; }
@@ -31875,8 +31857,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-//        arr_list_[i]->registerSlope(slope_);
-arr_list_[i]->registerDomain(grid_);
+        arr_list_[i]->registerDomain(grid_);
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
@@ -31901,8 +31882,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-//        arr_list_[i]->registerSlope(slope_);
-arr_list_[i]->registerDomain(grid_);
+        arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
@@ -31918,8 +31898,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-//        arr_list_[i]->registerSlope(slope_);
-arr_list_[i]->registerDomain(grid_);
+        arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
@@ -31939,8 +31918,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-//        arr_list_[i]->registerSlope(slope_);
-arr_list_[i]->registerDomain(grid_);
+        arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
@@ -32003,7 +31981,7 @@ int main(int argc, char * argv[])
 	/* Known */ Pochoir <double, 2, 2> heat_2D ;
 
 	Pochoir_Domain I(1, N_SIZE - 1), J(1, N_SIZE - 1) ;
-Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
+Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, -1, -1}, {0, 0, -1}, {0, 0, 1}};
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -32030,31 +32008,42 @@ Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}
 	gettimeofday(&start, 0);
     for (int times = 0; times < 3; ++times) {
         
-	auto pointer_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
+	auto Iter_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
-	double * pt_a_1;
-	double * pt_a_0;
-	
-	double * a_base = a.data();
-	const int l_a_total_size = a.total_size();
-	
+	Pochoir_Iterator<double, 2, 2> iter0(a);
+	Pochoir_Iterator<double, 2, 2> iter1(a);
+	Pochoir_Iterator<double, 2, 2> iter2(a);
+	Pochoir_Iterator<double, 2, 2> iter3(a);
+	Pochoir_Iterator<double, 2, 2> iter4(a);
+	Pochoir_Iterator<double, 2, 2> iter5(a);
 	int gap_a_1, gap_a_0;
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_a_0 = a_base + ((t + 1) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
-	pt_a_1 = a_base + ((t) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	iter0.set(t + 1, l_grid.x0[1], l_grid.x0[0]);
+	iter1.set(t, l_grid.x0[1] + 1, l_grid.x0[0]);
+	iter2.set(t, l_grid.x0[1], l_grid.x0[0]);
+	iter3.set(t, l_grid.x0[1] - 1, l_grid.x0[0]);
+	iter4.set(t, l_grid.x0[1], l_grid.x0[0] + 1);
+	iter5.set(t, l_grid.x0[1], l_grid.x0[0] - 1);
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i, 
-	pt_a_0 += gap_a_1, 
-	pt_a_1 += gap_a_1) {
-	#pragma ivdep
+	iter0.inc(gap_a_1), 
+	iter1.inc(gap_a_1), 
+	iter2.inc(gap_a_1), 
+	iter3.inc(gap_a_1), 
+	iter4.inc(gap_a_1), 
+	iter5.inc(gap_a_1)) {
 	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j, 
-	++pt_a_0, 
-	++pt_a_1) {
+	++iter0, 
+	++iter1, 
+	++iter2, 
+	++iter3, 
+	++iter4, 
+	++iter5) {
 	
-	pt_a_0[0] = 0.125 * (pt_a_1[l_stride_a_1 * (1)] - 2.0 * pt_a_1[0] + pt_a_1[l_stride_a_1 * (-1)]) + 0.125 * (pt_a_1[l_stride_a_0 * (1)] - 2.0 * pt_a_1[0] + pt_a_1[l_stride_a_0 * (-1)]) + pt_a_1[0];
+	iter0 = 0.125 * (iter1 - 2.0 * iter2 + iter3) + 0.125 * (iter4 - 2.0 * iter2 + iter5) + iter2;
 	} } /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
 	for (int i = 0; i < 2; ++i) {
@@ -32063,7 +32052,7 @@ Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}
 	} /* end for t */
 	};
 
-	heat_2D.run_obase(T_SIZE, pointer_heat_2D_fn);
+	heat_2D.run_obase(T_SIZE, Iter_heat_2D_fn);
 	}
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
@@ -32075,7 +32064,8 @@ gettimeofday(&start, 0);
 	for (int t = 0; t < T_SIZE; ++t) {
     _Cilk_for (int i = 1; i < N_SIZE-1; ++i) {
 	for (int j = 1; j < N_SIZE-1; ++j) {
-       b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); 
+//       b.interior(t+1, i, j) = b.interior(t, i-1, j-1) + b.interior(t, i, j-1) + 0.01; 
+b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); 
     } } }
     }
 	gettimeofday(&end, 0);

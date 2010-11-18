@@ -96,6 +96,13 @@ getIter arrayInUse (PVAR v dL) =
     in  [(iterName, arrayInUse, dL)]
 getIter arrayInUse _ = []
 
+getBaseIter :: [PName] -> [Iter] -> [Iter]
+getBaseIter _ []  = []
+getBaseIter l_kernelParams iL@(i:is) = union (getBaseIterItem i) (getBaseIter l_kernelParams is)
+    where getBaseIterItem (name, array, dims) = 
+            let dims' = getBaseDimExpr (tail l_kernelParams) dims
+            in  [("baseIter_", array, dims')]
+
 getPointer :: [PName] -> PArray -> Expr -> [Iter]
 getPointer kernelParams arrayInUse (PVAR v dL) =
     let iterName = "pt_" ++ aName arrayInUse ++ "_"
@@ -112,6 +119,11 @@ transArrayMap aL = Map.fromList $ transAssocList aL
     where transAssocList [] = []
           transAssocList aL@(a:as) = [(aName a, a)] ++ (transAssocList as)
 
+getBaseDimExpr :: [PName] -> [DimExpr] -> [DimExpr]
+getBaseDimExpr kL [] = []
+getBaseDimExpr kL dL@(d:ds) = [d] ++ map transKernelParamsToDimExprItem kL
+    where transKernelParamsToDimExprItem k = DimVAR k
+
 transDimExpr :: [PName] -> [DimExpr] -> [DimExpr]
 transDimExpr kL [] = []
 transDimExpr kL dL@(d:ds) = [d] ++ (transSpaceDimExpr ds)
@@ -127,4 +139,15 @@ transDimExpr kL dL@(d:ds) = [d] ++ (transSpaceDimExpr ds)
 pFirst (a, _, _) = a
 pSecond (_, b, _) = b
 pThird (_, _, c) = c
+
+transInterior :: [PName] -> Expr -> Expr
+transInterior l_arrayInUse (PVAR v dL) =
+    if elem v l_arrayInUse == True then PVAR (v ++ ".interior") dL
+                                   else PVAR v dL
+transInterior l_arrayInUse e = e
+
+getArrayName :: [PArray] -> [PName]
+getArrayName [] = []
+getArrayName (a:as) = (aName a) : (getArrayName as)
+
 

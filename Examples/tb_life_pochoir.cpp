@@ -31415,7 +31415,6 @@ int total_size_;
             }
         }
 
-
 		/* return size */
 		int phys_size(T_dim _dim) const { return phys_size_[_dim]; }
 		int logic_size(T_dim _dim) const { return logic_size_[_dim]; }
@@ -31858,8 +31857,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-//        arr_list_[i]->registerSlope(slope_);
-arr_list_[i]->registerDomain(grid_);
+        arr_list_[i]->registerDomain(grid_);
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
@@ -31884,8 +31882,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-//        arr_list_[i]->registerSlope(slope_);
-arr_list_[i]->registerDomain(grid_);
+        arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
@@ -31901,8 +31898,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-//        arr_list_[i]->registerSlope(slope_);
-arr_list_[i]->registerDomain(grid_);
+        arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
@@ -31922,8 +31918,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-//        arr_list_[i]->registerSlope(slope_);
-arr_list_[i]->registerDomain(grid_);
+        arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
@@ -32014,7 +32009,7 @@ life_2D.registerBoundaryFn(a, life_bv_2D); /* register Boundary Fn */
 gettimeofday(&start, 0);
     for (int times = 0; times < 3; ++times) {
         
-	auto pointer_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
+	auto Pointer_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
 	bool * pt_a_1;
 	bool * pt_a_0;
@@ -32026,8 +32021,8 @@ gettimeofday(&start, 0);
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_a_0 = a_base + ((t - 1) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
-	pt_a_1 = a_base + ((t) & 0x1) * l_a_total_size + l_grid.x0[1] * l_stride_a_1 + l_grid.x0[0] * l_stride_a_0;
+	pt_a_0 = a_base + ((t - 1) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
+	pt_a_1 = a_base + ((t) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i, 
@@ -32059,7 +32054,7 @@ gettimeofday(&start, 0);
 	} /* end for t */
 	};
 
-	life_2D.run_obase(T_SIZE, pointer_life_2D_fn, life_2D_fn);
+	life_2D.run_obase(T_SIZE, Pointer_life_2D_fn, life_2D_fn);
 	}
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;

@@ -38121,7 +38121,6 @@ size_info logic_start_, logic_end_;
 		size_info phys_size_; // physical of elements in each dimension
 size_info stride_; // stride of each dimension
 int total_size_;
-        int slope_[N_RANK];
         typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
@@ -38141,9 +38140,6 @@ int total_size_;
             view_ = __null;
             view_ = new Storage<T>(TOGGLE * total_size_);
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
         }
 
@@ -38157,9 +38153,6 @@ int total_size_;
 			view_ = __null;
 			view_ = new Storage<T>(TOGGLE * total_size_) ;
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -38179,9 +38172,6 @@ int total_size_;
 			/* double the total_size_ because we are using toggle array */
 			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -38203,9 +38193,6 @@ int total_size_;
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
 		}
 
@@ -38224,9 +38211,6 @@ int total_size_;
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = 0;
-            }
             data_ = view_->data();
             return *this;
 		}
@@ -38253,11 +38237,6 @@ int total_size_;
 
         void unregisterBV(void) { bv1_ = __null;  bv2_ = __null; bv3_ = __null; }
 
-        void registerSlope(int const _slope[]) {
-            for (int i = 0; i < N_RANK; ++i) 
-                slope_[i] = _slope[i];
-        }
-
         void registerDomain(grid_info<N_RANK> initial_grid) {
             for (int i = 0; i < N_RANK; ++i) {
                 logic_start_[i] = initial_grid.x0[i];
@@ -38266,26 +38245,6 @@ int total_size_;
             }
         }
 
-
-        /* We should prevent user from calling this function directly! */
-        template <size_t N_SIZE>
-        void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
-            /* currently we just get the slope_[] out of the shape[] */
-            int l_min_time_shift=0, l_max_time_shift=0, time_slope=0;
-            for (int i = 0; i < N_SIZE; ++i) {
-                if (shape[i].shift[0] < l_min_time_shift)
-                    l_min_time_shift = shape[i].shift[0];
-                if (shape[i].shift[0] > l_max_time_shift)
-                    l_max_time_shift = shape[i].shift[0];
-                for (int r = 1; r < N_RANK+1; ++r) {
-                    slope_[N_RANK-r] = ((slope_[N_RANK-r]) > (abs(shape[i]. shift[r])) ? (slope_[N_RANK-r]) : (abs(shape[i]. shift[r])));
-                }
-            }
-            time_slope = l_max_time_shift - l_min_time_shift;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = (int)ceil((float)slope_[i]/time_slope);
-            }
-        }
 		/* return size */
 		int phys_size(T_dim _dim) const { return phys_size_[_dim]; }
 		int logic_size(T_dim _dim) const { return logic_size_[_dim]; }
@@ -38728,7 +38687,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->registerDomain(grid_);
     }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
@@ -38754,7 +38712,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
@@ -38771,7 +38728,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.set_logic_size(logic_size_);
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
@@ -38792,7 +38748,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerSlope(slope_);
         arr_list_[i]->registerDomain(grid_);
     }
     checkFlags();
@@ -39178,6 +39133,20 @@ A = new float*[2];
 	
   ///////////////////////////////////////////////                                                                      
 init_variables();
+  start = getseconds();
+  
+  /* this is loop based version */
+  loop_opt3(0, T,
+            ds, Nx - ds, 
+            ds, Ny - ds,
+            ds, Nz - ds);
+  
+  //basecase(0, T,
+stop = getseconds(); 
+  //copy_A_to_B();
+print_summary("base", stop - start);
+  ///////////////////////////////////////////////
+init_variables();
   // verify_A_and_B();
 start = getseconds();
   /* this is the divide-and-conquer version in cilk++ */
@@ -39246,23 +39215,24 @@ fd_3D.registerArray (pa); /* register Array */
 	
 	float * pa_base = pa.data();
 	const int l_pa_total_size = pa.total_size();
+	
 	int gap_pa_2, gap_pa_1, gap_pa_0;
 	const int l_stride_pa_2 = pa.stride(2), l_stride_pa_1 = pa.stride(1), l_stride_pa_0 = pa.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_pa_0 = pa_base + ((t) & 0x1) * l_pa_total_size + l_grid.x0[2] * l_stride_pa_2 + l_grid.x0[1] * l_stride_pa_1 + l_grid.x0[0] * l_stride_pa_0;
-	pt_pa_1 = pa_base + ((t + 1) & 0x1) * l_pa_total_size + l_grid.x0[2] * l_stride_pa_2 + l_grid.x0[1] * l_stride_pa_1 + l_grid.x0[0] * l_stride_pa_0;
+	pt_pa_0 = pa_base + ((t) & 0x1) * l_pa_total_size + (l_grid.x0[2]) * l_stride_pa_2 + (l_grid.x0[1]) * l_stride_pa_1 + (l_grid.x0[0]) * l_stride_pa_0;
+	pt_pa_1 = pa_base + ((t + 1) & 0x1) * l_pa_total_size + (l_grid.x0[2]) * l_stride_pa_2 + (l_grid.x0[1]) * l_stride_pa_1 + (l_grid.x0[0]) * l_stride_pa_0;
 	
 	gap_pa_2 = l_stride_pa_2 + (l_grid.x0[1] - l_grid.x1[1]) * l_stride_pa_1;
-	for (int i = l_grid.x0[2]; i < l_grid.x1[2]; ++i,
+	for (int i = l_grid.x0[2]; i < l_grid.x1[2]; ++i, 
 	pt_pa_0 += gap_pa_2, 
 	pt_pa_1 += gap_pa_2) {
 	gap_pa_1 = l_stride_pa_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_pa_0;
-	for (int j = l_grid.x0[1]; j < l_grid.x1[1]; ++j,
+	for (int j = l_grid.x0[1]; j < l_grid.x1[1]; ++j, 
 	pt_pa_0 += gap_pa_1, 
 	pt_pa_1 += gap_pa_1) {
 	#pragma ivdep
-	for (int k = l_grid.x0[0]; k < l_grid.x1[0]; ++k,
+	for (int k = l_grid.x0[0]; k < l_grid.x1[0]; ++k, 
 	++pt_pa_0, 
 	++pt_pa_1) {
 	

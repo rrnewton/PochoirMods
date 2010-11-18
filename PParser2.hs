@@ -30,6 +30,7 @@ import Text.ParserCombinators.Parsec
 import Control.Monad
 
 import PBasicParser
+import PShow
 import PData
 import qualified Data.Map as Map
 
