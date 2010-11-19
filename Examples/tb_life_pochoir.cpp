@@ -31996,7 +31996,7 @@ life_2D.registerBoundaryFn(a, life_bv_2D); /* register Boundary Fn */
 	
 	int neighbors = a(t - 1, i - 1, j - 1) + a(t - 1, i - 1, j) + a(t - 1, i - 1, j + 1) + a(t - 1, i, j - 1) + a(t - 1, i, j + 1) + a(t - 1, i + 1, j - 1) + a(t - 1, i + 1, j) + a(t - 1, i + 1, j + 1);
 	if (a(t - 1, i, j) == true && neighbors < 2)
-	a(t, i, j) = true;
+	a(t, i, j) = false;
 	else if (a(t - 1, i, j) == true && neighbors > 3)
 	{
 	a(t, i, j) = false;
@@ -32076,7 +32076,7 @@ gettimeofday(&start, 0);
 	
 	int neighbors = (*iter0) + (*iter1) + (*iter2) + (*iter3) + (*iter4) + (*iter5) + (*iter6) + (*iter7);
 	if ((*iter8) == true && neighbors < 2)
-	(*iter9) = true;
+	(*iter9) = false;
 	else if ((*iter8) == true && neighbors > 3)
 	{
 	(*iter9) = false;
@@ -32104,9 +32104,9 @@ gettimeofday(&start, 0);
     auto bt_life_2D_fn = [&] (int t, int i, int j) {
 	
 	int neighbors = c(t - 1, i - 1, j - 1) + c(t - 1, i - 1, j) + c(t - 1, i - 1, j + 1) + c(t - 1, i, j - 1) + c(t - 1, i, j + 1) + c(t - 1, i + 1, j - 1) + c(t - 1, i + 1, j) + c(t - 1, i + 1, j + 1);
-	bool set0 = (c(t - 1, i, j) == true && neighbors < 2) || (c(t - 1, i, j) == false && neighbors == 3);
-	bool set1 = (c(t - 1, i, j) == true && neighbors > 3);
-	c(t, i, j) = set0 ? true : (set1 ? false : c(t - 1, i, j));
+	int x = ((neighbors - 2) >> 31) | ~((neighbors - 3) >> 31);
+	int y = ((neighbors - 3) >> 31) | ~((neighbors - 4) >> 31);
+	c(t, i, j) = 1 & ((~x & c(t - 1, i, j)) | ~y);
 	};
 	bt_life_2D.registerShape(life_shape_2D);
 //    life_2D.registerDomain(I, J);
@@ -32145,8 +32145,8 @@ gettimeofday(&start, 0);
 	iter5 = baseIter_0 + (1) * l_stride_c_1 + (-1) * l_stride_c_0;
 	iter6 = baseIter_0 + (1) * l_stride_c_1 + (0) * l_stride_c_0;
 	iter7 = baseIter_0 + (1) * l_stride_c_1 + (1) * l_stride_c_0;
-	iter8 = baseIter_0 + (0) * l_stride_c_1 + (0) * l_stride_c_0;
-	iter9 = baseIter_1 + (0) * l_stride_c_1 + (0) * l_stride_c_0;
+	iter8 = baseIter_1 + (0) * l_stride_c_1 + (0) * l_stride_c_0;
+	iter9 = baseIter_0 + (0) * l_stride_c_1 + (0) * l_stride_c_0;
 	
 	gap_c_1 = l_stride_c_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_c_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i, 
@@ -32174,9 +32174,9 @@ gettimeofday(&start, 0);
 	++iter9) {
 	
 	int neighbors = (*iter0) + (*iter1) + (*iter2) + (*iter3) + (*iter4) + (*iter5) + (*iter6) + (*iter7);
-	bool set0 = ((*iter8) == true && neighbors < 2) || ((*iter8) == false && neighbors == 3);
-	bool set1 = ((*iter8) == true && neighbors > 3);
-	(*iter9) = set0 ? true : (set1 ? false : (*iter8));
+	int x = ((neighbors - 2) >> 31) | ~((neighbors - 3) >> 31);
+	int y = ((neighbors - 3) >> 31) | ~((neighbors - 4) >> 31);
+	(*iter8) = 1 & ((~x & (*iter9)) | ~y);
 	} } /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
 	for (int i = 0; i < 2; ++i) {
@@ -32206,7 +32206,7 @@ for (int times = 0; times < 3; ++times) {
 	size_t idx5 = (i + N_SIZE + 1) % ( N_SIZE);
 	int neighbors = b.interior(t, idx0, idx1) + b.interior(t, idx0, idx2) + b.interior(t, idx0, idx3) + b.interior(t, idx4, idx1) + b.interior(t, idx4, idx3) + b.interior(t, idx5, idx1) + b.interior(t, idx5, idx2) + b.interior(t, idx5, idx3);
 	if (b.interior(t, idx4, idx2) == true && neighbors < 2)
-	b.interior(t + 1, idx4, idx2) = true;
+	b.interior(t + 1, idx4, idx2) = false;
 	else if (b.interior(t, idx4, idx2) == true && neighbors > 3)
 	b.interior(t + 1, idx4, idx2) = false;
 	else if (b.interior(t, idx4, idx2) == true && (neighbors == 2 || neighbors == 3))

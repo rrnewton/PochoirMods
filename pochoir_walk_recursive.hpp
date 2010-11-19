@@ -33,8 +33,8 @@
 /* grid.x1[i] >= initial_grid_.x1[i] - stride_[i] - slope_[i] 
  * because we compute the kernel with range [a, b)
  */
-template <int N_RANK, typename Grid_info>
-inline bool Algorithm<N_RANK, Grid_info>::touch_boundary(int i, int lt, Grid_info & grid) 
+template <int N_RANK>
+inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> & grid) 
 {
     bool interior = false;
     if (grid.x0[i] >= uub_boundary[i] 
@@ -53,14 +53,14 @@ inline bool Algorithm<N_RANK, Grid_info>::touch_boundary(int i, int lt, Grid_inf
     return !interior;
 }
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::walk_serial(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::walk_serial(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     int lt = t1 - t0;
     bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
     bool cut_yet = false;
     bool can_cut[N_RANK];
-    Grid_info l_grid;
+    grid_info<N_RANK> l_grid;
 
     for (int i = 0; i < N_RANK; ++i) {
         can_cut[i] = (2 * (grid.x1[i] - grid.x0[i]) + (grid.dx1[i] - grid.dx0[i]) * lt >= 4 * slope_[i] * lt) && (grid.x1[i] - grid.x0[i] > dx_recursive_[i]);
@@ -122,15 +122,15 @@ inline void Algorithm<N_RANK, Grid_info>::walk_serial(int t0, int t1, Grid_info 
 }
 
 /* walk_adaptive() is just for interior region */
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::walk_bicut(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::walk_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
 	   for the rest cut into that dimension, cut into as many as we can!
 	 */
 	int lt = t1 - t0;
 	index_info lb, thres;
-	Grid_info l_grid;
+	grid_info<N_RANK> l_grid;
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
@@ -214,8 +214,8 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut(int t0, int t1, Grid_info c
 }
 
 /* walk_adaptive() is just for interior region */
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::walk_adaptive(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::walk_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
 	   for the rest cut into that dimension, cut into as many as we can!
@@ -226,7 +226,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_adaptive(int t0, int t1, Grid_inf
 	//int lb[N_RANK];
 	//int thres[N_RANK];
 	index_info lb, thres;
-	Grid_info l_grid;
+	grid_info<N_RANK> l_grid;
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
@@ -324,8 +324,8 @@ static int count_internal = 0;
 #endif
 
 /* walk_ncores_boundary_p() will be called for -split-shadow mode */
-template <int N_RANK, typename Grid_info> template <typename F, typename BF>
-inline void Algorithm<N_RANK, Grid_info>::walk_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::walk_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
@@ -333,7 +333,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut_boundary_p(int t0, int t1, 
 	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
 	bool can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
     int l_dt_stop;
 
@@ -476,8 +476,8 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut_boundary_p(int t0, int t1, 
 
 
 /* walk_ncores_boundary_p() will be called for -split-shadow mode */
-template <int N_RANK, typename Grid_info> template <typename F, typename BF>
-inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::walk_ncores_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
@@ -485,7 +485,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1,
 	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
 	bool cut_yet = false, can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
 
 	for (int i = 0; i < N_RANK; ++i) {
@@ -631,15 +631,15 @@ inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1,
 }
 
 /* this is for interior region */
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::obase_bicut(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
 	   for the rest cut into that dimension, cut into as many as we can!
 	 */
 	int lt = t1 - t0;
 	index_info lb, thres;
-	Grid_info l_grid;
+	grid_info<N_RANK> l_grid;
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
@@ -722,8 +722,8 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut(int t0, int t1, Grid_info 
 
 
 /* this is for interior region */
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::obase_adaptive(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::obase_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
 	   for the rest cut into that dimension, cut into as many as we can!
@@ -734,7 +734,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_adaptive(int t0, int t1, Grid_in
 	//int lb[N_RANK];
 	//int thres[N_RANK];
 	index_info lb, thres;
-	Grid_info l_grid;
+	grid_info<N_RANK> l_grid;
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
@@ -825,15 +825,15 @@ inline void Algorithm<N_RANK, Grid_info>::obase_adaptive(int t0, int t1, Grid_in
 }
 
 /* this is the version for executable spec!!! */
-template <int N_RANK, typename Grid_info> template <typename BF>
-inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf)
+template <int N_RANK> template <typename BF>
+inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
 	int lt = t1 - t0;
 	bool can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
 
 	for (int i = 0; i < N_RANK; ++i) {
@@ -921,8 +921,8 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
 
 
 /* this is the version for executable spec!!! */
-template <int N_RANK, typename Grid_info> template <typename BF>
-inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf)
+template <int N_RANK> template <typename BF>
+inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
@@ -930,7 +930,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
 	bool cut_yet = false, can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
 
 	for (int i = 0; i < N_RANK; ++i) {
@@ -1029,15 +1029,15 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 }
 
 /* this is for optimizing base case!!! */
-template <int N_RANK, typename Grid_info> template <typename F, typename BF>
-inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
 	int lt = t1 - t0;
 	bool can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
     int l_dt_stop;
 
@@ -1173,8 +1173,8 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1,
 }
 
 /* this is for optimizing base case!!! */
-template <int N_RANK, typename Grid_info> template <typename F, typename BF>
-inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
@@ -1182,7 +1182,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
 	bool cut_yet = false, can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
 
 	for (int i = 0; i < N_RANK; ++i) {

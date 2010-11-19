@@ -36,7 +36,7 @@
 
 using namespace std;
 
-template <T_dim DIM>
+template <int DIM>
 inline int cal_index(int const * _idx, int const * _stride) {
 	return (_idx[DIM] * _stride[DIM]) + cal_index<DIM-1>(_idx, _stride);
 }
@@ -47,7 +47,7 @@ inline int cal_index<0>(int const * _idx, int const * _stride) {
 	return (_idx[0] * _stride[0]);
 }
 
-template <T_dim TOGGLE>
+template <int TOGGLE>
 inline int toggle_base(int const & _idx0) {
     return (_idx0 % TOGGLE);
 }
@@ -114,7 +114,7 @@ class Storage {
 		T * data() { return storage_; }
 };
 
-template <typename T, T_dim N_RANK, T_dim TOGGLE=2>
+template <typename T, int N_RANK, int TOGGLE=2>
 class Pochoir_Array {
 	private:
 		Storage<T> * view_; // real storage of elements
@@ -168,7 +168,7 @@ class Pochoir_Array {
             logic_start_[2] = 0; logic_end_[2] = sz2;
 			stride_[0] = 1;  
 			total_size_ = phys_size_[2];
-			for (T_dim i = 0; i < 2; ++i) {
+			for (int i = 0; i < 2; ++i) {
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
 			}
@@ -184,7 +184,7 @@ class Pochoir_Array {
 		 */
 		Pochoir_Array (Pochoir_Array<T, N_RANK, TOGGLE> const & orig) {
 			total_size_ = orig.total_size();
-			for (T_dim i = 0; i < N_RANK; ++i) {
+			for (int i = 0; i < N_RANK; ++i) {
 				phys_size_[i] = orig.phys_size(i);
 				logic_size_[i] = orig.logic_size(i);
 				stride_[i] = orig.stride(i);
@@ -203,7 +203,7 @@ class Pochoir_Array {
         /* assignment operator for vector<> */
 		Pochoir_Array<T, N_RANK, TOGGLE> & operator= (Pochoir_Array<T, N_RANK, TOGGLE> const & orig) {
 			total_size_ = orig.total_size();
-			for (T_dim i = 0; i < N_RANK; ++i) {
+			for (int i = 0; i < N_RANK; ++i) {
 				phys_size_[i] = orig.phys_size(i);
 				logic_size_[i] = orig.logic_size(i);
 				stride_[i] = orig.stride(i);
@@ -250,16 +250,16 @@ class Pochoir_Array {
         }
 
 		/* return size */
-		int phys_size(T_dim _dim) const { return phys_size_[_dim]; }
-		int logic_size(T_dim _dim) const { return logic_size_[_dim]; }
+		int phys_size(int _dim) const { return phys_size_[_dim]; }
+		int logic_size(int _dim) const { return logic_size_[_dim]; }
         /* the size() function is for user's convenience! */
-		int size(T_dim _dim) const { return phys_size_[_dim]; }
+		int size(int _dim) const { return phys_size_[_dim]; }
 
 		/* return total_size_ */
 		int total_size() const { return total_size_; }
 
 		/* return stride */
-		int stride (T_dim _dim) const { return stride_[_dim]; }
+		int stride (int _dim) const { return stride_[_dim]; }
 
         inline bool check_boundary(size_info const & _idx) const {
             bool touch_boundary = false;
@@ -446,7 +446,7 @@ class Pochoir_Array {
 		/* size_info is of type int[] */
 		static inline bool update_index(int * index, bool & line_break, int const * head_index, int const * tail_index)
 		{
-			T_dim i = 0;
+			int i = 0;
 			bool done = false, whole_done = false;
 			while (!done && i < N_RANK) {
 				if (index[i] == (tail_index[i] - 1)) {
@@ -463,19 +463,19 @@ class Pochoir_Array {
 			return whole_done;
 		}
 
-		template <typename T2, T_dim N2>
+		template <typename T2, int N2>
 		friend std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x); 
 };
 
-template<typename T2, T_dim N2>
+template<typename T2, int N2>
 std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x) { 
 	typedef int size_info[N2];
 	size_info l_index, l_head_index, l_tail_index;
 	bool done = false, line_break = false;
-	T_dim i = 0;
+	int i = 0;
 
 	os << " Pochoir_Array : "; 
-	for (T_dim i = 0; i < N2; ++i) {
+	for (int i = 0; i < N2; ++i) {
 		l_index[i] = 0;
 		l_head_index[i] = 0;
 		l_tail_index[i] = x.phys_size(i);

@@ -412,7 +412,7 @@ void dotest()
   double stop;
 	
   ///////////////////////////////////////////////                                                                      
-#if 1
+#if 0
   
   init_variables();
   start = getseconds();

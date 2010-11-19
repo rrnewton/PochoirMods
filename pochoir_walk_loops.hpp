@@ -30,8 +30,8 @@
 
 #define MAX(a, b) ((a) >= (b) ? (a) : (b))
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_mp(int dim, int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::naive_cut_space_mp(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* This is the version that cut into as many pieces as we can */
 	/* cut into Space dimension one after another */
@@ -61,7 +61,7 @@ inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_mp(int dim, int t0, in
 		return;
 	} else {
 		assert(can_cut);
-		Grid_info l_grid = grid;
+		grid_info<N_RANK> l_grid = grid;
 		int r = lx / bl;
 		int sep = bl;
 		for (i = 0; i < r - 1; i++) {
@@ -103,8 +103,8 @@ inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_mp(int dim, int t0, in
 	}
 }
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_ncores(int dim, int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::naive_cut_space_ncores(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* This version cut into exactly N_CORES pieces */
 	/* cut into Space dimension one after another */
@@ -133,7 +133,7 @@ inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_ncores(int dim, int t0
 		return;
 	} else {
 		assert(can_cut);
-		Grid_info l_grid = grid;
+		grid_info<N_RANK> l_grid = grid;
 		int sep = lx / N_CORES;
 		for (i = 0; i < N_CORES - 1; i++) {
 			l_grid.x0[dim] = grid.x0[dim] + i * sep;
@@ -178,8 +178,8 @@ inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_ncores(int dim, int t0
 	}
 }
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::cut_space_ncores_boundary(int dim, int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::cut_space_ncores_boundary(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* This version cut into exactly NCORES pieces */
 	/* cut into Space dimension one after another */
@@ -221,7 +221,7 @@ inline void Algorithm<N_RANK, Grid_info>::cut_space_ncores_boundary(int dim, int
 		return;
 	} else {
 		assert(can_cut);
-		Grid_info l_grid = grid;
+		grid_info<N_RANK> l_grid = grid;
 		int sep = lx / N_CORES;
 		int l_start = (grid.x0[dim]);
 		int l_end = (grid.x1[dim]);
@@ -269,8 +269,8 @@ inline void Algorithm<N_RANK, Grid_info>::cut_space_ncores_boundary(int dim, int
 	}
 }
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::cut_time(algor_type algor, int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::cut_time(algor_type algor, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* cut into Time dimension */
 	int i;

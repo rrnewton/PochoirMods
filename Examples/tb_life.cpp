@@ -117,7 +117,7 @@ int main(int argc, char * argv[])
                     a(t-1, i, j-1)                  + a(t-1, i, j+1) +
                     a(t-1, i+1, j-1) + a(t-1, i+1, j) + a(t-1, i+1, j+1);
     if (a(t-1, i, j) == true && neighbors < 2)
-        a(t, i, j) = true;
+        a(t, i, j) = false;
     else if (a(t-1, i, j) == true && neighbors > 3) { 
         a(t, i, j) = false;
     } else if (a(t-1, i, j) == true && (neighbors == 2 || neighbors == 3)) {
@@ -149,13 +149,17 @@ int main(int argc, char * argv[])
                 || (!c(t-1, i, j) && neighbors == 3))
                 && !(c(t-1, i, j) && neighbors > 3);
 #endif
-    bool set0 = (c(t-1, i, j) == true && neighbors < 2) 
-             || (c(t-1, i, j) == false && neighbors == 3); /* set true */
-    bool set1 = (c(t-1, i, j) == true && neighbors > 3); /* set false */
 #if 1
-    c(t, i, j) = set0 ? true : (set1 ? false : c(t-1, i, j));
+     int x = ((neighbors-2)>>31) | ~((neighbors-3)>>31); // x==0 iff neighbors==2 (otherwise -1)
+     int y = ((neighbors-3)>>31) | ~((neighbors-4)>>31); // y==0 iff neighbors==3 (otherwise -1)
+     //c(t,i,j) = 1&((~x&c(t-1,i,j))|~y);
+     c(t,i,j) = 1&((~x&c(t-1,i,j)) | ~y);
 #else
-    c(t, i, j) = pCond(set0, true, pCond(set1, false, c(t-1, i, j)));
+    bool set0 = (c(t-1, i, j) == false && neighbors == 3); /* set true */
+    bool set1 = (c(t-1, i, j) == true && neighbors < 2) 
+             || (c(t-1, i, j) == true && neighbors > 3); /* set false */
+    c(t, i, j) = set0 ? true : (set1 ? false : c(t-1, i, j));
+//    c(t, i, j) = pCond(set0, true, pCond(set1, false, c(t-1, i, j)));
 #endif
     Pochoir_kernel_end
 
@@ -188,7 +192,7 @@ int main(int argc, char * argv[])
 	size_t idx5 = (i + N_SIZE + 1) % ( N_SIZE);
 	int neighbors = b.interior(t, idx0, idx1) + b.interior(t, idx0, idx2) + b.interior(t, idx0, idx3) + b.interior(t, idx4, idx1) + b.interior(t, idx4, idx3) + b.interior(t, idx5, idx1) + b.interior(t, idx5, idx2) + b.interior(t, idx5, idx3);
 	if (b.interior(t, idx4, idx2) == true && neighbors < 2)
-	b.interior(t + 1, idx4, idx2) = true;
+	b.interior(t + 1, idx4, idx2) = false;
 	else if (b.interior(t, idx4, idx2) == true && neighbors > 3)
 	b.interior(t + 1, idx4, idx2) = false;
 	else if (b.interior(t, idx4, idx2) == true && (neighbors == 2 || neighbors == 3))

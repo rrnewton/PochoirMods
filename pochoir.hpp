@@ -219,7 +219,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     /* this version uses 'f' to compute interior region, 
      * and 'bf' to compute boundary region
      */
-    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    Algorithm<N_RANK> algor(slope_);
     getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -241,7 +241,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
 /* safe/non-safe ExecSpec */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
-    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    Algorithm<N_RANK> algor(slope_);
     getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -264,7 +264,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
 /* obase for zero-padded area! */
 template <typename T, int N_RANK, int TOGGLE> template <typename F>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
-    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    Algorithm<N_RANK> algor(slope_);
     getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -285,7 +285,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
 /* obase for interior and ExecSpec for boundary */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const & bf) {
-    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    Algorithm<N_RANK> algor(slope_);
     getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
