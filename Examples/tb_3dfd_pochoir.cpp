@@ -25530,6 +25530,7 @@ int StrToInt(const std::string& s)
 
 /* a bit tricky version of modulo operation, assuming a < 2 * b */
 
+
 inline bool select(bool b, bool x, bool y) {
     return (x&(-b)) | (y&-(!b));
 }
@@ -39208,7 +39209,7 @@ fd_3D.registerArray (pa); /* register Array */
   init_pochoir_array(pa);
   start = getseconds();
   
-	auto pointer_fd_3D_fn = [&] (int t0, int t1, grid_info<3> const & grid) {
+	auto Default_fd_3D_fn = [&] (int t0, int t1, grid_info<3> const & grid) {
 	grid_info<3> l_grid = grid;
 	float * pt_pa_1;
 	float * pt_pa_0;
@@ -39247,7 +39248,7 @@ fd_3D.registerArray (pa); /* register Array */
 	} /* end for t */
 	};
 
-	fd_3D.run_obase(T, pointer_fd_3D_fn);
+	fd_3D.run_obase(T, Default_fd_3D_fn);
 	stop = getseconds();
   print_summary("Pochoir", stop - start);
 

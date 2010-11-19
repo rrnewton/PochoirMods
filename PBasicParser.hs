@@ -50,7 +50,8 @@ lexer = Token.makeTokenParser (javaStyle
                nestedComments = True,
                reservedOpNames = ["*", "/", "+", "-", "!", "&&", "||", "=", ">", ">=", 
                                   "<", "<=", "==", "!=", "+=", "-=", "*=", "&=", "|=", 
-                                  "<<=", ">>=", "^=", "++", "--", "?", ":", "&"],
+                                  "<<=", ">>=", "^=", "++", "--", "?", ":", "&", "|", "~",
+                                  ">>", "<<", "%"],
                reservedNames = ["Pochoir_Array", "Pochoir", "Pochoir_Domain", 
                                 "Pochoir", "Pochoir_pRange", 
                                 "Pochoir_kernel_1D", "Pochoir_kernel_2D", 
@@ -134,6 +135,14 @@ ppStencil l_id l_stencil l_state =
                Just l_kernel -> 
                     let l_revKernel = transKernel l_kernel l_stencil $ pMode l_state
                     in case pMode l_state of
+                            PDefault -> 
+                                let l_showKernel = 
+                                       if sRank l_stencil < 3
+                                           then pShowOptPointerKernel
+                                           else pShowPointerKernel
+                                in  pSplitObase
+                                        ("Default_", l_id, l_tstep, l_revKernel, l_stencil)
+                                        l_showKernel
                             PTypeShadow -> 
                                 pSplitScope 
                                     ("type_", l_id, l_tstep, l_revKernel, l_stencil) 
@@ -187,6 +196,14 @@ transKernel l_kernel l_stencil l_mode =
                                     getIter 
                                     (transArrayMap $ sArrayInUse l_stencil) 
                                     l_exprStmts 
+                       PDefault -> let l_get = 
+                                            if sRank l_stencil < 3 
+                                                then getIter
+                                                else (getPointer $ l_kernelParams)
+                                   in  getFromStmts 
+                                         l_get
+                                         (transArrayMap $ sArrayInUse l_stencil) 
+                                         l_exprStmts 
            l_revIters = transIterN 0 l_iters
        in  l_kernel { kIter = l_revIters }
  
@@ -532,19 +549,29 @@ exprStmt :: GenParser Char ParserState Expr
 exprStmt = buildExpressionParser tableStmt termStmt
    <?> "Expression Statement"
 
-tableStmt = [[Prefix (reservedOp "-" >> return (Uno "-")),
-              Prefix (reservedOp "!" >> return (Uno "!")),
+tableStmt = [[Postfix (reservedOp "++" >> return (PostUno "++")),
+              Postfix (reservedOp "--" >> return (PostUno "--"))],
+            [Prefix (reservedOp "!" >> return (Uno "!")),
+              Prefix (reservedOp "~" >> return (Uno "~")),
               Prefix (reservedOp "++" >> return (Uno "++")),
               Prefix (reservedOp "--" >> return (Uno "--")),
-              Postfix (reservedOp "++" >> return (PostUno "++")),
-              Postfix (reservedOp "--" >> return (PostUno "--"))
-              ],
-         [op "*" "*" AssocLeft, op "/" "/" AssocLeft],
+              Prefix (reservedOp "-" >> return (Uno "-")),
+              Prefix (reservedOp "+" >> return (Uno "+")), --Unary Plus
+              Prefix (reservedOp "*" >> return (Uno "*")), --Dereference
+              Prefix (reservedOp "&" >> return (Uno "&"))  --Address of
+             ],
+         [op "*" "*" AssocLeft, op "/" "/" AssocLeft,
+          op "%" "%" AssocLeft],
          [op "+" "+" AssocLeft, op "-" "-" AssocLeft],
+         [op ">>" ">>" AssocLeft, op "<<" "<<" AssocLeft],
          [op ">" ">" AssocLeft, op "<" "<" AssocLeft,
-          op ">=" ">=" AssocLeft, op "<=" "<=" AssocLeft,
-          op "==" "==" AssocLeft, op "!=" "!=" AssocLeft],
-         [op "&&" "&&" AssocLeft, op "||" "||" AssocLeft],
+          op ">=" ">=" AssocLeft, op "<=" "<=" AssocLeft],
+         [op "==" "==" AssocLeft, op "!=" "!=" AssocLeft],
+         [op "&" "&" AssocLeft], --bitwise and
+         [op "^" "^" AssocLeft], --bitwise xor
+         [op "|" "|" AssocLeft], --bitwise inclusive or
+         [op "&&" "&&" AssocLeft], --logical and
+         [op "||" "||" AssocLeft], --logical or
          [op ":" ":" AssocLeft],
          [op "?" "?" AssocLeft],
          [Infix (reservedOp "=" >> return (Duo "=")) AssocLeft,

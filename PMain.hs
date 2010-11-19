@@ -44,7 +44,7 @@ main = do args <- getArgs
              printUsage
              exitFailure
           let (inFile, inDir, mode, debug, showFile) 
-                = parseArgs ("", "", PPointer, False, True) args
+                = parseArgs ("", "", PDefault, False, True) args
           whilst (mode == PHelp) $ do
              printUsage
              exitFailure

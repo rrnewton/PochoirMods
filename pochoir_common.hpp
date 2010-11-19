@@ -61,6 +61,8 @@ int StrToInt(const std::string& s)
 #define pmod(a, b) ((a) - ((b) & -((a)>=(b))))
 #define pmod_lu(a, lb, ub) ((a) - (((ub)-(lb)) & -((a)>=(ub))))
 
+#define pCond(b, x, y) (x&(-b)) | (y&-(!b))
+
 inline bool select(bool b, bool x, bool y) {
     return (x&(-b)) | (y&-(!b));
 }

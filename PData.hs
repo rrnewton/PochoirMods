@@ -47,7 +47,7 @@ newtype PShift = PShift Int deriving (Eq, Ord)
 data RegionT = Periodic | Nonperiodic | UnknownRegionT deriving Show
 data PType = PInt | PDouble | PFloat | PBool | PUnknownType deriving Eq
 data PState = PochoirBegin | PochoirEnd | PochoirMacro | PochoirDeclArray | PochoirDeclRange | PochoirError | Unrelated deriving (Show, Eq)
-data PMode = PHelp | PIter | POptPointer | PPointer | PTypeShadow | PInterior | PMacroShadow | PError deriving (Show, Eq)
+data PMode = PHelp | PDefault | PIter | POptPointer | PPointer | PTypeShadow | PInterior | PMacroShadow | PError deriving (Show, Eq)
 data PMacro = PMacro {
     mName :: PName,
     mValue :: PValue

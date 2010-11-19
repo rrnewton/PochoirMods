@@ -28150,6 +28150,7 @@ int StrToInt(const std::string& s)
 
 /* a bit tricky version of modulo operation, assuming a < 2 * b */
 
+
 inline bool select(bool b, bool x, bool y) {
     return (x&(-b)) | (y&-(!b));
 }
@@ -32008,33 +32009,42 @@ Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, -1, -1
 	gettimeofday(&start, 0);
     for (int times = 0; times < 3; ++times) {
         
-	auto Iter_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
+	auto Default_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
-	Pochoir_Iterator<double, 2, 2> iter0(a);
-	Pochoir_Iterator<double, 2, 2> iter1(a);
-	Pochoir_Iterator<double, 2, 2> iter2(a);
-	Pochoir_Iterator<double, 2, 2> iter3(a);
-	Pochoir_Iterator<double, 2, 2> iter4(a);
-	Pochoir_Iterator<double, 2, 2> iter5(a);
+	double * iter5;
+	double * iter4;
+	double * iter3;
+	double * iter2;
+	double * iter1;
+	double * iter0;
+	
+	double * a_base = a.data();
+	const int l_a_total_size = a.total_size();
+	
 	int gap_a_1, gap_a_0;
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	iter0.set(t + 1, l_grid.x0[1], l_grid.x0[0]);
-	iter1.set(t, l_grid.x0[1] + 1, l_grid.x0[0]);
-	iter2.set(t, l_grid.x0[1], l_grid.x0[0]);
-	iter3.set(t, l_grid.x0[1] - 1, l_grid.x0[0]);
-	iter4.set(t, l_grid.x0[1], l_grid.x0[0] + 1);
-	iter5.set(t, l_grid.x0[1], l_grid.x0[0] - 1);
+	double * baseIter_1;
+	double * baseIter_0;
+	baseIter_0 = a_base + ((t + 1) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
+	baseIter_1 = a_base + ((t) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
+	iter0 = baseIter_0 + (0) * l_stride_a_1 + (0) * l_stride_a_0;
+	iter1 = baseIter_1 + (1) * l_stride_a_1 + (0) * l_stride_a_0;
+	iter2 = baseIter_1 + (0) * l_stride_a_1 + (0) * l_stride_a_0;
+	iter3 = baseIter_1 + (-1) * l_stride_a_1 + (0) * l_stride_a_0;
+	iter4 = baseIter_1 + (0) * l_stride_a_1 + (1) * l_stride_a_0;
+	iter5 = baseIter_1 + (0) * l_stride_a_1 + (-1) * l_stride_a_0;
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i, 
-	iter0.inc(gap_a_1), 
-	iter1.inc(gap_a_1), 
-	iter2.inc(gap_a_1), 
-	iter3.inc(gap_a_1), 
-	iter4.inc(gap_a_1), 
-	iter5.inc(gap_a_1)) {
+	iter0 += gap_a_1, 
+	iter1 += gap_a_1, 
+	iter2 += gap_a_1, 
+	iter3 += gap_a_1, 
+	iter4 += gap_a_1, 
+	iter5 += gap_a_1) {
+	#pragma ivdep
 	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j, 
 	++iter0, 
 	++iter1, 
@@ -32043,7 +32053,7 @@ Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, -1, -1
 	++iter4, 
 	++iter5) {
 	
-	iter0 = 0.125 * (iter1 - 2.0 * iter2 + iter3) + 0.125 * (iter4 - 2.0 * iter2 + iter5) + iter2;
+	(*iter0) = 0.125 * ((*iter1) - 2.0 * (*iter2) + (*iter3)) + 0.125 * ((*iter4) - 2.0 * (*iter2) + (*iter5)) + (*iter2);
 	} } /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
 	for (int i = 0; i < 2; ++i) {
@@ -32052,7 +32062,7 @@ Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, -1, -1
 	} /* end for t */
 	};
 
-	heat_2D.run_obase(T_SIZE, Iter_heat_2D_fn);
+	heat_2D.run_obase(T_SIZE, Default_heat_2D_fn);
 	}
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;

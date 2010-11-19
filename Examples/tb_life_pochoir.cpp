@@ -28150,6 +28150,7 @@ int StrToInt(const std::string& s)
 
 /* a bit tricky version of modulo operation, assuming a < 2 * b */
 
+
 inline bool select(bool b, bool x, bool y) {
     return (x&(-b)) | (y&-(!b));
 }
@@ -31972,18 +31973,21 @@ int main(int argc, char * argv[])
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
 	
-	/* Known*/ Pochoir_Array <bool, 2, 2> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE) ;
+	/* Known*/ Pochoir_Array <bool, 2, 2> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE), c(N_SIZE, N_SIZE) ;
 
-	/* Known */ Pochoir <bool, 2, 2> life_2D ;
+	/* Known */ Pochoir <bool, 2, 2> life_2D, bt_life_2D ;
 
 	Pochoir_Shape <2> life_shape_2D [9] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, 1}, {-1, 0, -1}, {-1, 1, 1}, {-1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}};
 life_2D.registerBoundaryFn(a, life_bv_2D); /* register Boundary Fn */
+	bt_life_2D.registerBoundaryFn(c, life_bv_2D); /* register Boundary Fn */
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
 		a(0, i, j) = (rand() & 0x1) ? true : false;
 		a(1, i, j) = 0; 
         b(0, i, j) = a(0, i, j);
         b(1, i, j) = 0;
+        c(0, i, j) = a(0, i, j);
+        c(1, i, j) = 0;
 	} }
 
     printf("Game of Life : %d x %d, %d time steps\n", N_SIZE, N_SIZE, T_SIZE);
@@ -32003,16 +32007,25 @@ life_2D.registerBoundaryFn(a, life_bv_2D); /* register Boundary Fn */
 	}
 	else if (a(t - 1, i, j) == false && neighbors == 3)
 	a(t, i, j) = true;
+	else a(t, i, j) = a(t - 1, i, j);
 	};
 	life_2D.registerShape(life_shape_2D);
 //    life_2D.registerDomain(I, J);
 gettimeofday(&start, 0);
     for (int times = 0; times < 3; ++times) {
         
-	auto Pointer_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
+	auto Default_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
 	grid_info<2> l_grid = grid;
-	bool * pt_a_1;
-	bool * pt_a_0;
+	bool * iter9;
+	bool * iter8;
+	bool * iter7;
+	bool * iter6;
+	bool * iter5;
+	bool * iter4;
+	bool * iter3;
+	bool * iter2;
+	bool * iter1;
+	bool * iter0;
 	
 	bool * a_base = a.data();
 	const int l_a_total_size = a.total_size();
@@ -32021,31 +32034,60 @@ gettimeofday(&start, 0);
 	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_a_0 = a_base + ((t - 1) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
-	pt_a_1 = a_base + ((t) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
+	bool * baseIter_1;
+	bool * baseIter_0;
+	baseIter_0 = a_base + ((t - 1) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
+	baseIter_1 = a_base + ((t) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
+	iter0 = baseIter_0 + (-1) * l_stride_a_1 + (-1) * l_stride_a_0;
+	iter1 = baseIter_0 + (-1) * l_stride_a_1 + (0) * l_stride_a_0;
+	iter2 = baseIter_0 + (-1) * l_stride_a_1 + (1) * l_stride_a_0;
+	iter3 = baseIter_0 + (0) * l_stride_a_1 + (-1) * l_stride_a_0;
+	iter4 = baseIter_0 + (0) * l_stride_a_1 + (1) * l_stride_a_0;
+	iter5 = baseIter_0 + (1) * l_stride_a_1 + (-1) * l_stride_a_0;
+	iter6 = baseIter_0 + (1) * l_stride_a_1 + (0) * l_stride_a_0;
+	iter7 = baseIter_0 + (1) * l_stride_a_1 + (1) * l_stride_a_0;
+	iter8 = baseIter_0 + (0) * l_stride_a_1 + (0) * l_stride_a_0;
+	iter9 = baseIter_1 + (0) * l_stride_a_1 + (0) * l_stride_a_0;
 	
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
 	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i, 
-	pt_a_0 += gap_a_1, 
-	pt_a_1 += gap_a_1) {
+	iter0 += gap_a_1, 
+	iter1 += gap_a_1, 
+	iter2 += gap_a_1, 
+	iter3 += gap_a_1, 
+	iter4 += gap_a_1, 
+	iter5 += gap_a_1, 
+	iter6 += gap_a_1, 
+	iter7 += gap_a_1, 
+	iter8 += gap_a_1, 
+	iter9 += gap_a_1) {
 	#pragma ivdep
 	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j, 
-	++pt_a_0, 
-	++pt_a_1) {
+	++iter0, 
+	++iter1, 
+	++iter2, 
+	++iter3, 
+	++iter4, 
+	++iter5, 
+	++iter6, 
+	++iter7, 
+	++iter8, 
+	++iter9) {
 	
-	int neighbors = pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (-1)] + pt_a_0[l_stride_a_1 * (-1) + l_stride_a_0 * (1)] + pt_a_0[l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_0 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (-1)] + pt_a_0[l_stride_a_1 * (1)] + pt_a_0[l_stride_a_1 * (1) + l_stride_a_0 * (1)];
-	if (pt_a_0[0] == true && neighbors < 2)
-	pt_a_1[0] = true;
-	else if (pt_a_0[0] == true && neighbors > 3)
+	int neighbors = (*iter0) + (*iter1) + (*iter2) + (*iter3) + (*iter4) + (*iter5) + (*iter6) + (*iter7);
+	if ((*iter8) == true && neighbors < 2)
+	(*iter9) = true;
+	else if ((*iter8) == true && neighbors > 3)
 	{
-	pt_a_1[0] = false;
+	(*iter9) = false;
 	}
-	else if (pt_a_0[0] == true && (neighbors == 2 || neighbors == 3))
+	else if ((*iter8) == true && (neighbors == 2 || neighbors == 3))
 	{
-	pt_a_1[0] = pt_a_0[0];
+	(*iter9) = (*iter8);
 	}
-	else if (pt_a_0[0] == false && neighbors == 3)
-	pt_a_1[0] = true;
+	else if ((*iter8) == false && neighbors == 3)
+	(*iter9) = true;
+	else (*iter9) = (*iter8);
 	} } /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
 	for (int i = 0; i < 2; ++i) {
@@ -32054,10 +32096,99 @@ gettimeofday(&start, 0);
 	} /* end for t */
 	};
 
-	life_2D.run_obase(T_SIZE, Pointer_life_2D_fn, life_2D_fn);
+	life_2D.run_obase(T_SIZE, Default_life_2D_fn, life_2D_fn);
 	}
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
+
+    auto bt_life_2D_fn = [&] (int t, int i, int j) {
+	
+	int neighbors = c(t - 1, i - 1, j - 1) + c(t - 1, i - 1, j) + c(t - 1, i - 1, j + 1) + c(t - 1, i, j - 1) + c(t - 1, i, j + 1) + c(t - 1, i + 1, j - 1) + c(t - 1, i + 1, j) + c(t - 1, i + 1, j + 1);
+	bool set0 = (c(t - 1, i, j) == true && neighbors < 2) || (c(t - 1, i, j) == false && neighbors == 3);
+	bool set1 = (c(t - 1, i, j) == true && neighbors > 3);
+	c(t, i, j) = set0 ? true : (set1 ? false : c(t - 1, i, j));
+	};
+	bt_life_2D.registerShape(life_shape_2D);
+//    life_2D.registerDomain(I, J);
+gettimeofday(&start, 0);
+    for (int times = 0; times < 3; ++times) {
+        
+	auto Default_bt_life_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
+	grid_info<2> l_grid = grid;
+	bool * iter9;
+	bool * iter8;
+	bool * iter7;
+	bool * iter6;
+	bool * iter5;
+	bool * iter4;
+	bool * iter3;
+	bool * iter2;
+	bool * iter1;
+	bool * iter0;
+	
+	bool * c_base = c.data();
+	const int l_c_total_size = c.total_size();
+	
+	int gap_c_1, gap_c_0;
+	const int l_stride_c_1 = c.stride(1), l_stride_c_0 = c.stride(0);
+
+	for (int t = t0; t < t1; ++t) { 
+	bool * baseIter_1;
+	bool * baseIter_0;
+	baseIter_0 = c_base + ((t - 1) & 0x1) * l_c_total_size + (l_grid.x0[1]) * l_stride_c_1 + (l_grid.x0[0]) * l_stride_c_0;
+	baseIter_1 = c_base + ((t) & 0x1) * l_c_total_size + (l_grid.x0[1]) * l_stride_c_1 + (l_grid.x0[0]) * l_stride_c_0;
+	iter0 = baseIter_0 + (-1) * l_stride_c_1 + (-1) * l_stride_c_0;
+	iter1 = baseIter_0 + (-1) * l_stride_c_1 + (0) * l_stride_c_0;
+	iter2 = baseIter_0 + (-1) * l_stride_c_1 + (1) * l_stride_c_0;
+	iter3 = baseIter_0 + (0) * l_stride_c_1 + (-1) * l_stride_c_0;
+	iter4 = baseIter_0 + (0) * l_stride_c_1 + (1) * l_stride_c_0;
+	iter5 = baseIter_0 + (1) * l_stride_c_1 + (-1) * l_stride_c_0;
+	iter6 = baseIter_0 + (1) * l_stride_c_1 + (0) * l_stride_c_0;
+	iter7 = baseIter_0 + (1) * l_stride_c_1 + (1) * l_stride_c_0;
+	iter8 = baseIter_0 + (0) * l_stride_c_1 + (0) * l_stride_c_0;
+	iter9 = baseIter_1 + (0) * l_stride_c_1 + (0) * l_stride_c_0;
+	
+	gap_c_1 = l_stride_c_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_c_0;
+	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i, 
+	iter0 += gap_c_1, 
+	iter1 += gap_c_1, 
+	iter2 += gap_c_1, 
+	iter3 += gap_c_1, 
+	iter4 += gap_c_1, 
+	iter5 += gap_c_1, 
+	iter6 += gap_c_1, 
+	iter7 += gap_c_1, 
+	iter8 += gap_c_1, 
+	iter9 += gap_c_1) {
+	#pragma ivdep
+	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j, 
+	++iter0, 
+	++iter1, 
+	++iter2, 
+	++iter3, 
+	++iter4, 
+	++iter5, 
+	++iter6, 
+	++iter7, 
+	++iter8, 
+	++iter9) {
+	
+	int neighbors = (*iter0) + (*iter1) + (*iter2) + (*iter3) + (*iter4) + (*iter5) + (*iter6) + (*iter7);
+	bool set0 = ((*iter8) == true && neighbors < 2) || ((*iter8) == false && neighbors == 3);
+	bool set1 = ((*iter8) == true && neighbors > 3);
+	(*iter9) = set0 ? true : (set1 ? false : (*iter8));
+	} } /* end for (sub-trapezoid) */ 
+	/* Adjust sub-trapezoid! */
+	for (int i = 0; i < 2; ++i) {
+		l_grid.x0[i] += l_grid.dx0[i]; l_grid.x1[i] += l_grid.dx1[i];
+	}
+	} /* end for t */
+	};
+
+	bt_life_2D.run_obase(T_SIZE, Default_bt_life_2D_fn, bt_life_2D_fn);
+	}
+	gettimeofday(&end, 0);
+	std::cout << "Pochoir ET (Bit Trick): consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
 
 	gettimeofday(&start, 0);
     // we can handle the boundary condition either by register a boundary function
@@ -32082,16 +32213,27 @@ for (int times = 0; times < 3; ++times) {
 	b.interior(t + 1, idx4, idx2) = b.interior(t, idx4, idx2);
 	else if (b.interior(t, idx4, idx2) == false && neighbors == 3)
 	b.interior(t + 1, idx4, idx2) = true;
+    else
+    b.interior(t+1, idx4, idx2) = b.interior(t, idx4, idx2);
 	} } }
     }
 	gettimeofday(&end, 0);
 	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) / 3 << "ms" << std::endl;
 
 	t = T_SIZE;
+    printf("compare a with b : ");
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
 		check_result(t, i, j, a(t, i, j), b(t, i, j));
 	} } 
+    printf("passed!\n");
+
+    printf("compare c with b : ");
+	for (int i = 0; i < N_SIZE; ++i) {
+	for (int j = 0; j < N_SIZE; ++j) {
+		check_result(t, i, j, c(t, i, j), b(t, i, j));
+	} } 
+    printf("passed!\n");
 
 	return 0;
 }

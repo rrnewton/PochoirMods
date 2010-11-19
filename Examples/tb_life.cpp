@@ -83,8 +83,8 @@ int main(int argc, char * argv[])
     T_SIZE = StrToInt(argv[2]);
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
-	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
-    Pochoir <bool, N_RANK> life_2D;
+	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE), c(N_SIZE, N_SIZE);
+    Pochoir <bool, N_RANK> life_2D, bt_life_2D;
 //	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 #if 0
     Pochoir_Shape<2> life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
@@ -93,6 +93,7 @@ int main(int argc, char * argv[])
 #endif
 
     life_2D.registerBoundaryFn(a, life_bv_2D);
+    bt_life_2D.registerBoundaryFn(c, life_bv_2D);
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -105,24 +106,13 @@ int main(int argc, char * argv[])
 #endif
         b(0, i, j) = a(0, i, j);
         b(1, i, j) = 0;
+        c(0, i, j) = a(0, i, j);
+        c(1, i, j) = 0;
 	} }
 
     printf("Game of Life : %d x %d, %d time steps\n", N_SIZE, N_SIZE, T_SIZE);
 
     Pochoir_kernel_2D(life_2D_fn, t, i, j)
-#if 0
-    int neighbors = a(t, i-1, j-1) + a(t, i-1, j) + a(t, i-1, j+1) +
-                    a(t, i, j-1)                  + a(t, i, j+1) +
-                    a(t, i+1, j-1) + a(t, i+1, j) + a(t, i+1, j+1);
-    if (a(t, i, j) == true && neighbors < 2)
-        a(t+1, i, j) = true;
-    else if (a(t, i, j) == true && neighbors > 3) { 
-        a(t+1, i, j) = false;
-    } else if (a(t, i, j) == true && (neighbors == 2 || neighbors == 3)) {
-        a(t+1, i, j) = a(t, i, j);
-    } else if (a(t, i, j) == false && neighbors == 3) 
-        a(t+1, i, j) = true;
-#else
     int neighbors = a(t-1, i-1, j-1) + a(t-1, i-1, j) + a(t-1, i-1, j+1) +
                     a(t-1, i, j-1)                  + a(t-1, i, j+1) +
                     a(t-1, i+1, j-1) + a(t-1, i+1, j) + a(t-1, i+1, j+1);
@@ -134,7 +124,8 @@ int main(int argc, char * argv[])
         a(t, i, j) = a(t-1, i, j);
     } else if (a(t-1, i, j) == false && neighbors == 3) 
         a(t, i, j) = true;
-#endif
+    else
+        a(t, i, j) = a(t-1, i, j);
     Pochoir_kernel_end
 
 //    life_2D.registerArray(a);
@@ -147,6 +138,37 @@ int main(int argc, char * argv[])
     }
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
+
+    Pochoir_kernel_2D(bt_life_2D_fn, t, i, j)
+    int neighbors = c(t-1, i-1, j-1) + c(t-1, i-1, j) + c(t-1, i-1, j+1) +
+                    c(t-1, i, j-1)                  + c(t-1, i, j+1) +
+                    c(t-1, i+1, j-1) + c(t-1, i+1, j) + c(t-1, i+1, j+1);
+#if 0
+    c(t, i, j) = ((c(t-1, i, j) && neighbors < 2) 
+                || (c(t-1, i, j) && (neighbors == 2 || neighbors == 3))
+                || (!c(t-1, i, j) && neighbors == 3))
+                && !(c(t-1, i, j) && neighbors > 3);
+#endif
+    bool set0 = (c(t-1, i, j) == true && neighbors < 2) 
+             || (c(t-1, i, j) == false && neighbors == 3); /* set true */
+    bool set1 = (c(t-1, i, j) == true && neighbors > 3); /* set false */
+#if 1
+    c(t, i, j) = set0 ? true : (set1 ? false : c(t-1, i, j));
+#else
+    c(t, i, j) = pCond(set0, true, pCond(set1, false, c(t-1, i, j)));
+#endif
+    Pochoir_kernel_end
+
+//    life_2D.registerArray(a);
+    bt_life_2D.registerShape(life_shape_2D);
+//    life_2D.registerDomain(I, J);
+
+	gettimeofday(&start, 0);
+    for (int times = 0; times < TIMES; ++times) {
+        bt_life_2D.run(T_SIZE, bt_life_2D_fn);
+    }
+	gettimeofday(&end, 0);
+	std::cout << "Pochoir ET (Bit Trick): consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
 
 	gettimeofday(&start, 0);
     // we can handle the boundary condition either by register a boundary function
@@ -173,16 +195,27 @@ int main(int argc, char * argv[])
 	b.interior(t + 1, idx4, idx2) = b.interior(t, idx4, idx2);
 	else if (b.interior(t, idx4, idx2) == false && neighbors == 3)
 	b.interior(t + 1, idx4, idx2) = true;
+    else
+    b.interior(t+1, idx4, idx2) = b.interior(t, idx4, idx2);
 	} } }
     }
 	gettimeofday(&end, 0);
 	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) / TIMES << "ms" << std::endl;
 
 	t = T_SIZE;
+    printf("compare a with b : ");
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
 		check_result(t, i, j, a(t, i, j), b(t, i, j));
 	} } 
+    printf("passed!\n");
+
+    printf("compare c with b : ");
+	for (int i = 0; i < N_SIZE; ++i) {
+	for (int j = 0; j < N_SIZE; ++j) {
+		check_result(t, i, j, c(t, i, j), b(t, i, j));
+	} } 
+    printf("passed!\n");
 
 	return 0;
 }
