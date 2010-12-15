@@ -71,7 +71,7 @@ pParseMacro =
 pParsePochoirArray :: GenParser Char ParserState String
 pParsePochoirArray =
     do reserved "Pochoir_Array"
-       (l_type, l_rank, l_toggle) <- angles pDeclStatic
+       (l_type, l_rank, l_toggle) <- angles $ try pDeclStatic
        l_arrayDecl0 <- pDeclDynamic
 --       let l_arrayDecl = [l_arrayDecl0]
 --     'many' does NOT have the semantic of rolling back when the parser fails!!!
@@ -89,7 +89,7 @@ pParsePochoirArray =
 pParsePochoirStencil :: GenParser Char ParserState String
 pParsePochoirStencil = 
     do reserved "Pochoir"
-       (l_type, l_rank, l_toggle) <- angles pDeclStatic 
+       (l_type, l_rank, l_toggle) <- angles $ try pDeclStatic 
        l_stencil0 <- pDeclDynamic
        l_stencil1 <- many $ try $ comma >> pDeclDynamic
        l_delim <- pDelim

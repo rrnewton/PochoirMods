@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <sys/time.h>
-#include "util_time.hpp"
+#include "cilktime.h"
 //#include "tbb/blocked_range.h"
 
 #include <pochoir.hpp>
@@ -415,7 +415,7 @@ void dotest()
 #if 0
   
   init_variables();
-  start = getseconds();
+  start = cilk_ticks_to_seconds(cilk_getticks());
   
   /* this is loop based version */
   loop_opt3(0, T,
@@ -427,7 +427,7 @@ void dotest()
   //	    ds, 0, Nx - ds, 0, 
   //	    ds, 0, Ny - ds, 0, 
   //	    ds, 0, Nz - ds, 0);
-  stop = getseconds(); 
+  stop = cilk_ticks_to_seconds(cilk_getticks()); 
   //copy_A_to_B();
   print_summary("base", stop - start);
 #endif
@@ -435,13 +435,13 @@ void dotest()
   
   init_variables();
   // verify_A_and_B();
-  start = getseconds();
+  start = cilk_ticks_to_seconds(cilk_getticks());
   /* this is the divide-and-conquer version in cilk++ */
   walk3(0, T,
 	    ds, 0, Nx - ds, 0, 
 		ds, 0, Ny - ds, 0, 
 		ds, 0, Nz - ds, 0);
-  stop = getseconds();
+  stop = cilk_ticks_to_seconds(cilk_getticks());
   print_summary("COStencilTask", stop - start);
 
   // verify_A_and_B();
@@ -506,9 +506,11 @@ int main(int argc, char *argv[])
   dotest();
 
   init_pochoir_array(pa);
-  start = getseconds();
+  start = cilk_ticks_to_seconds(cilk_getticks());
+#pragma isat marker M2_begin
   fd_3D.run(T, fd_3D_fn);
-  stop = getseconds();
+#pragma isat marker M2_end
+  stop = cilk_ticks_to_seconds(cilk_getticks());
   print_summary("Pochoir", stop - start);
 
   delete[] A;

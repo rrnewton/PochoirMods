@@ -91,7 +91,7 @@ updateStencilBoundary l_id l_regBound parserState =
     in  parserState { pStencil = Map.updateWithKey f l_id $ pStencil parserState }
 
 getIter :: PArray -> Expr -> [Iter]
-getIter arrayInUse (PVAR v dL) =
+getIter arrayInUse (PVAR q v dL) =
     let iterName = "iter"
     in  [(iterName, arrayInUse, dL)]
 getIter arrayInUse _ = []
@@ -104,7 +104,7 @@ getBaseIter l_kernelParams iL@(i:is) = union (getBaseIterItem i) (getBaseIter l_
             in  [("baseIter_", array, dims')]
 
 getPointer :: [PName] -> PArray -> Expr -> [Iter]
-getPointer kernelParams arrayInUse (PVAR v dL) =
+getPointer kernelParams arrayInUse (PVAR q v dL) =
     let iterName = "pt_" ++ aName arrayInUse ++ "_"
         dL' = transDimExpr kernelParams dL
     in  [(iterName, arrayInUse, dL')]
@@ -141,9 +141,9 @@ pSecond (_, b, _) = b
 pThird (_, _, c) = c
 
 transInterior :: [PName] -> Expr -> Expr
-transInterior l_arrayInUse (PVAR v dL) =
-    if elem v l_arrayInUse == True then PVAR (v ++ ".interior") dL
-                                   else PVAR v dL
+transInterior l_arrayInUse (PVAR q v dL) =
+    if elem v l_arrayInUse == True then PVAR q (v ++ ".interior") dL
+                                   else PVAR q v dL
 transInterior l_arrayInUse e = e
 
 getArrayName :: [PArray] -> [PName]

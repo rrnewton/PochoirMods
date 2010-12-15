@@ -45,7 +45,7 @@ lexer = Token.makeTokenParser (javaStyle
              { commentStart = "/*",
                commentEnd = "*/",
                commentLine = "//",
-               identStart = letter <|> oneOf "_'",
+               identStart = letter,
                identLetter = alphaNum <|> oneOf "_'", 
                nestedComments = True,
                reservedOpNames = ["*", "/", "+", "-", "!", "&&", "||", "=", ">", ">=", 
@@ -77,7 +77,6 @@ parens = Token.parens lexer
 angles = Token.angles lexer
 semi = Token.semi lexer
 colon = Token.colon lexer
-dot = Token.dot lexer
 identifier = Token.identifier lexer
 reserved = Token.reserved lexer
 reservedOp = Token.reservedOp lexer
@@ -502,11 +501,7 @@ pType = do reserved "double"
     <|> do reserved "void"
            return PType{typeName = "void", basicType = PVoid}
     <|> do l_type <- identifier
-           l_qualifiers <- many cppQualifier
-           return PType{typeName = l_type ++ (intercalate " " l_qualifiers), basicType = PUserType}
-    <|> do l_qualifiers <- many cppQualifier
-           l_type <- identifier 
-           return PType{typeName = (intercalate " " l_qualifiers) ++ l_type, basicType = PUserType}
+           return PType{typeName = l_type, basicType = PUserType}
 
 eol :: GenParser Char ParserState String
 eol = do string "\n" 
@@ -559,14 +554,11 @@ termStmtDim :: GenParser Char ParserState DimExpr
 termStmtDim = do e <- try (parens exprStmtDim)
                  return (DimParen e)
           <|> do literal_dim <- try (identifier)
-                 return (DimVAR literal_dim)
-{-
                  l_state <- getState
                  -- check whether it's an effective Range name
                  case Map.lookup literal_dim $ pMacro l_state of
                      Nothing -> return (DimVAR literal_dim)
                      Just l_dim -> return (DimINT l_dim)
--}
           <|> do num_dim <- try (natural)
                  return (DimINT $ fromInteger num_dim)
           <?> "TermStmtDim"
@@ -616,9 +608,7 @@ tableStmt = [[Postfix (reservedOp "++" >> return (PostUno "++")),
          where op s fop assoc = Infix (do {reservedOp s; return (Duo fop)} <?> "operator") assoc
 
 termStmt :: GenParser Char ParserState Expr
-termStmt =  do try pArrayOfStructTermStmt
-        <|> do try pPArrayOfStructTermStmt
-        <|> do l_expr <- try (parens exprStmt) 
+termStmt =  do l_expr <- try (parens exprStmt) 
                return (PARENS l_expr)
         <|> do l_num <- try (number)
                case l_num of
@@ -631,18 +621,15 @@ termStmt =  do try pArrayOfStructTermStmt
         <|> do try pParenTermStmt
         <|> do try pBracketTermStmt
         <|> do try pBExprTermStmt
-        -- pArrayOfStructTermStmt has to be before pPlainVarTermStmt
-        -- because pPlainVarTermStmt just scan a plain identifier
-        -- so, it's a conflict with pArrayOfStructTermStmt
         <|> do try pPlainVarTermStmt
+--        <|> do try pCondTermStmt
         <?> "term statement"
 
 pParenTermStmt :: GenParser Char ParserState Expr
 pParenTermStmt =
-    do l_qualifiers <- try (many cppQualifier)
-       l_var <- try identifier
+    do l_var <- try identifier
        l_dims <- parens (commaSep1 exprStmtDim)
-       return (PVAR (concat l_qualifiers) l_var l_dims)
+       return (PVAR l_var l_dims)
 
 pBracketTermStmt :: GenParser Char ParserState Expr
 pBracketTermStmt =
@@ -658,22 +645,5 @@ pBExprTermStmt =
 
 pPlainVarTermStmt :: GenParser Char ParserState Expr
 pPlainVarTermStmt =
-    do l_qualifiers <- try (many cppQualifier)
-       l_var <- try identifier
-       return (VAR (concat l_qualifiers) l_var)
-
-pArrayOfStructTermStmt :: GenParser Char ParserState Expr
-pArrayOfStructTermStmt =
-    do l_type <- pType
-       l_pTerm <- parens pParenTermStmt
-       l_connector <- symbol "." <|> symbol "->"
-       l_field <- identifier
-       return (SVAR l_type l_pTerm l_connector l_field)
-
-pPArrayOfStructTermStmt :: GenParser Char ParserState Expr
-pPArrayOfStructTermStmt =
-    do l_type <- parens pType
-       l_pTerm <- parens pParenTermStmt
-       l_connector <- symbol "." <|> symbol "->"
-       l_field <- identifier
-       return (PSVAR l_type l_pTerm l_connector l_field)
+    do l_var <- try identifier
+       return (VAR l_var)

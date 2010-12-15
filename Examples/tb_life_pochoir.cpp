@@ -29093,14 +29093,14 @@ int __cilkrts_get_worker_number(void);
 } // extern "C"
 using namespace std;
 
-template <T_dim N_RANK, typename Grid_info, typename BF>
+template <int N_RANK, typename BF>
 struct meta_grid_boundary {
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, BF const & bf); 
+	static inline void single_step(int t, grid_info<N_RANK> const & grid, grid_info<N_RANK> const & initial_grid, BF const & bf); 
 };
 
-template <typename Grid_info, typename BF>
-struct meta_grid_boundary <3, Grid_info, BF>{
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, BF const & bf) {
+template <typename BF>
+struct meta_grid_boundary <3, BF>{
+	static inline void single_step(int t, grid_info<3> const & grid, grid_info<3> const & initial_grid, BF const & bf) {
         /* add cilk_for here will only lower the performance */
 		for (int i = grid.x0[2]; i < grid.x1[2]; ++i) {
             int new_i = ((i) - (((initial_grid . x1[2])-(initial_grid . x0[2])) & -((i)>=(initial_grid . x1[2]))));
@@ -29115,9 +29115,9 @@ struct meta_grid_boundary <3, Grid_info, BF>{
 	} 
 };
 
-template <typename Grid_info, typename BF>
-struct meta_grid_boundary <2, Grid_info, BF>{
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, BF const & bf) {
+template <typename BF>
+struct meta_grid_boundary <2, BF>{
+	static inline void single_step(int t, grid_info<2> const & grid, grid_info<2> const & initial_grid, BF const & bf) {
 		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
             int new_i = ((i) - (((initial_grid . x1[1])-(initial_grid . x0[1])) & -((i)>=(initial_grid . x1[1]))));
 			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
@@ -29128,9 +29128,9 @@ struct meta_grid_boundary <2, Grid_info, BF>{
 	} 
 };
 
-template <typename Grid_info, typename BF>
-struct meta_grid_boundary <1, Grid_info, BF>{
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, BF const & bf) {
+template <typename BF>
+struct meta_grid_boundary <1, BF>{
+	static inline void single_step(int t, grid_info<1> const & grid, grid_info<1> const & initial_grid, BF const & bf) {
 		for (int i = grid.x0[0]; i < grid.x1[0]; ++i) {
             int new_i = ((i) - (((initial_grid . x1[0])-(initial_grid . x0[0])) & -((i)>=(initial_grid . x1[0]))));
 		    bf(t, new_i);
@@ -29138,14 +29138,14 @@ struct meta_grid_boundary <1, Grid_info, BF>{
 	} 
 };
 
-template <T_dim N_RANK, typename Grid_info, typename F>
+template <int N_RANK, typename F>
 struct meta_grid_interior {
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f); 
+	static inline void single_step(int t, grid_info<N_RANK> const & grid, grid_info<N_RANK> const & initial_grid, F const & f); 
 };
 
-template <typename Grid_info, typename F>
-struct meta_grid_interior <3, Grid_info, F>{
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
+template <typename F>
+struct meta_grid_interior <3, F>{
+	static inline void single_step(int t, grid_info<3> const & grid, grid_info<3> const & initial_grid, F const & f) {
         /* add cilk_for here will only lower the performance */
 		for (int i = grid.x0[2]; i < grid.x1[2]; ++i) {
 			for (int j = grid.x0[1]; j < grid.x1[1]; ++j) {
@@ -29157,9 +29157,9 @@ struct meta_grid_interior <3, Grid_info, F>{
 	} 
 };
 
-template <typename Grid_info, typename F>
-struct meta_grid_interior <2, Grid_info, F>{
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
+template <typename F>
+struct meta_grid_interior <2, F>{
+	static inline void single_step(int t, grid_info<2> const & grid, grid_info<2> const & initial_grid, F const & f) {
 		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
 			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
                 f(t, i, j);
@@ -29168,9 +29168,9 @@ struct meta_grid_interior <2, Grid_info, F>{
 	} 
 };
 
-template <typename Grid_info, typename F>
-struct meta_grid_interior <1, Grid_info, F>{
-	static inline void single_step(int t, Grid_info const & grid, Grid_info const & initial_grid, F const & f) {
+template <typename F>
+struct meta_grid_interior <1, F>{
+	static inline void single_step(int t, grid_info<1> const & grid, grid_info<1> const & initial_grid, F const & f) {
 		for (int i = grid.x0[0]; i < grid.x1[0]; ++i) {
 		    f(t, i);
         }
@@ -29186,7 +29186,7 @@ static inline void set_worker_count(const char * nstr)
     }
 }
 
-template <T_dim N_RANK, typename Grid_info>
+template <int N_RANK>
 struct Algorithm {
 	private:
         /* different stencils will have different slopes */
@@ -29203,7 +29203,7 @@ struct Algorithm {
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     typedef int index_info[N_RANK];
 
-    Grid_info initial_grid_;
+    grid_info<N_RANK> initial_grid_;
     int initial_length_[N_RANK];
     int logic_size_[N_RANK];
 	int slope_[N_RANK];
@@ -29211,16 +29211,17 @@ struct Algorithm {
     int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
     bool boundarySet, initialGridSet, slopeSet;
 
-    /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1) {
+//#pragma isat tuning name(tune_coarsening_factor) scope(M1_begin, M1_end) measure(M2_begin, M2_end) variable(tune_dt, range(1, 10, 1)) variable(tune_dt_boundary, range(1, 10, 1)) variable(tune_dx_boundary, range(1, 10, 1)) variable(tune_dx_i, range(1, 100, 10)) variable(tune_dx_0, range(1, 100, 10)) search(dependent)
+Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
-            ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
+//            dx_recursive_boundary_[i] = 1;
+ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
 }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 3;
+            dx_recursive_[i] = 100;
         dx_recursive_[0] = 1000;
         boundarySet = false;
         initialGridSet = false;
@@ -29228,59 +29229,55 @@ struct Algorithm {
         N_CORES = __cilkrts_get_nworkers();
 //        cout << " N_CORES = " << N_CORES << endl;
 }
-    /* README!!!: set_initial_grid()/set_stride() must be called before call to 
-     * - walk_adaptive 
-     * - walk_ncores_hybrid
-     * - walk_ncores_boundary
-     */
-    void set_initial_grid(Grid_info const & grid);
+//#pragma isat marker M1_end
+void set_initial_grid(grid_info<N_RANK> const & grid);
     void set_stride(int const stride[]);
     void set_logic_size(int const phys_size[]);
     void set_slope(int const slope[]);
-    inline bool touch_boundary(int i, int lt, Grid_info & grid);
+    inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
     template <typename F> 
-	inline void base_case_kernel_interior(int t0, int t1, Grid_info const grid, F const & f);
+	inline void base_case_kernel_interior(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename BF> 
-	inline void base_case_kernel_boundary(int t0, int t1, Grid_info const grid, BF const & bf);
+	inline void base_case_kernel_boundary(int t0, int t1, grid_info<N_RANK> const grid, BF const & bf);
     template <typename F> 
-	inline void walk_serial(int t0, int t1, Grid_info const grid, F const & f);
+	inline void walk_serial(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
 
     /* all recursion-based algorithm */
     template <typename F> 
-    inline void walk_adaptive(int t0, int t1, Grid_info const grid, F const & f);
+    inline void walk_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
-    inline void walk_bicut(int t0, int t1, Grid_info const grid, F const & f);
+    inline void walk_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     /* recursive algorithm for obase */
     template <typename F> 
-    inline void obase_adaptive(int t0, int t1, Grid_info const grid, F const & f);
+    inline void obase_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
-    inline void obase_bicut(int t0, int t1, Grid_info const grid, F const & f);
+    inline void obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F, typename BF> 
-    inline void walk_ncores_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf);
+    inline void walk_ncores_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF> 
-    inline void walk_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf);
+    inline void walk_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename BF> 
-    inline void obase_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf);
+    inline void obase_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, BF const & bf);
     template <typename BF> 
-    inline void obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf);
+    inline void obase_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, BF const & bf);
     template <typename F, typename BF> 
-    inline void obase_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf);
+    inline void obase_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF> 
-    inline void obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf);
+    inline void obase_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 
     /* all loop-based algorithm */
     template <typename F> 
-    inline void cut_time(algor_type algor, int t0, int t1, Grid_info const grid, F const & f);
+    inline void cut_time(algor_type algor, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
-    inline void naive_cut_space_mp(int dim, int t0, int t1, Grid_info const grid, F const & f);
+    inline void naive_cut_space_mp(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
-    inline void naive_cut_space_ncores(int dim, int t0, int t1, Grid_info const grid, F const & f);
+    inline void naive_cut_space_ncores(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
-    inline void cut_space_ncores_boundary(int dim, int t0, int t1, Grid_info const grid, F const & f);
+    inline void cut_space_ncores_boundary(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
 };
 
-template <T_dim N_RANK, typename Grid_info>
-void Algorithm<N_RANK, Grid_info>::set_initial_grid(Grid_info const & grid)
+template <int N_RANK>
+void Algorithm<N_RANK>::set_initial_grid(grid_info<N_RANK> const & grid)
 {
     initial_grid_ = grid;
     for (int i = 0; i < N_RANK; ++i)
@@ -29296,22 +29293,22 @@ void Algorithm<N_RANK, Grid_info>::set_initial_grid(Grid_info const & grid)
     }
 }
 
-template <T_dim N_RANK, typename Grid_info>
-void Algorithm<N_RANK, Grid_info>::set_stride(int const stride[])
+template <int N_RANK>
+void Algorithm<N_RANK>::set_stride(int const stride[])
 {
     for (int i = 0; i < N_RANK; ++i)
         stride_[i] = stride[i];
 }
 
-template <T_dim N_RANK, typename Grid_info>
-void Algorithm<N_RANK, Grid_info>::set_logic_size(int const logic_size[])
+template <int N_RANK>
+void Algorithm<N_RANK>::set_logic_size(int const logic_size[])
 {
     for (int i = 0; i < N_RANK; ++i)
         logic_size_[i] = logic_size[i];
 }
 
-template <T_dim N_RANK, typename Grid_info>
-void Algorithm<N_RANK, Grid_info>::set_slope(int const slope[])
+template <int N_RANK>
+void Algorithm<N_RANK>::set_slope(int const slope[])
 {
     for (int i = 0; i < N_RANK; ++i)
         slope_[i] = slope[i];
@@ -29326,12 +29323,12 @@ void Algorithm<N_RANK, Grid_info>::set_slope(int const slope[])
     }
 }
 
-template <T_dim N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::base_case_kernel_interior(int t0, int t1, Grid_info const grid, F const & f) {
-	Grid_info l_grid = grid;
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::base_case_kernel_interior(int t0, int t1, grid_info<N_RANK> const grid, F const & f) {
+	grid_info<N_RANK> l_grid = grid;
 	for (int t = t0; t < t1; ++t) {
 		/* execute one single time step */
-		meta_grid_interior<N_RANK, Grid_info, F>::single_step(t, l_grid, initial_grid_, f);
+		meta_grid_interior<N_RANK, F>::single_step(t, l_grid, initial_grid_, f);
 
 		/* because the shape is trapezoid! */
 		for (int i = 0; i < N_RANK; ++i) {
@@ -29340,12 +29337,12 @@ inline void Algorithm<N_RANK, Grid_info>::base_case_kernel_interior(int t0, int 
 	}
 }
 
-template <T_dim N_RANK, typename Grid_info> template <typename BF>
-inline void Algorithm<N_RANK, Grid_info>::base_case_kernel_boundary(int t0, int t1, Grid_info const grid, BF const & bf) {
-	Grid_info l_grid = grid;
+template <int N_RANK> template <typename BF>
+inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_info<N_RANK> const grid, BF const & bf) {
+	grid_info<N_RANK> l_grid = grid;
 	for (int t = t0; t < t1; ++t) {
 		/* execute one single time step */
-		meta_grid_boundary<N_RANK, Grid_info, BF>::single_step(t, l_grid, initial_grid_, bf);
+		meta_grid_boundary<N_RANK, BF>::single_step(t, l_grid, initial_grid_, bf);
 
 		/* because the shape is trapezoid! */
 		for (int i = 0; i < N_RANK; ++i) {
@@ -29384,8 +29381,8 @@ inline void Algorithm<N_RANK, Grid_info>::base_case_kernel_boundary(int t0, int 
 /* grid.x1[i] >= initial_grid_.x1[i] - stride_[i] - slope_[i] 
  * because we compute the kernel with range [a, b)
  */
-template <int N_RANK, typename Grid_info>
-inline bool Algorithm<N_RANK, Grid_info>::touch_boundary(int i, int lt, Grid_info & grid) 
+template <int N_RANK>
+inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> & grid) 
 {
     bool interior = false;
     if (grid.x0[i] >= uub_boundary[i] 
@@ -29404,14 +29401,14 @@ inline bool Algorithm<N_RANK, Grid_info>::touch_boundary(int i, int lt, Grid_inf
     return !interior;
 }
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::walk_serial(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::walk_serial(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     int lt = t1 - t0;
     bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
     bool cut_yet = false;
     bool can_cut[N_RANK];
-    Grid_info l_grid;
+    grid_info<N_RANK> l_grid;
 
     for (int i = 0; i < N_RANK; ++i) {
         can_cut[i] = (2 * (grid.x1[i] - grid.x0[i]) + (grid.dx1[i] - grid.dx0[i]) * lt >= 4 * slope_[i] * lt) && (grid.x1[i] - grid.x0[i] > dx_recursive_[i]);
@@ -29459,15 +29456,15 @@ inline void Algorithm<N_RANK, Grid_info>::walk_serial(int t0, int t1, Grid_info 
 }
 
 /* walk_adaptive() is just for interior region */
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::walk_bicut(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::walk_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
 	   for the rest cut into that dimension, cut into as many as we can!
 	 */
 	int lt = t1 - t0;
 	index_info lb, thres;
-	Grid_info l_grid;
+	grid_info<N_RANK> l_grid;
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
@@ -29530,8 +29527,8 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut(int t0, int t1, Grid_info c
 }
 
 /* walk_adaptive() is just for interior region */
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::walk_adaptive(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::walk_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
 	   for the rest cut into that dimension, cut into as many as we can!
@@ -29541,7 +29538,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_adaptive(int t0, int t1, Grid_inf
 	bool cut_yet = false;
 	//int lb[N_RANK];
 index_info lb, thres;
-	Grid_info l_grid;
+	grid_info<N_RANK> l_grid;
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
@@ -29614,8 +29611,8 @@ l_grid.x0[i] = grid.x0[i] + sep * (r-1);
 
 
 /* walk_ncores_boundary_p() will be called for -split-shadow mode */
-template <int N_RANK, typename Grid_info> template <typename F, typename BF>
-inline void Algorithm<N_RANK, Grid_info>::walk_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::walk_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
@@ -29623,7 +29620,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_bicut_boundary_p(int t0, int t1, 
 	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
 	bool can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
     int l_dt_stop;
 
@@ -29752,8 +29749,8 @@ if (call_boundary) {
 
 
 /* walk_ncores_boundary_p() will be called for -split-shadow mode */
-template <int N_RANK, typename Grid_info> template <typename F, typename BF>
-inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::walk_ncores_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
@@ -29761,7 +29758,7 @@ inline void Algorithm<N_RANK, Grid_info>::walk_ncores_boundary_p(int t0, int t1,
 	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
 	bool cut_yet = false, can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
 
 	for (int i = 0; i < N_RANK; ++i) {
@@ -29893,15 +29890,15 @@ l_son_grid.x0[i] = l_end;
 }
 
 /* this is for interior region */
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::obase_bicut(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
 	   for the rest cut into that dimension, cut into as many as we can!
 	 */
 	int lt = t1 - t0;
 	index_info lb, thres;
-	Grid_info l_grid;
+	grid_info<N_RANK> l_grid;
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
@@ -29963,8 +29960,8 @@ inline void Algorithm<N_RANK, Grid_info>::obase_bicut(int t0, int t1, Grid_info 
 
 
 /* this is for interior region */
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::obase_adaptive(int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::obase_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
 	   for the rest cut into that dimension, cut into as many as we can!
@@ -29974,7 +29971,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_adaptive(int t0, int t1, Grid_in
 	bool cut_yet = false;
 	//int lb[N_RANK];
 index_info lb, thres;
-	Grid_info l_grid;
+	grid_info<N_RANK> l_grid;
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
@@ -30044,15 +30041,15 @@ l_grid.x0[i] = grid.x0[i] + sep * (r-1);
 }
 
 /* this is the version for executable spec!!! */
-template <int N_RANK, typename Grid_info> template <typename BF>
-inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf)
+template <int N_RANK> template <typename BF>
+inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
 	int lt = t1 - t0;
 	bool can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
 
 	for (int i = 0; i < N_RANK; ++i) {
@@ -30134,8 +30131,8 @@ l_son_grid.x0[i] = l_end;
 
 
 /* this is the version for executable spec!!! */
-template <int N_RANK, typename Grid_info> template <typename BF>
-inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_info const grid, BF const & bf)
+template <int N_RANK> template <typename BF>
+inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
@@ -30143,7 +30140,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
 	bool cut_yet = false, can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
 
 	for (int i = 0; i < N_RANK; ++i) {
@@ -30236,15 +30233,15 @@ l_son_grid.x0[i] = l_end;
 }
 
 /* this is for optimizing base case!!! */
-template <int N_RANK, typename Grid_info> template <typename F, typename BF>
-inline void Algorithm<N_RANK, Grid_info>::obase_bicut_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
 	int lt = t1 - t0;
 	bool can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
     int l_dt_stop;
 
@@ -30372,8 +30369,8 @@ base_case_kernel_boundary(t0, t1, l_father_grid, bf);
 }
 
 /* this is for optimizing base case!!! */
-template <int N_RANK, typename Grid_info> template <typename F, typename BF>
-inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_info const grid, F const & f, BF const & bf)
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
 	/* cut into exact N_CORES pieces */
 	/* Indirect memory access is expensive */
@@ -30381,7 +30378,7 @@ inline void Algorithm<N_RANK, Grid_info>::obase_boundary_p(int t0, int t1, Grid_
 	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
 	bool cut_yet = false, can_cut = false, call_boundary = false;
 	index_info lb, thres;
-    Grid_info l_father_grid = grid, l_son_grid;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
 
 	for (int i = 0; i < N_RANK; ++i) {
@@ -30542,8 +30539,8 @@ l_son_grid.x0[i] = l_end;
 
 
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_mp(int dim, int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::naive_cut_space_mp(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* This is the version that cut into as many pieces as we can */
 	/* cut into Space dimension one after another */
@@ -30564,7 +30561,7 @@ base_case_kernel(t0, t1, grid, f);
 		return;
 	} else {
 		(static_cast<void> (0));
-		Grid_info l_grid = grid;
+		grid_info<N_RANK> l_grid = grid;
 		int r = lx / bl;
 		int sep = bl;
 		for (i = 0; i < r - 1; i++) {
@@ -30606,8 +30603,8 @@ base_case_kernel(t0, t1, grid, f);
 	}
 }
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::naive_cut_space_ncores(int dim, int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::naive_cut_space_ncores(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* This version cut into exactly N_CORES pieces */
 	/* cut into Space dimension one after another */
@@ -30628,7 +30625,7 @@ base_case_kernel(t0, t1, grid, f);
 		return;
 	} else {
 		(static_cast<void> (0));
-		Grid_info l_grid = grid;
+		grid_info<N_RANK> l_grid = grid;
 		int sep = lx / N_CORES;
 		for (i = 0; i < N_CORES - 1; i++) {
 			l_grid.x0[dim] = grid.x0[dim] + i * sep;
@@ -30669,8 +30666,8 @@ base_case_kernel(t0, t1, grid, f);
 	}
 }
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::cut_space_ncores_boundary(int dim, int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::cut_space_ncores_boundary(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* This version cut into exactly NCORES pieces */
 	/* cut into Space dimension one after another */
@@ -30703,7 +30700,7 @@ base_case_kernel(t0, t1, grid, f);
 		return;
 	} else {
 		(static_cast<void> (0));
-		Grid_info l_grid = grid;
+		grid_info<N_RANK> l_grid = grid;
 		int sep = lx / N_CORES;
 		int l_start = (grid.x0[dim]);
 		int l_end = (grid.x1[dim]);
@@ -30747,8 +30744,8 @@ base_case_kernel(t0, t1, grid, f);
 	}
 }
 
-template <int N_RANK, typename Grid_info> template <typename F>
-inline void Algorithm<N_RANK, Grid_info>::cut_time(algor_type algor, int t0, int t1, Grid_info const grid, F const & f)
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::cut_time(algor_type algor, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* cut into Time dimension */
 	int i;
@@ -31209,7 +31206,7 @@ return *this;
 
 using namespace std;
 
-template <T_dim DIM>
+template <int DIM>
 inline int cal_index(int const * _idx, int const * _stride) {
 	return (_idx[DIM] * _stride[DIM]) + cal_index<DIM-1>(_idx, _stride);
 }
@@ -31220,7 +31217,7 @@ inline int cal_index<0>(int const * _idx, int const * _stride) {
 	return (_idx[0] * _stride[0]);
 }
 
-template <T_dim TOGGLE>
+template <int TOGGLE>
 inline int toggle_base(int const & _idx0) {
     return (_idx0 % TOGGLE);
 }
@@ -31281,7 +31278,7 @@ class Storage {
 		T * data() { return storage_; }
 };
 
-template <typename T, T_dim N_RANK, T_dim TOGGLE=2>
+template <typename T, int N_RANK, int TOGGLE=2>
 class Pochoir_Array {
 	private:
 		Storage<T> * view_; // real storage of elements
@@ -31335,7 +31332,7 @@ int total_size_;
             logic_start_[2] = 0; logic_end_[2] = sz2;
 			stride_[0] = 1;  
 			total_size_ = phys_size_[2];
-			for (T_dim i = 0; i < 2; ++i) {
+			for (int i = 0; i < 2; ++i) {
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
 			}
@@ -31351,7 +31348,7 @@ int total_size_;
 		 */
 		Pochoir_Array (Pochoir_Array<T, N_RANK, TOGGLE> const & orig) {
 			total_size_ = orig.total_size();
-			for (T_dim i = 0; i < N_RANK; ++i) {
+			for (int i = 0; i < N_RANK; ++i) {
 				phys_size_[i] = orig.phys_size(i);
 				logic_size_[i] = orig.logic_size(i);
 				stride_[i] = orig.stride(i);
@@ -31370,7 +31367,7 @@ int total_size_;
         /* assignment operator for vector<> */
 		Pochoir_Array<T, N_RANK, TOGGLE> & operator= (Pochoir_Array<T, N_RANK, TOGGLE> const & orig) {
 			total_size_ = orig.total_size();
-			for (T_dim i = 0; i < N_RANK; ++i) {
+			for (int i = 0; i < N_RANK; ++i) {
 				phys_size_[i] = orig.phys_size(i);
 				logic_size_[i] = orig.logic_size(i);
 				stride_[i] = orig.stride(i);
@@ -31417,16 +31414,16 @@ int total_size_;
         }
 
 		/* return size */
-		int phys_size(T_dim _dim) const { return phys_size_[_dim]; }
-		int logic_size(T_dim _dim) const { return logic_size_[_dim]; }
+		int phys_size(int _dim) const { return phys_size_[_dim]; }
+		int logic_size(int _dim) const { return logic_size_[_dim]; }
         /* the size() function is for user's convenience! */
-		int size(T_dim _dim) const { return phys_size_[_dim]; }
+		int size(int _dim) const { return phys_size_[_dim]; }
 
 		/* return total_size_ */
 		int total_size() const { return total_size_; }
 
 		/* return stride */
-		int stride (T_dim _dim) const { return stride_[_dim]; }
+		int stride (int _dim) const { return stride_[_dim]; }
 
         inline bool check_boundary(size_info const & _idx) const {
             bool touch_boundary = false;
@@ -31483,7 +31480,8 @@ int total_size_;
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
-            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : 0;
+            T * l_null = (T*)calloc(1, sizeof(T));
+            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != __null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -31491,7 +31489,8 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : 0;
+            T * l_null = (T*)calloc(1, sizeof(T));
+            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -31499,7 +31498,8 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : 0;
+            T * l_null = (T*)calloc(1, sizeof(T));
+            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -31507,7 +31507,8 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx1, _idx0);
-            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : 0;
+            T * l_null = (T*)calloc(1, sizeof(T));
+            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != __null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -31515,7 +31516,8 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : 0;
+            T * l_null = (T*)calloc(1, sizeof(T));
+            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -31523,7 +31525,8 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : 0;
+            T * l_null = (T*)calloc(1, sizeof(T));
+            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -31613,7 +31616,7 @@ int total_size_;
 		/* size_info is of type int[] */
 		static inline bool update_index(int * index, bool & line_break, int const * head_index, int const * tail_index)
 		{
-			T_dim i = 0;
+			int i = 0;
 			bool done = false, whole_done = false;
 			while (!done && i < N_RANK) {
 				if (index[i] == (tail_index[i] - 1)) {
@@ -31630,19 +31633,19 @@ int total_size_;
 			return whole_done;
 		}
 
-		template <typename T2, T_dim N2>
+		template <typename T2, int N2>
 		friend std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x); 
 };
 
-template<typename T2, T_dim N2>
+template<typename T2, int N2>
 std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x) { 
 	typedef int size_info[N2];
 	size_info l_index, l_head_index, l_tail_index;
 	bool done = false, line_break = false;
-	T_dim i = 0;
+	int i = 0;
 
 	os << " Pochoir_Array : "; 
-	for (T_dim i = 0; i < N2; ++i) {
+	for (int i = 0; i < N2; ++i) {
 		l_index[i] = 0;
 		l_head_index[i] = 0;
 		l_tail_index[i] = x.phys_size(i);
@@ -31740,7 +31743,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine/pochoir.hpp", __FUNCTION__, 111, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir.hpp", __FUNCTION__, 111, str);
         exit(1);
     }
 }
@@ -31851,7 +31854,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
     /* this version uses 'f' to compute interior region, 
      * and 'bf' to compute boundary region
      */
-    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    Algorithm<N_RANK> algor(slope_);
     getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -31873,7 +31876,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
 /* safe/non-safe ExecSpec */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
-    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    Algorithm<N_RANK> algor(slope_);
     getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -31892,7 +31895,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
 /* obase for zero-padded area! */
 template <typename T, int N_RANK, int TOGGLE> template <typename F>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
-    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    Algorithm<N_RANK> algor(slope_);
     getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);
@@ -31909,7 +31912,7 @@ algor.obase_bicut(0+time_shift_, timestep+time_shift_, grid_, f);
 /* obase for interior and ExecSpec for boundary */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const & bf) {
-    Algorithm<N_RANK, grid_info<N_RANK> > algor(slope_);
+    Algorithm<N_RANK> algor(slope_);
     getDomainFromArray();
     algor.set_initial_grid(grid_);
     algor.set_stride(stride_);

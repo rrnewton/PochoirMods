@@ -146,41 +146,44 @@ struct Algorithm {
 	public:
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     typedef int index_info[N_RANK];
-    typedef struct {
-        int level; /* level is how many dimensions we have cut so far */
-        int t0, t1;
-        grid_info<N_RANK> grid;
-    } queue_info;
 
-#define ALGOR_QUEUE_SIZE 200
-    /* we can use toggled circular queue! */
-    queue_info circular_queue_[2][ALGOR_QUEUE_SIZE];
-    int queue_head_[2], queue_tail_[2], queue_len_[2];
-    grid_info<N_RANK> phys_grid_;
-    int phys_length_[N_RANK];
+    grid_info<N_RANK> initial_grid_;
+    int initial_length_[N_RANK];
+    int logic_size_[N_RANK];
 	int slope_[N_RANK];
     int stride_[N_RANK];
     int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
-    bool boundarySet, physGridSet, slopeSet;
+    bool boundarySet, initialGridSet, slopeSet;
     
+#pragma isat tuning name(tune_coarsening_factor) scope(M1_begin, M1_end) measure(M2_begin, M2_end) variable(tune_dt, range(1, 2, 1)) variable(tune_dt_boundary, range(1, 2, 1)) variable(tune_dx_boundary, range(1, 2, 1)) variable(tune_dx_i, range(1, 100, 50)) variable(tune_dx_0, range(1, 100, 50)) search(dependent)
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1) {
+#if 1
+    static const int tune_dt = 5, tune_dt_boundary = 1;
+    static const int tune_dx_boundary = 1;
+//    static const int tune_dx_i = 3;
+//    static const int tune_dx_0 = 1000;
+//  suppose that we support arbitrary number of ranks up to 8
+#define SUPPORT_RANK 8
+    int tune_dx[SUPPORT_RANK][SUPPORT_RANK];
+    int tune_dt[SUPPORT_RANK];
+#endif
+
+    /* constructor */
+#pragma isat marker M1_begin
+    Algorithm (int const _slope[]) : dt_recursive_(tune_dt[N_RANK]), dt_recursive_boundary_(tune_dt_boundary) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
-            dx_recursive_boundary_[i] = _slope[i];
-//            dx_recursive_boundary_[i] = tune_dx_boundary;
+//            dx_recursive_boundary_[i] = _slope[i];
+            dx_recursive_boundary_[i] = tune_dx_boundary;
             ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 100;
-        dx_recursive_[0] = 100;
+            dx_recursive_[i] = tune_dx[N_RANK][i];
+        dx_recursive_[0] = tune_dx[N_RANK][0];
         boundarySet = false;
-        physGridSet = false;
+        initialGridSet = false;
         slopeSet = true;
-        for (int i = 0; i < 2; ++i) {
-            queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
-        }
 #if DEBUG
         N_CORES = 2;
 #else
@@ -189,27 +192,18 @@ struct Algorithm {
 //        cout << " N_CORES = " << N_CORES << endl;
 
     }
+#pragma isat marker M1_end
 
-    /* README!!!: set_phys_grid()/set_stride() must be called before call to 
+    /* README!!!: set_initial_grid()/set_stride() must be called before call to 
      * - walk_adaptive 
      * - walk_ncores_hybrid
      * - walk_ncores_boundary
      */
-    inline void push_queue(int dep, int level, int t0, int t1, grid_info<N_RANK> const & grid);
-    inline queue_info & top_queue(int dep);
-    inline void pop_queue(int dep);
-    inline bool within_boundary(int t0, int t1, grid_info<N_RANK> const & grid);
-
-    void set_phys_grid(grid_info<N_RANK> const & grid);
+    void set_initial_grid(grid_info<N_RANK> const & grid);
     void set_stride(int const stride[]);
+    void set_logic_size(int const phys_size[]);
     void set_slope(int const slope[]);
-    inline bool touch_boundary(int i, int lt, grid_info<N_RANK> const & grid);
-
-    template <typename F, typename BF>
-    inline void sim_space_cut_p(F const & f, BF const & bf);
-    template <typename F, typename BF>
-    inline void sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
-
+    inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
     template <typename F> 
 	inline void base_case_kernel_interior(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename BF> 
@@ -258,18 +252,18 @@ struct Algorithm {
 };
 
 template <int N_RANK>
-void Algorithm<N_RANK>::set_phys_grid(grid_info<N_RANK> const & grid)
+void Algorithm<N_RANK>::set_initial_grid(grid_info<N_RANK> const & grid)
 {
-    phys_grid_ = grid;
+    initial_grid_ = grid;
     for (int i = 0; i < N_RANK; ++i)
-        phys_length_[i] = grid.x1[i] - grid.x0[i];
-    physGridSet = true;
+        initial_length_[i] = grid.x1[i] - grid.x0[i];
+    initialGridSet = true;
     if (slopeSet) {
         /* set up the lb/ub_boundary */
         for (int i = 0; i < N_RANK; ++i) {
-            ulb_boundary[i] = phys_grid_.x1[i] - slope_[i];
-            uub_boundary[i] = phys_grid_.x1[i] + slope_[i];
-            lub_boundary[i] = phys_grid_.x0[i] + slope_[i];
+            ulb_boundary[i] = initial_grid_.x1[i] - slope_[i];
+            uub_boundary[i] = initial_grid_.x1[i] + slope_[i];
+            lub_boundary[i] = initial_grid_.x0[i] + slope_[i];
         }
     }
 }
@@ -282,17 +276,24 @@ void Algorithm<N_RANK>::set_stride(int const stride[])
 }
 
 template <int N_RANK>
+void Algorithm<N_RANK>::set_logic_size(int const logic_size[])
+{
+    for (int i = 0; i < N_RANK; ++i)
+        logic_size_[i] = logic_size[i];
+}
+
+template <int N_RANK>
 void Algorithm<N_RANK>::set_slope(int const slope[])
 {
     for (int i = 0; i < N_RANK; ++i)
         slope_[i] = slope[i];
     slopeSet = true;
-    if (physGridSet) {
+    if (initialGridSet) {
         /* set up the lb/ub_boundary */
         for (int i = 0; i < N_RANK; ++i) {
-            ulb_boundary[i] = phys_grid_.x1[i] - slope_[i];
-            uub_boundary[i] = phys_grid_.x1[i] + slope_[i];
-            lub_boundary[i] = phys_grid_.x0[i] + slope_[i];
+            ulb_boundary[i] = initial_grid_.x1[i] - slope_[i];
+            uub_boundary[i] = initial_grid_.x1[i] + slope_[i];
+            lub_boundary[i] = initial_grid_.x0[i] + slope_[i];
         }
     }
 }
@@ -302,7 +303,7 @@ inline void Algorithm<N_RANK>::base_case_kernel_interior(int t0, int t1, grid_in
 	grid_info<N_RANK> l_grid = grid;
 	for (int t = t0; t < t1; ++t) {
 		/* execute one single time step */
-		meta_grid_interior<N_RANK, F>::single_step(t, l_grid, phys_grid_, f);
+		meta_grid_interior<N_RANK, F>::single_step(t, l_grid, initial_grid_, f);
 
 		/* because the shape is trapezoid! */
 		for (int i = 0; i < N_RANK; ++i) {
@@ -316,7 +317,7 @@ inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_in
 	grid_info<N_RANK> l_grid = grid;
 	for (int t = t0; t < t1; ++t) {
 		/* execute one single time step */
-		meta_grid_boundary<N_RANK, BF>::single_step(t, l_grid, phys_grid_, bf);
+		meta_grid_boundary<N_RANK, BF>::single_step(t, l_grid, initial_grid_, bf);
 
 		/* because the shape is trapezoid! */
 		for (int i = 0; i < N_RANK; ++i) {

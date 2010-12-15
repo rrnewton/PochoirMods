@@ -29523,26 +29523,37 @@ struct Algorithm {
     int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
     bool boundarySet, initialGridSet, slopeSet;
 
-//#pragma isat tuning name(tune_coarsening_factor) scope(M1_begin, M1_end) measure(M2_begin, M2_end) variable(tune_dt, range(1, 10, 1)) variable(tune_dt_boundary, range(1, 10, 1)) variable(tune_dx_boundary, range(1, 10, 1)) variable(tune_dx_i, range(1, 100, 10)) variable(tune_dx_0, range(1, 100, 10)) search(dependent)
-Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1) {
+#pragma isat tuning name(tune_coarsening_factor) scope(M1_begin, M1_end) measure(M2_begin, M2_end) variable(tune_dt, range(1, 10, 1)) variable(tune_dt_boundary, range(1, 10, 1)) variable(tune_dx_boundary, range(1, 10, 1)) variable(tune_dx_i, range(1, 100, 10)) variable(tune_dx_0, range(1, 100, 10)) search(dependent)
+    /* constructor */
+#pragma isat marker M1_begin
+    const int tune_dt = 5, tune_dt_boundary = 1;
+    const int tune_dx_boundary = 1;
+    const int tune_dx_i = 3;
+    const int tune_dx_0 = 1000;
+    Algorithm (int const _slope[]) : dt_recursive_(tune_dt), dt_recursive_boundary_(tune_dt_boundary) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
-            dx_recursive_boundary_[i] = _slope[i];
-//            dx_recursive_boundary_[i] = 1;
-ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
+//            dx_recursive_boundary_[i] = _slope[i];
+dx_recursive_boundary_[i] = tune_dx_boundary;
+            ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
 }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 100;
-        dx_recursive_[0] = 1000;
+            dx_recursive_[i] = tune_dx_i;
+        dx_recursive_[0] = tune_dx_0;
         boundarySet = false;
         initialGridSet = false;
         slopeSet = true;
         N_CORES = __cilkrts_get_nworkers();
 //        cout << " N_CORES = " << N_CORES << endl;
 }
-//#pragma isat marker M1_end
-void set_initial_grid(grid_info<N_RANK> const & grid);
+#pragma isat marker M1_end
+    /* README!!!: set_initial_grid()/set_stride() must be called before call to 
+     * - walk_adaptive 
+     * - walk_ncores_hybrid
+     * - walk_ncores_boundary
+     */
+    void set_initial_grid(grid_info<N_RANK> const & grid);
     void set_stride(int const stride[]);
     void set_logic_size(int const phys_size[]);
     void set_slope(int const slope[]);
@@ -31792,8 +31803,7 @@ int total_size_;
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
-            T * l_null = (T*)calloc(1, sizeof(T));
-            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : 0;
             bool set_boundary = (l_boundary && bv1_ != __null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -31801,8 +31811,7 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T * l_null = (T*)calloc(1, sizeof(T));
-            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : 0;
             bool set_boundary = (l_boundary && bv2_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -31810,8 +31819,7 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T * l_null = (T*)calloc(1, sizeof(T));
-            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : 0;
             bool set_boundary = (l_boundary && bv3_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);

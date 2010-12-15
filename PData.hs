@@ -45,9 +45,13 @@ stripWhite l = dropWhile isSpace l
 -- We use newtype just because we want to manually derive a Show instance of PShift
 newtype PShift = PShift Int deriving (Eq, Ord)
 data RegionT = Periodic | Nonperiodic | UnknownRegionT deriving Show
-data PType = PInt | PDouble | PFloat | PBool | PUnknownType deriving Eq
+data PBasicType = PChar | PShort | PLong | PSigned | PUnsigned | PVoid | PInt | PDouble | PFloat | PBool | PUserType deriving Eq
+data PType = PType {
+    basicType :: PBasicType,
+    typeName :: String
+} deriving Eq
 data PState = PochoirBegin | PochoirEnd | PochoirMacro | PochoirDeclArray | PochoirDeclRange | PochoirError | Unrelated deriving (Show, Eq)
-data PMode = PHelp | PDefault | PIter | POptPointer | PPointer | PTypeShadow | PInterior | PMacroShadow | PError deriving (Show, Eq)
+data PMode = PHelp | PDefault | PIter | POptPointer | PPointer | PTypeShadow | PInterior | PMacroShadow | PNoPP deriving (Show, Eq)
 data PMacro = PMacro {
     mName :: PName,
     mValue :: PValue
@@ -100,12 +104,17 @@ data ParserState = ParserState {
     pKernel :: Map.Map PName PKernel
 } deriving Show
 
-data Expr = VAR String 
-          -- PVAR : p(a, b, ...)
-          | PVAR String [DimExpr]
+data Expr = VAR String String 
+          -- PVAR : (*&)p(a, b, ...)
+          | PVAR String String [DimExpr]
           -- BVAR : v[a]
           | BVAR String DimExpr
+          -- BExprVAR : v[a+b+c]
           | BExprVAR String Expr
+          -- SVAR : type(p(a, b)).field
+          | SVAR PType Expr String String
+          -- PSVAR : (type*)(p(a, b)).field
+          | PSVAR PType Expr String String
           -- Uno is prefix unary operator
           | Uno Uop Expr
           -- PostUno is postfix unary operator
@@ -139,17 +148,15 @@ data DimExpr = DimVAR String
           deriving Eq
 
 instance Show PType where
-    show PInt = "int"
-    show PDouble = "double"
-    show PFloat = "float"
-    show PBool = "bool"
-    show PUnknownType = "UnknownType"
+    show ptype = typeName ptype
 
 instance Show Expr where
-    show (VAR str) = str
-    show (PVAR a xList@(x:xs)) = a ++ "(" ++ showList xList "" ++ ")"
+    show (VAR q str) = q ++ str
+    show (PVAR q a xList@(x:xs)) = q ++ a ++ "(" ++ showList xList "" ++ ")"
     show (BVAR a x) = a ++ "[" ++ show x ++ "]"
     show (BExprVAR a e) = a ++ "[" ++ show e ++ "]"
+    show (SVAR t e c f) = show t ++ "(" ++ show e ++ ")" ++ c ++ f
+    show (PSVAR t e c f) = "(" ++ show t ++ ")(" ++ show e ++ ")" ++ c ++ f
     show (Uno uop expr) = uop ++ show expr 
     show (PostUno uop expr) = show expr ++ uop
     show (Duo bop lexpr rexpr) = show lexpr ++ " " ++ bop ++ " " ++ show rexpr

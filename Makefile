@@ -1,5 +1,5 @@
 POCHOIR_HEADER := pochoir.hpp pochoir_array.hpp pochoir_walk.hpp pochoir_range.hpp pochoir_common.hpp pochoir_wrapper.hpp pochoir_iter.hpp pochoir_walk_recursive.hpp pochoir_walk_loops.hpp
-PP_FILE := PMain.hs PMainParser.hs PBasicParser.hs PData.hs PParser2.hs
+PP_FILE := PMain.hs PMainParser.hs PBasicParser.hs PData.hs PShow.hs PUtils.hs PParser2.hs
 #OPT_FLAGS=-funroll-loops -fstrict-aliasing -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -funsafe-loop-optimizations -Wunsafe-loop-optimizations -fdump-tree-original -fdump-tree-optimized
 #OPT_FLAGS=-funroll-loops -fstrict-aliasing -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -funsafe-loop-optimizations -Wunsafe-loop-optimizations
 OPT_FLAGS=-funroll-loops -fstrict-aliasing -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -funsafe-loop-optimizations 

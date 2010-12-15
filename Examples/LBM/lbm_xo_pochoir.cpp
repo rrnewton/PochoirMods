@@ -1,569 +1,22 @@
-/*
- **********************************************************************************
- *  Copyright (C) 2010  Massachusetts Institute of Technology
- *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- *                      Charles E. Leiserson <cel@mit.edu>
- *   
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- *   Suggestsions:                  yuantang@csail.mit.edu
- *   Bugs:                          yuantang@csail.mit.edu
- *
- *********************************************************************************
- */
+/*############################################################################*/
 
-/* Copyright (C) 1991,1992,1994-2001,2003,2004,2007
-   Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+/* $Id: main.h,v 1.4 2004/04/21 04:23:43 pohlt Exp $ */
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+/*############################################################################*/
 
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+/*############################################################################*/
 
-/*
- *	ISO C99 Standard: 7.2 Diagnostics	<assert.h>
- */
+/* $Id: config.h,v 1.5 2004/04/20 14:42:56 pohlt Exp $ */
 
+/*############################################################################*/
 
-/* Copyright (C) 1991-1993,1995-2006,2007,2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+/*############################################################################*/
 
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
 
-
-/* These are defined by the user (or the compiler)
-   to specify the desired environment:
-
-   __STRICT_ANSI__	ISO Standard C.
-   _ISOC99_SOURCE	Extensions to ISO C89 from ISO C99.
-   _POSIX_SOURCE	IEEE Std 1003.1.
-   _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
-			if >=199309L, add IEEE Std 1003.1b-1993;
-			if >=199506L, add IEEE Std 1003.1c-1995;
-			if >=200112L, all of IEEE 1003.1-2004
-			if >=200809L, all of IEEE 1003.1-2008
-   _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
-			Single Unix conformance is wanted, to 600 for the
-			sixth revision, to 700 for the seventh revision.
-   _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
-   _LARGEFILE_SOURCE	Some more functions for correct standard I/O.
-   _LARGEFILE64_SOURCE	Additional functionality from LFS for large files.
-   _FILE_OFFSET_BITS=N	Select default filesystem interface.
-   _BSD_SOURCE		ISO C, POSIX, and 4.3BSD things.
-   _SVID_SOURCE		ISO C, POSIX, and SVID things.
-   _ATFILE_SOURCE	Additional *at interfaces.
-   _GNU_SOURCE		All of the above, plus GNU extensions.
-   _REENTRANT		Select additionally reentrant object.
-   _THREAD_SAFE		Same as _REENTRANT, often used by other systems.
-   _FORTIFY_SOURCE	If set to numeric value > 0 additional security
-			measures are defined, according to level.
-
-   The `-ansi' switch to the GNU C compiler defines __STRICT_ANSI__.
-   If none of these are defined, the default is to have _SVID_SOURCE,
-   _BSD_SOURCE, and _POSIX_SOURCE set to one and _POSIX_C_SOURCE set to
-   200112L.  If more than one of these are defined, they accumulate.
-   For example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE
-   together give you ISO C, 1003.1, and 1003.2, but nothing else.
-
-   These are defined by this file and are used by the
-   header files to decide what to declare or define:
-
-   __USE_ISOC99		Define ISO C99 things.
-   __USE_ISOC95		Define ISO C90 AMD1 (C95) things.
-   __USE_POSIX		Define IEEE Std 1003.1 things.
-   __USE_POSIX2		Define IEEE Std 1003.2 things.
-   __USE_POSIX199309	Define IEEE Std 1003.1, and .1b things.
-   __USE_POSIX199506	Define IEEE Std 1003.1, .1b, .1c and .1i things.
-   __USE_XOPEN		Define XPG things.
-   __USE_XOPEN_EXTENDED	Define X/Open Unix things.
-   __USE_UNIX98		Define Single Unix V2 things.
-   __USE_XOPEN2K        Define XPG6 things.
-   __USE_XOPEN2K8       Define XPG7 things.
-   __USE_LARGEFILE	Define correct standard I/O things.
-   __USE_LARGEFILE64	Define LFS things with separate names.
-   __USE_FILE_OFFSET64	Define 64bit interface as default.
-   __USE_BSD		Define 4.3BSD things.
-   __USE_SVID		Define SVID things.
-   __USE_MISC		Define things common to BSD and System V Unix.
-   __USE_ATFILE		Define *at interfaces and AT_* constants for them.
-   __USE_GNU		Define GNU extensions.
-   __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
-   __USE_FORTIFY_LEVEL	Additional security measures used, according to level.
-   __FAVOR_BSD		Favor 4.3BSD things in cases of conflict.
-
-   The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
-   defined by this file unconditionally.  `__GNU_LIBRARY__' is provided
-   only for compatibility.  All new code should use the other symbols
-   to test for features.
-
-   All macros listed above as possibly being defined by this file are
-   explicitly undefined if they are not explicitly defined.
-   Feature-test macros that are not defined by the user or compiler
-   but are implied by the other feature-test macros defined (or by the
-   lack of any definitions) are defined by the file.  */
-
-
-/* Undefine everything, so we get a clean slate.  */
-
-/* Suppress kernel-name space pollution unless user expressedly asks
-   for it.  */
-
-/* Always use ISO C things.  */
-
-/* Convenience macros to test the versions of glibc and gcc.
-   Use them like this:
-   #if __GNUC_PREREQ (2,8)
-   ... code requiring gcc 2.8 or later ...
-   #endif
-   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
-   were not defined then.  */
-
-
-/* If _BSD_SOURCE was defined by the user, favor BSD over POSIX.  */
-
-/* If _GNU_SOURCE was defined by the user, turn on all the other features.  */
-
-/* If nothing (other than _GNU_SOURCE) is defined,
-   define _BSD_SOURCE and _SVID_SOURCE.  */
-
-/* This is to enable the ISO C99 extension.  Also recognize the old macro
-   which was used prior to the standard acceptance.  This macro will
-   eventually go away and the features enabled by default once the ISO C99
-   standard is widely adopted.  */
-
-/* This is to enable the ISO C90 Amendment 1:1995 extension.  */
-
-/* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2
-   (and IEEE Std 1003.1b-1993 unless _XOPEN_SOURCE is defined).  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Define __STDC_IEC_559__ and other similar macros.  */
-/* Copyright (C) 2005 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-
-/* We do support the IEC 559 math functionality, real and complex.  */
-
-
-/* wchar_t uses ISO 10646-1 (2nd ed., published 2000-09-15) / Unicode 3.1.  */
-
-/* This macro indicates that the installed library is the GNU C Library.
-   For historic reasons the value now is 6 and this will stay from now
-   on.  The use of this variable is deprecated.  Use __GLIBC__ and
-   __GLIBC_MINOR__ now (see below) when you want to test for a specific
-   GNU C library version and use the values in <gnu/lib-names.h> to get
-   the sonames of the shared libraries.  */
-
-/* Major and minor version number of the GNU C library package.  Use
-   these macros to test for features in specific releases.  */
-
-
-/* Decide whether a compiler supports the long long datatypes.  */
-
-/* This is here only because every header file already includes this one.  */
-/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006, 2007, 2009
-   Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-/* We are almost always included from features.h. */
-
-/* The GNU libc does not support any K&R compilers or the traditional mode
-   of ISO C compilers anymore.  Check for some of the combinations not
-   anymore supported.  */
-
-/* Some user header file might have defined this before.  */
-
-
-/* GCC can always grok prototypes.  For C++ programs we add throw()
-   to help it optimize the function calls.  But this works only with
-   gcc 2.8.x and egcs.  For gcc 3.2 and up we even mark C functions
-   as non-throwing using a function attribute since programs can use
-   the -fexceptions options for C code as well.  */
-
-
-/* These two macros are not used in glibc anymore.  They are kept here
-   only because some other projects expect the macros to be defined.  */
-
-/* For these things, GCC behaves the ANSI way normally,
-   and the non-ANSI way under -traditional.  */
-
-
-/* This is not a typedef so `const __ptr_t' does the right thing.  */
-
-
-/* C++ needs to know that types and declarations are C, not C++.  */
-
-
-/* The standard library needs the functions from the ISO C90 standard
-   in the std namespace.  At the same time we want to be safe for
-   future changes and we include the ISO C99 code in the non-standard
-   namespace __c99.  The C++ wrapper header take case of adding the
-   definitions to the global namespace.  */
-/* For compatibility we do not add the declarations into any
-   namespace.  They will end up in the global namespace which is what
-   old code expects.  */
-
-
-/* Support for bounded pointers.  */
-
-
-/* Fortify support.  */
-
-
-/* Support for flexible arrays.  */
-/* GCC 2.97 supports C99 flexible array members.  */
-
-
-/* __asm__ ("xyz") is used throughout the headers to rename functions
-   at the assembly language level.  This is wrapped by the __REDIRECT
-   macro, in order to support compilers that can do this some other
-   way.  When compilers don't support asm-names at all, we have to do
-   preprocessor tricks instead (which don't have exactly the right
-   semantics, but it's the best we can do).
-
-   Example:
-   int __REDIRECT(setpgrp, (__pid_t pid, __pid_t pgrp), setpgid); */
-
-
-
-/*
-#elif __SOME_OTHER_COMPILER__
-
-# define __REDIRECT(name, proto, alias) name proto; 	_Pragma("let " #name " = " #alias)
-*/
-
-/* GCC has various useful declarations that can be made with the
-   `__attribute__' syntax.  All of the ways we use this do fine if
-   they are omitted for compilers that don't understand it. */
-
-/* At some point during the gcc 2.96 development the `malloc' attribute
-   for functions was introduced.  We don't want to use it unconditionally
-   (although this would be possible) since it generates warnings.  */
-
-/* At some point during the gcc 2.96 development the `pure' attribute
-   for functions was introduced.  We don't want to use it unconditionally
-   (although this would be possible) since it generates warnings.  */
-
-/* At some point during the gcc 3.1 development the `used' attribute
-   for functions was introduced.  We don't want to use it unconditionally
-   (although this would be possible) since it generates warnings.  */
-
-/* gcc allows marking deprecated functions.  */
-
-/* At some point during the gcc 2.8 development the `format_arg' attribute
-   for functions was introduced.  We don't want to use it unconditionally
-   (although this would be possible) since it generates warnings.
-   If several `format_arg' attributes are given for the same function, in
-   gcc-3.0 and older, all but the last one are ignored.  In newer gccs,
-   all designated arguments are considered.  */
-
-/* At some point during the gcc 2.97 development the `strfmon' format
-   attribute for functions was introduced.  We don't want to use it
-   unconditionally (although this would be possible) since it
-   generates warnings.  */
-
-/* The nonull function attribute allows to mark pointer parameters which
-   must not be NULL.  */
-
-/* If fortification mode, we warn about unused results of certain
-   function calls which can lead to problems.  */
-
-/* Forces a function to be always inlined.  */
-
-/* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
-   inline semantics, unless -fgnu89-inline is used.  */
-
-/* GCC 4.3 and above allow passing all anonymous arguments of an
-   __extern_always_inline function to some other vararg function.  */
-
-/* It is possible to compile containing GCC extensions even if GCC is
-   run in pedantic mode if the uses are carefully marked using the
-   `__extension__' keyword.  But this is not generally available before
-   version 2.8.  */
-
-/* __restrict is known in EGCS 1.2 and above. */
-
-/* ISO C99 also allows to declare arrays as non-overlapping.  The syntax is
-     array_name[restrict]
-   GCC 3.1 supports this.  */
-
-/* Determine the wordsize from the preprocessor defines.  */
-
-
-
-
-/* If we don't have __REDIRECT, prototypes will be missing if
-   __USE_FILE_OFFSET64 but not __USE_LARGEFILE[64]. */
-
-
-/* Decide whether we can define 'extern inline' functions in headers.  */
-
-/* There are some functions that must be declared 'extern inline' even with
-   -Os when building LIBC, or they'll end up undefined.  */
-
-
-/* This is here only because every header file already includes this one.
-   Get the definitions of all the appropriate `__stub_FUNCTION' symbols.
-   <gnu/stubs.h> contains `#define __stub_FUNCTION' when FUNCTION is a stub
-   that will always return failure (and set errno to ENOSYS).  */
-/* This file selects the right generated file of `__stub_FUNCTION' macros
-   based on the architecture being compiled for.  */
-
-/* Determine the wordsize from the preprocessor defines.  */
-
-
-/* This file is automatically generated.
-   It defines a symbol `__stub_FUNCTION' for each function
-   in the C library which is a stub, meaning it will fail
-   every time called, usually setting errno to ENOSYS.  */
-
-
-
-
-
-
-/* void assert (int expression);
-
-   If NDEBUG is defined, do nothing.
-   If not, and EXPRESSION is zero, print an error message and abort.  */
-
-
-
-/* void assert_perror (int errnum);
-
-   If NDEBUG is defined, do nothing.  If not, and ERRNUM is not zero, print an
-   error message with the error text for ERRNUM and abort.
-   (This is a GNU extension.) */
-
-
-/* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994-2007, 2008, 2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-/*
- *	ISO C99 Standard: 7.19 Input/output	<stdio.h>
- */
-
-
-
-extern "C" {
-
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
-
-/*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
- */
-
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
-
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
-
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-typedef unsigned long size_t;
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
-
-
-
-
-/* bits/types.h -- definitions of __*_t types underlying *_t types.
-   Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-/*
- * Never include this file directly; use <sys/types.h> instead.
- */
-
-
-/* Determine the wordsize from the preprocessor defines.  */
-
-
-/* Convenience types.  */
+//#define OUTPUT_PRECISION MY_TYPE
 typedef unsigned char __u_char;
 typedef unsigned short int __u_short;
 typedef unsigned int __u_int;
@@ -708,1202 +161,171 @@ typedef unsigned int __socklen_t;
 
 
 
+/* Returned by `clock'.  */
+typedef __clock_t clock_t;
 
-/* Define outside of namespace so the C++ is happy.  */
-struct _IO_FILE;
 
 
-/* The opaque type of streams.  This is the definition used elsewhere.  */
-typedef struct _IO_FILE FILE;
 
 
 
 
 
 
-/* The opaque type of streams.  This is the definition used elsewhere.  */
-typedef struct _IO_FILE __FILE;
 
 
-
-
-/* Copyright (C) 1991-1995,1997-2006,2007,2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-   Written by Per Bothner <bothner@cygnus.com>.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.
-
-   As a special exception, if you link the code in this file with
-   files compiled with a GNU compiler to produce an executable,
-   that does not cause the resulting executable to be covered by
-   the GNU Lesser General Public License.  This exception does not
-   however invalidate any other reasons why the executable file
-   might be covered by the GNU Lesser General Public License.
-   This exception applies to code released by its copyright holders
-   in files containing the exception.  */
-
-
-/* This file is needed by libio to define various configuration parameters.
-   These are always the same in the GNU C library.  */
-
-
-/* Define types for libio in terms of the standard internal type names.  */
-
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
-
-/*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
- */
-
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
-
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
-
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
-
-
-
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-/*
- *      ISO C99 Standard: 7.24
- *	Extended multibyte and wide character utilities	<wchar.h>
- */
-
-
-
-
-/* Conversion state information.  */
-typedef struct
-{
-  int __count;
-  union
-  {
-    unsigned int __wch;
-    char __wchb[4];
-  } __value;		/* Value so far.  */
-} __mbstate_t;
-
-
-/* The rest of the file is only used if used if __need_mbstate_t is not
-   defined.  */
-
-
-/* Undefined all __need_* constants in case we are included to get those
-   constants but the whole file was already read.  */
-typedef struct
-{
-  __off_t __pos;
-  __mbstate_t __state;
-} _G_fpos_t;
-typedef struct
-{
-  __off64_t __pos;
-  __mbstate_t __state;
-} _G_fpos64_t;
-
-typedef int _G_int16_t __attribute__ ((__mode__ (__HI__)));
-typedef int _G_int32_t __attribute__ ((__mode__ (__SI__)));
-typedef unsigned int _G_uint16_t __attribute__ ((__mode__ (__HI__)));
-typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
-
-
-
-/* These library features are always available in the GNU C library.  */
-
-
-
-
-/* This is defined by <bits/stat.h> if `st_blksize' exists.  */
-
-
-/* These are the vtbl details for ELF.  */
-
-
-
-/* ALL of these should be defined in _G_config.h */
-
-/* This define avoids name pollution if we're using GNU stdarg.h */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2009 Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
-
-/*
- * ISO C Standard:  7.15  Variable arguments  <stdarg.h>
- */
-
-
-/* Define __gnuc_va_list.  */
-
-typedef __builtin_va_list __gnuc_va_list;
-
-/* Define the standard macros for the user,
-   if this invocation was from the user program.  */
-
-
-
-/* For backward compatibility */
-
-
-
-
-/* Magic numbers and bits for the _flags field.
-   The magic numbers use the high-order bits of _flags;
-   the remaining bits are available for variable flags.
-   Note: The magic numbers must all be negative if stdio
-   emulation is desired. */
-
-
-
-/* These are "formatting flags" matching the iostream fmtflags enum values. */
-
-
-struct _IO_jump_t;  struct _IO_FILE;
-
-/* Handle lock.  */
-typedef void _IO_lock_t;
-
-
-/* A streammarker remembers a position in a buffer. */
-
-struct _IO_marker {
-  struct _IO_marker *_next;
-  struct _IO_FILE *_sbuf;
-  /* If _pos >= 0
- it points to _buf->Gbase()+_pos. FIXME comment */
-  /* if _pos < 0, it points to _buf->eBptr()+_pos. FIXME comment */
-  int _pos;
-};
-
-/* This is the structure from the libstdc++ codecvt class.  */
-enum __codecvt_result
-{
-  __codecvt_ok,
-  __codecvt_partial,
-  __codecvt_error,
-  __codecvt_noconv
-};
-
-
-struct _IO_FILE {
-  int _flags;		/* High-order word is _IO_MAGIC; rest is flags. */
-
-  /* The following pointers correspond to the C++ streambuf protocol. */
-  /* Note:  Tk uses the _IO_read_ptr and _IO_read_end fields directly. */
-  char* _IO_read_ptr;	/* Current read pointer */
-  char* _IO_read_end;	/* End of get area. */
-  char* _IO_read_base;	/* Start of putback+get area. */
-  char* _IO_write_base;	/* Start of put area. */
-  char* _IO_write_ptr;	/* Current put pointer. */
-  char* _IO_write_end;	/* End of put area. */
-  char* _IO_buf_base;	/* Start of reserve area. */
-  char* _IO_buf_end;	/* End of reserve area. */
-  /* The following fields are used to support backing up and undo. */
-  char *_IO_save_base; /* Pointer to start of non-current get area. */
-  char *_IO_backup_base;  /* Pointer to first valid character of backup area */
-  char *_IO_save_end; /* Pointer to end of non-current get area. */
-
-  struct _IO_marker *_markers;
-
-  struct _IO_FILE *_chain;
-
-  int _fileno;
-  int _flags2;
-  __off_t _old_offset; /* This used to be _offset but it's too small.  */
-
-  /* 1+column number of pbase(); 0 is unknown. */
-  unsigned short _cur_column;
-  signed char _vtable_offset;
-  char _shortbuf[1];
-
-  /*  char* _save_gptr;  char* _save_egptr; */
-
-  _IO_lock_t *_lock;
-  __off64_t _offset;
-  void *__pad1;
-  void *__pad2;
-  void *__pad3;
-  void *__pad4;
-  size_t __pad5;
-  int _mode;
-  /* Make sure we don't get into trouble again.  */
-  char _unused2[15 * sizeof (int) - 4 * sizeof (void *) - sizeof (size_t)];
-};
-
-
-struct _IO_FILE_plus;
-
-extern struct _IO_FILE_plus _IO_2_1_stdin_;
-extern struct _IO_FILE_plus _IO_2_1_stdout_;
-extern struct _IO_FILE_plus _IO_2_1_stderr_;
-
-
-/* Functions to do I/O and file management for a stream.  */
-
-/* Read NBYTES bytes from COOKIE into a buffer pointed to by BUF.
-   Return number of bytes read.  */
-typedef __ssize_t __io_read_fn (void *__cookie, char *__buf, size_t __nbytes);
-
-/* Write N bytes pointed to by BUF to COOKIE.  Write all N bytes
-   unless there is an error.  Return number of bytes written, or -1 if
-   there is an error without writing anything.  If the file has been
-   opened for append (__mode.__append set), then set the file pointer
-   to the end of the file and then do the write; if not, just write at
-   the current file pointer.  */
-typedef __ssize_t __io_write_fn (void *__cookie, __const char *__buf,
-				 size_t __n);
-
-/* Move COOKIE's file position to *POS bytes from the
-   beginning of the file (if W is SEEK_SET),
-   the current position (if W is SEEK_CUR),
-   or the end of the file (if W is SEEK_END).
-   Set *POS to the new file position.
-   Returns zero if successful, nonzero if not.  */
-typedef int __io_seek_fn (void *__cookie, __off64_t *__pos, int __w);
-
-/* Close COOKIE.  */
-typedef int __io_close_fn (void *__cookie);
-
-
-/* User-visible names for the above.  */
-typedef __io_read_fn cookie_read_function_t;
-typedef __io_write_fn cookie_write_function_t;
-typedef __io_seek_fn cookie_seek_function_t;
-typedef __io_close_fn cookie_close_function_t;
-
-/* The structure with the cookie function pointers.  */
-typedef struct
-{
-  __io_read_fn *read;		/* Read bytes.  */
-  __io_write_fn *write;		/* Write bytes.  */
-  __io_seek_fn *seek;		/* Seek/tell file position.  */
-  __io_close_fn *close;		/* Close file.  */
-} _IO_cookie_io_functions_t;
-typedef _IO_cookie_io_functions_t cookie_io_functions_t;
-
-struct _IO_cookie_file;
-
-/* Initialize one of those.  */
-extern void _IO_cookie_init (struct _IO_cookie_file *__cfile, int __read_write,
-			     void *__cookie, _IO_cookie_io_functions_t __fns);
 
 
 extern "C" {
 
-extern int __underflow (_IO_FILE *);
-extern int __uflow (_IO_FILE *);
-extern int __overflow (_IO_FILE *, int);
+/* Structure describing CPU time used by a process and its children.  */
+struct tms
+  {
+    clock_t tms_utime;		/* User CPU time.  */
+    clock_t tms_stime;		/* System CPU time.  */
+
+    clock_t tms_cutime;		/* User CPU time of dead children.  */
+    clock_t tms_cstime;		/* System CPU time of dead children.  */
+  };
 
 
-
-
-
-extern int _IO_getc (_IO_FILE *__fp);
-extern int _IO_putc (int __c, _IO_FILE *__fp);
-extern int _IO_feof (_IO_FILE *__fp) throw ();
-extern int _IO_ferror (_IO_FILE *__fp) throw ();
-
-extern int _IO_peekc_locked (_IO_FILE *__fp);
-
-/* This one is for Emacs. */
-
-extern void _IO_flockfile (_IO_FILE *) throw ();
-extern void _IO_funlockfile (_IO_FILE *) throw ();
-extern int _IO_ftrylockfile (_IO_FILE *) throw ();
-
-
-extern int _IO_vfscanf (_IO_FILE * __restrict, const char * __restrict,
-			__gnuc_va_list, int *__restrict);
-extern int _IO_vfprintf (_IO_FILE *__restrict, const char *__restrict,
-			 __gnuc_va_list);
-extern __ssize_t _IO_padn (_IO_FILE *, int, __ssize_t);
-extern size_t _IO_sgetn (_IO_FILE *, void *, size_t);
-
-extern __off64_t _IO_seekoff (_IO_FILE *, __off64_t, int, int);
-extern __off64_t _IO_seekpos (_IO_FILE *, __off64_t, int);
-
-extern void _IO_free_backup_area (_IO_FILE *) throw ();
-
-
+/* Store the CPU time used by this process and all its
+   dead children (and their dead children) in BUFFER.
+   Return the elapsed real time, or (clock_t) -1 for errors.
+   All times are in CLK_TCKths of a second.  */
+extern clock_t times (struct tms *__buffer) throw ();
 
 }
 
 
-typedef __gnuc_va_list va_list;
+/*############################################################################*/
 
-/* The type of the second argument to `fgetpos' and `fsetpos'.  */
+typedef struct {
+	double timeScale;
+	clock_t tickStart, tickStop;
+	struct tms timeStart, timeStop;
 
-typedef _G_fpos_t fpos_t;
+} MAIN_Time;
 
-typedef _G_fpos64_t fpos64_t;
-
-/* The possibilities for the third argument to `setvbuf'.  */
-
-
-/* Default buffer size.  */
-
-
-/* End of file character.
-   Some things throughout the library rely on this being -1.  */
-
-
-/* The possibilities for the third argument to `fseek'.
-   These values should not be changed.  */
-
-
-/* Default path prefix for `tempnam' and `tmpnam'.  */
-
-
-/* Get the values:
-   L_tmpnam	How long an array of chars must be to be passed to `tmpnam'.
-   TMP_MAX	The minimum number of unique filenames generated by tmpnam
-   		(and tempnam when it uses tmpnam's name space),
-		or tempnam (the two are separate).
-   L_ctermid	How long an array to pass to `ctermid'.
-   L_cuserid	How long an array to pass to `cuserid'.
-   FOPEN_MAX	Minimum number of files that can be open at once.
-   FILENAME_MAX	Maximum length of a filename.  */
-/* Copyright (C) 1994, 1997, 1998, 1999, 2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-
-
-
-
-
-/* Standard streams.  */
-extern struct _IO_FILE *stdin;		/* Standard input stream.  */
-extern struct _IO_FILE *stdout;		/* Standard output stream.  */
-extern struct _IO_FILE *stderr;		/* Standard error output stream.  */
-/* C89/C99 say they're macros.  Make them happy.  */
-
-
-/* Remove file FILENAME.  */
-extern int remove (__const char *__filename) throw ();
-/* Rename file OLD to NEW.  */
-extern int rename (__const char *__old, __const char *__new) throw ();
-
-
-/* Rename file OLD relative to OLDFD to NEW relative to NEWFD.  */
-extern int renameat (int __oldfd, __const char *__old, int __newfd,
-		     __const char *__new) throw ();
-
-
-/* Create a temporary file and open it read/write.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern FILE *tmpfile (void) ;
-
-extern FILE *tmpfile64 (void) ;
-
-/* Generate a temporary filename.  */
-extern char *tmpnam (char *__s) throw () ;
-
-
-/* This is the reentrant variant of `tmpnam'.  The only difference is
-   that it does not allow S to be NULL.  */
-extern char *tmpnam_r (char *__s) throw () ;
-
-
-/* Generate a unique temporary filename using up to five characters of PFX
-   if it is not NULL.  The directory to put this file in is searched for
-   as follows: First the environment variable "TMPDIR" is checked.
-   If it contains the name of a writable directory, that directory is used.
-   If not and if DIR is not NULL, that value is checked.  If that fails,
-   P_tmpdir is tried and finally "/tmp".  The storage for the filename
-   is allocated by `malloc'.  */
-extern char *tempnam (__const char *__dir, __const char *__pfx)
-     throw () __attribute__ ((__malloc__)) ;
-
-
-
-/* Close STREAM.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int fclose (FILE *__stream);
-/* Flush STREAM, or all streams if STREAM is NULL.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int fflush (FILE *__stream);
-
-
-/* Faster versions when locking is not required.
-
-   This function is not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation it is a cancellation point and
-   therefore not marked with __THROW.  */
-extern int fflush_unlocked (FILE *__stream);
-
-/* Close all streams.
-
-   This function is not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation it is a cancellation point and
-   therefore not marked with __THROW.  */
-extern int fcloseall (void);
-
-
-
-/* Open a file and create a new stream for it.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern FILE *fopen (__const char *__restrict __filename,
-		    __const char *__restrict __modes) ;
-/* Open a file, replacing an existing stream with it.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern FILE *freopen (__const char *__restrict __filename,
-		      __const char *__restrict __modes,
-		      FILE *__restrict __stream) ;
-
-extern FILE *fopen64 (__const char *__restrict __filename,
-		      __const char *__restrict __modes) ;
-extern FILE *freopen64 (__const char *__restrict __filename,
-			__const char *__restrict __modes,
-			FILE *__restrict __stream) ;
-
-/* Create a new stream that refers to an existing system file descriptor.  */
-extern FILE *fdopen (int __fd, __const char *__modes) throw () ;
-
-/* Create a new stream that refers to the given magic cookie,
-   and uses the given functions for input and output.  */
-extern FILE *fopencookie (void *__restrict __magic_cookie,
-			  __const char *__restrict __modes,
-			  _IO_cookie_io_functions_t __io_funcs) throw () ;
-
-/* Create a new stream that refers to a memory buffer.  */
-extern FILE *fmemopen (void *__s, size_t __len, __const char *__modes)
-  throw () ;
-
-/* Open a stream that writes into a malloc'd buffer that is expanded as
-   necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
-   and the number of characters written on fflush or fclose.  */
-extern FILE *open_memstream (char **__bufloc, size_t *__sizeloc) throw () ;
-
-
-
-/* If BUF is NULL, make STREAM unbuffered.
-   Else make it use buffer BUF, of size BUFSIZ.  */
-extern void setbuf (FILE *__restrict __stream, char *__restrict __buf) throw ();
-/* Make STREAM use buffering mode MODE.
-   If BUF is not NULL, use N bytes of it for buffering;
-   else allocate an internal buffer N bytes long.  */
-extern int setvbuf (FILE *__restrict __stream, char *__restrict __buf,
-		    int __modes, size_t __n) throw ();
-
-
-/* If BUF is NULL, make STREAM unbuffered.
-   Else make it use SIZE bytes of BUF for buffering.  */
-extern void setbuffer (FILE *__restrict __stream, char *__restrict __buf,
-		       size_t __size) throw ();
-
-/* Make STREAM line-buffered.  */
-extern void setlinebuf (FILE *__stream) throw ();
-
-
-
-/* Write formatted output to STREAM.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int fprintf (FILE *__restrict __stream,
-		    __const char *__restrict __format, ...);
-/* Write formatted output to stdout.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int printf (__const char *__restrict __format, ...);
-/* Write formatted output to S.  */
-extern int sprintf (char *__restrict __s,
-		    __const char *__restrict __format, ...) throw ();
-
-/* Write formatted output to S from argument list ARG.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int vfprintf (FILE *__restrict __s, __const char *__restrict __format,
-		     __gnuc_va_list __arg);
-/* Write formatted output to stdout from argument list ARG.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int vprintf (__const char *__restrict __format, __gnuc_va_list __arg);
-/* Write formatted output to S from argument list ARG.  */
-extern int vsprintf (char *__restrict __s, __const char *__restrict __format,
-		     __gnuc_va_list __arg) throw ();
-
-
-
-/* Maximum chars of output to write in MAXLEN.  */
-extern int snprintf (char *__restrict __s, size_t __maxlen,
-		     __const char *__restrict __format, ...)
-     throw () __attribute__ ((__format__ (__printf__, 3, 4)));
-
-extern int vsnprintf (char *__restrict __s, size_t __maxlen,
-		      __const char *__restrict __format, __gnuc_va_list __arg)
-     throw () __attribute__ ((__format__ (__printf__, 3, 0)));
-
-
-/* Write formatted output to a string dynamically allocated with `malloc'.
-   Store the address of the string in *PTR.  */
-extern int vasprintf (char **__restrict __ptr, __const char *__restrict __f,
-		      __gnuc_va_list __arg)
-     throw () __attribute__ ((__format__ (__printf__, 2, 0))) ;
-extern int __asprintf (char **__restrict __ptr,
-		       __const char *__restrict __fmt, ...)
-     throw () __attribute__ ((__format__ (__printf__, 2, 3))) ;
-extern int asprintf (char **__restrict __ptr,
-		     __const char *__restrict __fmt, ...)
-     throw () __attribute__ ((__format__ (__printf__, 2, 3))) ;
-
-/* Write formatted output to a file descriptor.
-
-   These functions are not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation they are cancellation points and
-   therefore not marked with __THROW.  */
-extern int vdprintf (int __fd, __const char *__restrict __fmt,
-		     __gnuc_va_list __arg)
-     __attribute__ ((__format__ (__printf__, 2, 0)));
-extern int dprintf (int __fd, __const char *__restrict __fmt, ...)
-     __attribute__ ((__format__ (__printf__, 2, 3)));
-
-
-
-/* Read formatted input from STREAM.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int fscanf (FILE *__restrict __stream,
-		   __const char *__restrict __format, ...) ;
-/* Read formatted input from stdin.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int scanf (__const char *__restrict __format, ...) ;
-/* Read formatted input from S.  */
-extern int sscanf (__const char *__restrict __s,
-		   __const char *__restrict __format, ...) throw ();
-
-
-
-
-
-/* Read formatted input from S into argument list ARG.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int vfscanf (FILE *__restrict __s, __const char *__restrict __format,
-		    __gnuc_va_list __arg)
-     __attribute__ ((__format__ (__scanf__, 2, 0))) ;
-
-/* Read formatted input from stdin into argument list ARG.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int vscanf (__const char *__restrict __format, __gnuc_va_list __arg)
-     __attribute__ ((__format__ (__scanf__, 1, 0))) ;
-
-/* Read formatted input from S into argument list ARG.  */
-extern int vsscanf (__const char *__restrict __s,
-		    __const char *__restrict __format, __gnuc_va_list __arg)
-     throw () __attribute__ ((__format__ (__scanf__, 2, 0)));
-
-
-
-
-
-
-/* Read a character from STREAM.
-
-   These functions are possible cancellation points and therefore not
-   marked with __THROW.  */
-extern int fgetc (FILE *__stream);
-extern int getc (FILE *__stream);
-
-/* Read a character from stdin.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int getchar (void);
-
-
-/* The C standard explicitly says this is a macro, so we always do the
-   optimization for it.  */
-
-/* These are defined in POSIX.1:1996.
-
-   These functions are possible cancellation points and therefore not
-   marked with __THROW.  */
-extern int getc_unlocked (FILE *__stream);
-extern int getchar_unlocked (void);
-
-/* Faster version when locking is not necessary.
-
-   This function is not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation it is a cancellation point and
-   therefore not marked with __THROW.  */
-extern int fgetc_unlocked (FILE *__stream);
-
-
-
-/* Write a character to STREAM.
-
-   These functions are possible cancellation points and therefore not
-   marked with __THROW.
-
-   These functions is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int fputc (int __c, FILE *__stream);
-extern int putc (int __c, FILE *__stream);
-
-/* Write a character to stdout.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int putchar (int __c);
-
-
-/* The C standard explicitly says this can be a macro,
-   so we always do the optimization for it.  */
-
-/* Faster version when locking is not necessary.
-
-   This function is not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation it is a cancellation point and
-   therefore not marked with __THROW.  */
-extern int fputc_unlocked (int __c, FILE *__stream);
-
-/* These are defined in POSIX.1:1996.
-
-   These functions are possible cancellation points and therefore not
-   marked with __THROW.  */
-extern int putc_unlocked (int __c, FILE *__stream);
-extern int putchar_unlocked (int __c);
-
-
-/* Get a word (int) from STREAM.  */
-extern int getw (FILE *__stream);
-
-/* Write a word (int) to STREAM.  */
-extern int putw (int __w, FILE *__stream);
-
-
-
-/* Get a newline-terminated string of finite length from STREAM.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-     ;
-
-/* Get a newline-terminated string from stdin, removing the newline.
-   DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern char *gets (char *__s) ;
-
-
-/* This function does the same as `fgets' but does not lock the stream.
-
-   This function is not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation it is a cancellation point and
-   therefore not marked with __THROW.  */
-extern char *fgets_unlocked (char *__restrict __s, int __n,
-			     FILE *__restrict __stream) ;
-
-
-/* Read up to (and including) a DELIMITER from STREAM into *LINEPTR
-   (and null-terminate it). *LINEPTR is a pointer returned from malloc (or
-   NULL), pointing to *N characters of space.  It is realloc'd as
-   necessary.  Returns the number of characters read (not including the
-   null terminator), or -1 on error or EOF.
-
-   These functions are not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation they are cancellation points and
-   therefore not marked with __THROW.  */
-extern __ssize_t __getdelim (char **__restrict __lineptr,
-			       size_t *__restrict __n, int __delimiter,
-			       FILE *__restrict __stream) ;
-extern __ssize_t getdelim (char **__restrict __lineptr,
-			     size_t *__restrict __n, int __delimiter,
-			     FILE *__restrict __stream) ;
-
-/* Like `getdelim', but reads up to a newline.
-
-   This function is not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation it is a cancellation point and
-   therefore not marked with __THROW.  */
-extern __ssize_t getline (char **__restrict __lineptr,
-			    size_t *__restrict __n,
-			    FILE *__restrict __stream) ;
-
-
-
-/* Write a string to STREAM.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern int fputs (__const char *__restrict __s, FILE *__restrict __stream);
-
-/* Write a string, followed by a newline, to stdout.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern int puts (__const char *__s);
-
-
-/* Push a character back onto the input buffer of STREAM.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern int ungetc (int __c, FILE *__stream);
-
-
-/* Read chunks of generic data from STREAM.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern size_t fread (void *__restrict __ptr, size_t __size,
-		     size_t __n, FILE *__restrict __stream) ;
-/* Write chunks of generic data to STREAM.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern size_t fwrite (__const void *__restrict __ptr, size_t __size,
-		      size_t __n, FILE *__restrict __s);
-
-
-/* This function does the same as `fputs' but does not lock the stream.
-
-   This function is not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation it is a cancellation point and
-   therefore not marked with __THROW.  */
-extern int fputs_unlocked (__const char *__restrict __s,
-			   FILE *__restrict __stream);
-
-/* Faster versions when locking is not necessary.
-
-   These functions are not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation they are cancellation points and
-   therefore not marked with __THROW.  */
-extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
-			      size_t __n, FILE *__restrict __stream) ;
-extern size_t fwrite_unlocked (__const void *__restrict __ptr, size_t __size,
-			       size_t __n, FILE *__restrict __stream);
-
-
-
-/* Seek to a certain position on STREAM.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int fseek (FILE *__stream, long int __off, int __whence);
-/* Return the current position of STREAM.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern long int ftell (FILE *__stream) ;
-/* Rewind to the beginning of STREAM.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern void rewind (FILE *__stream);
-
-
-/* The Single Unix Specification, Version 2, specifies an alternative,
-   more adequate interface for the two functions above which deal with
-   file offset.  `long int' is not the right type.  These definitions
-   are originally defined in the Large File Support API.  */
-
-/* Seek to a certain position on STREAM.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int fseeko (FILE *__stream, __off_t __off, int __whence);
-/* Return the current position of STREAM.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern __off_t ftello (FILE *__stream) ;
-
-
-/* Get STREAM's position.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int fgetpos (FILE *__restrict __stream, fpos_t *__restrict __pos);
-/* Set STREAM's position.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int fsetpos (FILE *__stream, __const fpos_t *__pos);
-
-
-extern int fseeko64 (FILE *__stream, __off64_t __off, int __whence);
-extern __off64_t ftello64 (FILE *__stream) ;
-extern int fgetpos64 (FILE *__restrict __stream, fpos64_t *__restrict __pos);
-extern int fsetpos64 (FILE *__stream, __const fpos64_t *__pos);
-
-
-/* Clear the error and EOF indicators for STREAM.  */
-extern void clearerr (FILE *__stream) throw ();
-/* Return the EOF indicator for STREAM.  */
-extern int feof (FILE *__stream) throw () ;
-/* Return the error indicator for STREAM.  */
-extern int ferror (FILE *__stream) throw () ;
-
-
-/* Faster versions when locking is not required.  */
-extern void clearerr_unlocked (FILE *__stream) throw ();
-extern int feof_unlocked (FILE *__stream) throw () ;
-extern int ferror_unlocked (FILE *__stream) throw () ;
-
-
-
-/* Print a message describing the meaning of the value of errno.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern void perror (__const char *__s);
-
-
-/* Provide the declarations for `sys_errlist' and `sys_nerr' if they
-   are available on this system.  Even if available, these variables
-   should not be used directly.  The `strerror' function provides
-   all the necessary functionality.  */
-/* Declare sys_errlist and sys_nerr, or don't.  Compatibility (do) version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-/* sys_errlist and sys_nerr are deprecated.  Use strerror instead.  */
-
-extern int sys_nerr;
-extern __const char *__const sys_errlist[];
-extern int _sys_nerr;
-extern __const char *__const _sys_errlist[];
-
-
-/* Return the system file descriptor for STREAM.  */
-extern int fileno (FILE *__stream) throw () ;
-
-/* Faster version when locking is not required.  */
-extern int fileno_unlocked (FILE *__stream) throw () ;
-
-
-/* Create a new stream connected to a pipe running the given command.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern FILE *popen (__const char *__command, __const char *__modes) ;
-
-/* Close a stream opened by popen and return the status of its child.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int pclose (FILE *__stream);
-
-
-/* Return the name of the controlling terminal.  */
-extern char *ctermid (char *__s) throw ();
-
-
-/* Return the name of the current user.  */
-extern char *cuserid (char *__s);
-
-
-struct obstack;			/* See <obstack.h>.  */
-
-/* Write formatted output to an obstack.  */
-extern int obstack_printf (struct obstack *__restrict __obstack,
-			   __const char *__restrict __format, ...)
-     throw () __attribute__ ((__format__ (__printf__, 2, 3)));
-extern int obstack_vprintf (struct obstack *__restrict __obstack,
-			    __const char *__restrict __format,
-			    __gnuc_va_list __args)
-     throw () __attribute__ ((__format__ (__printf__, 2, 0)));
-
-
-/* These are defined in POSIX.1:1996.  */
-
-/* Acquire ownership of STREAM.  */
-extern void flockfile (FILE *__stream) throw ();
-
-/* Try to acquire ownership of STREAM but do not block if it is not
-   possible.  */
-extern int ftrylockfile (FILE *__stream) throw () ;
-
-/* Relinquish the ownership granted for STREAM.  */
-extern void funlockfile (FILE *__stream) throw ();
-
-
-/* If we are compiling with optimizing read this file.  It contains
-   several optimizing inline functions and macros.  */
-
-}
-
-
-/* Copyright (C) 1991-2007, 2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-/*
- *	ISO C99 Standard: 7.20 General utilities	<stdlib.h>
- */
-
-
-
-/* Get size_t, wchar_t and NULL from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
-
-/*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
- */
-
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
-
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
-
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
+typedef enum {NOTHING = 0, COMPARE, STORE} MAIN_Action;
+typedef enum {LDC = 0, CHANNEL} MAIN_SimType;
+
+typedef struct {
+	int nTimeSteps;
+	char* resultFilename;
+	MAIN_Action action;
+	MAIN_SimType simType;
+	char* obstacleFilename;
+} MAIN_Param;
+
+/*############################################################################*/
+
+void MAIN_parseCommandLine( int nArgs, char* arg[], MAIN_Param* param );
+void MAIN_printInfo( const MAIN_Param* param );
+void MAIN_initialize( const MAIN_Param* param );
+void MAIN_finalize( const MAIN_Param* param );
+
+void MAIN_startClock( MAIN_Time* time );
+void MAIN_stopClock( MAIN_Time* time, const MAIN_Param* param );
+
+/*############################################################################*/
+
+/* $Id: lbm.h,v 1.1 2004/04/20 14:33:59 pohlt Exp $ */
+
+/*############################################################################*/
+
+
+/*############################################################################*/
+
+
+/*############################################################################*/
+
+typedef enum {C = 0,
+              N, S, E, W, T, B,
+              NE, NW, SE, SW,
+              NT, NB, ST, SB,
+              ET, EB, WT, WB,
+              FLAGS, N_CELL_ENTRIES} CELL_ENTRIES;
+
+typedef enum {OBSTACLE    = 1 << 0,
+              ACCEL       = 1 << 1,
+              IN_OUT_FLOW = 1 << 2} CELL_FLAGS;
+
+/* $Id: lbm_1d_array.h,v 1.1 2004/04/20 14:33:59 pohlt Exp $ */
+
+
+/*############################################################################*/
+typedef double LBM_Grid[(16+(130)*(1*(100))*(1*(100)))*N_CELL_ENTRIES];
+typedef LBM_Grid* LBM_GridPtr;
+
+/*############################################################################*/
+
+///////////// AOS ///////////////
+extern void LBM_allocateGrid( double** ptr );
+extern void LBM_freeGrid( double** ptr );
+extern void LBM_initializeGrid( LBM_Grid grid );
+extern void LBM_initializeSpecialCellsForLDC( LBM_Grid grid );
+extern void LBM_loadObstacleFile( LBM_Grid grid, const char* filename );
+extern void LBM_initializeSpecialCellsForChannel( LBM_Grid grid );
+extern void LBM_swapGrids( LBM_GridPtr* grid1, LBM_GridPtr* grid2 );
+extern void LBM_performStreamCollide( LBM_Grid srcGrid, LBM_Grid dstGrid, const int x0, const int x1, const int y0, const int y1, const int z0, const int z1);
+extern void LBM_handleInOutFlow( LBM_Grid srcGrid, const int x0, const int x1, const int y0, const int y1, const int z0, const int z1);
+extern void LBM_showGridStatistics( LBM_Grid Grid );
+extern void LBM_storeVelocityField( LBM_Grid grid, const char* filename,
+                           const int binary );
+extern void LBM_compareVelocityField( LBM_Grid grid, const char* filename,
+                               const int binary );
+
+extern void co_basecase_1(LBM_GridPtr* toggle,
+                             int t0, int t1,
+                             int x0, int dx0, int x1, int dx1,
+                             int y0, int dy0, int y1, int dy1, 
+                             int z0, int dz0, int z1, int dz1);
+
+extern void co_basecase_2(LBM_GridPtr* toggle,
+                             int t0, int t1,
+                             int x0, int dx0, int x1, int dx1,
+                             int y0, int dy0, int y1, int dy1, 
+                             int z0, int dz0, int z1, int dz1);
+
+/*############################################################################*/
+
+
+
+typedef struct 
+{
+    double _C;
+    double _N;
+    double _S;
+    double _E;
+    double _W;
+    double _T;
+    double _B;
+    double _NE;
+    double _NW;
+    double _SE;
+    double _SW;
+    double _NT;
+    double _NB;
+    double _ST;
+    double _SB;
+    double _ET;
+    double _EB;
+    double _WT;
+    double _WB;
+    double _FLAGS;
+} PoCellEntry;
+
+
+extern void co_basecase(LBM_GridPtr* toggle, MAIN_SimType simType,
+			   int t0, int t1,
+			   int x0, int dx0, int x1, int dx1,
+			   int y0, int dy0, int y1, int dy1, 
+			   int z0, int dz0, int z1, int dz1);
+
+extern void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int numTimeSteps);
+//#include <math.h>
+typedef unsigned long size_t;
 
 
 /* Wide character type.
@@ -2417,14 +839,6 @@ typedef __key_t key_t;
  *	ISO C99 Standard: 7.23 Date and time	<time.h>
  */
 
-
-
-
-
-
-
-/* Returned by `clock'.  */
-typedef __clock_t clock_t;
 
 
 
@@ -3634,6 +2048,2166 @@ extern int getloadavg (double __loadavg[], int __nelem)
 
 /* Define some macros helping to catch buffer overflows.  */
 
+
+}
+
+/* Define ISO C stdio on top of C++ iostreams.
+   Copyright (C) 1991, 1994-2007, 2008, 2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	ISO C99 Standard: 7.19 Input/output	<stdio.h>
+ */
+
+
+
+extern "C" {
+
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
+   Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
+/*
+ * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ */
+
+/* Any one of these symbols __need_* means that GNU libc
+   wants us just to define one data type.  So don't define
+   the symbols that indicate this file's entire job has been done.  */
+
+/* This avoids lossage on SunOS but only if stdtypes.h comes first.
+   There's no way to win with the other order!  Sun lossage.  */
+
+/* On 4.3bsd-net2, make sure ansi.h is included, so we have
+   one less case to deal with in the following.  */
+/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
+
+/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+   defined if the corresponding type is *not* defined.
+   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
+
+/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+   Just ignore it.  */
+
+/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
+   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+   not defined, and so that defining this macro defines _GCC_SIZE_T.
+   If we find that the macros are still defined at this point, we must
+   invoke them so that the type is defined as expected.  */
+
+/* In case nobody has defined these types, but we aren't running under
+   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+   parts of GCC is compiled by an older compiler, that actually
+   include gstddef.h, such as collect2.  */
+
+/* Signed type of difference of two pointers.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+/* Unsigned type of `sizeof' something.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+
+/* Wide character type.
+   Locale-writers should change this as necessary to
+   be big enough to hold unique values not between 0 and 127,
+   and not (wchar_t) -1, for each defined multibyte character.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+
+/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+    are already defined.  */
+/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
+
+
+/* A null pointer constant.  */
+
+
+
+
+
+
+
+/* Define outside of namespace so the C++ is happy.  */
+struct _IO_FILE;
+
+
+/* The opaque type of streams.  This is the definition used elsewhere.  */
+typedef struct _IO_FILE FILE;
+
+
+
+
+
+
+/* The opaque type of streams.  This is the definition used elsewhere.  */
+typedef struct _IO_FILE __FILE;
+
+
+
+
+/* Copyright (C) 1991-1995,1997-2006,2007,2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Written by Per Bothner <bothner@cygnus.com>.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.
+
+   As a special exception, if you link the code in this file with
+   files compiled with a GNU compiler to produce an executable,
+   that does not cause the resulting executable to be covered by
+   the GNU Lesser General Public License.  This exception does not
+   however invalidate any other reasons why the executable file
+   might be covered by the GNU Lesser General Public License.
+   This exception applies to code released by its copyright holders
+   in files containing the exception.  */
+
+
+/* This file is needed by libio to define various configuration parameters.
+   These are always the same in the GNU C library.  */
+
+
+/* Define types for libio in terms of the standard internal type names.  */
+
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
+   Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
+/*
+ * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ */
+
+/* Any one of these symbols __need_* means that GNU libc
+   wants us just to define one data type.  So don't define
+   the symbols that indicate this file's entire job has been done.  */
+
+/* This avoids lossage on SunOS but only if stdtypes.h comes first.
+   There's no way to win with the other order!  Sun lossage.  */
+
+/* On 4.3bsd-net2, make sure ansi.h is included, so we have
+   one less case to deal with in the following.  */
+/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
+
+/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+   defined if the corresponding type is *not* defined.
+   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
+
+/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+   Just ignore it.  */
+
+/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
+   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+   not defined, and so that defining this macro defines _GCC_SIZE_T.
+   If we find that the macros are still defined at this point, we must
+   invoke them so that the type is defined as expected.  */
+
+/* In case nobody has defined these types, but we aren't running under
+   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+   parts of GCC is compiled by an older compiler, that actually
+   include gstddef.h, such as collect2.  */
+
+/* Signed type of difference of two pointers.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+/* Unsigned type of `sizeof' something.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+
+/* Wide character type.
+   Locale-writers should change this as necessary to
+   be big enough to hold unique values not between 0 and 127,
+   and not (wchar_t) -1, for each defined multibyte character.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+
+/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+    are already defined.  */
+/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
+
+
+/* A null pointer constant.  */
+
+
+
+/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *      ISO C99 Standard: 7.24
+ *	Extended multibyte and wide character utilities	<wchar.h>
+ */
+
+
+
+
+/* Conversion state information.  */
+typedef struct
+{
+  int __count;
+  union
+  {
+    unsigned int __wch;
+    char __wchb[4];
+  } __value;		/* Value so far.  */
+} __mbstate_t;
+
+
+/* The rest of the file is only used if used if __need_mbstate_t is not
+   defined.  */
+
+
+/* Undefined all __need_* constants in case we are included to get those
+   constants but the whole file was already read.  */
+typedef struct
+{
+  __off_t __pos;
+  __mbstate_t __state;
+} _G_fpos_t;
+typedef struct
+{
+  __off64_t __pos;
+  __mbstate_t __state;
+} _G_fpos64_t;
+
+typedef int _G_int16_t __attribute__ ((__mode__ (__HI__)));
+typedef int _G_int32_t __attribute__ ((__mode__ (__SI__)));
+typedef unsigned int _G_uint16_t __attribute__ ((__mode__ (__HI__)));
+typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
+
+
+
+/* These library features are always available in the GNU C library.  */
+
+
+
+
+/* This is defined by <bits/stat.h> if `st_blksize' exists.  */
+
+
+/* These are the vtbl details for ELF.  */
+
+
+
+/* ALL of these should be defined in _G_config.h */
+
+/* This define avoids name pollution if we're using GNU stdarg.h */
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2009 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
+/*
+ * ISO C Standard:  7.15  Variable arguments  <stdarg.h>
+ */
+
+
+/* Define __gnuc_va_list.  */
+
+typedef __builtin_va_list __gnuc_va_list;
+
+/* Define the standard macros for the user,
+   if this invocation was from the user program.  */
+
+
+
+/* For backward compatibility */
+
+
+
+
+/* Magic numbers and bits for the _flags field.
+   The magic numbers use the high-order bits of _flags;
+   the remaining bits are available for variable flags.
+   Note: The magic numbers must all be negative if stdio
+   emulation is desired. */
+
+
+
+/* These are "formatting flags" matching the iostream fmtflags enum values. */
+
+
+struct _IO_jump_t;  struct _IO_FILE;
+
+/* Handle lock.  */
+typedef void _IO_lock_t;
+
+
+/* A streammarker remembers a position in a buffer. */
+
+struct _IO_marker {
+  struct _IO_marker *_next;
+  struct _IO_FILE *_sbuf;
+  /* If _pos >= 0
+ it points to _buf->Gbase()+_pos. FIXME comment */
+  /* if _pos < 0, it points to _buf->eBptr()+_pos. FIXME comment */
+  int _pos;
+};
+
+/* This is the structure from the libstdc++ codecvt class.  */
+enum __codecvt_result
+{
+  __codecvt_ok,
+  __codecvt_partial,
+  __codecvt_error,
+  __codecvt_noconv
+};
+
+
+struct _IO_FILE {
+  int _flags;		/* High-order word is _IO_MAGIC; rest is flags. */
+
+  /* The following pointers correspond to the C++ streambuf protocol. */
+  /* Note:  Tk uses the _IO_read_ptr and _IO_read_end fields directly. */
+  char* _IO_read_ptr;	/* Current read pointer */
+  char* _IO_read_end;	/* End of get area. */
+  char* _IO_read_base;	/* Start of putback+get area. */
+  char* _IO_write_base;	/* Start of put area. */
+  char* _IO_write_ptr;	/* Current put pointer. */
+  char* _IO_write_end;	/* End of put area. */
+  char* _IO_buf_base;	/* Start of reserve area. */
+  char* _IO_buf_end;	/* End of reserve area. */
+  /* The following fields are used to support backing up and undo. */
+  char *_IO_save_base; /* Pointer to start of non-current get area. */
+  char *_IO_backup_base;  /* Pointer to first valid character of backup area */
+  char *_IO_save_end; /* Pointer to end of non-current get area. */
+
+  struct _IO_marker *_markers;
+
+  struct _IO_FILE *_chain;
+
+  int _fileno;
+  int _flags2;
+  __off_t _old_offset; /* This used to be _offset but it's too small.  */
+
+  /* 1+column number of pbase(); 0 is unknown. */
+  unsigned short _cur_column;
+  signed char _vtable_offset;
+  char _shortbuf[1];
+
+  /*  char* _save_gptr;  char* _save_egptr; */
+
+  _IO_lock_t *_lock;
+  __off64_t _offset;
+  void *__pad1;
+  void *__pad2;
+  void *__pad3;
+  void *__pad4;
+  size_t __pad5;
+  int _mode;
+  /* Make sure we don't get into trouble again.  */
+  char _unused2[15 * sizeof (int) - 4 * sizeof (void *) - sizeof (size_t)];
+};
+
+
+struct _IO_FILE_plus;
+
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern struct _IO_FILE_plus _IO_2_1_stdout_;
+extern struct _IO_FILE_plus _IO_2_1_stderr_;
+
+
+/* Functions to do I/O and file management for a stream.  */
+
+/* Read NBYTES bytes from COOKIE into a buffer pointed to by BUF.
+   Return number of bytes read.  */
+typedef __ssize_t __io_read_fn (void *__cookie, char *__buf, size_t __nbytes);
+
+/* Write N bytes pointed to by BUF to COOKIE.  Write all N bytes
+   unless there is an error.  Return number of bytes written, or -1 if
+   there is an error without writing anything.  If the file has been
+   opened for append (__mode.__append set), then set the file pointer
+   to the end of the file and then do the write; if not, just write at
+   the current file pointer.  */
+typedef __ssize_t __io_write_fn (void *__cookie, __const char *__buf,
+				 size_t __n);
+
+/* Move COOKIE's file position to *POS bytes from the
+   beginning of the file (if W is SEEK_SET),
+   the current position (if W is SEEK_CUR),
+   or the end of the file (if W is SEEK_END).
+   Set *POS to the new file position.
+   Returns zero if successful, nonzero if not.  */
+typedef int __io_seek_fn (void *__cookie, __off64_t *__pos, int __w);
+
+/* Close COOKIE.  */
+typedef int __io_close_fn (void *__cookie);
+
+
+/* User-visible names for the above.  */
+typedef __io_read_fn cookie_read_function_t;
+typedef __io_write_fn cookie_write_function_t;
+typedef __io_seek_fn cookie_seek_function_t;
+typedef __io_close_fn cookie_close_function_t;
+
+/* The structure with the cookie function pointers.  */
+typedef struct
+{
+  __io_read_fn *read;		/* Read bytes.  */
+  __io_write_fn *write;		/* Write bytes.  */
+  __io_seek_fn *seek;		/* Seek/tell file position.  */
+  __io_close_fn *close;		/* Close file.  */
+} _IO_cookie_io_functions_t;
+typedef _IO_cookie_io_functions_t cookie_io_functions_t;
+
+struct _IO_cookie_file;
+
+/* Initialize one of those.  */
+extern void _IO_cookie_init (struct _IO_cookie_file *__cfile, int __read_write,
+			     void *__cookie, _IO_cookie_io_functions_t __fns);
+
+
+extern "C" {
+
+extern int __underflow (_IO_FILE *);
+extern int __uflow (_IO_FILE *);
+extern int __overflow (_IO_FILE *, int);
+
+
+
+
+
+extern int _IO_getc (_IO_FILE *__fp);
+extern int _IO_putc (int __c, _IO_FILE *__fp);
+extern int _IO_feof (_IO_FILE *__fp) throw ();
+extern int _IO_ferror (_IO_FILE *__fp) throw ();
+
+extern int _IO_peekc_locked (_IO_FILE *__fp);
+
+/* This one is for Emacs. */
+
+extern void _IO_flockfile (_IO_FILE *) throw ();
+extern void _IO_funlockfile (_IO_FILE *) throw ();
+extern int _IO_ftrylockfile (_IO_FILE *) throw ();
+
+
+extern int _IO_vfscanf (_IO_FILE * __restrict, const char * __restrict,
+			__gnuc_va_list, int *__restrict);
+extern int _IO_vfprintf (_IO_FILE *__restrict, const char *__restrict,
+			 __gnuc_va_list);
+extern __ssize_t _IO_padn (_IO_FILE *, int, __ssize_t);
+extern size_t _IO_sgetn (_IO_FILE *, void *, size_t);
+
+extern __off64_t _IO_seekoff (_IO_FILE *, __off64_t, int, int);
+extern __off64_t _IO_seekpos (_IO_FILE *, __off64_t, int);
+
+extern void _IO_free_backup_area (_IO_FILE *) throw ();
+
+
+
+}
+
+
+typedef __gnuc_va_list va_list;
+
+/* The type of the second argument to `fgetpos' and `fsetpos'.  */
+
+typedef _G_fpos_t fpos_t;
+
+typedef _G_fpos64_t fpos64_t;
+
+/* The possibilities for the third argument to `setvbuf'.  */
+
+
+/* Default buffer size.  */
+
+
+/* End of file character.
+   Some things throughout the library rely on this being -1.  */
+
+
+/* The possibilities for the third argument to `fseek'.
+   These values should not be changed.  */
+
+
+/* Default path prefix for `tempnam' and `tmpnam'.  */
+
+
+/* Get the values:
+   L_tmpnam	How long an array of chars must be to be passed to `tmpnam'.
+   TMP_MAX	The minimum number of unique filenames generated by tmpnam
+   		(and tempnam when it uses tmpnam's name space),
+		or tempnam (the two are separate).
+   L_ctermid	How long an array to pass to `ctermid'.
+   L_cuserid	How long an array to pass to `cuserid'.
+   FOPEN_MAX	Minimum number of files that can be open at once.
+   FILENAME_MAX	Maximum length of a filename.  */
+/* Copyright (C) 1994, 1997, 1998, 1999, 2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+
+
+
+
+
+
+/* Standard streams.  */
+extern struct _IO_FILE *stdin;		/* Standard input stream.  */
+extern struct _IO_FILE *stdout;		/* Standard output stream.  */
+extern struct _IO_FILE *stderr;		/* Standard error output stream.  */
+/* C89/C99 say they're macros.  Make them happy.  */
+
+
+/* Remove file FILENAME.  */
+extern int remove (__const char *__filename) throw ();
+/* Rename file OLD to NEW.  */
+extern int rename (__const char *__old, __const char *__new) throw ();
+
+
+/* Rename file OLD relative to OLDFD to NEW relative to NEWFD.  */
+extern int renameat (int __oldfd, __const char *__old, int __newfd,
+		     __const char *__new) throw ();
+
+
+/* Create a temporary file and open it read/write.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern FILE *tmpfile (void) ;
+
+extern FILE *tmpfile64 (void) ;
+
+/* Generate a temporary filename.  */
+extern char *tmpnam (char *__s) throw () ;
+
+
+/* This is the reentrant variant of `tmpnam'.  The only difference is
+   that it does not allow S to be NULL.  */
+extern char *tmpnam_r (char *__s) throw () ;
+
+
+/* Generate a unique temporary filename using up to five characters of PFX
+   if it is not NULL.  The directory to put this file in is searched for
+   as follows: First the environment variable "TMPDIR" is checked.
+   If it contains the name of a writable directory, that directory is used.
+   If not and if DIR is not NULL, that value is checked.  If that fails,
+   P_tmpdir is tried and finally "/tmp".  The storage for the filename
+   is allocated by `malloc'.  */
+extern char *tempnam (__const char *__dir, __const char *__pfx)
+     throw () __attribute__ ((__malloc__)) ;
+
+
+
+/* Close STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fclose (FILE *__stream);
+/* Flush STREAM, or all streams if STREAM is NULL.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fflush (FILE *__stream);
+
+
+/* Faster versions when locking is not required.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int fflush_unlocked (FILE *__stream);
+
+/* Close all streams.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int fcloseall (void);
+
+
+
+/* Open a file and create a new stream for it.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern FILE *fopen (__const char *__restrict __filename,
+		    __const char *__restrict __modes) ;
+/* Open a file, replacing an existing stream with it.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern FILE *freopen (__const char *__restrict __filename,
+		      __const char *__restrict __modes,
+		      FILE *__restrict __stream) ;
+
+extern FILE *fopen64 (__const char *__restrict __filename,
+		      __const char *__restrict __modes) ;
+extern FILE *freopen64 (__const char *__restrict __filename,
+			__const char *__restrict __modes,
+			FILE *__restrict __stream) ;
+
+/* Create a new stream that refers to an existing system file descriptor.  */
+extern FILE *fdopen (int __fd, __const char *__modes) throw () ;
+
+/* Create a new stream that refers to the given magic cookie,
+   and uses the given functions for input and output.  */
+extern FILE *fopencookie (void *__restrict __magic_cookie,
+			  __const char *__restrict __modes,
+			  _IO_cookie_io_functions_t __io_funcs) throw () ;
+
+/* Create a new stream that refers to a memory buffer.  */
+extern FILE *fmemopen (void *__s, size_t __len, __const char *__modes)
+  throw () ;
+
+/* Open a stream that writes into a malloc'd buffer that is expanded as
+   necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
+   and the number of characters written on fflush or fclose.  */
+extern FILE *open_memstream (char **__bufloc, size_t *__sizeloc) throw () ;
+
+
+
+/* If BUF is NULL, make STREAM unbuffered.
+   Else make it use buffer BUF, of size BUFSIZ.  */
+extern void setbuf (FILE *__restrict __stream, char *__restrict __buf) throw ();
+/* Make STREAM use buffering mode MODE.
+   If BUF is not NULL, use N bytes of it for buffering;
+   else allocate an internal buffer N bytes long.  */
+extern int setvbuf (FILE *__restrict __stream, char *__restrict __buf,
+		    int __modes, size_t __n) throw ();
+
+
+/* If BUF is NULL, make STREAM unbuffered.
+   Else make it use SIZE bytes of BUF for buffering.  */
+extern void setbuffer (FILE *__restrict __stream, char *__restrict __buf,
+		       size_t __size) throw ();
+
+/* Make STREAM line-buffered.  */
+extern void setlinebuf (FILE *__stream) throw ();
+
+
+
+/* Write formatted output to STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fprintf (FILE *__restrict __stream,
+		    __const char *__restrict __format, ...);
+/* Write formatted output to stdout.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int printf (__const char *__restrict __format, ...);
+/* Write formatted output to S.  */
+extern int sprintf (char *__restrict __s,
+		    __const char *__restrict __format, ...) throw ();
+
+/* Write formatted output to S from argument list ARG.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int vfprintf (FILE *__restrict __s, __const char *__restrict __format,
+		     __gnuc_va_list __arg);
+/* Write formatted output to stdout from argument list ARG.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int vprintf (__const char *__restrict __format, __gnuc_va_list __arg);
+/* Write formatted output to S from argument list ARG.  */
+extern int vsprintf (char *__restrict __s, __const char *__restrict __format,
+		     __gnuc_va_list __arg) throw ();
+
+
+
+/* Maximum chars of output to write in MAXLEN.  */
+extern int snprintf (char *__restrict __s, size_t __maxlen,
+		     __const char *__restrict __format, ...)
+     throw () __attribute__ ((__format__ (__printf__, 3, 4)));
+
+extern int vsnprintf (char *__restrict __s, size_t __maxlen,
+		      __const char *__restrict __format, __gnuc_va_list __arg)
+     throw () __attribute__ ((__format__ (__printf__, 3, 0)));
+
+
+/* Write formatted output to a string dynamically allocated with `malloc'.
+   Store the address of the string in *PTR.  */
+extern int vasprintf (char **__restrict __ptr, __const char *__restrict __f,
+		      __gnuc_va_list __arg)
+     throw () __attribute__ ((__format__ (__printf__, 2, 0))) ;
+extern int __asprintf (char **__restrict __ptr,
+		       __const char *__restrict __fmt, ...)
+     throw () __attribute__ ((__format__ (__printf__, 2, 3))) ;
+extern int asprintf (char **__restrict __ptr,
+		     __const char *__restrict __fmt, ...)
+     throw () __attribute__ ((__format__ (__printf__, 2, 3))) ;
+
+/* Write formatted output to a file descriptor.
+
+   These functions are not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation they are cancellation points and
+   therefore not marked with __THROW.  */
+extern int vdprintf (int __fd, __const char *__restrict __fmt,
+		     __gnuc_va_list __arg)
+     __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int dprintf (int __fd, __const char *__restrict __fmt, ...)
+     __attribute__ ((__format__ (__printf__, 2, 3)));
+
+
+
+/* Read formatted input from STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fscanf (FILE *__restrict __stream,
+		   __const char *__restrict __format, ...) ;
+/* Read formatted input from stdin.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int scanf (__const char *__restrict __format, ...) ;
+/* Read formatted input from S.  */
+extern int sscanf (__const char *__restrict __s,
+		   __const char *__restrict __format, ...) throw ();
+
+
+
+
+
+/* Read formatted input from S into argument list ARG.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int vfscanf (FILE *__restrict __s, __const char *__restrict __format,
+		    __gnuc_va_list __arg)
+     __attribute__ ((__format__ (__scanf__, 2, 0))) ;
+
+/* Read formatted input from stdin into argument list ARG.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int vscanf (__const char *__restrict __format, __gnuc_va_list __arg)
+     __attribute__ ((__format__ (__scanf__, 1, 0))) ;
+
+/* Read formatted input from S into argument list ARG.  */
+extern int vsscanf (__const char *__restrict __s,
+		    __const char *__restrict __format, __gnuc_va_list __arg)
+     throw () __attribute__ ((__format__ (__scanf__, 2, 0)));
+
+
+
+
+
+
+/* Read a character from STREAM.
+
+   These functions are possible cancellation points and therefore not
+   marked with __THROW.  */
+extern int fgetc (FILE *__stream);
+extern int getc (FILE *__stream);
+
+/* Read a character from stdin.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int getchar (void);
+
+
+/* The C standard explicitly says this is a macro, so we always do the
+   optimization for it.  */
+
+/* These are defined in POSIX.1:1996.
+
+   These functions are possible cancellation points and therefore not
+   marked with __THROW.  */
+extern int getc_unlocked (FILE *__stream);
+extern int getchar_unlocked (void);
+
+/* Faster version when locking is not necessary.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int fgetc_unlocked (FILE *__stream);
+
+
+
+/* Write a character to STREAM.
+
+   These functions are possible cancellation points and therefore not
+   marked with __THROW.
+
+   These functions is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fputc (int __c, FILE *__stream);
+extern int putc (int __c, FILE *__stream);
+
+/* Write a character to stdout.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int putchar (int __c);
+
+
+/* The C standard explicitly says this can be a macro,
+   so we always do the optimization for it.  */
+
+/* Faster version when locking is not necessary.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int fputc_unlocked (int __c, FILE *__stream);
+
+/* These are defined in POSIX.1:1996.
+
+   These functions are possible cancellation points and therefore not
+   marked with __THROW.  */
+extern int putc_unlocked (int __c, FILE *__stream);
+extern int putchar_unlocked (int __c);
+
+
+/* Get a word (int) from STREAM.  */
+extern int getw (FILE *__stream);
+
+/* Write a word (int) to STREAM.  */
+extern int putw (int __w, FILE *__stream);
+
+
+
+/* Get a newline-terminated string of finite length from STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
+     ;
+
+/* Get a newline-terminated string from stdin, removing the newline.
+   DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern char *gets (char *__s) ;
+
+
+/* This function does the same as `fgets' but does not lock the stream.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern char *fgets_unlocked (char *__restrict __s, int __n,
+			     FILE *__restrict __stream) ;
+
+
+/* Read up to (and including) a DELIMITER from STREAM into *LINEPTR
+   (and null-terminate it). *LINEPTR is a pointer returned from malloc (or
+   NULL), pointing to *N characters of space.  It is realloc'd as
+   necessary.  Returns the number of characters read (not including the
+   null terminator), or -1 on error or EOF.
+
+   These functions are not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation they are cancellation points and
+   therefore not marked with __THROW.  */
+extern __ssize_t __getdelim (char **__restrict __lineptr,
+			       size_t *__restrict __n, int __delimiter,
+			       FILE *__restrict __stream) ;
+extern __ssize_t getdelim (char **__restrict __lineptr,
+			     size_t *__restrict __n, int __delimiter,
+			     FILE *__restrict __stream) ;
+
+/* Like `getdelim', but reads up to a newline.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern __ssize_t getline (char **__restrict __lineptr,
+			    size_t *__restrict __n,
+			    FILE *__restrict __stream) ;
+
+
+
+/* Write a string to STREAM.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern int fputs (__const char *__restrict __s, FILE *__restrict __stream);
+
+/* Write a string, followed by a newline, to stdout.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern int puts (__const char *__s);
+
+
+/* Push a character back onto the input buffer of STREAM.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern int ungetc (int __c, FILE *__stream);
+
+
+/* Read chunks of generic data from STREAM.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern size_t fread (void *__restrict __ptr, size_t __size,
+		     size_t __n, FILE *__restrict __stream) ;
+/* Write chunks of generic data to STREAM.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern size_t fwrite (__const void *__restrict __ptr, size_t __size,
+		      size_t __n, FILE *__restrict __s);
+
+
+/* This function does the same as `fputs' but does not lock the stream.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int fputs_unlocked (__const char *__restrict __s,
+			   FILE *__restrict __stream);
+
+/* Faster versions when locking is not necessary.
+
+   These functions are not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation they are cancellation points and
+   therefore not marked with __THROW.  */
+extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
+			      size_t __n, FILE *__restrict __stream) ;
+extern size_t fwrite_unlocked (__const void *__restrict __ptr, size_t __size,
+			       size_t __n, FILE *__restrict __stream);
+
+
+
+/* Seek to a certain position on STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fseek (FILE *__stream, long int __off, int __whence);
+/* Return the current position of STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern long int ftell (FILE *__stream) ;
+/* Rewind to the beginning of STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern void rewind (FILE *__stream);
+
+
+/* The Single Unix Specification, Version 2, specifies an alternative,
+   more adequate interface for the two functions above which deal with
+   file offset.  `long int' is not the right type.  These definitions
+   are originally defined in the Large File Support API.  */
+
+/* Seek to a certain position on STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fseeko (FILE *__stream, __off_t __off, int __whence);
+/* Return the current position of STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern __off_t ftello (FILE *__stream) ;
+
+
+/* Get STREAM's position.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fgetpos (FILE *__restrict __stream, fpos_t *__restrict __pos);
+/* Set STREAM's position.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fsetpos (FILE *__stream, __const fpos_t *__pos);
+
+
+extern int fseeko64 (FILE *__stream, __off64_t __off, int __whence);
+extern __off64_t ftello64 (FILE *__stream) ;
+extern int fgetpos64 (FILE *__restrict __stream, fpos64_t *__restrict __pos);
+extern int fsetpos64 (FILE *__stream, __const fpos64_t *__pos);
+
+
+/* Clear the error and EOF indicators for STREAM.  */
+extern void clearerr (FILE *__stream) throw ();
+/* Return the EOF indicator for STREAM.  */
+extern int feof (FILE *__stream) throw () ;
+/* Return the error indicator for STREAM.  */
+extern int ferror (FILE *__stream) throw () ;
+
+
+/* Faster versions when locking is not required.  */
+extern void clearerr_unlocked (FILE *__stream) throw ();
+extern int feof_unlocked (FILE *__stream) throw () ;
+extern int ferror_unlocked (FILE *__stream) throw () ;
+
+
+
+/* Print a message describing the meaning of the value of errno.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern void perror (__const char *__s);
+
+
+/* Provide the declarations for `sys_errlist' and `sys_nerr' if they
+   are available on this system.  Even if available, these variables
+   should not be used directly.  The `strerror' function provides
+   all the necessary functionality.  */
+/* Declare sys_errlist and sys_nerr, or don't.  Compatibility (do) version.
+   Copyright (C) 2002 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+
+/* sys_errlist and sys_nerr are deprecated.  Use strerror instead.  */
+
+extern int sys_nerr;
+extern __const char *__const sys_errlist[];
+extern int _sys_nerr;
+extern __const char *__const _sys_errlist[];
+
+
+/* Return the system file descriptor for STREAM.  */
+extern int fileno (FILE *__stream) throw () ;
+
+/* Faster version when locking is not required.  */
+extern int fileno_unlocked (FILE *__stream) throw () ;
+
+
+/* Create a new stream connected to a pipe running the given command.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern FILE *popen (__const char *__command, __const char *__modes) ;
+
+/* Close a stream opened by popen and return the status of its child.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int pclose (FILE *__stream);
+
+
+/* Return the name of the controlling terminal.  */
+extern char *ctermid (char *__s) throw ();
+
+
+/* Return the name of the current user.  */
+extern char *cuserid (char *__s);
+
+
+struct obstack;			/* See <obstack.h>.  */
+
+/* Write formatted output to an obstack.  */
+extern int obstack_printf (struct obstack *__restrict __obstack,
+			   __const char *__restrict __format, ...)
+     throw () __attribute__ ((__format__ (__printf__, 2, 3)));
+extern int obstack_vprintf (struct obstack *__restrict __obstack,
+			    __const char *__restrict __format,
+			    __gnuc_va_list __args)
+     throw () __attribute__ ((__format__ (__printf__, 2, 0)));
+
+
+/* These are defined in POSIX.1:1996.  */
+
+/* Acquire ownership of STREAM.  */
+extern void flockfile (FILE *__stream) throw ();
+
+/* Try to acquire ownership of STREAM but do not block if it is not
+   possible.  */
+extern int ftrylockfile (FILE *__stream) throw () ;
+
+/* Relinquish the ownership granted for STREAM.  */
+extern void funlockfile (FILE *__stream) throw ();
+
+
+/* If we are compiling with optimizing read this file.  It contains
+   several optimizing inline functions and macros.  */
+
+}
+
+
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2007
+   Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	ISO C99 Standard: 7.2 Diagnostics	<assert.h>
+ */
+
+
+
+
+/* void assert (int expression);
+
+   If NDEBUG is defined, do nothing.
+   If not, and EXPRESSION is zero, print an error message and abort.  */
+
+
+
+/* void assert_perror (int errnum);
+
+   If NDEBUG is defined, do nothing.  If not, and ERRNUM is not zero, print an
+   error message with the error text for ERRNUM and abort.
+   (This is a GNU extension.) */
+
+
+/*
+ **********************************************************************************
+ *  Copyright (C) 2010  Massachusetts Institute of Technology
+ *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
+ * 		                Charles E. Leiserson <cel@mit.edu>
+ * 	 
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *   Suggestsions:                  yuantang@csail.mit.edu
+ *   Bugs:                          yuantang@csail.mit.edu
+ *
+ *********************************************************************************
+ */
+
+
+/*
+ **********************************************************************************
+ *  Copyright (C) 2010  Massachusetts Institute of Technology
+ *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
+ * 		                Charles E. Leiserson <cel@mit.edu>
+ * 	 
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *   Suggestsions:                  yuantang@csail.mit.edu
+ *   Bugs:                          yuantang@csail.mit.edu
+ *
+ *********************************************************************************
+ */
+
+
+/* Copyright (C) 1991-1994,1996-2003,2005,2006,2009
+	Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+
+
+/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	ISO C99 Standard: 7.23 Date and time	<time.h>
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+/* System-dependent timing definitions.  Generic version.
+   Copyright (C) 1996,1997,1999-2002,2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ * Never include this file directly; use <time.h> instead.
+ */
+
+
+
+
+
+
+extern "C" {
+
+/* Macros for converting between `struct timeval' and `struct timespec'.  */
+
+
+/* Structure crudely representing a timezone.
+   This is obsolete and should never be used.  */
+struct timezone
+  {
+    int tz_minuteswest;		/* Minutes west of GMT.  */
+    int tz_dsttime;		/* Nonzero if DST is ever in effect.  */
+  };
+
+typedef struct timezone *__restrict __timezone_ptr_t;
+
+/* Get the current time of day and timezone information,
+   putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
+   Returns 0 on success, -1 on errors.
+   NOTE: This form of timezone information is obsolete.
+   Use the functions and variables declared in <time.h> instead.  */
+extern int gettimeofday (struct timeval *__restrict __tv,
+			 __timezone_ptr_t __tz) throw () __attribute__ ((__nonnull__ (1)));
+
+/* Set the current time of day and timezone information.
+   This call is restricted to the super-user.  */
+extern int settimeofday (__const struct timeval *__tv,
+			 __const struct timezone *__tz)
+     throw () __attribute__ ((__nonnull__ (1)));
+
+/* Adjust the current time of day by the amount in DELTA.
+   If OLDDELTA is not NULL, it is filled in with the amount
+   of time adjustment remaining to be done from the last `adjtime' call.
+   This call is restricted to the super-user.  */
+extern int adjtime (__const struct timeval *__delta,
+		    struct timeval *__olddelta) throw ();
+
+
+/* Values for the first argument to `getitimer' and `setitimer'.  */
+enum __itimer_which
+  {
+    /* Timers run in real time.  */
+    ITIMER_REAL = 0,
+    /* Timers run only when the process is executing.  */
+    ITIMER_VIRTUAL = 1,
+    /* Timers run when the process is executing and when
+       the system is executing on behalf of the process.  */
+    ITIMER_PROF = 2
+  };
+
+/* Type of the second argument to `getitimer' and
+   the second and third arguments `setitimer'.  */
+struct itimerval
+  {
+    /* Value to put into `it_value' when the timer expires.  */
+    struct timeval it_interval;
+    /* Time to the next timer expiration.  */
+    struct timeval it_value;
+  };
+
+typedef int __itimer_which_t;
+
+/* Set *VALUE to the current setting of timer WHICH.
+   Return 0 on success, -1 on errors.  */
+extern int getitimer (__itimer_which_t __which,
+		      struct itimerval *__value) throw ();
+
+/* Set the timer WHICH to *NEW.  If OLD is not NULL,
+   set *OLD to the old value of timer WHICH.
+   Returns 0 on success, -1 on errors.  */
+extern int setitimer (__itimer_which_t __which,
+		      __const struct itimerval *__restrict __new,
+		      struct itimerval *__restrict __old) throw ();
+
+/* Change the access time of FILE to TVP[0] and the modification time of
+   FILE to TVP[1].  If TVP is a null pointer, use the current time instead.
+   Returns 0 on success, -1 on errors.  */
+extern int utimes (__const char *__file, __const struct timeval __tvp[2])
+     throw () __attribute__ ((__nonnull__ (1)));
+
+/* Same as `utimes', but does not follow symbolic links.  */
+extern int lutimes (__const char *__file, __const struct timeval __tvp[2])
+     throw () __attribute__ ((__nonnull__ (1)));
+
+/* Same as `utimes', but takes an open file descriptor instead of a name.  */
+extern int futimes (int __fd, __const struct timeval __tvp[2]) throw ();
+
+/* Change the access time of FILE relative to FD to TVP[0] and the
+   modification time of FILE to TVP[1].  If TVP is a null pointer, use
+   the current time instead.  Returns 0 on success, -1 on errors.  */
+extern int futimesat (int __fd, __const char *__file,
+		      __const struct timeval __tvp[2]) throw ();
+
+
+/* Convenience macros for operations on timevals.
+   NOTE: `timercmp' does not work for >= or <=.  */
+
+}
+
+// -*- C++ -*- forwarding header.
+#pragma GCC system_header
+
+// Predefined symbols and macros -*- C++ -*-
+#pragma GCC system_header
+
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
+   Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
+/*
+ * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ */
+
+/* Any one of these symbols __need_* means that GNU libc
+   wants us just to define one data type.  So don't define
+   the symbols that indicate this file's entire job has been done.  */
+/* snaroff@next.com says the NeXT needs this.  */
+/* Irix 5.1 needs this.  */
+
+/* This avoids lossage on SunOS but only if stdtypes.h comes first.
+   There's no way to win with the other order!  Sun lossage.  */
+
+/* On 4.3bsd-net2, make sure ansi.h is included, so we have
+   one less case to deal with in the following.  */
+/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
+
+/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+   defined if the corresponding type is *not* defined.
+   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
+
+/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+   Just ignore it.  */
+
+/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
+   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+   not defined, and so that defining this macro defines _GCC_SIZE_T.
+   If we find that the macros are still defined at this point, we must
+   invoke them so that the type is defined as expected.  */
+
+/* In case nobody has defined these types, but we aren't running under
+   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+   parts of GCC is compiled by an older compiler, that actually
+   include gstddef.h, such as collect2.  */
+
+/* Signed type of difference of two pointers.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+typedef long ptrdiff_t;
+
+/* If this symbol has done its job, get rid of it.  */
+
+
+/* Unsigned type of `sizeof' something.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+
+/* Wide character type.
+   Locale-writers should change this as necessary to
+   be big enough to hold unique values not between 0 and 127,
+   and not (wchar_t) -1, for each defined multibyte character.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+
+/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+    are already defined.  */
+/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
+
+
+/* A null pointer constant.  */
+
+
+
+/* Offset of member MEMBER in a struct of type TYPE. */
+
+
+
+
+namespace std __attribute__ ((__visibility__ ("default"))) {
+
+  using ::ptrdiff_t;
+  using ::size_t;
+
+}
+
+
+
+// Get rid of those macros defined in <stdio.h> in lieu of real functions.
+namespace std __attribute__ ((__visibility__ ("default"))) {
+
+  using ::FILE;
+  using ::fpos_t;
+
+  using ::clearerr;
+  using ::fclose;
+  using ::feof;
+  using ::ferror;
+  using ::fflush;
+  using ::fgetc;
+  using ::fgetpos;
+  using ::fgets;
+  using ::fopen;
+  using ::fprintf;
+  using ::fputc;
+  using ::fputs;
+  using ::fread;
+  using ::freopen;
+  using ::fscanf;
+  using ::fseek;
+  using ::fsetpos;
+  using ::ftell;
+  using ::fwrite;
+  using ::getc;
+  using ::getchar;
+  using ::gets;
+  using ::perror;
+  using ::printf;
+  using ::putc;
+  using ::putchar;
+  using ::puts;
+  using ::remove;
+  using ::rename;
+  using ::rewind;
+  using ::scanf;
+  using ::setbuf;
+  using ::setvbuf;
+  using ::sprintf;
+  using ::sscanf;
+  using ::tmpfile;
+  using ::tmpnam;
+  using ::ungetc;
+  using ::vfprintf;
+  using ::vprintf;
+  using ::vsprintf;
+
+}
+
+
+
+namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
+
+
+  using ::snprintf;
+  using ::vfscanf;
+  using ::vscanf;
+  using ::vsnprintf;
+  using ::vsscanf;
+
+}
+
+namespace std __attribute__ ((__visibility__ ("default"))) {
+
+  using ::__gnu_cxx::snprintf;
+  using ::__gnu_cxx::vfscanf;
+  using ::__gnu_cxx::vscanf;
+  using ::__gnu_cxx::vsnprintf;
+  using ::__gnu_cxx::vsscanf;
+
+}
+
+
+
+// -*- C++ -*- C forwarding header.
+#pragma GCC system_header
+
+// The  -*- C++ -*- type traits classes for internal use in libstdc++
+#pragma GCC system_header
+
+
+//
+namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
+
+  template<typename _Iterator, typename _Container>
+    class __normal_iterator;
+
+}
+
+namespace std __attribute__ ((__visibility__ ("default"))) {
+
+  struct __true_type { };
+  struct __false_type { };
+
+  template<bool>
+    struct __truth_type
+    { typedef __false_type __type; };
+
+  template<>
+    struct __truth_type<true>
+    { typedef __true_type __type; };
+
+  // N.B. The conversions to bool are needed due to the issue
+template<class _Sp, class _Tp>
+    struct __traitor
+    {
+      enum { __value = bool(_Sp::__value) || bool(_Tp::__value) };
+      typedef typename __truth_type<__value>::__type __type;
+    };
+
+  // Compare for equality of types.
+template<typename, typename>
+    struct __are_same
+    {
+      enum { __value = 0 };
+      typedef __false_type __type;
+    };
+
+  template<typename _Tp>
+    struct __are_same<_Tp, _Tp>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  // Holds if the template-argument is a void type.
+template<typename _Tp>
+    struct __is_void
+    {
+      enum { __value = 0 };
+      typedef __false_type __type;
+    };
+
+  template<>
+    struct __is_void<void>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  //
+template<typename _Tp>
+    struct __is_integer
+    {
+      enum { __value = 0 };
+      typedef __false_type __type;
+    };
+
+  // Thirteen specializations (yes there are eleven standard integer
+template<>
+    struct __is_integer<bool>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<char>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<signed char>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<unsigned char>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<wchar_t>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+
+  template<>
+    struct __is_integer<short>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<unsigned short>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<int>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<unsigned int>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<long>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<unsigned long>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<long long>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_integer<unsigned long long>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  //
+template<typename _Tp>
+    struct __is_floating
+    {
+      enum { __value = 0 };
+      typedef __false_type __type;
+    };
+
+  // three specializations (float, double and 'long double')
+template<>
+    struct __is_floating<float>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_floating<double>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_floating<long double>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  //
+template<typename _Tp>
+    struct __is_pointer
+    {
+      enum { __value = 0 };
+      typedef __false_type __type;
+    };
+
+  template<typename _Tp>
+    struct __is_pointer<_Tp*>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  //
+template<typename _Tp>
+    struct __is_normal_iterator
+    {
+      enum { __value = 0 };
+      typedef __false_type __type;
+    };
+
+  template<typename _Iterator, typename _Container>
+    struct __is_normal_iterator< __gnu_cxx::__normal_iterator<_Iterator,
+							      _Container> >
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  //
+template<typename _Tp>
+    struct __is_arithmetic
+    : public __traitor<__is_integer<_Tp>, __is_floating<_Tp> >
+    { };
+
+  //
+template<typename _Tp>
+    struct __is_fundamental
+    : public __traitor<__is_void<_Tp>, __is_arithmetic<_Tp> >
+    { };
+
+  //
+template<typename _Tp>
+    struct __is_scalar
+    : public __traitor<__is_arithmetic<_Tp>, __is_pointer<_Tp> >
+    { };
+
+  //
+template<typename _Tp>
+    struct __is_char
+    {
+      enum { __value = 0 };
+      typedef __false_type __type;
+    };
+
+  template<>
+    struct __is_char<char>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_char<wchar_t>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<typename _Tp>
+    struct __is_byte
+    {
+      enum { __value = 0 };
+      typedef __false_type __type;
+    };
+
+  template<>
+    struct __is_byte<char>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_byte<signed char>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  template<>
+    struct __is_byte<unsigned char>
+    {
+      enum { __value = 1 };
+      typedef __true_type __type;
+    };
+
+  //
+template<typename _Tp>
+    struct __is_move_iterator
+    {
+      enum { __value = 0 };
+      typedef __false_type __type;
+    };
+
+
+}
+
+// -*- C++ -*-
+#pragma GCC system_header
+
+
+namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
+
+  // Define a nested type if some predicate holds.
+template<bool, typename>
+    struct __enable_if 
+    { };
+
+  template<typename _Tp>
+    struct __enable_if<true, _Tp>
+    { typedef _Tp __type; };
+
+
+  // Conditional expression for types. If true, first, if false, second.
+template<bool _Cond, typename _Iftrue, typename _Iffalse>
+    struct __conditional_type
+    { typedef _Iftrue __type; };
+
+  template<typename _Iftrue, typename _Iffalse>
+    struct __conditional_type<false, _Iftrue, _Iffalse>
+    { typedef _Iffalse __type; };
+
+
+  // Given an integral builtin type, return the corresponding unsigned type.
+template<typename _Tp>
+    struct __add_unsigned
+    { 
+    private:
+      typedef __enable_if<std::__is_integer<_Tp>::__value, _Tp> __if_type;
+      
+    public:
+      typedef typename __if_type::__type __type; 
+    };
+
+  template<>
+    struct __add_unsigned<char>
+    { typedef unsigned char __type; };
+
+  template<>
+    struct __add_unsigned<signed char>
+    { typedef unsigned char __type; };
+
+  template<>
+    struct __add_unsigned<short>
+    { typedef unsigned short __type; };
+
+  template<>
+    struct __add_unsigned<int>
+    { typedef unsigned int __type; };
+
+  template<>
+    struct __add_unsigned<long>
+    { typedef unsigned long __type; };
+
+  template<>
+    struct __add_unsigned<long long>
+    { typedef unsigned long long __type; };
+
+  // Declare but don't define.
+template<>
+    struct __add_unsigned<bool>;
+
+  template<>
+    struct __add_unsigned<wchar_t>;
+
+
+  // Given an integral builtin type, return the corresponding signed type.
+template<typename _Tp>
+    struct __remove_unsigned
+    { 
+    private:
+      typedef __enable_if<std::__is_integer<_Tp>::__value, _Tp> __if_type;
+      
+    public:
+      typedef typename __if_type::__type __type; 
+    };
+
+  template<>
+    struct __remove_unsigned<char>
+    { typedef signed char __type; };
+
+  template<>
+    struct __remove_unsigned<unsigned char>
+    { typedef signed char __type; };
+
+  template<>
+    struct __remove_unsigned<unsigned short>
+    { typedef short __type; };
+
+  template<>
+    struct __remove_unsigned<unsigned int>
+    { typedef int __type; };
+
+  template<>
+    struct __remove_unsigned<unsigned long>
+    { typedef long __type; };
+
+  template<>
+    struct __remove_unsigned<unsigned long long>
+    { typedef long long __type; };
+
+  // Declare but don't define.
+template<>
+    struct __remove_unsigned<bool>;
+
+  template<>
+    struct __remove_unsigned<wchar_t>;
+
+
+  // For use in string and vstring.
+template<typename _Type>
+    inline bool
+    __is_null_pointer(_Type* __ptr)
+    { return __ptr == 0; }
+
+  template<typename _Type>
+    inline bool
+    __is_null_pointer(_Type)
+    { return false; }
+
+
+  // For complex and cmath
+template<typename _Tp, bool = std::__is_integer<_Tp>::__value>
+    struct __promote
+    { typedef double __type; };
+
+  template<typename _Tp>
+    struct __promote<_Tp, false>
+    { typedef _Tp __type; };
+
+  template<typename _Tp, typename _Up>
+    struct __promote_2
+    {
+    private:
+      typedef typename __promote<_Tp>::__type __type1;
+      typedef typename __promote<_Up>::__type __type2;
+
+    public:
+      typedef __typeof__(__type1() + __type2()) __type;
+    };
+
+  template<typename _Tp, typename _Up, typename _Vp>
+    struct __promote_3
+    {
+    private:
+      typedef typename __promote<_Tp>::__type __type1;
+      typedef typename __promote<_Up>::__type __type2;
+      typedef typename __promote<_Vp>::__type __type3;
+
+    public:
+      typedef __typeof__(__type1() + __type2() + __type3()) __type;
+    };
+
+  template<typename _Tp, typename _Up, typename _Vp, typename _Wp>
+    struct __promote_4
+    {
+    private:
+      typedef typename __promote<_Tp>::__type __type1;
+      typedef typename __promote<_Up>::__type __type2;
+      typedef typename __promote<_Vp>::__type __type3;
+      typedef typename __promote<_Wp>::__type __type4;
+
+    public:
+      typedef __typeof__(__type1() + __type2() + __type3() + __type4()) __type;
+    };
 
 }
 
@@ -4944,1310 +5518,6 @@ extern int matherr (struct __exception *__exc) throw ();
 
 }
 
-
-/* Copyright (C) 1991-1994,1996-2003,2005,2006,2009
-	Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-/*
- *	ISO C99 Standard: 7.23 Date and time	<time.h>
- */
-
-
-
-
-
-
-
-
-
-
-
-
-/* System-dependent timing definitions.  Generic version.
-   Copyright (C) 1996,1997,1999-2002,2003 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-/*
- * Never include this file directly; use <time.h> instead.
- */
-
-
-
-
-
-
-extern "C" {
-
-/* Macros for converting between `struct timeval' and `struct timespec'.  */
-
-
-/* Structure crudely representing a timezone.
-   This is obsolete and should never be used.  */
-struct timezone
-  {
-    int tz_minuteswest;		/* Minutes west of GMT.  */
-    int tz_dsttime;		/* Nonzero if DST is ever in effect.  */
-  };
-
-typedef struct timezone *__restrict __timezone_ptr_t;
-
-/* Get the current time of day and timezone information,
-   putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
-   Returns 0 on success, -1 on errors.
-   NOTE: This form of timezone information is obsolete.
-   Use the functions and variables declared in <time.h> instead.  */
-extern int gettimeofday (struct timeval *__restrict __tv,
-			 __timezone_ptr_t __tz) throw () __attribute__ ((__nonnull__ (1)));
-
-/* Set the current time of day and timezone information.
-   This call is restricted to the super-user.  */
-extern int settimeofday (__const struct timeval *__tv,
-			 __const struct timezone *__tz)
-     throw () __attribute__ ((__nonnull__ (1)));
-
-/* Adjust the current time of day by the amount in DELTA.
-   If OLDDELTA is not NULL, it is filled in with the amount
-   of time adjustment remaining to be done from the last `adjtime' call.
-   This call is restricted to the super-user.  */
-extern int adjtime (__const struct timeval *__delta,
-		    struct timeval *__olddelta) throw ();
-
-
-/* Values for the first argument to `getitimer' and `setitimer'.  */
-enum __itimer_which
-  {
-    /* Timers run in real time.  */
-    ITIMER_REAL = 0,
-    /* Timers run only when the process is executing.  */
-    ITIMER_VIRTUAL = 1,
-    /* Timers run when the process is executing and when
-       the system is executing on behalf of the process.  */
-    ITIMER_PROF = 2
-  };
-
-/* Type of the second argument to `getitimer' and
-   the second and third arguments `setitimer'.  */
-struct itimerval
-  {
-    /* Value to put into `it_value' when the timer expires.  */
-    struct timeval it_interval;
-    /* Time to the next timer expiration.  */
-    struct timeval it_value;
-  };
-
-typedef int __itimer_which_t;
-
-/* Set *VALUE to the current setting of timer WHICH.
-   Return 0 on success, -1 on errors.  */
-extern int getitimer (__itimer_which_t __which,
-		      struct itimerval *__value) throw ();
-
-/* Set the timer WHICH to *NEW.  If OLD is not NULL,
-   set *OLD to the old value of timer WHICH.
-   Returns 0 on success, -1 on errors.  */
-extern int setitimer (__itimer_which_t __which,
-		      __const struct itimerval *__restrict __new,
-		      struct itimerval *__restrict __old) throw ();
-
-/* Change the access time of FILE to TVP[0] and the modification time of
-   FILE to TVP[1].  If TVP is a null pointer, use the current time instead.
-   Returns 0 on success, -1 on errors.  */
-extern int utimes (__const char *__file, __const struct timeval __tvp[2])
-     throw () __attribute__ ((__nonnull__ (1)));
-
-/* Same as `utimes', but does not follow symbolic links.  */
-extern int lutimes (__const char *__file, __const struct timeval __tvp[2])
-     throw () __attribute__ ((__nonnull__ (1)));
-
-/* Same as `utimes', but takes an open file descriptor instead of a name.  */
-extern int futimes (int __fd, __const struct timeval __tvp[2]) throw ();
-
-/* Change the access time of FILE relative to FD to TVP[0] and the
-   modification time of FILE to TVP[1].  If TVP is a null pointer, use
-   the current time instead.  Returns 0 on success, -1 on errors.  */
-extern int futimesat (int __fd, __const char *__file,
-		      __const struct timeval __tvp[2]) throw ();
-
-
-/* Convenience macros for operations on timevals.
-   NOTE: `timercmp' does not work for >= or <=.  */
-
-}
-
-/*
- * Copyright (C) 2009-2010 Intel Corporation. All Rights Reserved.
- *
- * The source code contained or described herein and all
- * documents related to the source code ("Material") are owned by 
- * Intel Corporation or its suppliers or licensors. Title to the
- * Material remains with Intel Corporation or its suppliers and
- * licensors. The Material is protected by worldwide copyright
- * laws and treaty provisions.  No part of the Material may be
- * used, copied, reproduced, modified, published, uploaded,
- * posted, transmitted, distributed,  or disclosed in any way
- * except as expressly provided in the license provided with the
- * Materials.  No license under any patent, copyright, trade
- * secret or other intellectual property right is granted to or
- * conferred upon you by disclosure or delivery of the Materials,
- * either expressly, by implication, inducement, estoppel or
- * otherwise, except as expressly provided in the license
- * provided with the Materials. 
- *
- * Simple header file for abstracting machine-dependent timers
- *
- * This file declares the following functions:
- *
- * cilk_getticks() - Returns a timer value with a resolution of
- * milliseconds
- *
- * cilk_ticks_to_seconds - Converts the timer value to seconds.
- */
-
-
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-/*
- *	ISO C99 Standard: 7.23 Date and time	<time.h>
- */
-
-
-
-extern "C" {
-
-
-/* Get size_t and NULL from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
-
-/*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
- */
-
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
-
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
-
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
-
-
-
-
-/* This defines CLOCKS_PER_SEC, which is the number of processor clock
-   ticks per second.  */
-/* System-dependent timing definitions.  Generic version.
-   Copyright (C) 1996,1997,1999-2002,2003 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-/*
- * Never include this file directly; use <time.h> instead.
- */
-
-
-/* ISO/IEC 9899:1990 7.12.1: <time.h>
-   The macro `CLOCKS_PER_SEC' is the number per second of the value
-   returned by the `clock' function. */
-/* CAE XSH, Issue 4, Version 2: <time.h>
-   The value of CLOCKS_PER_SEC is required to be 1 million on all
-   XSI-conformant systems. */
-
-
-/* Identifier for system-wide realtime clock.  */
-/* Monotonic system-wide clock.  */
-/* High-resolution timer from the CPU.  */
-/* Thread-specific CPU-time clock.  */
-
-/* Flag to indicate time is absolute.  */
-
-
-
-/* This is the obsolete POSIX.1-1988 name for the same constant.  */
-
-
-
-
-
-
-
-
-
-
-/* Used by other time functions.  */
-struct tm
-{
-  int tm_sec;			/* Seconds.	[0-60] (1 leap second) */
-  int tm_min;			/* Minutes.	[0-59] */
-  int tm_hour;			/* Hours.	[0-23] */
-  int tm_mday;			/* Day.		[1-31] */
-  int tm_mon;			/* Month.	[0-11] */
-  int tm_year;			/* Year	- 1900.  */
-  int tm_wday;			/* Day of week.	[0-6] */
-  int tm_yday;			/* Days in year.[0-365]	*/
-  int tm_isdst;			/* DST.		[-1/0/1]*/
-
-  long int tm_gmtoff;		/* Seconds east of UTC.  */
-  __const char *tm_zone;	/* Timezone abbreviation.  */
-};
-
-
-
-
-/* POSIX.1b structure for timer start values and intervals.  */
-struct itimerspec
-  {
-    struct timespec it_interval;
-    struct timespec it_value;
-  };
-
-/* We can use a simple forward declaration.  */
-struct sigevent;
-
-
-
-
-
-/* Time used by the program so far (user time + system time).
-   The result / CLOCKS_PER_SECOND is program time in seconds.  */
-extern clock_t clock (void) throw ();
-
-/* Return the current time and put it in *TIMER if TIMER is not NULL.  */
-extern time_t time (time_t *__timer) throw ();
-
-/* Return the difference between TIME1 and TIME0.  */
-extern double difftime (time_t __time1, time_t __time0)
-     throw () __attribute__ ((__const__));
-
-/* Return the `time_t' representation of TP and normalize TP.  */
-extern time_t mktime (struct tm *__tp) throw ();
-
-
-/* Format TP into S according to FORMAT.
-   Write no more than MAXSIZE characters and return the number
-   of characters written, or 0 if it would exceed MAXSIZE.  */
-extern size_t strftime (char *__restrict __s, size_t __maxsize,
-			__const char *__restrict __format,
-			__const struct tm *__restrict __tp) throw ();
-
-
-/* Parse S according to FORMAT and store binary time information in TP.
-   The return value is a pointer to the first unparsed character in S.  */
-extern char *strptime (__const char *__restrict __s,
-		       __const char *__restrict __fmt, struct tm *__tp)
-     throw ();
-
-/* Similar to the two functions above but take the information from
-   the provided locale and not the global locale.  */
-
-extern size_t strftime_l (char *__restrict __s, size_t __maxsize,
-			  __const char *__restrict __format,
-			  __const struct tm *__restrict __tp,
-			  __locale_t __loc) throw ();
-
-extern char *strptime_l (__const char *__restrict __s,
-			 __const char *__restrict __fmt, struct tm *__tp,
-			 __locale_t __loc) throw ();
-
-
-
-/* Return the `struct tm' representation of *TIMER
-   in Universal Coordinated Time (aka Greenwich Mean Time).  */
-extern struct tm *gmtime (__const time_t *__timer) throw ();
-
-/* Return the `struct tm' representation
-   of *TIMER in the local timezone.  */
-extern struct tm *localtime (__const time_t *__timer) throw ();
-
-
-/* Return the `struct tm' representation of *TIMER in UTC,
-   using *TP to store the result.  */
-extern struct tm *gmtime_r (__const time_t *__restrict __timer,
-			    struct tm *__restrict __tp) throw ();
-
-/* Return the `struct tm' representation of *TIMER in local time,
-   using *TP to store the result.  */
-extern struct tm *localtime_r (__const time_t *__restrict __timer,
-			       struct tm *__restrict __tp) throw ();
-
-
-/* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
-   that is the representation of TP in this format.  */
-extern char *asctime (__const struct tm *__tp) throw ();
-
-/* Equivalent to `asctime (localtime (timer))'.  */
-extern char *ctime (__const time_t *__timer) throw ();
-
-
-/* Reentrant versions of the above functions.  */
-
-/* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
-   that is the representation of TP in this format.  */
-extern char *asctime_r (__const struct tm *__restrict __tp,
-			char *__restrict __buf) throw ();
-
-/* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
-extern char *ctime_r (__const time_t *__restrict __timer,
-		      char *__restrict __buf) throw ();
-
-
-/* Defined in localtime.c.  */
-extern char *__tzname[2];	/* Current timezone names.  */
-extern int __daylight;		/* If daylight-saving time is ever in use.  */
-extern long int __timezone;	/* Seconds west of UTC.  */
-
-
-/* Same as above.  */
-extern char *tzname[2];
-
-/* Set time conversion information from the TZ environment variable.
-   If TZ is not defined, a locale-dependent default is used.  */
-extern void tzset (void) throw ();
-
-extern int daylight;
-extern long int timezone;
-
-/* Set the system time to *WHEN.
-   This call is restricted to the superuser.  */
-extern int stime (__const time_t *__when) throw ();
-
-
-/* Nonzero if YEAR is a leap year (every 4 years,
-   except every 100th isn't, and every 400th is).  */
-
-
-/* Miscellaneous functions many Unices inherited from the public domain
-   localtime package.  These are included only for compatibility.  */
-
-/* Like `mktime', but for TP represents Universal Time, not local time.  */
-extern time_t timegm (struct tm *__tp) throw ();
-
-/* Another name for `mktime'.  */
-extern time_t timelocal (struct tm *__tp) throw ();
-
-/* Return the number of days in YEAR.  */
-extern int dysize (int __year) throw ()  __attribute__ ((__const__));
-
-
-/* Pause execution for a number of nanoseconds.
-
-   This function is a cancellation point and therefore not marked with
-   __THROW.  */
-extern int nanosleep (__const struct timespec *__requested_time,
-		      struct timespec *__remaining);
-
-
-/* Get resolution of clock CLOCK_ID.  */
-extern int clock_getres (clockid_t __clock_id, struct timespec *__res) throw ();
-
-/* Get current value of clock CLOCK_ID and store it in TP.  */
-extern int clock_gettime (clockid_t __clock_id, struct timespec *__tp) throw ();
-
-/* Set clock CLOCK_ID to value TP.  */
-extern int clock_settime (clockid_t __clock_id, __const struct timespec *__tp)
-     throw ();
-
-/* High-resolution sleep with the specified clock.
-
-   This function is a cancellation point and therefore not marked with
-   __THROW.  */
-extern int clock_nanosleep (clockid_t __clock_id, int __flags,
-			    __const struct timespec *__req,
-			    struct timespec *__rem);
-
-/* Return clock ID for CPU-time clock.  */
-extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id) throw ();
-
-
-/* Create new per-process timer using CLOCK_ID.  */
-extern int timer_create (clockid_t __clock_id,
-			 struct sigevent *__restrict __evp,
-			 timer_t *__restrict __timerid) throw ();
-
-/* Delete timer TIMERID.  */
-extern int timer_delete (timer_t __timerid) throw ();
-
-/* Set timer TIMERID to VALUE, returning old value in OVLAUE.  */
-extern int timer_settime (timer_t __timerid, int __flags,
-			  __const struct itimerspec *__restrict __value,
-			  struct itimerspec *__restrict __ovalue) throw ();
-
-/* Get current value of timer TIMERID and store it in VLAUE.  */
-extern int timer_gettime (timer_t __timerid, struct itimerspec *__value)
-     throw ();
-
-/* Get expiration overrun for timer TIMERID.  */
-extern int timer_getoverrun (timer_t __timerid) throw ();
-
-
-/* Set to one of the following values to indicate an error.
-     1  the DATEMSK environment variable is null or undefined,
-     2  the template file cannot be opened for reading,
-     3  failed to get file status information,
-     4  the template file is not a regular file,
-     5  an error is encountered while reading the template file,
-     6  memory allication failed (not enough memory available),
-     7  there is no line in the template that matches the input,
-     8  invalid input specification Example: February 31 or a time is
-        specified that can not be represented in a time_t (representing
-	the time in seconds since 00:00:00 UTC, January 1, 1970) */
-extern int getdate_err;
-
-/* Parse the given string as a date specification and return a value
-   representing the value.  The templates from the file identified by
-   the environment variable DATEMSK are used.  In case of an error
-   `getdate_err' is set.
-
-   This function is a possible cancellation points and therefore not
-   marked with __THROW.  */
-extern struct tm *getdate (__const char *__string);
-
-/* Since `getdate' is not reentrant because of the use of `getdate_err'
-   and the static buffer to return the result in, we provide a thread-safe
-   variant.  The functionality is the same.  The result is returned in
-   the buffer pointed to by RESBUFP and in case of an error the return
-   value is != 0 with the same values as given above for `getdate_err'.
-
-   This function is not part of POSIX and therefore no official
-   cancellation point.  But due to similarity with an POSIX interface
-   or due to the implementation it is a cancellation point and
-   therefore not marked with __THROW.  */
-extern int getdate_r (__const char *__restrict __string,
-		      struct tm *__restrict __resbufp);
-
-}
-
-
-
-static inline unsigned long long cilk_getticks()
-{
-     struct timeval t;
-     gettimeofday(&t, 0);
-     return t.tv_sec * 1000000ULL + t.tv_usec;
-}
-
-static inline double cilk_ticks_to_seconds(unsigned long long ticks)
-{
-     return ticks * 1.0e-6;
-}
-//#include "tbb/blocked_range.h"
-#pragma GCC system_header
-
-// Predefined symbols and macros -*- C++ -*-
-#pragma GCC system_header
-
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
-
-/*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
- */
-
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
-/* snaroff@next.com says the NeXT needs this.  */
-/* Irix 5.1 needs this.  */
-
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
-
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-typedef long ptrdiff_t;
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
-
-
-
-/* Offset of member MEMBER in a struct of type TYPE. */
-
-
-
-
-namespace std __attribute__ ((__visibility__ ("default"))) {
-
-  using ::ptrdiff_t;
-  using ::size_t;
-
-}
-
-
-
-// Get rid of those macros defined in <stdio.h> in lieu of real functions.
-namespace std __attribute__ ((__visibility__ ("default"))) {
-
-  using ::FILE;
-  using ::fpos_t;
-
-  using ::clearerr;
-  using ::fclose;
-  using ::feof;
-  using ::ferror;
-  using ::fflush;
-  using ::fgetc;
-  using ::fgetpos;
-  using ::fgets;
-  using ::fopen;
-  using ::fprintf;
-  using ::fputc;
-  using ::fputs;
-  using ::fread;
-  using ::freopen;
-  using ::fscanf;
-  using ::fseek;
-  using ::fsetpos;
-  using ::ftell;
-  using ::fwrite;
-  using ::getc;
-  using ::getchar;
-  using ::gets;
-  using ::perror;
-  using ::printf;
-  using ::putc;
-  using ::putchar;
-  using ::puts;
-  using ::remove;
-  using ::rename;
-  using ::rewind;
-  using ::scanf;
-  using ::setbuf;
-  using ::setvbuf;
-  using ::sprintf;
-  using ::sscanf;
-  using ::tmpfile;
-  using ::tmpnam;
-  using ::ungetc;
-  using ::vfprintf;
-  using ::vprintf;
-  using ::vsprintf;
-
-}
-
-
-
-namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
-
-
-  using ::snprintf;
-  using ::vfscanf;
-  using ::vscanf;
-  using ::vsnprintf;
-  using ::vsscanf;
-
-}
-
-namespace std __attribute__ ((__visibility__ ("default"))) {
-
-  using ::__gnu_cxx::snprintf;
-  using ::__gnu_cxx::vfscanf;
-  using ::__gnu_cxx::vscanf;
-  using ::__gnu_cxx::vsnprintf;
-  using ::__gnu_cxx::vsscanf;
-
-}
-
-
-
-// -*- C++ -*- C forwarding header.
-#pragma GCC system_header
-
-// The  -*- C++ -*- type traits classes for internal use in libstdc++
-#pragma GCC system_header
-
-
-//
-namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
-
-  template<typename _Iterator, typename _Container>
-    class __normal_iterator;
-
-}
-
-namespace std __attribute__ ((__visibility__ ("default"))) {
-
-  struct __true_type { };
-  struct __false_type { };
-
-  template<bool>
-    struct __truth_type
-    { typedef __false_type __type; };
-
-  template<>
-    struct __truth_type<true>
-    { typedef __true_type __type; };
-
-  // N.B. The conversions to bool are needed due to the issue
-template<class _Sp, class _Tp>
-    struct __traitor
-    {
-      enum { __value = bool(_Sp::__value) || bool(_Tp::__value) };
-      typedef typename __truth_type<__value>::__type __type;
-    };
-
-  // Compare for equality of types.
-template<typename, typename>
-    struct __are_same
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-  template<typename _Tp>
-    struct __are_same<_Tp, _Tp>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  // Holds if the template-argument is a void type.
-template<typename _Tp>
-    struct __is_void
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-  template<>
-    struct __is_void<void>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  //
-template<typename _Tp>
-    struct __is_integer
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-  // Thirteen specializations (yes there are eleven standard integer
-template<>
-    struct __is_integer<bool>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<char>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<signed char>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<unsigned char>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<wchar_t>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-
-  template<>
-    struct __is_integer<short>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<unsigned short>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<int>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<unsigned int>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<long>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<unsigned long>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<long long>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_integer<unsigned long long>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  //
-template<typename _Tp>
-    struct __is_floating
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-  // three specializations (float, double and 'long double')
-template<>
-    struct __is_floating<float>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_floating<double>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_floating<long double>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  //
-template<typename _Tp>
-    struct __is_pointer
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-  template<typename _Tp>
-    struct __is_pointer<_Tp*>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  //
-template<typename _Tp>
-    struct __is_normal_iterator
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-  template<typename _Iterator, typename _Container>
-    struct __is_normal_iterator< __gnu_cxx::__normal_iterator<_Iterator,
-							      _Container> >
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  //
-template<typename _Tp>
-    struct __is_arithmetic
-    : public __traitor<__is_integer<_Tp>, __is_floating<_Tp> >
-    { };
-
-  //
-template<typename _Tp>
-    struct __is_fundamental
-    : public __traitor<__is_void<_Tp>, __is_arithmetic<_Tp> >
-    { };
-
-  //
-template<typename _Tp>
-    struct __is_scalar
-    : public __traitor<__is_arithmetic<_Tp>, __is_pointer<_Tp> >
-    { };
-
-  //
-template<typename _Tp>
-    struct __is_char
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-  template<>
-    struct __is_char<char>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_char<wchar_t>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<typename _Tp>
-    struct __is_byte
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-  template<>
-    struct __is_byte<char>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_byte<signed char>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  template<>
-    struct __is_byte<unsigned char>
-    {
-      enum { __value = 1 };
-      typedef __true_type __type;
-    };
-
-  //
-template<typename _Tp>
-    struct __is_move_iterator
-    {
-      enum { __value = 0 };
-      typedef __false_type __type;
-    };
-
-
-}
-
-// -*- C++ -*-
-#pragma GCC system_header
-
-
-namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
-
-  // Define a nested type if some predicate holds.
-template<bool, typename>
-    struct __enable_if 
-    { };
-
-  template<typename _Tp>
-    struct __enable_if<true, _Tp>
-    { typedef _Tp __type; };
-
-
-  // Conditional expression for types. If true, first, if false, second.
-template<bool _Cond, typename _Iftrue, typename _Iffalse>
-    struct __conditional_type
-    { typedef _Iftrue __type; };
-
-  template<typename _Iftrue, typename _Iffalse>
-    struct __conditional_type<false, _Iftrue, _Iffalse>
-    { typedef _Iffalse __type; };
-
-
-  // Given an integral builtin type, return the corresponding unsigned type.
-template<typename _Tp>
-    struct __add_unsigned
-    { 
-    private:
-      typedef __enable_if<std::__is_integer<_Tp>::__value, _Tp> __if_type;
-      
-    public:
-      typedef typename __if_type::__type __type; 
-    };
-
-  template<>
-    struct __add_unsigned<char>
-    { typedef unsigned char __type; };
-
-  template<>
-    struct __add_unsigned<signed char>
-    { typedef unsigned char __type; };
-
-  template<>
-    struct __add_unsigned<short>
-    { typedef unsigned short __type; };
-
-  template<>
-    struct __add_unsigned<int>
-    { typedef unsigned int __type; };
-
-  template<>
-    struct __add_unsigned<long>
-    { typedef unsigned long __type; };
-
-  template<>
-    struct __add_unsigned<long long>
-    { typedef unsigned long long __type; };
-
-  // Declare but don't define.
-template<>
-    struct __add_unsigned<bool>;
-
-  template<>
-    struct __add_unsigned<wchar_t>;
-
-
-  // Given an integral builtin type, return the corresponding signed type.
-template<typename _Tp>
-    struct __remove_unsigned
-    { 
-    private:
-      typedef __enable_if<std::__is_integer<_Tp>::__value, _Tp> __if_type;
-      
-    public:
-      typedef typename __if_type::__type __type; 
-    };
-
-  template<>
-    struct __remove_unsigned<char>
-    { typedef signed char __type; };
-
-  template<>
-    struct __remove_unsigned<unsigned char>
-    { typedef signed char __type; };
-
-  template<>
-    struct __remove_unsigned<unsigned short>
-    { typedef short __type; };
-
-  template<>
-    struct __remove_unsigned<unsigned int>
-    { typedef int __type; };
-
-  template<>
-    struct __remove_unsigned<unsigned long>
-    { typedef long __type; };
-
-  template<>
-    struct __remove_unsigned<unsigned long long>
-    { typedef long long __type; };
-
-  // Declare but don't define.
-template<>
-    struct __remove_unsigned<bool>;
-
-  template<>
-    struct __remove_unsigned<wchar_t>;
-
-
-  // For use in string and vstring.
-template<typename _Type>
-    inline bool
-    __is_null_pointer(_Type* __ptr)
-    { return __ptr == 0; }
-
-  template<typename _Type>
-    inline bool
-    __is_null_pointer(_Type)
-    { return false; }
-
-
-  // For complex and cmath
-template<typename _Tp, bool = std::__is_integer<_Tp>::__value>
-    struct __promote
-    { typedef double __type; };
-
-  template<typename _Tp>
-    struct __promote<_Tp, false>
-    { typedef _Tp __type; };
-
-  template<typename _Tp, typename _Up>
-    struct __promote_2
-    {
-    private:
-      typedef typename __promote<_Tp>::__type __type1;
-      typedef typename __promote<_Up>::__type __type2;
-
-    public:
-      typedef __typeof__(__type1() + __type2()) __type;
-    };
-
-  template<typename _Tp, typename _Up, typename _Vp>
-    struct __promote_3
-    {
-    private:
-      typedef typename __promote<_Tp>::__type __type1;
-      typedef typename __promote<_Up>::__type __type2;
-      typedef typename __promote<_Vp>::__type __type3;
-
-    public:
-      typedef __typeof__(__type1() + __type2() + __type3()) __type;
-    };
-
-  template<typename _Tp, typename _Up, typename _Vp, typename _Wp>
-    struct __promote_4
-    {
-    private:
-      typedef typename __promote<_Tp>::__type __type1;
-      typedef typename __promote<_Up>::__type __type2;
-      typedef typename __promote<_Vp>::__type __type3;
-      typedef typename __promote<_Wp>::__type __type4;
-
-    public:
-      typedef __typeof__(__type1() + __type2() + __type3() + __type4()) __type;
-    };
-
-}
 
 
 
@@ -12714,6 +11984,39 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 
 
+/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	ISO C99 Standard: 7.23 Date and time	<time.h>
+ */
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Get system specific constant and data structure definitions.  */
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
@@ -12848,6 +12151,427 @@ extern int sched_getaffinity (__pid_t __pid, size_t __cpusetsize,
 			      cpu_set_t *__cpuset) throw ();
 
 }
+
+/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	ISO C99 Standard: 7.23 Date and time	<time.h>
+ */
+
+
+
+extern "C" {
+
+
+/* Get size_t and NULL from <stddef.h>.  */
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
+   Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
+/*
+ * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ */
+
+/* Any one of these symbols __need_* means that GNU libc
+   wants us just to define one data type.  So don't define
+   the symbols that indicate this file's entire job has been done.  */
+
+/* This avoids lossage on SunOS but only if stdtypes.h comes first.
+   There's no way to win with the other order!  Sun lossage.  */
+
+/* On 4.3bsd-net2, make sure ansi.h is included, so we have
+   one less case to deal with in the following.  */
+/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
+
+/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+   defined if the corresponding type is *not* defined.
+   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
+
+/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+   Just ignore it.  */
+
+/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
+   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+   not defined, and so that defining this macro defines _GCC_SIZE_T.
+   If we find that the macros are still defined at this point, we must
+   invoke them so that the type is defined as expected.  */
+
+/* In case nobody has defined these types, but we aren't running under
+   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+   parts of GCC is compiled by an older compiler, that actually
+   include gstddef.h, such as collect2.  */
+
+/* Signed type of difference of two pointers.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+/* If this symbol has done its job, get rid of it.  */
+
+
+/* Unsigned type of `sizeof' something.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+
+/* Wide character type.
+   Locale-writers should change this as necessary to
+   be big enough to hold unique values not between 0 and 127,
+   and not (wchar_t) -1, for each defined multibyte character.  */
+
+/* Define this type if we are doing the whole job,
+   or if we want this type in particular.  */
+
+
+/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+    are already defined.  */
+/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
+
+
+/* A null pointer constant.  */
+
+
+
+/* Offset of member MEMBER in a struct of type TYPE. */
+
+
+
+/* This defines CLOCKS_PER_SEC, which is the number of processor clock
+   ticks per second.  */
+/* System-dependent timing definitions.  Generic version.
+   Copyright (C) 1996,1997,1999-2002,2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ * Never include this file directly; use <time.h> instead.
+ */
+
+
+/* ISO/IEC 9899:1990 7.12.1: <time.h>
+   The macro `CLOCKS_PER_SEC' is the number per second of the value
+   returned by the `clock' function. */
+/* CAE XSH, Issue 4, Version 2: <time.h>
+   The value of CLOCKS_PER_SEC is required to be 1 million on all
+   XSI-conformant systems. */
+
+
+/* Identifier for system-wide realtime clock.  */
+/* Monotonic system-wide clock.  */
+/* High-resolution timer from the CPU.  */
+/* Thread-specific CPU-time clock.  */
+
+/* Flag to indicate time is absolute.  */
+
+
+
+/* This is the obsolete POSIX.1-1988 name for the same constant.  */
+
+
+
+
+
+
+
+
+
+
+/* Used by other time functions.  */
+struct tm
+{
+  int tm_sec;			/* Seconds.	[0-60] (1 leap second) */
+  int tm_min;			/* Minutes.	[0-59] */
+  int tm_hour;			/* Hours.	[0-23] */
+  int tm_mday;			/* Day.		[1-31] */
+  int tm_mon;			/* Month.	[0-11] */
+  int tm_year;			/* Year	- 1900.  */
+  int tm_wday;			/* Day of week.	[0-6] */
+  int tm_yday;			/* Days in year.[0-365]	*/
+  int tm_isdst;			/* DST.		[-1/0/1]*/
+
+  long int tm_gmtoff;		/* Seconds east of UTC.  */
+  __const char *tm_zone;	/* Timezone abbreviation.  */
+};
+
+
+
+
+/* POSIX.1b structure for timer start values and intervals.  */
+struct itimerspec
+  {
+    struct timespec it_interval;
+    struct timespec it_value;
+  };
+
+/* We can use a simple forward declaration.  */
+struct sigevent;
+
+
+
+
+
+/* Time used by the program so far (user time + system time).
+   The result / CLOCKS_PER_SECOND is program time in seconds.  */
+extern clock_t clock (void) throw ();
+
+/* Return the current time and put it in *TIMER if TIMER is not NULL.  */
+extern time_t time (time_t *__timer) throw ();
+
+/* Return the difference between TIME1 and TIME0.  */
+extern double difftime (time_t __time1, time_t __time0)
+     throw () __attribute__ ((__const__));
+
+/* Return the `time_t' representation of TP and normalize TP.  */
+extern time_t mktime (struct tm *__tp) throw ();
+
+
+/* Format TP into S according to FORMAT.
+   Write no more than MAXSIZE characters and return the number
+   of characters written, or 0 if it would exceed MAXSIZE.  */
+extern size_t strftime (char *__restrict __s, size_t __maxsize,
+			__const char *__restrict __format,
+			__const struct tm *__restrict __tp) throw ();
+
+
+/* Parse S according to FORMAT and store binary time information in TP.
+   The return value is a pointer to the first unparsed character in S.  */
+extern char *strptime (__const char *__restrict __s,
+		       __const char *__restrict __fmt, struct tm *__tp)
+     throw ();
+
+/* Similar to the two functions above but take the information from
+   the provided locale and not the global locale.  */
+
+extern size_t strftime_l (char *__restrict __s, size_t __maxsize,
+			  __const char *__restrict __format,
+			  __const struct tm *__restrict __tp,
+			  __locale_t __loc) throw ();
+
+extern char *strptime_l (__const char *__restrict __s,
+			 __const char *__restrict __fmt, struct tm *__tp,
+			 __locale_t __loc) throw ();
+
+
+
+/* Return the `struct tm' representation of *TIMER
+   in Universal Coordinated Time (aka Greenwich Mean Time).  */
+extern struct tm *gmtime (__const time_t *__timer) throw ();
+
+/* Return the `struct tm' representation
+   of *TIMER in the local timezone.  */
+extern struct tm *localtime (__const time_t *__timer) throw ();
+
+
+/* Return the `struct tm' representation of *TIMER in UTC,
+   using *TP to store the result.  */
+extern struct tm *gmtime_r (__const time_t *__restrict __timer,
+			    struct tm *__restrict __tp) throw ();
+
+/* Return the `struct tm' representation of *TIMER in local time,
+   using *TP to store the result.  */
+extern struct tm *localtime_r (__const time_t *__restrict __timer,
+			       struct tm *__restrict __tp) throw ();
+
+
+/* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
+   that is the representation of TP in this format.  */
+extern char *asctime (__const struct tm *__tp) throw ();
+
+/* Equivalent to `asctime (localtime (timer))'.  */
+extern char *ctime (__const time_t *__timer) throw ();
+
+
+/* Reentrant versions of the above functions.  */
+
+/* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
+   that is the representation of TP in this format.  */
+extern char *asctime_r (__const struct tm *__restrict __tp,
+			char *__restrict __buf) throw ();
+
+/* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
+extern char *ctime_r (__const time_t *__restrict __timer,
+		      char *__restrict __buf) throw ();
+
+
+/* Defined in localtime.c.  */
+extern char *__tzname[2];	/* Current timezone names.  */
+extern int __daylight;		/* If daylight-saving time is ever in use.  */
+extern long int __timezone;	/* Seconds west of UTC.  */
+
+
+/* Same as above.  */
+extern char *tzname[2];
+
+/* Set time conversion information from the TZ environment variable.
+   If TZ is not defined, a locale-dependent default is used.  */
+extern void tzset (void) throw ();
+
+extern int daylight;
+extern long int timezone;
+
+/* Set the system time to *WHEN.
+   This call is restricted to the superuser.  */
+extern int stime (__const time_t *__when) throw ();
+
+
+/* Nonzero if YEAR is a leap year (every 4 years,
+   except every 100th isn't, and every 400th is).  */
+
+
+/* Miscellaneous functions many Unices inherited from the public domain
+   localtime package.  These are included only for compatibility.  */
+
+/* Like `mktime', but for TP represents Universal Time, not local time.  */
+extern time_t timegm (struct tm *__tp) throw ();
+
+/* Another name for `mktime'.  */
+extern time_t timelocal (struct tm *__tp) throw ();
+
+/* Return the number of days in YEAR.  */
+extern int dysize (int __year) throw ()  __attribute__ ((__const__));
+
+
+/* Pause execution for a number of nanoseconds.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int nanosleep (__const struct timespec *__requested_time,
+		      struct timespec *__remaining);
+
+
+/* Get resolution of clock CLOCK_ID.  */
+extern int clock_getres (clockid_t __clock_id, struct timespec *__res) throw ();
+
+/* Get current value of clock CLOCK_ID and store it in TP.  */
+extern int clock_gettime (clockid_t __clock_id, struct timespec *__tp) throw ();
+
+/* Set clock CLOCK_ID to value TP.  */
+extern int clock_settime (clockid_t __clock_id, __const struct timespec *__tp)
+     throw ();
+
+/* High-resolution sleep with the specified clock.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int clock_nanosleep (clockid_t __clock_id, int __flags,
+			    __const struct timespec *__req,
+			    struct timespec *__rem);
+
+/* Return clock ID for CPU-time clock.  */
+extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id) throw ();
+
+
+/* Create new per-process timer using CLOCK_ID.  */
+extern int timer_create (clockid_t __clock_id,
+			 struct sigevent *__restrict __evp,
+			 timer_t *__restrict __timerid) throw ();
+
+/* Delete timer TIMERID.  */
+extern int timer_delete (timer_t __timerid) throw ();
+
+/* Set timer TIMERID to VALUE, returning old value in OVLAUE.  */
+extern int timer_settime (timer_t __timerid, int __flags,
+			  __const struct itimerspec *__restrict __value,
+			  struct itimerspec *__restrict __ovalue) throw ();
+
+/* Get current value of timer TIMERID and store it in VLAUE.  */
+extern int timer_gettime (timer_t __timerid, struct itimerspec *__value)
+     throw ();
+
+/* Get expiration overrun for timer TIMERID.  */
+extern int timer_getoverrun (timer_t __timerid) throw ();
+
+
+/* Set to one of the following values to indicate an error.
+     1  the DATEMSK environment variable is null or undefined,
+     2  the template file cannot be opened for reading,
+     3  failed to get file status information,
+     4  the template file is not a regular file,
+     5  an error is encountered while reading the template file,
+     6  memory allication failed (not enough memory available),
+     7  there is no line in the template that matches the input,
+     8  invalid input specification Example: February 31 or a time is
+        specified that can not be represented in a time_t (representing
+	the time in seconds since 00:00:00 UTC, January 1, 1970) */
+extern int getdate_err;
+
+/* Parse the given string as a date specification and return a value
+   representing the value.  The templates from the file identified by
+   the environment variable DATEMSK are used.  In case of an error
+   `getdate_err' is set.
+
+   This function is a possible cancellation points and therefore not
+   marked with __THROW.  */
+extern struct tm *getdate (__const char *__string);
+
+/* Since `getdate' is not reentrant because of the use of `getdate_err'
+   and the static buffer to return the result in, we provide a thread-safe
+   variant.  The functionality is the same.  The result is returned in
+   the buffer pointed to by RESBUFP and in case of an error the return
+   value is != 0 with the same values as given above for `getdate_err'.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int getdate_r (__const char *__restrict __string,
+		      struct tm *__restrict __resbufp);
+
+}
+
 
 
 /* Copyright (C) 1991-2003, 2004, 2007, 2009 Free Software Foundation, Inc.
@@ -29522,18 +29246,18 @@ struct Algorithm {
     int stride_[N_RANK];
     int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
     bool boundarySet, initialGridSet, slopeSet;
-
-//#pragma isat tuning name(tune_coarsening_factor) scope(M1_begin, M1_end) measure(M2_begin, M2_end) variable(tune_dt, range(1, 10, 1)) variable(tune_dt_boundary, range(1, 10, 1)) variable(tune_dx_boundary, range(1, 10, 1)) variable(tune_dx_i, range(1, 100, 10)) variable(tune_dx_0, range(1, 100, 10)) search(dependent)
+    
+// #pragma isat tuning name(tune_coarsening_factor) scope(M1_begin, M1_end) measure(M2_begin, M2_end) variable(tune_dt, range(1, 2, 1)) variable(tune_dt_boundary, range(1, 2, 1)) variable(tune_dx_boundary, range(1, 2, 1)) variable(tune_dx_i, range(1, 100, 50)) variable(tune_dx_0, range(1, 100, 50)) search(dependent)
 Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
-//            dx_recursive_boundary_[i] = 1;
+//            dx_recursive_boundary_[i] = tune_dx_boundary;
 ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
 }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 100;
+            dx_recursive_[i] = 3;
         dx_recursive_[0] = 1000;
         boundarySet = false;
         initialGridSet = false;
@@ -29541,7 +29265,7 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
         N_CORES = __cilkrts_get_nworkers();
 //        cout << " N_CORES = " << N_CORES << endl;
 }
-//#pragma isat marker M1_end
+// #pragma isat marker M1_end
 void set_initial_grid(grid_info<N_RANK> const & grid);
     void set_stride(int const stride[]);
     void set_logic_size(int const phys_size[]);
@@ -31604,6 +31328,7 @@ int total_size_;
         typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
+        T * l_null;
         BValue_1D bv1_;
         BValue_2D bv2_;
         BValue_3D bv3_;
@@ -31621,6 +31346,7 @@ int total_size_;
             view_ = new Storage<T>(TOGGLE * total_size_);
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
         }
 
 		explicit Pochoir_Array (int sz1, int sz0) {
@@ -31634,6 +31360,7 @@ int total_size_;
 			view_ = new Storage<T>(TOGGLE * total_size_) ;
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
 		}
 
 		explicit Pochoir_Array (int sz2, int sz1, int sz0) {
@@ -31653,6 +31380,7 @@ int total_size_;
 			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = __null; bv2_ = __null; bv3_ = __null;
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
 		}
 
 		/* Copy constructor -- create another view of the
@@ -31674,6 +31402,7 @@ int total_size_;
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
 		}
 
         /* assignment operator for vector<> */
@@ -31692,12 +31421,14 @@ int total_size_;
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
             return *this;
 		}
 
 		/* destructor : free memory */
 		~Pochoir_Array() {
 			view_->dec_ref();
+            free(l_null);
 		}
 
 		inline Storage<T> * view() {
@@ -31792,7 +31523,6 @@ int total_size_;
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
-            T * l_null = (T*)calloc(1, sizeof(T));
             T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != __null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
@@ -31801,7 +31531,6 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T * l_null = (T*)calloc(1, sizeof(T));
             T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
@@ -31810,7 +31539,6 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T * l_null = (T*)calloc(1, sizeof(T));
             T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
@@ -31819,7 +31547,6 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx1, _idx0);
-            T * l_null = (T*)calloc(1, sizeof(T));
             T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != __null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
@@ -31828,7 +31555,6 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T * l_null = (T*)calloc(1, sizeof(T));
             T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
@@ -31837,7 +31563,6 @@ int total_size_;
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T * l_null = (T*)calloc(1, sizeof(T));
             T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != __null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
@@ -32055,7 +31780,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir.hpp", __FUNCTION__, 111, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/Release/pochoir.hpp", __FUNCTION__, 111, str);
         exit(1);
     }
 }
@@ -32241,492 +31966,1129 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
 }
 
 
-using namespace std;
 
-int nthreads = 1;
-const int ds = 4;
-int Nx = 100;
-int Ny = 100;
-int Nz = 100;
-int T = 40;
-static const int NPIECES = 2;
-static const int dt_threshold = 3;
-static const int dx_threshold = 1000;
-static const int dyz_threshold = 3;
-int N_CORES=2;
 
-float **A;
+/*############################################################################*/
 
-float coef[ds + 1];
-float *vsq;
 
-int N = 997;
-int Nxy;
-int sx2, sx3, sx4;
-int sxy2, sxy3, sxy4;
+/*############################################################################*/
 
-void basecase(int t0, int t1, 
-	      int x0, int dx0, int x1, int dx1,
-	      int y0, int dy0, int y1, int dy1, 
-	      int z0, int dz0, int z1, int dz1 )
+double sqrt(const double x)
 {
-  int _Nx = Nx;
-  int Nxy = _Nx * Ny;
-  int sx2 = _Nx * 2;
-  int sx3 = _Nx * 3;
-  int sx4 = _Nx * 4;
-  int sxy2 = Nxy * 2;
-  int sxy3 = Nxy * 3;
-  int sxy4 = Nxy * 4;
-  float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
+  return x;
+}
 
-  for(int t = t0; t < t1; ++t) {
-    for(int z = z0; z < z1; ++z) {
-      for(int y = y0; y < y1; ++y) {
-	  float *A_cur = &A[t & 1][z * Nxy + y * _Nx];
-	  float *A_next = &A[(t + 1) & 1][z * Nxy + y * _Nx];
-	  float *vvv = &vsq[z * Nxy + y * _Nx];
-#pragma ivdep
-	for(int x = x0; x < x1; ++x) {
-	  float div = c0 * A_cur[x] 
-	    + c1 * ((A_cur[x + 1] + A_cur[x - 1])
-		    + (A_cur[x + _Nx] + A_cur[x - _Nx])
-		    + (A_cur[x + Nxy] + A_cur[x - Nxy]))
-	    + c2 * ((A_cur[x + 2] + A_cur[x - 2])
-		    + (A_cur[x + sx2] + A_cur[x - sx2])
-		    + (A_cur[x + sxy2] + A_cur[x - sxy2]))
-	    + c3 * ((A_cur[x + 3] + A_cur[x - 3])
-		    + (A_cur[x + sx3] + A_cur[x - sx3])
-		    + (A_cur[x + sxy3] + A_cur[x - sxy3]))
-	    + c4 * ((A_cur[x + 4] + A_cur[x - 4])
-		    + (A_cur[x + sx4] + A_cur[x - sx4])
-		    + (A_cur[x + sxy4] + A_cur[x - sxy4]));
-	  A_next[x] = 2 * A_cur[x] - A_next[x] + vvv[x] * div;
-	}
-      }
+void LBM_allocateGrid( double** ptr ) {
+    const size_t margin = 2*(1*(100))*(1*(100))*N_CELL_ENTRIES,
+                 size   = sizeof( LBM_Grid ) + 2*margin*sizeof( double );
+
+    *ptr = (double*)malloc(size);
+    if( ! *ptr ) {
+        printf( "LBM_allocateGrid: could not allocate %.1f MByte\n",
+                size / (1024.0*1024.0) );
+        exit( 1 );
     }
-    x0 += dx0; x1 += dx1;
-    y0 += dy0; y1 += dy1;
-    z0 += dz0; z1 += dz1;
-  }
+    printf( "LBM_allocateGrid: allocated %.1f MByte\n",
+            size / (1024.0*1024.0) );
+    *ptr += margin;
 }
 
-void basecase_loop(int t, 
-                   int x0, int x1,
-                   int y0, int y1, 
-                   int z )
-{
-  int _Nx = Nx;
-  int Nxy = _Nx * Ny;
-  int sx2 = _Nx * 2;
-  int sx3 = _Nx * 3;
-  int sx4 = _Nx * 4;
-  int sxy2 = Nxy * 2;
-  int sxy3 = Nxy * 3;
-  int sxy4 = Nxy * 4;
-  float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
+/*############################################################################*/
 
-      for(int y = y0; y < y1; ++y) {
-	  float *A_cur = &A[t & 1][z * Nxy + y * _Nx];
-	  float *A_next = &A[(t + 1) & 1][z * Nxy + y * _Nx];
-	  float *vvv = &vsq[z * Nxy + y * _Nx];
-#pragma ivdep
-	for(int x = x0; x < x1; ++x) {
-	  float div = c0 * A_cur[x] 
-	    + c1 * ((A_cur[x + 1] + A_cur[x - 1])
-		    + (A_cur[x + _Nx] + A_cur[x - _Nx])
-		    + (A_cur[x + Nxy] + A_cur[x - Nxy]))
-	    + c2 * ((A_cur[x + 2] + A_cur[x - 2])
-		    + (A_cur[x + sx2] + A_cur[x - sx2])
-		    + (A_cur[x + sxy2] + A_cur[x - sxy2]))
-	    + c3 * ((A_cur[x + 3] + A_cur[x - 3])
-		    + (A_cur[x + sx3] + A_cur[x - sx3])
-		    + (A_cur[x + sxy3] + A_cur[x - sxy3]))
-	    + c4 * ((A_cur[x + 4] + A_cur[x - 4])
-		    + (A_cur[x + sx4] + A_cur[x - sx4])
-		    + (A_cur[x + sxy4] + A_cur[x - sxy4]));
-	  A_next[x] = 2 * A_cur[x] - A_next[x] + vvv[x] * div;
+void LBM_freeGrid( double** ptr ) {
+  const size_t margin = 2*(1*(100))*(1*(100))*N_CELL_ENTRIES;
+
+    free(*ptr-margin);
+	*ptr = __null;
+}
+
+/*############################################################################*/
+
+void LBM_initializeGrid( LBM_Grid grid ) {
+	int i;
+
+	/*voption indep*/
+	for( i = ((0)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100)))); i < ((0)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+((130)+2)*(1*(100))*(1*(100)))); i += N_CELL_ENTRIES ) {
+		(((grid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/ 3.0);
+		(((grid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0);
+		(((grid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0);
+		(((grid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0);
+		(((grid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0);
+		(((grid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0);
+		(((grid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0);
+		(((grid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+		(((grid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0);
+
+		{unsigned int* const _aux_ = ((unsigned int*) ((void*) (&((((grid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))))); (*_aux_) = 0;};
 	}
-      }
 }
 
-/* map the triple (t, x, y) into a unique long long */
-static inline long long encode(int t, int x, int y, int z)
-{
-  return N * (N * (N * (long long)t + x) + y) + z;
+/*############################################################################*/
+
+void LBM_swapGrids( LBM_GridPtr* grid1, LBM_GridPtr* grid2 ) {
+	LBM_GridPtr aux = *grid1;
+	*grid1 = *grid2;
+	*grid2 = aux;
 }
 
-static inline float &aref(int t, int x, int y, int z)
-{
-  return A[t & 1][Nxy * z + Nx * y + x];
-}
+/*############################################################################*/
 
-static inline float &aref(int t, int s) {
-  return A[t & 1][s];
-}
+void LBM_loadObstacleFile( LBM_Grid grid, const char* filename ) {
+	int x,  y,  z;
 
-static inline float &vsqref(int x, int y, int z)
-{
-  return vsq[Nxy * z + Nx * y + x];
-}
+	FILE* file = fopen( filename, "rb" );
 
-static inline float &vsqref(int s)
-{
-  return vsq[s];
-}
-
-//Kernel:
-void loop_opt3(int t0, int t1, 
-	       int x0, int x1,
-	       int y0, int y1,
-	       int z0, int z1)
-{
-  for(int t = t0; t < t1; ++t) {
-      _Cilk_for (int z = z0; z < z1; ++ z) {
-          basecase_loop(t, x0, x1, y0, y1, z);
-      }
-  }
-}
-
-void walk3(int t0, int t1, 
-	   int x0, int dx0, int x1, int dx1,
-	   int y0, int dy0, int y1, int dy1, 
-	   int z0, int dz0, int z1, int dz1 )
-{
-  int dt = t1 - t0, dx = x1 - x0, dy = y1 - y0, dz = z1 - z0;
-  int i;
-
-  if (dx >= dx_threshold && dx >= dy && dx >= dz &&
-      dt >= 1 && dx >= 2 * ds * dt * NPIECES) {
-    int chunk = dx / NPIECES;
-
-    for (i = 0; i < NPIECES - 1; ++i)
-      _Cilk_spawn walk3(t0, t1,
-		       x0 + i * chunk, ds, x0 + (i+1) * chunk, -ds,
-		       y0, dy0, y1, dy1,
-		       z0, dz0, z1, dz1);
-    _Cilk_spawn walk3(t0, t1,
-		     x0 + i * chunk, ds, x1, -ds,
-		     y0, dy0, y1, dy1, 
-		     z0, dz0, z1, dz1);
-    _Cilk_sync;
-    _Cilk_spawn walk3(t0, t1, 
-		     x0, dx0, x0, ds,
-		     y0, dy0, y1, dy1, 
-		     z0, dz0, z1, dz1);
-    for (i = 1; i < NPIECES; ++i)
-      _Cilk_spawn walk3(t0, t1,
-		       x0 + i * chunk, -ds, x0 + i * chunk, ds,
-		       y0, dy0, y1, dy1, 
-		       z0, dz0, z1, dz1);
-    _Cilk_spawn walk3(t0, t1, 
-		     x1, -ds, x1, dx1,
-		     y0, dy0, y1, dy1, 
-		     z0, dz0, z1, dz1);
-  } else if (dy >= dyz_threshold && dy >= dz && dt >= 1 && dy >= 2 * ds * dt * NPIECES) {
-    int chunk = dy / NPIECES;
-
-    for (i = 0; i < NPIECES - 1; ++i)
-      _Cilk_spawn walk3(t0, t1,
-		       x0, dx0, x1, dx1,
-		       y0 + i * chunk, ds, y0 + (i+1) * chunk, -ds, 
-		       z0, dz0, z1, dz1);
-    _Cilk_spawn walk3(t0, t1,
-		     x0, dx0, x1, dx1,
-		     y0 + i * chunk, ds, y1, -ds, 
-		     z0, dz0, z1, dz1);
-    _Cilk_sync;
-    _Cilk_spawn walk3(t0, t1, 
-		     x0, dx0, x1, dx1,
-		     y0, dy0, y0, ds, 
-		     z0, dz0, z1, dz1);
-    for (i = 1; i < NPIECES; ++i)
-      _Cilk_spawn walk3(t0, t1,
-		       x0, dx0, x1, dx1,
-		       y0 + i * chunk, -ds, y0 + i * chunk, ds, 
-		       z0, dz0, z1, dz1);
-    _Cilk_spawn walk3(t0, t1, 
-		     x0, dx0, x1, dx1,
-		     y1, -ds, y1, dy1, 
-		     z0, dz0, z1, dz1);
-  } else if (dz >= dyz_threshold && dt >= 1 && dz >= 2 * ds * dt * NPIECES) {
-    int chunk = dz / NPIECES;
-
-    for (i = 0; i < NPIECES - 1; ++i)
-      _Cilk_spawn walk3(t0, t1,
-		       x0, dx0, x1, dx1,
-		       y0, dy0, y1, dy1,
-		       z0 + i * chunk, ds, z0 + (i+1) * chunk, -ds);
-    _Cilk_spawn walk3(t0, t1,
-		     x0, dx0, x1, dx1,
-		     y0, dy0, y1, dy1, 
-		     z0 + i * chunk, ds, z1, -ds);
-    _Cilk_sync;
-    _Cilk_spawn walk3(t0, t1, 
-		     x0, dx0, x1, dx1,
-		     y0, dy0, y1, dy1,
-		     z0, dz0, z0, ds);
-    for (i = 1; i < NPIECES; ++i)
-      _Cilk_spawn walk3(t0, t1,
-		       x0, dx0, x1, dx1,
-		       y0, dy0, y1, dy1,
-		       z0 + i * chunk, -ds, z0 + i * chunk, ds);
-    _Cilk_spawn walk3(t0, t1, 
-		     x0, dx0, x1, dx1,
-		     y0, dy0, y1, dy1,
-		     z1, -ds, z1, dz1);
-  }  else if (dt > dt_threshold) {
-    int halfdt = dt / 2;
-    walk3(t0, t0 + halfdt,
-	  x0, dx0, x1, dx1,
-	  y0, dy0, y1, dy1, 
-	  z0, dz0, z1, dz1);
-    walk3(t0 + halfdt, t1, 
-	  x0 + dx0 * halfdt, dx0, x1 + dx1 * halfdt, dx1,
-	  y0 + dy0 * halfdt, dy0, y1 + dy1 * halfdt, dy1, 
-	  z0 + dz0 * halfdt, dz0, z1 + dz1 * halfdt, dz1);
-  } else {
-    basecase(t0, t1, 
-	     x0, dx0, x1, dx1,
-	     y0, dy0, y1, dy1,
-	     z0, dz0, z1, dz1);
-  } 
-}
-
-void init_variables() 
-{
-  int count = 0;
-  Nxy = Nx * Ny;
-  sx2 = Nx * 2;
-  sx3 = Nx * 3;
-  sx4 = Nx * 4;
-  sxy2 = Nxy * 2;
-  sxy3 = Nxy * 3;
-  sxy4 = Nxy * 4;
-
-  coef[4] = -1.0f / 560.0f;
-  coef[3] = 8.0f/315;
-  coef[2] = -0.2f;
-  coef[1] = 1.6f;
-  coef[0] = -1435.0f/504 * 3;
-
-  count = 0;
-
-  for (int z = 0; z < Nz; ++z)
-    for (int y = 0; y < Ny; ++y) 
-      for(int x = 0; x < Nx; ++x) {
-	/* set initial values */
-	/*
-	  aref(0, x, y, z) = encode(0, x, y, z);
-	  aref(1, x, y, z) = encode(-1, x, y, z); // set to invalid
-	*/
-	float r = abs((float)(x - Nx/2 + y - Ny/2 + z - Nz/2) / 30);
-	r = ((1 - r) > (0.0f) ? (1 - r) : (0.0f)) + 1;
-	
-	aref(0, x, y, z) = r;
-	aref(1, x, y, z) = r;
-	vsqref(x, y, z) = 0.001f;
-      }
-    N_CORES = ((2) > (__cilkrts_get_nworkers()) ? (2) : (__cilkrts_get_nworkers()));
-    printf("N_CORES = %d\n", N_CORES);
-}
-
-template <typename T_Array>
-void init_pochoir_array(T_Array & arr) 
-{
-  int count = 0;
-  Nxy = Nx * Ny;
-  sx2 = Nx * 2;
-  sx3 = Nx * 3;
-  sx4 = Nx * 4;
-  sxy2 = Nxy * 2;
-  sxy3 = Nxy * 3;
-  sxy4 = Nxy * 4;
-
-  coef[4] = -1.0f / 560.0f;
-  coef[3] = 8.0f/315;
-  coef[2] = -0.2f;
-  coef[1] = 1.6f;
-  coef[0] = -1435.0f/504 * 3;
-
-  count = 0;
-
-  for (int z = 0; z < Nz; ++z)
-    for (int y = 0; y < Ny; ++y) 
-      for(int x = 0; x < Nx; ++x) {
-	/* set initial values */
-	/*
-	  aref(0, x, y, z) = encode(0, x, y, z);
-	  aref(1, x, y, z) = encode(-1, x, y, z); // set to invalid
-	*/
-	float r = abs((float)(x - Nx/2 + y - Ny/2 + z - Nz/2) / 30);
-	r = ((1 - r) > (0.0f) ? (1 - r) : (0.0f)) + 1;
-	
-	arr(0, z, y, x) = r;
-	arr(1, z, y, x) = r;
-	vsqref(x, y, z) = 0.001f;
-  }
-}
-void print_summary(char *header, double interval) {
-  /* print timing information */
-  long total = (long)Nx * Ny * Nz;
-//  int n_worker = cilk::current_worker_count();
-int n_worker = nthreads;
-  printf("++++++++++++++++++++ %s ++++++++++++++++++++++\n", header);
-  printf("first non-zero numbers\n");
-  for(int i = 0; i < total; i++) {
-    if(A[T%2][i] != 0) {
-      printf("%d: %f\n", i, A[T%2][i]);
-      break;
-    }
-  }
-	
-  long mul = (long)(Nx - 8) * (Ny  - 8) * (Nz - 8) * T;
-  double perf = mul / (interval * 1e6);
-  printf("time: %f\n", interval);
-  printf("Perf: %f Mcells/sec (%f M-FAdd/s, %f M-FMul/s)\n", 
-	 perf, 
-	 perf * 26, 
-	 perf * 7);
-  printf("Perf per worker: %f Mcells/sec (%f M-FAdd/s, %f M-FMul/s)\n\n", 
-	 perf / n_worker, 
-	 perf * 26 / n_worker, 
-	 perf * 7 / n_worker);
-  //printf("count = %d\n\n", count);		
-}
-
-void print_y() {
-  FILE *fout = fopen("y_points.txt", "w");
-  int z = Nz/2;
-  int x = Nx/2;
-  for(int y = 0; y < Ny; y++) {
-    fprintf(fout, "%f\n", aref(T, x, y, z));
-  }
-  fclose(fout);
-  printf("Done writing output\n");
-}
-
-void dotest()
-{
-  //initialization
-A = new float*[2];
-  A[0] = new float[Nx * Ny * Nz];
-  A[1] = new float[Nx * Ny * Nz];
-  vsq = new float[Nx * Ny * Nz];
-
-  double start;
-  double stop;
-	
-  ///////////////////////////////////////////////                                                                      
-init_variables();
-  // verify_A_and_B();
-start = cilk_ticks_to_seconds(cilk_getticks());
-  /* this is the divide-and-conquer version in cilk++ */
-  walk3(0, T,
-	    ds, 0, Nx - ds, 0, 
-		ds, 0, Ny - ds, 0, 
-		ds, 0, Nz - ds, 0);
-  stop = cilk_ticks_to_seconds(cilk_getticks());
-  print_summary("COStencilTask", stop - start);
-
-  // verify_A_and_B();
-}
-
-    template <typename T, int TOGGLE> T fd_bv_3D (Pochoir_Array<T, 3, TOGGLE> & arr, int t, int i, int j, int k) {
-        const int ds = 4;
-        if (i < ds || i >= arr.size(2)-ds 
-         || j < ds || j >= arr.size(1)-ds 
-         || k < ds || k >= arr.size(0)-ds)
-            return 0;
-        else
-            return arr.get(t, i, j, k);
-    }
-
-int main(int argc, char *argv[])
-{
-  double start, stop;
-  if (argc > 3) {
-    Nx = atoi(argv[1]);
-    Ny = atoi(argv[2]);
-    Nz = atoi(argv[3]);
-  }
-  /* T is time steps */
-  if (argc > 4)
-    T = atoi(argv[4]);
-
-  printf("Order-%d 3D-Stencil (%d points) with space %dx%dx%d and time %d\n", 
-	 ds, ds*2*3+1, Nx, Ny, Nz, T);
-
-  
-	/* Known*/ Pochoir_Array <float, 3, 2> pa(Nz, Ny, Nx) ;
-
-	/* Known */ Pochoir <float, 3, 2> fd_3D ;
-
-	Pochoir_Domain I(0 + ds, Nx - ds), J(0 + ds, Ny - ds), K(0 + ds, Nz - ds) ;
-
-	Pochoir_Shape <3> fd_shape_3D [26] = {{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 1}, {0, 0, 0, -1}, {0, 0, 1, 0}, {0, 0, -1, 0}, {0, 1, 0, 0}, {0, -1, 0, 0}, {0, 0, 0, 2}, {0, 0, 0, -2}, {0, 0, 2, 0}, {0, 0, -2, 0}, {0, 2, 0, 0}, {0, -2, 0, 0}, {0, 0, 0, 3}, {0, 0, 0, -3}, {0, 0, 3, 0}, {0, 0, -3, 0}, {0, 3, 0, 0}, {0, -3, 0, 0}, {0, 0, 0, 4}, {0, 0, 0, -4}, {0, 0, 4, 0}, {0, 0, -4, 0}, {0, 4, 0, 0}, {0, -4, 0, 0}};
-fd_3D.registerArray (pa); /* register Array */
-	fd_3D.registerShape(fd_shape_3D);
-  fd_3D.registerDomain(I, J, K);
-
-  auto fd_3D_fn = [&] (int t, int i, int j, int k) {
-	
-	float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
-	float div = c0 * pa(t, i, j, k) + c1 * ((pa(t, i, j, k + 1) + pa(t, i, j, k - 1)) + (pa(t, i, j + 1, k) + pa(t, i, j - 1, k)) + (pa(t, i + 1, j, k) + pa(t, i - 1, j, k))) + c2 * ((pa(t, i, j, k + 2) + pa(t, i, j, k - 2)) + (pa(t, i, j + 2, k) + pa(t, i, j - 2, k)) + (pa(t, i + 2, j, k) + pa(t, i - 2, j, k))) + c3 * ((pa(t, i, j, k + 3) + pa(t, i, j, k - 3)) + (pa(t, i, j + 3, k) + pa(t, i, j - 3, k)) + (pa(t, i + 3, j, k) + pa(t, i - 3, j, k))) + c4 * ((pa(t, i, j, k + 4) + pa(t, i, j, k - 4)) + (pa(t, i, j + 4, k) + pa(t, i, j - 4, k)) + (pa(t, i + 4, j, k) + pa(t, i - 4, j, k)));
-	pa(t + 1, i, j, k) = 2 * pa(t, i, j, k) - pa(t + 1, i, j, k) + vsq[i * Nxy + j * Nx + k] * div;
-	};
-	dotest();
-
-  init_pochoir_array(pa);
-  start = cilk_ticks_to_seconds(cilk_getticks());
-#pragma isat marker M2_begin
-  
-	auto Default_fd_3D_fn = [&] (int t0, int t1, grid_info<3> const & grid) {
-	grid_info<3> l_grid = grid;
-	float * pt_pa_1;
-	float * pt_pa_0;
-	
-	float * pa_base = pa.data();
-	const int l_pa_total_size = pa.total_size();
-	
-	int gap_pa_2, gap_pa_1, gap_pa_0;
-	const int l_stride_pa_2 = pa.stride(2), l_stride_pa_1 = pa.stride(1), l_stride_pa_0 = pa.stride(0);
-
-	for (int t = t0; t < t1; ++t) { 
-	pt_pa_0 = pa_base + ((t) & 0x1) * l_pa_total_size + (l_grid.x0[2]) * l_stride_pa_2 + (l_grid.x0[1]) * l_stride_pa_1 + (l_grid.x0[0]) * l_stride_pa_0;
-	pt_pa_1 = pa_base + ((t + 1) & 0x1) * l_pa_total_size + (l_grid.x0[2]) * l_stride_pa_2 + (l_grid.x0[1]) * l_stride_pa_1 + (l_grid.x0[0]) * l_stride_pa_0;
-	
-	gap_pa_2 = l_stride_pa_2 + (l_grid.x0[1] - l_grid.x1[1]) * l_stride_pa_1;
-	for (int i = l_grid.x0[2]; i < l_grid.x1[2]; ++i, 
-	pt_pa_0 += gap_pa_2, 
-	pt_pa_1 += gap_pa_2) {
-	gap_pa_1 = l_stride_pa_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_pa_0;
-	for (int j = l_grid.x0[1]; j < l_grid.x1[1]; ++j, 
-	pt_pa_0 += gap_pa_1, 
-	pt_pa_1 += gap_pa_1) {
-	#pragma ivdep
-	for (int k = l_grid.x0[0]; k < l_grid.x1[0]; ++k, 
-	++pt_pa_0, 
-	++pt_pa_1) {
-	
-	float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
-	float div = c0 * pt_pa_0[0] + c1 * ((pt_pa_0[l_stride_pa_0 * (1)] + pt_pa_0[l_stride_pa_0 * (-1)]) + (pt_pa_0[l_stride_pa_1 * (1)] + pt_pa_0[l_stride_pa_1 * (-1)]) + (pt_pa_0[l_stride_pa_2 * (1)] + pt_pa_0[l_stride_pa_2 * (-1)])) + c2 * ((pt_pa_0[l_stride_pa_0 * (2)] + pt_pa_0[l_stride_pa_0 * (-2)]) + (pt_pa_0[l_stride_pa_1 * (2)] + pt_pa_0[l_stride_pa_1 * (-2)]) + (pt_pa_0[l_stride_pa_2 * (2)] + pt_pa_0[l_stride_pa_2 * (-2)])) + c3 * ((pt_pa_0[l_stride_pa_0 * (3)] + pt_pa_0[l_stride_pa_0 * (-3)]) + (pt_pa_0[l_stride_pa_1 * (3)] + pt_pa_0[l_stride_pa_1 * (-3)]) + (pt_pa_0[l_stride_pa_2 * (3)] + pt_pa_0[l_stride_pa_2 * (-3)])) + c4 * ((pt_pa_0[l_stride_pa_0 * (4)] + pt_pa_0[l_stride_pa_0 * (-4)]) + (pt_pa_0[l_stride_pa_1 * (4)] + pt_pa_0[l_stride_pa_1 * (-4)]) + (pt_pa_0[l_stride_pa_2 * (4)] + pt_pa_0[l_stride_pa_2 * (-4)]));
-	pt_pa_1[0] = 2 * pt_pa_0[0] - pt_pa_1[0] + vsq[i * Nxy + j * Nx + k] * div;
-	} } } /* end for (sub-trapezoid) */ 
-	/* Adjust sub-trapezoid! */
-	for (int i = 0; i < 3; ++i) {
-		l_grid.x0[i] += l_grid.dx0[i]; l_grid.x1[i] += l_grid.dx1[i];
+	for( z = 0; z < (130); z++ ) {
+		for( y = 0; y < (1*(100)); y++ ) {
+			for( x = 0; x < (1*(100)); x++ ) {
+				if( fgetc( file ) != '.' ) {unsigned int* const _aux_ = ((unsigned int*) ((void*) (&(((grid)[((FLAGS)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]))))); (*_aux_) |= (OBSTACLE);};
+			}
+			fgetc( file );
+		}
+		fgetc( file );
 	}
-	} /* end for t */
-	};
 
-	fd_3D.run_obase(T, Default_fd_3D_fn);
-	#pragma isat marker M2_end
-  stop = cilk_ticks_to_seconds(cilk_getticks());
-  print_summary("Pochoir", stop - start);
+	fclose( file );
+}
 
-  delete[] A;
-  delete[] vsq;
-  return 0;
+/*############################################################################*/
+
+void LBM_initializeSpecialCellsForLDC( LBM_Grid grid ) {
+	int x,  y,  z;
+
+	/*voption indep*/
+	for( z = -2; z < (130)+2; z++ ) {
+		for( y = 0; y < (1*(100)); y++ ) {
+			for( x = 0; x < (1*(100)); x++ ) {
+				if( x == 0 || x == (1*(100))-1 ||
+				    y == 0 || y == (1*(100))-1 ||
+				    z == 0 || z == (130)-1 ) {
+					{unsigned int* const _aux_ = ((unsigned int*) ((void*) (&(((grid)[((FLAGS)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]))))); (*_aux_) |= (OBSTACLE);};
+				}
+				else {
+					if( (z == 1 || z == (130)-2) &&
+					     x > 1 && x < (1*(100))-2 &&
+					     y > 1 && y < (1*(100))-2 ) {
+						{unsigned int* const _aux_ = ((unsigned int*) ((void*) (&(((grid)[((FLAGS)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]))))); (*_aux_) |= (ACCEL);};
+					}
+				}
+			}
+		}
+	}
+}
+
+/*############################################################################*/
+
+void LBM_initializeSpecialCellsForChannel( LBM_Grid grid ) {
+	int x,  y,  z;
+
+	/*voption indep*/
+	for( z = -2; z < (130)+2; z++ ) {
+		for( y = 0; y < (1*(100)); y++ ) {
+			for( x = 0; x < (1*(100)); x++ ) {
+				if( x == 0 || x == (1*(100))-1 ||
+				    y == 0 || y == (1*(100))-1 ) {
+					{unsigned int* const _aux_ = ((unsigned int*) ((void*) (&(((grid)[((FLAGS)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]))))); (*_aux_) |= (OBSTACLE);};
+
+					if( (z == 0 || z == (130)-1) &&
+					    ! ((*((unsigned int*) ((void*) (&(((grid)[((FLAGS)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])))))) & (OBSTACLE)))
+						{unsigned int* const _aux_ = ((unsigned int*) ((void*) (&(((grid)[((FLAGS)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]))))); (*_aux_) |= (IN_OUT_FLOW);};
+				}
+			}
+		}
+	}
+}
+
+/*############################################################################*/
+void LBM_performStreamCollide( LBM_Grid srcGrid, LBM_Grid dstGrid,
+                               const int x0, const int x1, const int y0, const int y1, const int z0, const int z1)
+{
+    
+    double ux, uy, uz, u2, rho;
+
+    // CKLUK: Over 95% of total runtime spent in this loop
+int i, x, y, z;
+
+    for (z = z0; z < z1; z++)
+    {
+        for (y = y0; y < y1; y++)
+        {
+            for (x = x0; x < x1; x++)
+            {
+                i = ((0)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))));
+                
+                if( ((*((unsigned int*) ((void*) (&((((srcGrid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))))))) & (OBSTACLE))) {
+                    ((((dstGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((S)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((N)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((W)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((E)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((SW)+N_CELL_ENTRIES*((-1)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((SE)+N_CELL_ENTRIES*((+1)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((NW)+N_CELL_ENTRIES*((-1)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((NE)+N_CELL_ENTRIES*((+1)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((SB)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((ST)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((NB)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((NT)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((WB)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((WT)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((EB)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    ((((dstGrid)[((ET)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    continue;
+                }
+                            
+                rho = + ((((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                      + ((((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                      + ((((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                      + ((((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                      + ((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                      + ((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                      + ((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                      + ((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                      + ((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                      + ((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+
+                ux = + ((((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     + ((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     + ((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     + ((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     - ((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                uy = + ((((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     + ((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     - ((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     + ((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     - ((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                uz = + ((((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     + ((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     + ((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     + ((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                     + ((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+
+                ux /= rho;
+                uy /= rho;
+                uz /= rho;
+
+                if( ((*((unsigned int*) ((void*) (&((((srcGrid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))))))) & (ACCEL))) {
+                    ux = 0.005;
+                    uy = 0.002;
+                    uz = 0.000;
+                }
+        
+                u2 = 1.5 * (ux*ux + uy*uy + uz*uz);
+                ((((dstGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/ 3.0)*(1.95)*rho*(1.0                                 - u2);
+                
+                ((((dstGrid)[((N)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2);
+                ((((dstGrid)[((S)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2);
+                ((((dstGrid)[((E)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2);
+                ((((dstGrid)[((W)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2);
+                ((((dstGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2);
+                ((((dstGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2);
+        
+                ((((dstGrid)[((NE)+N_CELL_ENTRIES*((+1)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2);
+                ((((dstGrid)[((NW)+N_CELL_ENTRIES*((-1)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2);
+                ((((dstGrid)[((SE)+N_CELL_ENTRIES*((+1)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2);
+                ((((dstGrid)[((SW)+N_CELL_ENTRIES*((-1)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2);
+                ((((dstGrid)[((NT)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2);
+                ((((dstGrid)[((NB)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2);
+                ((((dstGrid)[((ST)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2);
+                ((((dstGrid)[((SB)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2);
+                ((((dstGrid)[((ET)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2);
+                ((((dstGrid)[((EB)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2);
+                ((((dstGrid)[((WT)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2);
+                ((((dstGrid)[((WB)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2);
+            }
+        }
+    }
+}
+
+
+/*############################################################################*/
+
+void LBM_handleInOutFlow( LBM_Grid srcGrid,
+                          const int x0, const int x1, const int y0, const int y1, const int z0, const int z1) {
+    
+    double ux , uy , uz , rho ,
+        ux1, uy1, uz1, rho1,
+        ux2, uy2, uz2, rho2,
+        u2, px, py;
+    
+    int i, x, y, z;
+
+    for (z= z0; z < z1; z++)
+    {
+        if (z == 0)
+        { /* inflow */        
+            for (y = y0; y < y1; y++)
+            {
+                for (x = x0; x < x1; x++)
+                {
+                    i = ((0)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))));
+
+                    rho1 = + srcGrid[((C)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))] + srcGrid[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))] + srcGrid[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))] + srcGrid[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))] + srcGrid[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))] + srcGrid[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))] + srcGrid[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))] + srcGrid[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))] + srcGrid[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))] + srcGrid[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+1)*(1*(100))*(1*(100))))];
+
+                    rho2 = + srcGrid[((C)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))] + srcGrid[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))] + srcGrid[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))] + srcGrid[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))] + srcGrid[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))] + srcGrid[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))] + srcGrid[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))] + srcGrid[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))] + srcGrid[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))] + srcGrid[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z+2)*(1*(100))*(1*(100))))];
+
+
+                    rho = 2.0*rho1 - rho2;
+
+                    px = (x / (0.5*((1*(100))-1))) - 1.0;
+                    py = (y / (0.5*((1*(100))-1))) - 1.0;
+                    ux = 0.00;
+                    uy = 0.00;
+                    uz = 0.01 * (1.0-px*px) * (1.0-py*py);
+
+                    u2 = 1.5 * (ux*ux + uy*uy + uz*uz);
+
+                    (((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/ 3.0)*rho*(1.0                                 - u2);
+
+                    (((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2);
+                    (((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2);
+                    (((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2);
+                    (((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2);
+                    (((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2);
+                    (((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2);
+
+                    (((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2);
+                    (((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2);
+                    (((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2);
+                    (((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2);
+                    (((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2);
+                    (((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2);
+                    (((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2);
+                    (((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2);
+                    (((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2);
+                    (((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2);
+                    (((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2);
+                    (((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2);
+                } /* for x */                
+            } /* for y */
+        } /* if (z==0) */
+
+        if (z == ((130)-1))
+        {     /* outflow */
+            for (y = y0; y < y1; y++)
+            {
+                for (x = x0; x < x1; x++)
+                {
+                    i = ((0)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))));
+                
+                    rho1 = + srcGrid[((C)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                           + srcGrid[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))];
+                
+                    ux1 = + srcGrid[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          + srcGrid[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          + srcGrid[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          + srcGrid[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          - srcGrid[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))];
+                    uy1 = + srcGrid[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          + srcGrid[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          - srcGrid[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          + srcGrid[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] + srcGrid[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          - srcGrid[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))];
+                    uz1 = + srcGrid[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          + srcGrid[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          + srcGrid[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          + srcGrid[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))]
+                          + srcGrid[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))] - srcGrid[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-1)*(1*(100))*(1*(100))))];
+
+                    ux1 /= rho1;
+                    uy1 /= rho1;
+                    uz1 /= rho1;
+
+                    rho2 = + srcGrid[((C)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                           + srcGrid[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))];
+                
+                    ux2 = + srcGrid[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          + srcGrid[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          + srcGrid[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          + srcGrid[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          - srcGrid[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))];
+                    uy2 = + srcGrid[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          + srcGrid[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          - srcGrid[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          + srcGrid[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] + srcGrid[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          - srcGrid[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))];
+                    uz2 = + srcGrid[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          + srcGrid[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          + srcGrid[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          + srcGrid[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))]
+                          + srcGrid[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))] - srcGrid[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z-2)*(1*(100))*(1*(100))))];
+
+
+                    ux2 /= rho2;
+                    uy2 /= rho2;
+                    uz2 /= rho2;
+
+                    rho = 1.0;
+
+                    ux = 2*ux1 - ux2;
+                    uy = 2*uy1 - uy2;
+                    uz = 2*uz1 - uz2;
+
+                    u2 = 1.5 * (ux*ux + uy*uy + uz*uz);
+
+                    (((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/ 3.0)*rho*(1.0                                 - u2);
+
+                    (((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2);
+                    (((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2);
+                    (((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2);
+                    (((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2);
+                    (((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2);
+                    (((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2);
+
+                    (((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2);
+                    (((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2);
+                    (((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2);
+                    (((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2);
+                    (((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2);
+                    (((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2);
+                    (((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2);
+                    (((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2);
+                    (((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2);
+                    (((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2);
+                    (((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2);
+                    (((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2);
+                }
+            }            
+        } /* if (z==SIZE_Z-1) */
+    } /* for z */
+}
+
+/*############################################################################*/
+
+void LBM_showGridStatistics( LBM_Grid grid ) {
+	int nObstacleCells = 0,
+	    nAccelCells    = 0,
+	    nFluidCells    = 0;
+	double ux, uy, uz;
+	double minU2  = 1e+30, maxU2  = -1e+30, u2;
+	double minRho = 1e+30, maxRho = -1e+30, rho;
+	double mass = 0;
+
+	int i;
+
+	for( i = ((0)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100)))); i < ((0)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+((130))*(1*(100))*(1*(100)))); i += N_CELL_ENTRIES ) {
+    rho = + (((grid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+		      + (((grid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+		      + (((grid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+		      + (((grid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+		      + (((grid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+		      + (((grid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+		      + (((grid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+		      + (((grid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+		      + (((grid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+		      + (((grid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+		if( rho < minRho ) minRho = rho;
+		if( rho > maxRho ) maxRho = rho;
+		mass += rho;
+
+		if( ((*((unsigned int*) ((void*) (&((((grid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))))))) & (OBSTACLE))) {
+			nObstacleCells++;
+		}
+		else {
+			if( ((*((unsigned int*) ((void*) (&((((grid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))))))) & (ACCEL)))
+				nAccelCells++;
+			else
+				nFluidCells++;
+
+			ux = + (((grid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     + (((grid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     + (((grid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     + (((grid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     - (((grid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+			uy = + (((grid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     + (((grid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     - (((grid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     + (((grid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) + (((grid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     - (((grid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+			uz = + (((grid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     + (((grid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     + (((grid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     + (((grid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))
+			     + (((grid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) - (((grid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+			u2 = (ux*ux + uy*uy + uz*uz) / (rho*rho);
+			if( u2 < minU2 ) minU2 = u2;
+			if( u2 > maxU2 ) maxU2 = u2;
+		}
+	}
+
+        printf( "LBM_showGridStatistics:\n"
+        "\tnObstacleCells: %7i nAccelCells: %7i nFluidCells: %7i\n"
+        "\tminRho: %8.4f maxRho: %8.4f mass: %e\n"
+        "\tminU: %e maxU: %e\n\n",
+        nObstacleCells, nAccelCells, nFluidCells,
+        minRho, maxRho, mass,
+        sqrt( minU2 ), sqrt( maxU2 ) );
+
+}
+
+/*############################################################################*/
+
+static void storeValue( FILE* file, double* v ) {
+	const int litteBigEndianTest = 1;
+	if( (*((unsigned char*) &litteBigEndianTest)) == 0 ) {         /* big endian */
+		const char* vPtr = (char*) v;
+		char buffer[sizeof( double )];
+		int i;
+
+		for (i = 0; i < sizeof( double ); i++)
+			buffer[i] = vPtr[sizeof( double ) - i - 1];
+
+		fwrite( buffer, sizeof( double ), 1, file );
+	}
+	else {                                                     /* little endian */
+		fwrite( v, sizeof( double ), 1, file );
+	}
+}
+
+/*############################################################################*/
+
+static void loadValue( FILE* file, double* v ) {
+	const int litteBigEndianTest = 1;
+	if( (*((unsigned char*) &litteBigEndianTest)) == 0 ) {         /* big endian */
+		char* vPtr = (char*) v;
+		char buffer[sizeof( double )];
+		int i;
+
+		fread( buffer, sizeof( double ), 1, file );
+
+		for (i = 0; i < sizeof( double ); i++)
+			vPtr[i] = buffer[sizeof( double ) - i - 1];
+	}
+	else {                                                     /* little endian */
+		fread( v, sizeof( double ), 1, file );
+	}
+}
+
+/*############################################################################*/
+
+void LBM_storeVelocityField( LBM_Grid grid, const char* filename,
+                             const int binary ) {
+	int x, y, z;
+	double rho, ux, uy, uz;
+
+	FILE* file = fopen( filename, (binary ? "wb" : "w") );
+
+	for( z = 0; z < (130); z++ ) {
+		for( y = 0; y < (1*(100)); y++ ) {
+			for( x = 0; x < (1*(100)); x++ ) {
+				rho = + ((grid)[((C)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]);
+				ux = + ((grid)[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     - ((grid)[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]);
+				uy = + ((grid)[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     - ((grid)[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     - ((grid)[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]);
+				uz = + ((grid)[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]);
+				ux /= rho;
+				uy /= rho;
+				uz /= rho;
+
+				if( binary ) {
+					/*
+					fwrite( &ux, sizeof( ux ), 1, file );
+					fwrite( &uy, sizeof( uy ), 1, file );
+					fwrite( &uz, sizeof( uz ), 1, file );
+					*/
+					storeValue( file, &ux );
+					storeValue( file, &uy );
+					storeValue( file, &uz );
+				} else
+					fprintf( file, "%e %e %e\n", ux, uy, uz );
+
+			}
+		}
+	}
+
+	fclose( file );
+}
+
+/*############################################################################*/
+
+void LBM_compareVelocityField( LBM_Grid grid, const char* filename,
+                             const int binary ) {
+	int x, y, z;
+	double rho, ux, uy, uz;
+	double fileUx, fileUy, fileUz,
+	                 dUx, dUy, dUz,
+	                 diff2, maxDiff2 = -1e+30;
+
+	FILE* file = fopen( filename, (binary ? "rb" : "r") );
+
+	for( z = 0; z < (130); z++ ) {
+		for( y = 0; y < (1*(100)); y++ ) {
+			for( x = 0; x < (1*(100)); x++ ) {
+				rho = + ((grid)[((C)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))])
+				      + ((grid)[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]);
+				ux = + ((grid)[((E)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((W)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     - ((grid)[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]);
+				uy = + ((grid)[((N)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((S)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((NE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((NW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     - ((grid)[((SE)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((SW)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) + ((grid)[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     - ((grid)[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]);
+				uz = + ((grid)[((T)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((B)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((NT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((NB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((ST)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((SB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((ET)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((EB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) 
+				     + ((grid)[((WT)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]) - ((grid)[((WB)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))))]);
+				ux /= rho;
+				uy /= rho;
+				uz /= rho;
+
+				if( binary ) {
+					loadValue( file, &fileUx );
+					loadValue( file, &fileUy );
+					loadValue( file, &fileUz );
+				}
+				else {
+					if( sizeof( double ) == sizeof( double )) {
+						fscanf( file, "%lf %lf %lf\n", &fileUx, &fileUy, &fileUz );
+					}
+					else {
+						fscanf( file, "%lf %lf %lbm_xo_pochoir.cpplf\n", &fileUx, &fileUy, &fileUz );
+					}
+				}
+
+				dUx = ux - fileUx;
+				dUy = uy - fileUy;
+				dUz = uz - fileUz;
+				diff2 = dUx*dUx + dUy*dUy + dUz*dUz;
+				if( diff2 > maxDiff2 ) maxDiff2 = diff2;
+			}
+		}
+	}
+
+	printf( "LBM_compareVelocityField: maxDiff = %e  ==>  %s\n\n",
+	        sqrt( maxDiff2 ),
+	        sqrt( maxDiff2 ) > 1e-5 ? "##### ERROR #####" : "OK" );
+	fclose( file );
+}
+
+//#define TRACE_BASECASE 1
+void co_basecase(LBM_GridPtr* toggle, MAIN_SimType simType,
+		 int t0, int t1,
+		 int x0, int dx0, int x1, int dx1,
+		 int y0, int dy0, int y1, int dy1, 
+		 int z0, int dz0, int z1, int dz1)
+{
+    
+    LBM_GridPtr src = toggle[(t0+1) & 1];
+    LBM_GridPtr dst = toggle[t0 & 1];
+    
+    for (int t = t0; t < t1; t++)
+    {
+        //printf("\t\t : t=%d, src=%p, dst=%p, x0=%d, x1=%d, y0=%d, y1=%d, z0=%d, z1=%d\n",
+if (simType == CHANNEL) {
+        LBM_handleInOutFlow( *src, x0, x1, y0, y1, z0, z1);
+      }
+
+      LBM_performStreamCollide( *src, *dst, x0, x1, y0, y1, z0, z1);
+        
+      src = toggle[t & 1];
+      dst = toggle[(t+1) & 1];
+
+      x0 += dx0; x1 += dx1;
+      y0 += dy0; y1 += dy1;
+      z0 += dz0; z1 += dz1;
+    }    
+}
+
+void co_basecase_1(LBM_GridPtr* toggle,
+                   int t0, int t1,
+                   int x0, int dx0, int x1, int dx1,
+                   int y0, int dy0, int y1, int dy1, 
+                   int z0, int dz0, int z1, int dz1)
+{
+    
+    LBM_GridPtr src = toggle[(t0+1) & 1];
+    LBM_GridPtr dst = toggle[t0 & 1];
+    
+    for (int t = t0; t < t1; t++)
+    {
+        //printf("\t\t : t=%d, src=%p, dst=%p, x0=%d, x1=%d, y0=%d, y1=%d, z0=%d, z1=%d\n",
+LBM_handleInOutFlow( *src, x0, x1, y0, y1, z0, z1);
+        LBM_performStreamCollide( *src, *dst, x0, x1, y0, y1, z0, z1);
+	//LBM_performStreamCollide( *src, *src, x0, x1, y0, y1, z0, z1);
+src = toggle[t & 1];
+        dst = toggle[(t+1) & 1];
+
+        x0 += dx0; x1 += dx1;
+        y0 += dy0; y1 += dy1;
+        z0 += dz0; z1 += dz1;
+    }    
+}
+
+
+void co_basecase_2(LBM_GridPtr* toggle,
+                   int t0, int t1,
+                   int x0, int dx0, int x1, int dx1,
+                   int y0, int dy0, int y1, int dy1, 
+                   int z0, int dz0, int z1, int dz1)
+{
+    
+    LBM_GridPtr src = toggle[(t0+1) & 1];
+    LBM_GridPtr dst = toggle[t0 & 1];
+    
+    for (int t = t0; t < t1; t++)
+    {
+        //printf("\t\t : t=%d, src=%p, dst=%p, x0=%d, x1=%d, y0=%d, y1=%d, z0=%d, z1=%d\n",
+LBM_performStreamCollide( *src, *dst, x0, x1, y0, y1, z0, z1);
+      //LBM_performStreamCollide( *src, *src, x0, x1, y0, y1, z0, z1);
+src = toggle[t & 1];
+      dst = toggle[(t+1) & 1];
+
+      x0 += dx0; x1 += dx1;
+      y0 += dy0; y1 += dy1;
+      z0 += dz0; z1 += dz1;
+    }    
+}
+
+void LBM_handleInOutFlow_Orig( LBM_Grid srcGrid ) {
+	double ux , uy , uz , rho ,
+	       ux1, uy1, uz1, rho1,
+	       ux2, uy2, uz2, rho2,
+	       u2, px, py;
+	int i;
+
+	/* inflow */
+	/*voption indep*/
+	for( i = ((0)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100)))); i < ((0)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100)))); i += N_CELL_ENTRIES ) {
+		rho1 = + ((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(1)*(1*(100))*(1*(100))))+(i)]);
+		rho2 = + ((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(2)*(1*(100))*(1*(100))))+(i)]);
+
+		rho = 2.0*rho1 - rho2;
+
+		px = (((i / N_CELL_ENTRIES) % (1*(100))) / (0.5*((1*(100))-1))) - 1.0;
+		py = ((((i / N_CELL_ENTRIES) / (1*(100))) % (1*(100))) / (0.5*((1*(100))-1))) - 1.0;
+		ux = 0.00;
+		uy = 0.00;
+		uz = 0.01 * (1.0-px*px) * (1.0-py*py);
+
+		u2 = 1.5 * (ux*ux + uy*uy + uz*uz);
+
+		(((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/ 3.0)*rho*(1.0                                 - u2);
+
+		(((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2);
+		(((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2);
+		(((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2);
+		(((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2);
+		(((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2);
+		(((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2);
+
+		(((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2);
+		(((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2);
+		(((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2);
+		(((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2);
+		(((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2);
+		(((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2);
+		(((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2);
+		(((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2);
+		(((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2);
+		(((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2);
+		(((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2);
+		(((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2);
+	}
+
+	/* outflow */
+	/*voption indep*/
+
+	for( i = ((0)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+((130)-1)*(1*(100))*(1*(100)))); i < ((0)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+((130))*(1*(100))*(1*(100)))); i += N_CELL_ENTRIES ) {
+		rho1 = + ((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]);
+		ux1 = + ((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      - ((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]);
+		uy1 = + ((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      - ((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      - ((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]);
+		uz1 = + ((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]);
+
+		ux1 /= rho1;
+		uy1 /= rho1;
+		uz1 /= rho1;
+
+		rho2 = + ((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		       + ((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]);
+		ux2 = + ((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      - ((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]);
+		uy2 = + ((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      - ((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) + ((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      - ((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]);
+		uz2 = + ((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)])
+		      + ((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]) - ((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-2)*(1*(100))*(1*(100))))+(i)]);
+
+		ux2 /= rho2;
+		uy2 /= rho2;
+		uz2 /= rho2;
+
+		rho = 1.0;
+
+		ux = 2*ux1 - ux2;
+		uy = 2*uy1 - uy2;
+		uz = 2*uz1 - uz2;
+
+		u2 = 1.5 * (ux*ux + uy*uy + uz*uz);
+
+		(((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/ 3.0)*rho*(1.0                                 - u2);
+
+		(((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2);
+		(((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2);
+		(((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2);
+		(((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2);
+		(((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2);
+		(((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2);
+
+		(((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2);
+		(((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2);
+		(((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2);
+		(((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2);
+		(((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2);
+		(((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2);
+		(((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2);
+		(((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2);
+		(((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2);
+		(((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2);
+		(((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2);
+		(((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2);
+	}
+}
+
+
+void LBM_performStreamCollide_Orig ( LBM_Grid srcGrid, LBM_Grid dstGrid ) {
+	double ux, uy, uz, u2, rho;
+
+        
+        int i, x, y, z;
+
+	/*voption indep*/
+        for (z = 0; z < (130); z++)
+        {
+            for (y = 0; y < (1*(100)); y++)
+            {
+                for (x = 0; x < (1*(100)); x++)
+                {
+                    i = ((0)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))));
+                    if( ((*((unsigned int*) ((void*) (&((((srcGrid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))))))) & (OBSTACLE))) {
+			((((dstGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((S)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((N)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((W)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((E)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((SW)+N_CELL_ENTRIES*((-1)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((SE)+N_CELL_ENTRIES*((+1)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((NW)+N_CELL_ENTRIES*((-1)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((NE)+N_CELL_ENTRIES*((+1)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((SB)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((ST)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((NB)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((NT)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((WB)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((WT)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((EB)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			((((dstGrid)[((ET)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = ((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+			continue;
+                    }
+
+                    rho = + ((((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                          + ((((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                          + ((((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                          + ((((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                          + ((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                          + ((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                          + ((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                          + ((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                          + ((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                          + ((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+
+                    ux = + ((((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         + ((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         + ((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         + ((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         - ((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    uy = + ((((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         + ((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         - ((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         + ((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + ((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         - ((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+                    uz = + ((((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         + ((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         + ((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         + ((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])))
+                         + ((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) - ((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])));
+
+                    ux /= rho;
+                    uy /= rho;
+                    uz /= rho;
+
+                    if( ((*((unsigned int*) ((void*) (&((((srcGrid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))))))) & (ACCEL))) {
+			ux = 0.005;
+			uy = 0.002;
+			uz = 0.000;
+                    }
+
+                    u2 = 1.5 * (ux*ux + uy*uy + uz*uz);
+                    ((((dstGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/ 3.0)*(1.95)*rho*(1.0                                 - u2);
+
+                    ((((dstGrid)[((N)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2);
+                    ((((dstGrid)[((S)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2);
+                    ((((dstGrid)[((E)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2);
+                    ((((dstGrid)[((W)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2);
+                    ((((dstGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2);
+                    ((((dstGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/18.0)*(1.95)*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2);
+
+                    ((((dstGrid)[((NE)+N_CELL_ENTRIES*((+1)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2);
+                    ((((dstGrid)[((NW)+N_CELL_ENTRIES*((-1)+(+1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2);
+                    ((((dstGrid)[((SE)+N_CELL_ENTRIES*((+1)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2);
+                    ((((dstGrid)[((SW)+N_CELL_ENTRIES*((-1)+(-1)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2);
+                    ((((dstGrid)[((NT)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2);
+                    ((((dstGrid)[((NB)+N_CELL_ENTRIES*((0)+(+1)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2);
+                    ((((dstGrid)[((ST)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2);
+                    ((((dstGrid)[((SB)+N_CELL_ENTRIES*((0)+(-1)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2);
+                    ((((dstGrid)[((ET)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2);
+                    ((((dstGrid)[((EB)+N_CELL_ENTRIES*((+1)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2);
+                    ((((dstGrid)[((WT)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(+1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2);
+                    ((((dstGrid)[((WB)+N_CELL_ENTRIES*((-1)+(0)*(1*(100))+(-1)*(1*(100))*(1*(100))))+(i)]))) = (1.0-(1.95))*((((srcGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))) + (1.0/36.0)*(1.95)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2);
+                }
+            }
+        }
+}
+
+
+
+	/* Known*/ Pochoir_Array <PoCellEntry, 3, 2> pa((2 * 1 + (130)), (1 * (100)), (1 * (100))) ;
+
+	Pochoir_Domain X(0, (1 * (100))), Y(0, (1 * (100))), Z(0 + 1, (130) + 1) ;
+
+	Pochoir_Shape <3> lbm_shape [8] = {{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 1}, {0, 0, 0, -1}, {0, 0, 1, 0}, {0, 0, -1, 0}, {0, 1, 0, 0}, {0, -1, 0, 0}};
+static MAIN_SimType mySimType;
+
+      /*
+
+       */
+
+static void CopyLbmGridToPochoirGrid(LBM_Grid lbmGrid, 
+	/* Known*/ Pochoir_Array <PoCellEntry, 3, 2> &parr , const int t)
+{
+    for (int z=0; z<(130); z++)
+    {
+        const int new_z = z + 1;
+        for (int y=0; y<(1*(100)); y++)
+        {
+            for (int x=0; x<(1*(100)); x++)
+            { 
+                const int i = ((0)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))));
+                PoCellEntry( parr(t, new_z, y, x) )._C  =  (((lbmGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._N  =  (((lbmGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._S  =  (((lbmGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._E  =  (((lbmGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._W  =  (((lbmGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._T  =  (((lbmGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._B  =  (((lbmGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._NE =  (((lbmGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._NW =  (((lbmGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._SE =  (((lbmGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._SW =  (((lbmGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._NT =  (((lbmGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._NB =  (((lbmGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._ST =  (((lbmGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._SB =  (((lbmGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._ET =  (((lbmGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._EB =  (((lbmGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._WT =  (((lbmGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._WB =  (((lbmGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                PoCellEntry( parr(t, new_z, y, x) )._FLAGS =  (((lbmGrid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+            }
+        }
+    }    
+}
+
+static void CopyPochoirGridToLbmGrid(LBM_Grid lbmGrid, 
+	/* Known*/ Pochoir_Array <PoCellEntry, 3, 2> &parr , const int t)
+{
+for (int z=0; z<(130); z++)
+    {
+        const int new_z = z + 1;
+        for (int y=0; y<(1*(100)); y++)
+        {
+            for (int x=0; x<(1*(100)); x++)
+            {
+                const int i = ((0)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))));
+                (((lbmGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._C;
+                (((lbmGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._N;
+                (((lbmGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._S;
+                (((lbmGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._E;
+                (((lbmGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._W;
+                (((lbmGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._T;
+                (((lbmGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._B;                
+                (((lbmGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._NE;
+                (((lbmGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._NW;
+                (((lbmGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._SE;
+                (((lbmGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._SW;
+                (((lbmGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._NT;
+		(((lbmGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._NB;
+                (((lbmGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._ST;
+                (((lbmGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._SB;
+                (((lbmGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._ET;
+                (((lbmGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._EB;
+                (((lbmGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._WT;
+                (((lbmGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._WB;
+                (((lbmGrid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)])) = PoCellEntry( parr(t, new_z, y, x) )._FLAGS;
+            }
+        }
+    }    
+}
+
+    
+void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int numTimeSteps)
+{
+  mySimType = simtype;      
+  //printf("RunPochoir, numTimeSteps=%d\n", numTimeSteps);  
+
+	/* Known */ Pochoir <PoCellEntry, 3, 2> lbm ;
+lbm.registerArray (pa); /* register Array */
+	CopyLbmGridToPochoirGrid(srcGrid, pa, 0);
+  CopyLbmGridToPochoirGrid(dstGrid, pa, 1);
+
+  lbm.registerShape(lbm_shape);
+  lbm.registerDomain(X, Y, Z);
+
+  auto lbm_kernel = [&](int t, int x, int y, int z) {
+    if (z == (0 + 1)) { int z1 = z + 1; double rho1 = + PoCellEntry( pa( t, x, y, z1) ). _C + PoCellEntry( pa( t, x, y, z1) ). _N; + PoCellEntry( pa( t, x, y, z1) ). _S + PoCellEntry( pa( t, x, y, z1) ). _E + PoCellEntry( pa( t, x, y, z1) ). _W + PoCellEntry( pa( t, x, y, z1) ). _T + PoCellEntry( pa( t, x, y, z1) ). _B + PoCellEntry( pa( t, x, y, z1) ). _NE + PoCellEntry( pa( t, x, y, z1) ). _NW + PoCellEntry( pa( t, x, y, z1) ). _SE + PoCellEntry( pa( t, x, y, z1) ). _SW + PoCellEntry( pa( t, x, y, z1) ). _NT + PoCellEntry( pa( t, x, y, z1) ). _NB + PoCellEntry( pa( t, x, y, z1) ). _ST + PoCellEntry( pa( t, x, y, z1) ). _SB + PoCellEntry( pa( t, x, y, z1) ). _ET + PoCellEntry( pa( t, x, y, z1) ). _EB + PoCellEntry( pa( t, x, y, z1) ). _WT + PoCellEntry( pa( t, x, y, z1) ). _WB; int z2 = z + 2; double rho2 = + PoCellEntry( pa( t, x, y, z2) ). _C + PoCellEntry( pa( t, x, y, z2) ). _N; + PoCellEntry( pa( t, x, y, z2) ). _S + PoCellEntry( pa( t, x, y, z2) ). _E + PoCellEntry( pa( t, x, y, z2) ). _W + PoCellEntry( pa( t, x, y, z2) ). _T + PoCellEntry( pa( t, x, y, z2) ). _B + PoCellEntry( pa( t, x, y, z2) ). _NE + PoCellEntry( pa( t, x, y, z2) ). _NW + PoCellEntry( pa( t, x, y, z2) ). _SE + PoCellEntry( pa( t, x, y, z2) ). _SW + PoCellEntry( pa( t, x, y, z2) ). _NT + PoCellEntry( pa( t, x, y, z2) ). _NB + PoCellEntry( pa( t, x, y, z2) ). _ST + PoCellEntry( pa( t, x, y, z2) ). _SB + PoCellEntry( pa( t, x, y, z2) ). _ET + PoCellEntry( pa( t, x, y, z2) ). _EB + PoCellEntry( pa( t, x, y, z2) ). _WT + PoCellEntry( pa( t, x, y, z2) ). _WB; double rho = 2.0*rho1 - rho2; double px = (x / (0.5*((1*(100))-1))) - 1.0; double py = (y / (0.5*((1*(100))-1))) - 1.0; double ux = 0.00; double uy = 0.00; double uz = 0.01 * (1.0-px*px) * (1.0-py*py); double u2 = 1.5 * (ux*ux + uy*uy + uz*uz); PoCellEntry( pa(t, x, y, z) ). _C = (1.0/ 3.0) * rho * (1.0 - u2); PoCellEntry( pa(t, x, y, z) ). _N = (1.0/18.0)*rho*(1.0 + uy*(4.5*uy + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _S = (1.0/18.0)*rho*(1.0 + uy*(4.5*uy - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _E = (1.0/18.0)*rho*(1.0 + ux*(4.5*ux + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _W = (1.0/18.0)*rho*(1.0 + ux*(4.5*ux - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _T = (1.0/18.0)*rho*(1.0 + uz*(4.5*uz + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _B = (1.0/18.0)*rho*(1.0 + uz*(4.5*uz - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NE = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NW = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SE = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SW = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NT = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NB = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _ST = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SB = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _ET = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _EB = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _WT = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _WB = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); } if (z == ((130) - 1 + 1)) { int z1 = z - 1; double rho1 = + PoCellEntry( pa( t, x, y, z1) ). _C + PoCellEntry( pa( t, x, y, z1) ). _N; + PoCellEntry( pa( t, x, y, z1) ). _S + PoCellEntry( pa( t, x, y, z1) ). _E + PoCellEntry( pa( t, x, y, z1) ). _W + PoCellEntry( pa( t, x, y, z1) ). _T + PoCellEntry( pa( t, x, y, z1) ). _B + PoCellEntry( pa( t, x, y, z1) ). _NE + PoCellEntry( pa( t, x, y, z1) ). _NW + PoCellEntry( pa( t, x, y, z1) ). _SE + PoCellEntry( pa( t, x, y, z1) ). _SW + PoCellEntry( pa( t, x, y, z1) ). _NT + PoCellEntry( pa( t, x, y, z1) ). _NB + PoCellEntry( pa( t, x, y, z1) ). _ST + PoCellEntry( pa( t, x, y, z1) ). _SB + PoCellEntry( pa( t, x, y, z1) ). _ET + PoCellEntry( pa( t, x, y, z1) ). _EB + PoCellEntry( pa( t, x, y, z1) ). _WT + PoCellEntry( pa( t, x, y, z1) ). _WB; double ux1 = + PoCellEntry( pa(t, x, y, z1) ). _E - PoCellEntry( pa(t, x, y, z1) ). _W + PoCellEntry( pa(t, x, y, z1) ). _NE - PoCellEntry( pa(t, x, y, z1) ). _NW + PoCellEntry( pa(t, x, y, z1) ). _SE - PoCellEntry( pa(t, x, y, z1) ). _SW + PoCellEntry( pa(t, x, y, z1) ). _ET + PoCellEntry( pa(t, x, y, z1) ). _EB - PoCellEntry( pa(t, x, y, z1) ). _WT - PoCellEntry( pa(t, x, y, z1) ). _WB; double uy1 = + PoCellEntry( pa(t, x, y, z1) ). _N - PoCellEntry( pa(t, x, y, z1) ). _S + PoCellEntry( pa(t, x, y, z1) ). _NE + PoCellEntry( pa(t, x, y, z1) ). _NW - PoCellEntry( pa(t, x, y, z1) ). _SE - PoCellEntry( pa(t, x, y, z1) ). _SW + PoCellEntry( pa(t, x, y, z1) ). _NT + PoCellEntry( pa(t, x, y, z1) ). _NB - PoCellEntry( pa(t, x, y, z1) ). _ST - PoCellEntry( pa(t, x, y, z1) ). _SB; double uz1 = + PoCellEntry( pa(t, x, y, z1) ). _T - PoCellEntry( pa(t, x, y, z1) ). _B + PoCellEntry( pa(t, x, y, z1) ). _NT - PoCellEntry( pa(t, x, y, z1) ). _NB + PoCellEntry( pa(t, x, y, z1) ). _ST - PoCellEntry( pa(t, x, y, z1) ). _SB + PoCellEntry( pa(t, x, y, z1) ). _ET - PoCellEntry( pa(t, x, y, z1) ). _EB + PoCellEntry( pa(t, x, y, z1) ). _WT - PoCellEntry( pa(t, x, y, z1) ). _WB; ux1 /= rho1; uy1 /= rho1; uz1 /= rho1; int z2 = z - 2; double rho2 = + PoCellEntry( pa(t, x, y, z2) ). _C + PoCellEntry( pa(t, x, y, z2) ). _N + PoCellEntry( pa(t, x, y, z2) ). _S + PoCellEntry( pa(t, x, y, z2) ). _E + PoCellEntry( pa(t, x, y, z2) ). _W + PoCellEntry( pa(t, x, y, z2) ). _T + PoCellEntry( pa(t, x, y, z2) ). _B + PoCellEntry( pa(t, x, y, z2) ). _NE + PoCellEntry( pa(t, x, y, z2) ). _NW + PoCellEntry( pa(t, x, y, z2) ). _SE + PoCellEntry( pa(t, x, y, z2) ). _SW + PoCellEntry( pa(t, x, y, z2) ). _NT + PoCellEntry( pa(t, x, y, z2) ). _NB + PoCellEntry( pa(t, x, y, z2) ). _ST + PoCellEntry( pa(t, x, y, z2) ). _SB + PoCellEntry( pa(t, x, y, z2) ). _ET + PoCellEntry( pa(t, x, y, z2) ). _EB + PoCellEntry( pa(t, x, y, z2) ). _WT + PoCellEntry( pa(t, x, y, z2) ). _WB; double ux2 = + PoCellEntry( pa(t, x, y, z2) ). _E - PoCellEntry( pa(t, x, y, z2) ). _W + PoCellEntry( pa(t, x, y, z2) ). _NE - PoCellEntry( pa(t, x, y, z2) ). _NW + PoCellEntry( pa(t, x, y, z2) ). _SE - PoCellEntry( pa(t, x, y, z2) ). _SW + PoCellEntry( pa(t, x, y, z2) ). _ET + PoCellEntry( pa(t, x, y, z2) ). _EB - PoCellEntry( pa(t, x, y, z2) ). _WT - PoCellEntry( pa(t, x, y, z2) ). _WB; double uy2 = + PoCellEntry( pa(t, x, y, z2) ). _N - PoCellEntry( pa(t, x, y, z2) ). _S + PoCellEntry( pa(t, x, y, z2) ). _NE + PoCellEntry( pa(t, x, y, z2) ). _NW - PoCellEntry( pa(t, x, y, z2) ). _SE - PoCellEntry( pa(t, x, y, z2) ). _SW + PoCellEntry( pa(t, x, y, z2) ). _NT + PoCellEntry( pa(t, x, y, z2) ). _NB - PoCellEntry( pa(t, x, y, z2) ). _ST - PoCellEntry( pa(t, x, y, z2) ). _SB; double uz2 = + PoCellEntry( pa(t, x, y, z2) ). _T - PoCellEntry( pa(t, x, y, z2) ). _B + PoCellEntry( pa(t, x, y, z2) ). _NT - PoCellEntry( pa(t, x, y, z2) ). _NB + PoCellEntry( pa(t, x, y, z2) ). _ST - PoCellEntry( pa(t, x, y, z2) ). _SB + PoCellEntry( pa(t, x, y, z2) ). _ET - PoCellEntry( pa(t, x, y, z2) ). _EB + PoCellEntry( pa(t, x, y, z2) ). _WT - PoCellEntry( pa(t, x, y, z2) ). _WB; ux2 /= rho2; uy2 /= rho2; uz2 /= rho2; double rho = 1.0; double ux = 2*ux1 - ux2; double uy = 2*uy1 - uy2; double uz = 2*uz1 - uz2; double u2 = 1.5 * (ux*ux + uy*uy + uz*uz); PoCellEntry( pa(t, x, y, z) ). _C = (1.0/ 3.0)*rho*(1.0 - u2); PoCellEntry( pa(t, x, y, z) ). _N = (1.0/18.0)*rho*(1.0 + uy*(4.5*uy + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _S = (1.0/18.0)*rho*(1.0 + uy*(4.5*uy - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _E = (1.0/18.0)*rho*(1.0 + ux*(4.5*ux + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _W = (1.0/18.0)*rho*(1.0 + ux*(4.5*ux - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _T = (1.0/18.0)*rho*(1.0 + uz*(4.5*uz + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _B = (1.0/18.0)*rho*(1.0 + uz*(4.5*uz - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NE = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NW = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SE = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SW = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NT = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NB = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _ST = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SB = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _ET = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _EB = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _WT = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _WB = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); };
+    const double src_c = PoCellEntry( pa(t, x, y, z) ). _C; const double src_n = PoCellEntry( pa(t, x, y, z) ). _N; const double src_s = PoCellEntry( pa(t, x, y, z) ). _S; const double src_e = PoCellEntry( pa(t, x, y, z) ). _E; const double src_w = PoCellEntry( pa(t, x, y, z) ). _W; const double src_t = PoCellEntry( pa(t, x, y, z) ). _T; const double src_b = PoCellEntry( pa(t, x, y, z) ). _B; const double src_ne = PoCellEntry( pa(t, x, y, z) ). _NE; const double src_nw = PoCellEntry( pa(t, x, y, z) ). _NW; const double src_se = PoCellEntry( pa(t, x, y, z) ). _SE; const double src_sw = PoCellEntry( pa(t, x, y, z) ). _SW; const double src_nt = PoCellEntry( pa(t, x, y, z) ). _NT; const double src_nb = PoCellEntry( pa(t, x, y, z) ). _NB; const double src_st = PoCellEntry( pa(t, x, y, z) ). _ST; const double src_sb = PoCellEntry( pa(t, x, y, z) ). _SB; const double src_et = PoCellEntry( pa(t, x, y, z) ). _ET; const double src_eb = PoCellEntry( pa(t, x, y, z) ). _EB; const double src_wt = PoCellEntry( pa(t, x, y, z) ). _WT; const double src_wb = PoCellEntry( pa(t, x, y, z) ). _WB; double* dst_c = &( PoCellEntry( pa(t+1, x, y, z) ). _C); double* dst_n = &( PoCellEntry( pa(t+1, x, y+1, z) ). _N); double* dst_s = &( PoCellEntry( pa(t+1, x, y-1, z) ). _S);;
+  };
+
+  {
+	lbm.run(numTimeSteps, lbm_kernel);
+	}
+	CopyPochoirGridToLbmGrid(srcGrid, pa, 0);
+  CopyPochoirGridToLbmGrid(dstGrid, pa, 1);
 }
 

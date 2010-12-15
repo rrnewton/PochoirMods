@@ -128,6 +128,7 @@ class Pochoir_Array {
         typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
+        T * l_null;
         BValue_1D bv1_;
         BValue_2D bv2_;
         BValue_3D bv3_;
@@ -145,6 +146,7 @@ class Pochoir_Array {
             view_ = new Storage<T>(TOGGLE * total_size_);
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
         }
 
 		explicit Pochoir_Array (int sz1, int sz0) {
@@ -158,6 +160,7 @@ class Pochoir_Array {
 			view_ = new Storage<T>(TOGGLE * total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
 		}
 
 		explicit Pochoir_Array (int sz2, int sz1, int sz0) {
@@ -177,6 +180,7 @@ class Pochoir_Array {
 			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
 		}
 
 		/* Copy constructor -- create another view of the
@@ -198,6 +202,7 @@ class Pochoir_Array {
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
 		}
 
         /* assignment operator for vector<> */
@@ -216,12 +221,14 @@ class Pochoir_Array {
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
             data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
             return *this;
 		}
 
 		/* destructor : free memory */
 		~Pochoir_Array() {
 			view_->dec_ref();
+            free(l_null);
 		}
 
 		inline Storage<T> * view() {
@@ -316,7 +323,7 @@ class Pochoir_Array {
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
-            T l_bvalue = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : 0;
+            T l_bvalue = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != NULL);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -324,7 +331,7 @@ class Pochoir_Array {
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : 0;
+            T l_bvalue = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -332,7 +339,7 @@ class Pochoir_Array {
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : 0;
+            T l_bvalue = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -340,7 +347,7 @@ class Pochoir_Array {
 
 		inline SProxy<T> operator() (int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx1, _idx0);
-            T l_bvalue = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : 0;
+            T l_bvalue = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != NULL);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -348,7 +355,7 @@ class Pochoir_Array {
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : 0;
+            T l_bvalue = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
@@ -356,7 +363,7 @@ class Pochoir_Array {
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : 0;
+            T l_bvalue = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);

@@ -43,11 +43,12 @@ main = do args <- getArgs
           whilst (null args) $ do
              printUsage
              exitFailure
-          let (inFile, inDir, mode, debug, showFile) 
-                = parseArgs ("", "", PDefault, False, True) args
+          let (inFiles, inDirs, mode, debug, showFile, userArgs) 
+                = parseArgs ([], [], PDefault, False, True, []) args
           whilst (mode == PHelp) $ do
              printUsage
              exitFailure
+{-
           fileExist <- doesFileExist $ inDir ++ inFile
           whilst (not fileExist) $ do
              putStrLn (inDir ++ inFile ++ " doesn't exist!")
@@ -55,31 +56,16 @@ main = do args <- getArgs
           whilst (mode == PError) $ do
              putStrLn ("command line argument error" ++ concat args)
              exitFailure
-          cilkHeaderPath <- catch (getEnv "CILK_HEADER_PATH")(\e -> return "EnvError")
-          whilst (cilkHeaderPath == "EnvError") $ do
-             putStrLn ("Environment variable CILK_HEADER_PATH is NOT set")
-             exitFailure
-          pochoirLibPath <- catch (getEnv "POCHOIR_LIB_PATH")(\e -> return "EnvError")
-          whilst (pochoirLibPath == "EnvError") $ do
-             putStrLn ("Environment variable POCHOIR_LIB_PATH is NOT set")
-             exitFailure
-          let envPath = ["-I" ++ cilkHeaderPath] ++ ["-I" ++ pochoirLibPath]
-          let iccPPFile = inDir ++ getPPFile inFile
-          let iccPPArgs = if debug == False
-                then iccPPFlags ++ envPath ++ [inFile]
-                else iccDebugPPFlags ++ envPath ++ [inFile] 
-          -- a pass of icc preprocessing
-          putStrLn ("inFile = " ++ inDir ++ inFile ++ 
-                    "; icc preprocessed File = " ++ iccPPFile)
-          rawSystem icc iccPPArgs
-          -- a pass of pochoir compilation
-          let outFile = rename inFile "_pochoir"
-          putStrLn ("inFile = " ++ iccPPFile ++ "; Pochoir outFile = " ++ inDir ++ outFile)
-          inh <- openFile iccPPFile ReadMode
-          outh <- openFile outFile WriteMode
-          pProcess mode inh outh
-          hClose inh
-          hClose outh
+-}
+          whilst (mode /= PNoPP) $ do
+             ppopp (mode, debug, showFile, userArgs) (zip inFiles inDirs)
+          -- directly pass the output file of pochoir to icc and userArgs
+          -- let objInFile = getObjFile inDir outFile
+          let iccArgs = userArgs
+          -- putStrLn ("userArgs = " ++ intercalate " " userArgs)
+          putStrLn (icc ++ " " ++ intercalate " " iccArgs)
+          rawSystem icc iccArgs
+{-
           -- a pass of compilation of user's original executable spec
           let objInFile  = getObjFile inDir inFile
           let iccInFileArgs = if debug == False 
@@ -94,24 +80,61 @@ main = do args <- getArgs
                 else objOutFile ++ iccDebugFlags ++ envPath ++ [outFile]
           putStrLn (icc ++ " " ++ intercalate " " iccOutFileArgs)
           rawSystem icc iccOutFileArgs
+-}
           whilst (showFile == False) $ do
-             removeFile outFile
+             let outFiles = map (rename "_pochoir") inFiles 
+             removeFile $ intercalate " " outFiles
 
 whilst :: Bool -> IO () -> IO ()
 whilst True action = action
 whilst False action = return () 
 
+ppopp :: (PMode, Bool, Bool, [String]) -> [(String, String)] -> IO ()
+ppopp (_, _, _, _) [] = return ()
+ppopp (mode, debug, showFile, userArgs) ((inFile, inDir):files) = 
+    do -- putStrLn ("ppopp called! with mode =" ++ show mode)
+       cilkHeaderPath <- catch (getEnv "CILK_HEADER_PATH")(\e -> return "EnvError")
+       whilst (cilkHeaderPath == "EnvError") $ do
+          putStrLn ("Environment variable CILK_HEADER_PATH is NOT set")
+          exitFailure
+       pochoirLibPath <- catch (getEnv "POCHOIR_LIB_PATH")(\e -> return "EnvError")
+       whilst (pochoirLibPath == "EnvError") $ do
+          putStrLn ("Environment variable POCHOIR_LIB_PATH is NOT set")
+          exitFailure
+       let envPath = ["-I" ++ cilkHeaderPath] ++ ["-I" ++ pochoirLibPath]
+       let iccPPFile = inDir ++ getPPFile inFile
+       let iccPPArgs = if debug == False
+             then iccPPFlags ++ envPath ++ [inFile]
+             else iccDebugPPFlags ++ envPath ++ [inFile] 
+       -- a pass of icc preprocessing
+       putStrLn ("icc " ++ intercalate " " iccPPArgs)
+       putStrLn ("inFile = " ++ inDir ++ inFile ++ 
+                 "; icc preprocessed File = " ++ iccPPFile)
+       rawSystem icc iccPPArgs
+       -- a pass of pochoir compilation
+       let outFile = rename "_pochoir" inFile
+       putStrLn ("pochoir -" ++ show mode ++ " " ++ iccPPFile)
+       putStrLn ("inFile = " ++ iccPPFile ++ "; Pochoir outFile = " ++ inDir ++ outFile)
+       inh <- openFile iccPPFile ReadMode
+       outh <- openFile outFile WriteMode
+       pProcess mode inh outh
+       hClose inh
+       hClose outh
+       ppopp (mode, debug, showFile, userArgs) files
+
 rename :: String -> String -> String
-rename fname pSuffix = name ++ pSuffix ++ ".cpp"
+rename pSuffix fname = name ++ pSuffix ++ ".cpp"
     where (name, suffix) = break ('.' ==) fname
 
 getPPFile :: String -> String
 getPPFile fname = name ++ ".i"
     where (name, suffix) = break ('.' ==) fname
 
+{-
 getObjFile :: String -> String -> [String]
 getObjFile dir fname = ["-o"] ++ [dir++name]
     where (name, suffix) = break ('.' ==) fname 
+-}
 
 pInitState = ParserState { pMode = POptPointer, pState = Unrelated, pMacro = Map.empty, pArray = Map.empty, pStencil = Map.empty, pShape = Map.empty, pRange = Map.empty, pKernel = Map.empty}
 
@@ -125,60 +148,73 @@ iccDebugFlags = ["-DDEBUG", "-O0", "-g3", "-std=c++0x", "-include", "cilk_stub.h
 
 iccDebugPPFlags = ["-P", "-C", "-DDEBUG", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
 
-parseArgs :: (String, String, PMode, Bool, Bool) -> [String] -> (String, String, PMode, Bool, Bool)
-parseArgs (inFile, inDir, mode, debug, showFile) aL 
+parseArgs :: ([String], [String], PMode, Bool, Bool, [String]) -> [String] -> ([String], [String], PMode, Bool, Bool, [String])
+parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL 
     | elem "-help" aL =
         let l_mode = PHelp
-        in  (inFile, inDir, l_mode, debug, showFile)
+            aL' = delete "-help" aL
+        in  (inFiles, inDirs, l_mode, debug, showFile, aL')
     | elem "-split-type-shadow" aL = 
         let l_mode = PTypeShadow
             aL' = delete "-split-type-shadow" aL
-        in  parseArgs (inFile, inDir, l_mode, debug, showFile) aL'
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-split-opt-pointer" aL =
         let l_mode = POptPointer
             aL' = delete "-split-opt-pointer" aL
-        in  parseArgs (inFile, inDir, l_mode, debug, showFile) aL'
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-split-pointer" aL =
         let l_mode = PPointer
             aL' = delete "-split-pointer" aL
-        in  parseArgs (inFile, inDir, l_mode, debug, showFile) aL'
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-split-iter" aL =
         let l_mode = PIter
             aL' = delete "-split-iter" aL
-        in  parseArgs (inFile, inDir, l_mode, debug, showFile) aL'
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-split-interior" aL =
         let l_mode = PInterior
             aL' = delete "-split-interior" aL
-        in  parseArgs (inFile, inDir, l_mode, debug, showFile) aL'
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-split-macro-shadow" aL =
         let l_mode = PMacroShadow
             aL' = delete "-split-macro-shadow" aL
-        in  parseArgs (inFile, inDir, l_mode, debug, showFile) aL'
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-showFile" aL =
         let l_showFile = True
             aL' = delete "-showFile" aL
-        in  parseArgs (inFile, inDir, mode, debug, l_showFile) aL'
+        in  parseArgs (inFiles, inDirs, mode, debug, l_showFile, aL') aL'
     | elem "-debug" aL =
         let l_debug = True
             aL' = delete "-debug" aL
-        in  parseArgs (inFile, inDir, mode, l_debug, showFile) aL'
+        in  parseArgs (inFiles, inDirs, mode, l_debug, showFile, aL') aL'
     | null aL == False =
-        let (l_file, l_dir) = findCPP aL
-        in  (l_file, l_dir, mode, debug, showFile)
+        let (l_files, l_dirs, l_mode, aL') = findCPP aL ([], [], mode, aL)
+        in  (l_files, l_dirs, l_mode, debug, showFile, aL')
     | otherwise = 
+        let l_mode = PNoPP
+        in  (inFiles, inDirs, l_mode, debug, showFile, aL)
+{-
         let l_mode = PError
-        in  (inFile, inDir, mode, debug, showFile)
+        in  (inFile, inDir, l_mode, debug, showFile, aL)
+-}
 
-findCPP :: [String] -> (String, String)
-findCPP [] = ("", "")
-findCPP (a:as)  
+findCPP :: [String] -> ([String], [String], PMode, [String]) -> ([String], [String], PMode, [String])
+findCPP [] (l_files, l_dirs, l_mode, l_al) = 
+    let l_mode' = 
+            if null l_files == True || null l_dirs == True then PNoPP else l_mode
+    in  (l_files, l_dirs, l_mode', l_al)
+findCPP (a:as) (l_files, l_dirs, l_mode, l_al)
     | isSuffixOf ".cpp" a || isSuffixOf ".cxx" a = 
         let l_file = drop (1 + (pLast $ findIndices (== '/') a)) a
             l_dir  = take (1 + (pLast $ findIndices (== '/') a)) a
+            l_files' = l_files ++ [l_file]
+            l_dirs'  = l_dirs ++ [l_dir]
             pLast [] = -1
             pLast aL@(a:as) = last aL
-        in  (l_file, l_dir)
-    | otherwise = findCPP as
+            l_pochoir_file = rename "_pochoir" l_file 
+            (prefix, suffix) = break (a == ) l_al
+            l_al' = prefix ++ [l_pochoir_file] ++ tail suffix
+        in  findCPP as (l_files', l_dirs', l_mode, l_al')
+    | otherwise = findCPP as (l_files, l_dirs, l_mode, l_al)
 
 printUsage :: IO ()
 printUsage = 

@@ -90,12 +90,14 @@ getFromStmts l_action l_arrayMap l_stmts@(a:as) =
                   iter2 = concat $ map (getFromStmts l_action l_arrayMap) sL
               in  union iter1 iter2
           getFromStmt (UNKNOWN s) = []
-          getFromExpr (VAR v) = []
+          getFromExpr (VAR q v) = []
           getFromExpr (BVAR v dim) = []
-          getFromExpr (PVAR v dL) = 
+          getFromExpr (PVAR q v dL) = 
               case Map.lookup v l_arrayMap of
                    Nothing -> []
-                   Just arrayInUse -> l_action arrayInUse (PVAR v dL)
+                   Just arrayInUse -> l_action arrayInUse (PVAR q v dL)
+          getFromExpr (SVAR t e c f) = getFromExpr e
+          getFromExpr (PSVAR t e c f) = getFromExpr e
           getFromExpr (Uno uop e) = getFromExpr e
           getFromExpr (PostUno uop e) = getFromExpr e
           getFromExpr (Duo bop e1 e2) = 
@@ -126,12 +128,14 @@ transStmts l_stmts@(a:as) l_action = transStmt a : transStmts as l_action
           transStmt (FOR sL s) = FOR (map (flip transStmts l_action) sL)
                                          (transStmt s) 
           transStmt (UNKNOWN s) = UNKNOWN s 
-          transExpr (VAR v) =  VAR v
+          transExpr (VAR q v) =  VAR q v
           -- if it's in the form of BVAR, then the user must have already done some
           -- manual transformation on its source, we just leave them untouched!
           transExpr (BVAR v dim) = BVAR v dim
           transExpr (BExprVAR v e) = BExprVAR v $ transExpr e
-          transExpr (PVAR v dL) = l_action (PVAR v dL)
+          transExpr (PVAR q v dL) = l_action (PVAR q v dL)
+          transExpr (SVAR t e c f) = SVAR t (transExpr e) c f
+          transExpr (PSVAR t e c f) = PSVAR t (transExpr e) c f
           transExpr (Uno uop e) = Uno uop $ transExpr e
           transExpr (PostUno uop e) = PostUno uop $ transExpr e
           transExpr (Duo bop e1 e2) = Duo bop (transExpr e1) (transExpr e2)
@@ -216,18 +220,21 @@ pShowInteriorKernel l_name l_kernel =
                                    }
     in  pShowAutoKernel l_name l_interiorKernel
 
-pShowTypeKernel :: String -> PKernel -> String
-pShowTypeKernel l_name l_kernel =
+pShowTypeKernel :: [PArray] -> String -> PKernel -> String
+pShowTypeKernel l_sArrayInUse l_name l_kernel =
     let l_iter = kIter l_kernel
         l_array = unionArrayIter l_iter
-    in  pShowShadowArrayInUse l_array ++ pShowAutoKernel l_name l_kernel 
+    --  in  pShowShadowArrayInUse l_array ++ pShowAutoKernel l_name l_kernel 
+    in  pShowShadowArrayInUse l_sArrayInUse ++ pShowAutoKernel l_name l_kernel 
 
-pShowMacroKernel :: String -> PKernel -> String
-pShowMacroKernel l_name l_kernel =
+pShowMacroKernel :: [PArray] -> String -> PKernel -> String
+pShowMacroKernel l_sArrayInUse l_name l_kernel =
     let l_iter = kIter l_kernel
         l_array = unionArrayIter l_iter
-        shadowArrayInUse = pDefMacroArrayInUse l_array (kParams l_kernel)
-        unshadowArrayInUse = pUndefMacroArrayInUse l_array (kParams l_kernel)
+        -- shadowArrayInUse = pDefMacroArrayInUse l_array (kParams l_kernel)
+        shadowArrayInUse = pDefMacroArrayInUse l_sArrayInUse (kParams l_kernel)
+        -- unshadowArrayInUse = pUndefMacroArrayInUse l_array (kParams l_kernel)
+        unshadowArrayInUse = pUndefMacroArrayInUse l_sArrayInUse (kParams l_kernel)
     in  shadowArrayInUse ++ pShowAutoKernel l_name l_kernel ++ unshadowArrayInUse
 
 pShowObaseKernel :: String -> PKernel -> String
@@ -325,9 +332,9 @@ pShowOptPointerStmt l_kernel =
     in show obaseStmts
 
 transPointer :: [Iter] -> Expr -> Expr
-transPointer l_iters (PVAR v dL) =
+transPointer l_iters (PVAR q v dL) =
     case pPointerLookup (v, dL) l_iters of
-        Nothing -> PVAR v dL
+        Nothing -> PVAR q v dL
         Just (iterName, arrayInUse, des) -> 
             BVAR iterName de
                 where de = simplifyDimExpr naive_de
@@ -343,14 +350,20 @@ mulDimExpr :: String -> DimExpr -> DimExpr
 mulDimExpr stride dim = DimDuo "*" (DimVAR stride) dim
 
 excludeDimExpr :: [DimExpr] -> [DimExpr] -> [DimExpr]
-excludeDimExpr [] [] = []
+excludeDimExpr dL [] = dL
+excludeDimExpr [] _ = []
 excludeDimExpr (d:ds) (r:rs) = (excludeDimExprItem d r):(excludeDimExpr ds rs)
     where excludeDimExprItem (DimVAR v) r = if (DimVAR v) == r then DimINT 0 else (DimVAR v)
           excludeDimExprItem (DimDuo bop e1 e2) r 
+            | (DimDuo bop e1 e2) == r = DimINT 0
             | e1 == r = DimParen (DimDuo bop (DimINT 0) e2)
             | e2 == r = DimParen (DimDuo bop e1 (DimINT 0))
             | otherwise = (DimDuo bop (excludeDimExprItem e1 r) (excludeDimExprItem e2 r))
           excludeDimExprItem (DimINT n) r = if (DimINT n) == r then DimINT 0 else (DimINT n)
+          excludeDimExprItem (DimParen e) r 
+            | (DimParen e) == r = DimINT 0
+            | e == r = DimINT 0
+            | otherwise = DimParen (excludeDimExprItem e r)
 
 pPointerLookup :: (PName, [DimExpr]) -> [Iter] -> Maybe Iter
 pPointerLookup (v, dL) [] = Nothing
@@ -359,17 +372,17 @@ pPointerLookup (v, dL) ((iterName, arrayInUse, dL'):is)
     | otherwise = pPointerLookup (v, dL) is
 
 transOptPointer :: [Iter] -> Expr -> Expr
-transOptPointer l_iters (PVAR v dL) =
+transOptPointer l_iters (PVAR q v dL) =
     case pIterLookup (v, dL) l_iters of
-        Nothing -> PVAR v dL
-        Just iterName -> VAR $ "(*" ++ iterName ++ ")"
+        Nothing -> PVAR q v dL
+        Just iterName -> VAR q $ "(*" ++ iterName ++ ")"
 transOptPointer l_iters e = e
 
 transIter :: [Iter] -> Expr -> Expr
-transIter l_iters (PVAR v dL) =
+transIter l_iters (PVAR q v dL) =
     case pIterLookup (v, dL) l_iters of
-        Nothing -> PVAR v dL
-        Just iterName -> VAR iterName
+        Nothing -> PVAR q v dL
+        Just iterName -> VAR q iterName
 transIter l_iters e = e
 
 pShowIterSet :: [Iter] -> [PName] -> String
