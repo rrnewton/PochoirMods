@@ -250,6 +250,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
     checkFlags();
 #if BICUT
     // algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    fprintf(stderr, "Call SIM_BICUT_P\n");
     algor.sim_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #else
     algor.walk_ncores_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);

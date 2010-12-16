@@ -98,6 +98,27 @@ struct Pochoir_Shape {
 template <int N_RANK, size_t N>
 size_t ArraySize (Pochoir_Shape<N_RANK> (& arr)[N]) { return N; }
 
+inline void klein_region(int i, grid_info<2> & grid, grid_info<2> const & initial_grid) {
+    grid_info<2> orig_grid = grid;
+    const int l_arr_size_1 = initial_grid.x1[1] - initial_grid.x0[1];
+    const int l_arr_size_0 = initial_grid.x1[0] - initial_grid.x0[0];
+
+    if (i == 1) {
+        if (grid.x0[1] >= initial_grid.x1[1]) {
+            grid.x0[1] -= l_arr_size_1;
+            grid.x1[1] -= l_arr_size_1;
+        }
+    } else if (i == 0) {
+        if (grid.x0[0] >= initial_grid.x1[0]) {
+            grid.x0[0] -= l_arr_size_0;
+            grid.x1[0] -= l_arr_size_0;
+            grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - 1 - orig_grid.x0[1]);
+            grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - 1 - orig_grid.x1[1]);
+        }
+    }
+    return;
+}
+
 /* these lambda functions are for computing internal/boundary region,
  * the original 'f'/'bf'
  */

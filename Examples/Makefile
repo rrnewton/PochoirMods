@@ -7,7 +7,7 @@ heat_NP : tb_heat_2D_NP.cpp
 heat_P : tb_heat_2D_P.cpp
 	${CC} -o tb_heat_2D_P_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo -split-macro-shadow tb_heat_2D_P.cpp
 life : tb_life.cpp
-	${CC} -o tb_life_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_life.cpp
+	${CC} -o tb_life_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo -split-macro-shadow tb_life.cpp
 rna : rna.cpp
 	${CC} -o rna_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo rna.cpp
 psa : psa.cpp
@@ -15,10 +15,9 @@ psa : psa.cpp
 rna_struct : rna_struct.cpp
 	${CC} -o rna_struct_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo rna_struct.cpp
 3dfd : tb_3dfd.cpp
-	${CC} -o tb_3dfd_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_3dfd.cpp
-klein : tb_life_klein.cpochoir tb_life_klein_pochoir.cpp
-	${CC} -o klein ${CFLAGS} tb_life_klein.cpochoir
-	${CC} -o klein_pochoir ${CFLAGS} tb_life_klein_pochoir.cpochoir
+	${CC} -o tb_3dfd_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo -split-macro-shadow tb_3dfd.cpp
+klein : tb_life_klein.cpp
+	${CC} -o klein_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo -split-macro-shadow tb_life_klein.cpp
 clean: 
 	rm -f *.o *.i
 	rm -f ./tb_3dfd_pochoir ./tb_life_pochoir ./tb_heat_2D_NP_pochoir ./tb_heat_2D_P_pochoir

@@ -154,8 +154,6 @@ struct Algorithm {
 
 #define ALGOR_QUEUE_SIZE 200
     /* we can use toggled circular queue! */
-    queue_info circular_queue_[2][ALGOR_QUEUE_SIZE];
-    int queue_head_[2], queue_tail_[2], queue_len_[2];
     grid_info<N_RANK> phys_grid_;
     int phys_length_[N_RANK];
 	int slope_[N_RANK];
@@ -178,9 +176,6 @@ struct Algorithm {
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
-        for (int i = 0; i < 2; ++i) {
-            queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
-        }
 #if DEBUG
         N_CORES = 2;
 #else
@@ -198,15 +193,15 @@ struct Algorithm {
     inline void push_queue(int dep, int level, int t0, int t1, grid_info<N_RANK> const & grid);
     inline queue_info & top_queue(int dep);
     inline void pop_queue(int dep);
-    inline bool within_boundary(int t0, int t1, grid_info<N_RANK> const & grid);
+    inline bool within_boundary(int t0, int t1, grid_info<N_RANK> & grid);
 
     void set_phys_grid(grid_info<N_RANK> const & grid);
     void set_stride(int const stride[]);
     void set_slope(int const slope[]);
-    inline bool touch_boundary(int i, int lt, grid_info<N_RANK> const & grid);
+    inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
 
     template <typename F, typename BF>
-    inline void sim_space_cut_p(F const & f, BF const & bf);
+    inline void sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF>
     inline void sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 
