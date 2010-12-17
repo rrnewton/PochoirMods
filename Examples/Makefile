@@ -1,6 +1,6 @@
 CC = ./pochoir
 ICC = icc
-all : clean 3dfd life heat_P heat_NP psa rna rna_struct
+all : clean klein 3dfd life heat_P heat_NP psa rna rna_struct
 heat_NP : tb_heat_2D_NP.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo -split-macro-shadow tb_heat_2D_NP.cpp
 	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo -split-macro-shadow tb_heat_2D_NP.cpp
@@ -18,6 +18,7 @@ rna_struct : rna_struct.cpp
 	${CC} -o tb_3dfd_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo -split-macro-shadow tb_3dfd.cpp
 klein : tb_life_klein.cpp
 	${CC} -o klein_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo -split-macro-shadow tb_life_klein.cpp
+#	${CC} -o klein_pochoir -O0 -DNDEBUG -std=c++0x -Wall -Werror -ipo -debug -split-macro-shadow tb_life_klein.cpp
 clean: 
 	rm -f *.o *.i
 	rm -f ./tb_3dfd_pochoir ./tb_life_pochoir ./tb_heat_2D_NP_pochoir ./tb_heat_2D_P_pochoir

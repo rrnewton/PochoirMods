@@ -39,14 +39,21 @@ inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> &
     bool interior = false;
     if (grid.x0[i] >= uub_boundary[i] 
      && grid.x0[i] + grid.dx0[i] * lt >= uub_boundary[i]) {
-#if 0
+#if !KLEIN
+        /* this is for NON klein bottle */
         interior = true;
-        /* by this way, we are assuming the shape is NOT a Klein bottle */
+        /* by this branch, we are assuming the shape is NOT a Klein bottle */
         grid.x0[i] -= phys_length_[i];
         grid.x1[i] -= phys_length_[i];
 #else
+        /* this is for klein bottle! */
+#if 1
         interior = true;
-        klein_region(i, grid, phys_grid_);
+//        fprintf(stderr, "call klein_region!\n");
+        klein_region(grid, phys_grid_);
+#else
+        interior = false;
+#endif
 #endif
     } else if (grid.x1[i] <= ulb_boundary[i] 
             && grid.x1[i] + grid.dx1[i] * lt <= ulb_boundary[i]
@@ -63,6 +70,7 @@ template <int N_RANK>
 inline bool Algorithm<N_RANK>::within_boundary(int t0, int t1, grid_info<N_RANK> & grid)
 {
     bool l_touch_boundary = false;
+    int lt = t1 - t0;
     for (int i = 0; i < N_RANK; ++i) {
         l_touch_boundary |= touch_boundary(i, t1-t0, grid);
     }
@@ -269,7 +277,7 @@ template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
     queue_info *l_father, *l_son;
-    int curr_dep = 0;
+//    int curr_dep = 0;
     queue_info circular_queue_[2][ALGOR_QUEUE_SIZE];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
 
@@ -279,7 +287,7 @@ inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK>
 
     /* set up the initial grid */
     push_queue(0, 0, t0, t1, grid);
-    while (curr_dep < N_RANK+1) {
+    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
             top_queue(curr_dep_pointer, l_father);
@@ -288,8 +296,8 @@ inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK>
 #if DEBUG
                 printf("call all sub_grid in dep (%d)\n", curr_dep);
 #endif
-#define USE_CILK_FOR
-#ifdef USE_CILK_FOR 
+#define USE_CILK_FOR 0
+#if USE_CILK_FOR 
                 /* use cilk_for to spawn all the sub-grid */
 //                fprintf(stderr, "using cilk_for!\n");
                 cilk_for (int j = 0; j < queue_len_[curr_dep_pointer]; ++j) {
@@ -326,14 +334,14 @@ inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK>
 #else
                 if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
 #if DEBUG
-                        printf("call interior!\n");
-                        print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
+//                        printf("call interior!\n");
+//                        print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
 #endif
                         cilk_spawn base_case_kernel_interior(l_father->t0, l_father->t1, l_father->grid, f);
                     } else {
 #if DEBUG
-                        printf("call boundary!\n");
-                        print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
+//                        printf("call boundary!\n");
+//                        print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
 #endif
                         cilk_spawn base_case_kernel_boundary(l_father->t0, l_father->t1, l_father->grid, bf);
                 }
@@ -400,12 +408,12 @@ inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK>
                 }
             }
         } /* end while (queue_len_[curr_dep] > 0) */
-#ifndef USE_CILK_FOR
+#if !USE_CILK_FOR
         cilk_sync;
 #endif
         assert(queue_len_[curr_dep_pointer] == 0);
-        ++curr_dep;
-    } /* end while (curr_dep < N_RANK+1) */
+//        ++curr_dep;
+    } /* end for (curr_dep < N_RANK+1) */
 }
 
 template <int N_RANK> template <typename F, typename BF>
@@ -451,14 +459,14 @@ inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> con
         // base case
         if (interior_flag) {
 #if DEBUG
-            printf("call interior!\n");
-            print_grid(stdout, t0, t1, l_father_grid);
+//            printf("call interior!\n");
+//            print_grid(stdout, t0, t1, l_father_grid);
 #endif
             base_case_kernel_interior(t0, t1, l_father_grid, f);
         } else {
 #if DEBUG
-            printf("call boundary!\n");
-            print_grid(stdout, t0, t1, l_father_grid);
+//            printf("call boundary!\n");
+//            print_grid(stdout, t0, t1, l_father_grid);
 #endif
             base_case_kernel_boundary(t0, t1, l_father_grid, bf);
         }

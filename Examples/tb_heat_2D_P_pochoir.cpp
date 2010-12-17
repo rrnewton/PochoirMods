@@ -28186,6 +28186,55 @@ struct Pochoir_Shape {
 template <int N_RANK, size_t N>
 size_t ArraySize (Pochoir_Shape<N_RANK> (& arr)[N]) { return N; }
 
+
+inline void klein(int & new_i, int & new_j, grid_info<2> const & grid) {
+    int l_arr_size_1 = grid.x1[1] - grid.x0[1];
+    int l_arr_size_0 = grid.x1[0] - grid.x0[0];
+
+    if (new_i < grid.x0[1])
+        new_i += l_arr_size_1;
+    else if (new_i >= grid.x1[1])
+        new_i -= l_arr_size_1;
+    if (new_j < grid.x0[0]) {
+        new_j += l_arr_size_0;
+        new_i  = grid.x0[1] + (grid.x1[1] - 1 - new_i);
+    } else if (new_j >= grid.x1[0]) {
+        new_j -= l_arr_size_0;
+        new_i  = grid.x0[1] + (grid.x1[1] - 1 - new_i);
+    }
+    return;
+}
+
+inline void klein_region(int i, grid_info<2> & grid, grid_info<2> const & initial_grid) {
+    grid_info<2> orig_grid = grid;
+    const int l_arr_size_1 = initial_grid.x1[1] - initial_grid.x0[1];
+    const int l_arr_size_0 = initial_grid.x1[0] - initial_grid.x0[0];
+
+    if (i == 1) {
+        if (grid.x0[1] >= initial_grid.x1[1]) {
+            grid.x0[1] -= l_arr_size_1;
+            grid.x1[1] -= l_arr_size_1;
+        } 
+    } else if (i == 0) {
+        if (grid.x0[0] >= initial_grid.x1[0]) {
+            grid.x0[0] -= l_arr_size_0;
+            grid.x1[0] -= l_arr_size_0;
+            if (grid.x0[1] >= initial_grid.x1[1]) {
+                grid.x0[1] -= l_arr_size_1;
+                grid.x1[1] -= l_arr_size_1;
+            } else if (grid.x1[1] < initial_grid.x0[1]) {
+                grid.x0[1] += l_arr_size_1;
+                grid.x1[1] += l_arr_size_1;
+            }
+            grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x0[1]);
+            grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x1[1]);
+            grid.dx0[1] = -orig_grid.dx1[1];
+            grid.dx1[1] = -orig_grid.dx0[1];
+        }
+    }
+    return;
+}
+
 /* these lambda functions are for computing internal/boundary region,
  * the original 'f'/'bf'
  */
@@ -29243,12 +29292,12 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
     inline void push_queue(int dep, int level, int t0, int t1, grid_info<N_RANK> const & grid);
     inline queue_info & top_queue(int dep);
     inline void pop_queue(int dep);
-    inline bool within_boundary(int t0, int t1, grid_info<N_RANK> const & grid);
+    inline bool within_boundary(int t0, int t1, grid_info<N_RANK> & grid);
 
     void set_phys_grid(grid_info<N_RANK> const & grid);
     void set_stride(int const stride[]);
     void set_slope(int const slope[]);
-    inline bool touch_boundary(int i, int lt, grid_info<N_RANK> const & grid);
+    inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
 
     template <typename F, typename BF>
     inline void sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
@@ -29395,13 +29444,14 @@ inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_in
  * because we compute the kernel with range [a, b)
  */
 template <int N_RANK>
-inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> const & grid) 
+inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> & grid) 
 {
     bool interior = false;
     if (grid.x0[i] >= uub_boundary[i] 
      && grid.x0[i] + grid.dx0[i] * lt >= uub_boundary[i]) {
+        /* this is for NON klein bottle */
         interior = true;
-        /* by this way, we are assuming the shape is NOT a Klein bottle */
+        /* by this branch, we are assuming the shape is NOT a Klein bottle */
         grid.x0[i] -= phys_length_[i];
         grid.x1[i] -= phys_length_[i];
     } else if (grid.x1[i] <= ulb_boundary[i] 
@@ -29416,7 +29466,7 @@ inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> c
 }
 
 template <int N_RANK>
-inline bool Algorithm<N_RANK>::within_boundary(int t0, int t1, grid_info<N_RANK> const & grid)
+inline bool Algorithm<N_RANK>::within_boundary(int t0, int t1, grid_info<N_RANK> & grid)
 {
     bool l_touch_boundary = false;
     for (int i = 0; i < N_RANK; ++i) {
@@ -29557,8 +29607,8 @@ template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
     queue_info *l_father, *l_son;
-    int curr_dep = 0;
-    queue_info circular_queue_[2][200];
+//    int curr_dep = 0;
+queue_info circular_queue_[2][200];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
 
     for (int i = 0; i < 2; ++i) {
@@ -29567,24 +29617,15 @@ inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK>
 
     /* set up the initial grid */
     do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-    while (curr_dep < N_RANK+1) {
+    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
             do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
-                /* use cilk_for to spawn all the sub-grid */
-//                fprintf(stderr, "using cilk_for!\n");
-_Cilk_for (int j = 0; j < queue_len_[curr_dep_pointer]; ++j) {
-                    int i = (((queue_head_[curr_dep_pointer]+j)) - ((200) & -(((queue_head_[curr_dep_pointer]+j))>=(200))));
-//                    l_son = top_queue(curr_dep);
-l_son = &(circular_queue_[curr_dep_pointer][i]);
-                    /* assert all the sub-grid has done N_RANK spatial cuts */
-                    (static_cast<void> (0));
-                    sim_bicut_p(l_son->t0, l_son->t1, l_son->grid, f, bf);
-                } /* end cilk_for */
-                queue_head_[curr_dep_pointer] = queue_tail_[curr_dep_pointer] = 0;
-                queue_len_[curr_dep_pointer] = 0;
+                /* use cilk_spawn to spawn all the sub-grid */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                _Cilk_spawn sim_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
             } else {
                 /* performing a space cut on dimension 'level' */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
@@ -29646,9 +29687,10 @@ l_son = &(circular_queue_[curr_dep_pointer][i]);
                 }
             }
         } /* end while (queue_len_[curr_dep] > 0) */
+        _Cilk_sync;
         (static_cast<void> (0));
-        ++curr_dep;
-    } /* end while (curr_dep < N_RANK+1) */
+//        ++curr_dep;
+} /* end for (curr_dep < N_RANK+1) */
 }
 
 template <int N_RANK> template <typename F, typename BF>
@@ -32055,9 +32097,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     checkFlags();
-    // algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
-fprintf(stderr, "Call SIM_BICUT_P\n");
-    algor.sim_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 }
 
 /* obase for zero-padded area! */

@@ -98,23 +98,52 @@ struct Pochoir_Shape {
 template <int N_RANK, size_t N>
 size_t ArraySize (Pochoir_Shape<N_RANK> (& arr)[N]) { return N; }
 
-inline void klein_region(int i, grid_info<2> & grid, grid_info<2> const & initial_grid) {
+#define KLEIN 1
+
+inline void klein(int & new_i, int & new_j, grid_info<2> const & grid) {
+    int l_arr_size_1 = grid.x1[1] - grid.x0[1];
+    int l_arr_size_0 = grid.x1[0] - grid.x0[0];
+
+    if (new_i < grid.x0[1])
+        new_i += l_arr_size_1;
+    else if (new_i >= grid.x1[1])
+        new_i -= l_arr_size_1;
+    if (new_j < grid.x0[0]) {
+        new_j += l_arr_size_0;
+        new_i  = grid.x0[1] + (grid.x1[1] - 1 - new_i);
+    } else if (new_j >= grid.x1[0]) {
+        new_j -= l_arr_size_0;
+        new_i  = grid.x0[1] + (grid.x1[1] - 1 - new_i);
+    }
+    return;
+}
+
+inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid) {
     grid_info<2> orig_grid = grid;
     const int l_arr_size_1 = initial_grid.x1[1] - initial_grid.x0[1];
     const int l_arr_size_0 = initial_grid.x1[0] - initial_grid.x0[0];
 
-    if (i == 1) {
-        if (grid.x0[1] >= initial_grid.x1[1]) {
-            grid.x0[1] -= l_arr_size_1;
-            grid.x1[1] -= l_arr_size_1;
-        }
-    } else if (i == 0) {
-        if (grid.x0[0] >= initial_grid.x1[0]) {
-            grid.x0[0] -= l_arr_size_0;
-            grid.x1[0] -= l_arr_size_0;
-            grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - 1 - orig_grid.x0[1]);
-            grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - 1 - orig_grid.x1[1]);
-        }
+    if (grid.x0[1] >= initial_grid.x1[1]) {
+        grid.x0[1] -= l_arr_size_1;
+        grid.x1[1] -= l_arr_size_1;
+    } else if (grid.x1[1] < initial_grid.x0[1]) {
+        grid.x0[1] += l_arr_size_1;
+        grid.x1[1] += l_arr_size_1;
+    } 
+    if (grid.x0[0] >= initial_grid.x1[0]) {
+        grid.x0[0] -= l_arr_size_0;
+        grid.x1[0] -= l_arr_size_0;
+        grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x1[1]);
+        grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x0[1]);
+        grid.dx0[1] = -orig_grid.dx1[1];
+        grid.dx1[1] = -orig_grid.dx0[1];
+    } else if (grid.x1[0] < initial_grid.x0[0]) {
+        grid.x0[0] += l_arr_size_0;
+        grid.x1[0] += l_arr_size_0;
+        grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x1[1]);
+        grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x0[1]);
+        grid.dx0[1] = -orig_grid.dx1[1];
+        grid.dx1[1] = -orig_grid.dx0[1];
     }
     return;
 }

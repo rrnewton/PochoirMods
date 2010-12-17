@@ -61,9 +61,16 @@ template <typename BF>
 struct meta_grid_boundary <2, BF>{
 	static inline void single_step(int t, grid_info<2> const & grid, grid_info<2> const & initial_grid, BF const & bf) {
 		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
+#if !KLEIN
             int new_i = pmod_lu(i, initial_grid.x0[1], initial_grid.x1[1]);
+#endif
 			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
+#if !KLEIN
                 int new_j = pmod_lu(j, initial_grid.x0[0], initial_grid.x1[0]);
+#else
+                int new_i = i, new_j = j;
+                klein(new_i, new_j, initial_grid);
+#endif
                 bf(t, new_i, new_j);
 			}
 		}
@@ -244,7 +251,7 @@ struct Algorithm {
     inline void naive_cut_space_ncores(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
     inline void cut_space_ncores_boundary(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
-#if DEBUG
+#if 1
 	void print_grid(FILE * fp, int t0, int t1, grid_info<N_RANK> const & grid);
 	void print_sync(FILE * fp);
 	void print_index(int t, int const idx[]);
@@ -320,7 +327,7 @@ inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_in
 	}
 }
 
-#if DEBUG
+#if 1
 template <int N_RANK>
 void Algorithm<N_RANK>::print_grid(FILE *fp, int t0, int t1, grid_info<N_RANK> const & grid)
 {
