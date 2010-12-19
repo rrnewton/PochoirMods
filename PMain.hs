@@ -92,7 +92,7 @@ whilst False action = return ()
 ppopp :: (PMode, Bool, Bool, [String]) -> [(String, String)] -> IO ()
 ppopp (_, _, _, _) [] = return ()
 ppopp (mode, debug, showFile, userArgs) ((inFile, inDir):files) = 
-    do -- putStrLn ("ppopp called! with mode =" ++ show mode)
+    do putStrLn ("ppopp called! with mode =" ++ show mode)
        cilkHeaderPath <- catch (getEnv "CILK_HEADER_PATH")(\e -> return "EnvError")
        whilst (cilkHeaderPath == "EnvError") $ do
           putStrLn ("Environment variable CILK_HEADER_PATH is NOT set")
@@ -107,7 +107,7 @@ ppopp (mode, debug, showFile, userArgs) ((inFile, inDir):files) =
              then iccPPFlags ++ envPath ++ [inFile]
              else iccDebugPPFlags ++ envPath ++ [inFile] 
        -- a pass of icc preprocessing
-       putStrLn ("icc " ++ intercalate " " iccPPArgs)
+       putStrLn (icc ++ intercalate " " iccPPArgs)
        putStrLn ("inFile = " ++ inDir ++ inFile ++ 
                  "; icc preprocessed File = " ++ iccPPFile)
        rawSystem icc iccPPArgs
@@ -138,7 +138,7 @@ getObjFile dir fname = ["-o"] ++ [dir++name]
 
 pInitState = ParserState { pMode = POptPointer, pState = Unrelated, pMacro = Map.empty, pArray = Map.empty, pStencil = Map.empty, pShape = Map.empty, pRange = Map.empty, pKernel = Map.empty}
 
-icc = "icc"
+icc = "icpc"
 
 iccFlags = ["-O3", "-DNDEBUG", "-std=c++0x", "-Wall", "-Werror", "-ipo"]
 

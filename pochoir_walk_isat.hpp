@@ -29,8 +29,8 @@
 #include <cstdio>
 #include <cassert>
 #include <iostream>
-#include <cilk.h>
-#include <cilk_api.h>
+#include <cilk/cilk.h>
+#include <cilk/cilk_api.h>
 #include "pochoir_common.hpp"
 
 using namespace std;

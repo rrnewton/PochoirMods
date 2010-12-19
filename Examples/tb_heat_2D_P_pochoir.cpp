@@ -30,104 +30,34 @@
 // Predefined symbols and macros -*- C++ -*-
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
-/* snaroff@next.com says the NeXT needs this.  */
-/* Irix 5.1 needs this.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
+		/* macros */
+		/* type definitions */
 typedef long ptrdiff_t;
 
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-typedef unsigned long size_t;
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+typedef unsigned long	size_t;
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+/*#endif*/ /* _STDDEF */
 
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -164,100 +94,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 extern "C" {
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* bits/types.h -- definitions of __*_t types underlying *_t types.
    Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
@@ -485,100 +347,32 @@ typedef struct _IO_FILE __FILE;
 
 /* Define types for libio in terms of the standard internal type names.  */
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 /* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -1620,33 +1414,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 // Standard iostream objects -*- C++ -*-
 #pragma GCC system_header
@@ -1696,33 +1489,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 /* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
@@ -1814,102 +1606,34 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 
 /* Get size_t, wchar_t, wint_t and NULL from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
+		/* macros */
+		/* type definitions */
 
 
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
 
 
 typedef unsigned int wint_t;
 
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
 
 
-/* A null pointer constant.  */
-
-
-
-/* Offset of member MEMBER in a struct of type TYPE. */
-
-
+/*#endif*/ /* _STDDEF */
 
 /* Tell the caller that we provide correct C++ prototypes.  */
 
@@ -3000,33 +2724,32 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 // Core algorithmic facilities -*- C++ -*-
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 // Function-Based Exception Support -*- C++ -*-
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -3631,33 +3354,32 @@ static const bool __is_signed = true;
 // Pair implementation -*- C++ -*-
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 // Concept-checking control -*- C++ -*-
 #pragma GCC system_header
@@ -3782,33 +3504,32 @@ template<class _T1, class _T2>
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -5619,33 +5340,32 @@ typedef typename iterator_traits<_II1>::value_type _ValueType1;
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 /* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
@@ -6021,100 +5741,32 @@ template<>
 
 
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 /* Definition of locale category symbol values.
    Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -6293,33 +5945,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 
@@ -6974,100 +6625,32 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 /* Get type definitions.  */
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -7275,100 +6858,32 @@ extern "C" {
 
 
 /* Get size_t and NULL from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* This defines CLOCKS_PER_SEC, which is the number of processor clock
    ticks per second.  */
@@ -9129,100 +8644,32 @@ extern "C" {
 
 typedef __ssize_t ssize_t;
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* The Single Unix specification says that some more types are
    available here.  */
@@ -10458,7 +9905,7 @@ static inline int
 __gthread_create (__gthread_t *__threadid, void *(*__func) (void*),
 		  void *__args)
 {
-  return __gthrw_pthread_create (__threadid, __null, __func, __args);
+  return __gthrw_pthread_create (__threadid, (__null), __func, __args);
 }
 
 static inline int
@@ -10706,33 +10153,32 @@ static inline _Atomic_word
 // Allocators -*- C++ -*-
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 #pragma GCC visibility push(default)
@@ -17421,100 +16867,32 @@ extern template class basic_streambuf<char>;
 
 
 /* Get wint_t from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* Constant expression of type `wint_t' whose value does not correspond
    to any member of the extended character set.  */
@@ -19646,8 +19024,8 @@ _CharT				_M_atoms_in[__num_base::_S_iend];
       bool				_M_allocated;
 
       __numpunct_cache(size_t __refs = 0) : facet(__refs),
-      _M_grouping(__null), _M_grouping_size(0), _M_use_grouping(false),
-      _M_truename(__null), _M_truename_size(0), _M_falsename(__null),
+      _M_grouping((__null)), _M_grouping_size(0), _M_use_grouping(false),
+      _M_truename((__null)), _M_truename_size(0), _M_falsename((__null)),
       _M_falsename_size(0), _M_decimal_point(_CharT()),
       _M_thousands_sep(_CharT()), _M_allocated(false)
       { }
@@ -19712,7 +19090,7 @@ static locale::id			id;
        *  @param  refs  Refcount to pass to the base class.
        */
       explicit
-      numpunct(size_t __refs = 0) : facet(__refs), _M_data(__null)
+      numpunct(size_t __refs = 0) : facet(__refs), _M_data((__null))
       { _M_initialize_numpunct(); }
 
       /**
@@ -19740,7 +19118,7 @@ static locale::id			id;
        */
       explicit
       numpunct(__c_locale __cloc, size_t __refs = 0)
-      : facet(__refs), _M_data(__null)
+      : facet(__refs), _M_data((__null))
       { _M_initialize_numpunct(__cloc); }
 
       /**
@@ -19896,7 +19274,7 @@ virtual
 
       // For use at construction time only.
 void
-      _M_initialize_numpunct(__c_locale __cloc = __null);
+      _M_initialize_numpunct(__c_locale __cloc = (__null));
     };
 
   template<typename _CharT>
@@ -20422,7 +19800,7 @@ template<typename _CharT>
 	const locale::facet** __caches = __loc._M_impl->_M_caches;
 	if (!__caches[__i])
 	  {
-	    __numpunct_cache<_CharT>* __tmp = __null;
+	    __numpunct_cache<_CharT>* __tmp = (__null);
 	    try
 	      {
 		__tmp = new __numpunct_cache<_CharT>;
@@ -24447,33 +23825,32 @@ static ios_base::Init __ioinit;
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 
@@ -24503,100 +23880,32 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 
 /* Get size_t, wchar_t and NULL from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 extern "C" {
 
@@ -24940,100 +24249,32 @@ typedef __key_t key_t;
 
 typedef __suseconds_t suseconds_t;
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* Old compatibility names for C types.  */
 typedef unsigned long int ulong;
@@ -25479,100 +24720,32 @@ extern void cfree (void *__ptr) throw ();
 
 
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 extern "C" {
 
@@ -26159,6 +25332,20 @@ extern int futimesat (int __fd, __const char *__file,
 
 // -*- C++ -*- C forwarding header.
 #pragma GCC system_header
+
+/* file: math.h */
+
+/*
+** Copyright  (C) 1985-2007 Intel Corporation. All rights reserved.
+**
+** The information and source code contained herein is the exclusive property
+** of Intel Corporation and may not be disclosed, examined, or reproduced in
+** whole or in part without explicit written authorization from the Company.
+**
+*/
+
+
+/* Include_next should be before guard macros in order to at last reach system header */
 
 /* Declarations for math functions.
    Copyright (C) 1991-1993, 1995-1999, 2001, 2002, 2004, 2006, 2009
@@ -27470,6 +26657,372 @@ extern int matherr (struct __exception *__exc) throw ();
 
 
 
+/* Check usage correctness */
+
+
+
+
+
+
+
+
+
+
+extern "C" {
+
+
+
+/* for Microsoft compatibility */
+
+
+/*-- Classification macros --*/
+
+
+
+
+
+extern int fpclassifyf    ( float              __x );
+extern int fpclassify     ( double               __x );
+extern int fpclassifyd    ( double             __x );
+extern int fpclassifyl    ( long double            __x );
+
+extern int __fpclassifyf  ( float              __x );
+extern int __fpclassify   ( double               __x );
+extern int __fpclassifyd  ( double             __x );
+extern int __fpclassifyl  ( long double            __x );
+
+extern int isinff         ( float              __x );
+extern int isinf          ( double               __x );
+extern int isinfd         ( double             __x );
+extern int isinfl         ( long double            __x );
+
+extern int __isinff       ( float              __x );
+extern int __isinf        ( double               __x );
+extern int __isinfd       ( double             __x );
+extern int __isinfl       ( long double            __x );
+
+extern int isnanf         ( float              __x );
+extern int isnan          ( double               __x );
+extern int isnand         ( double             __x );
+extern int isnanl         ( long double            __x );
+
+extern int __isnanf       ( float              __x );
+extern int __isnan        ( double               __x );
+extern int __isnand       ( double             __x );
+extern int __isnanl       ( long double            __x );
+
+extern int isnormalf      ( float              __x );
+extern int isnormal       ( double               __x );
+extern int isnormald      ( double             __x );
+extern int isnormall      ( long double            __x );
+
+extern int __isnormalf    ( float              __x );
+extern int __isnormal     ( double               __x );
+extern int __isnormald    ( double             __x );
+extern int __isnormall    ( long double            __x );
+
+extern int isfinitef      ( float              __x );
+extern int isfinite       ( double               __x );
+extern int isfinited      ( double             __x );
+extern int isfinitel      ( long double            __x );
+
+extern int __isfinitef    ( float              __x );
+extern int __isfinite     ( double               __x );
+extern int __isfinited    ( double             __x );
+extern int __isfinitel    ( long double            __x );
+
+extern int finitef        ( float              __x );
+extern int finite         ( double             __x );
+extern int finited        ( double             __x );
+extern int finitel        ( long double            __x );
+
+extern int __finitef      ( float              __x );
+extern int __finite       ( double             __x );
+extern int __finited      ( double             __x );
+extern int __finitel      ( long double            __x );
+
+extern int signbitf       ( float              __x );
+extern int signbit        ( double             __x );
+extern int signbitd       ( double             __x );
+extern int signbitl       ( long double            __x );
+
+extern int __signbitf     ( float              __x );
+extern int __signbit      ( double             __x );
+extern int __signbitd     ( double             __x );
+extern int __signbitl     ( long double            __x );
+
+
+
+
+
+
+
+
+/* Comparison macros */
+
+extern int isgreaterf( float xf, float yf );
+extern int isgreater( double xd, double yd );
+extern int isgreaterl( long double xl, long double yl );
+extern int __isgreaterf( float xf, float yf );
+extern int __isgreater( double xd, double yd );
+extern int __isgreaterl( long double xl, long double yl );
+
+extern int isgreaterequalf( float xf, float yf );
+extern int isgreaterequal( double xd, double yd );
+extern int isgreaterequall( long double xl, long double yl );
+extern int __isgreaterequalf( float xf, float yf );
+extern int __isgreaterequal( double xd, double yd );
+extern int __isgreaterequall( long double xl, long double yl );
+
+extern int islessf( float xf, float yf );
+extern int isless( double xd, double yd );
+extern int islessl( long double xl, long double yl );
+extern int __islessf( float xf, float yf );
+extern int __isless( double xd, double yd );
+extern int __islessl( long double xl, long double yl );
+
+extern int islessequalf( float xf, float yf );
+extern int islessequal( double xd, double yd );
+extern int islessequall( long double xl, long double yl );
+extern int __islessequalf( float xf, float yf );
+extern int __islessequal( double xd, double yd );
+extern int __islessequall( long double xl, long double yl );
+
+extern int islessgreaterf( float xf, float yf );
+extern int islessgreater( double xd, double yd );
+extern int islessgreaterl( long double xl, long double yl );
+extern int __islessgreaterf( float xf, float yf );
+extern int __islessgreater( double xd, double yd );
+extern int __islessgreaterl( long double xl, long double yl );
+
+extern int isunorderedf( float xf, float yf );
+extern int isunordered( double xd, double yd );
+extern int isunorderedl( long double xl, long double yl );
+extern int __isunorderedf( float xf, float yf );
+extern int __isunordered( double xd, double yd );
+extern int __isunorderedl( long double xl, long double yl );
+
+
+
+/*-- Real functions --*/
+
+/* Radian argument trigonometric functions */
+
+
+
+extern double    cot( double __x );
+extern float     cotf( float __x );
+extern long double   cotl( long double __x );
+
+
+/* Degree argument trigonometric functions */
+
+extern double    cosd( double __x );
+extern float     cosdf( float __x );
+extern long double   cosdl( long double __x );
+
+extern double    sind( double __x );
+extern float     sindf( float __x );
+extern long double   sindl( long double __x );
+
+extern double    tand( double __x );
+extern float     tandf( float __x );
+extern long double   tandl( long double __x );
+
+extern double    cotd( double __x );
+extern float     cotdf( float __x );
+extern long double   cotdl( long double __x );
+
+extern double    acosd( double __x );
+extern float     acosdf( float __x );
+extern long double   acosdl( long double __x );
+
+extern double    asind( double __x );
+extern float     asindf( float __x );
+extern long double   asindl( long double __x );
+
+extern double    atand( double __x );
+extern float     atandf( float __x );
+extern long double   atandl( long double __x );
+
+extern double    atand2( double __y, double __x );
+extern float     atand2f( float __y, float __x );
+extern long double   atand2l( long double __y, long double __x );
+
+extern double    atan2d( double __y, double __x );
+extern float     atan2df( float __y, float __x );
+extern long double   atan2dl( long double __y, long double __x );
+
+extern void      sincosd( double __x, double *__psin, double *__pcos );
+extern void      sincosdf( float __x, float *__psin, float *__pcos );
+extern void      sincosdl( long double __x, long double *__psin, long double *__pcos );
+
+/* Hyperbolic functions */
+
+
+extern void      sinhcosh( double __x, double *__psinh, double *__pcosh );
+extern void      sinhcoshf( float __x, float *__psinh, float *__pcosh );
+extern void      sinhcoshl( long double __x, long double *__psinh, long double *__pcosh );
+
+
+
+/* Exponential functions */
+
+
+
+
+
+
+
+
+
+
+
+/* Logarithmic functions */
+
+
+
+
+
+
+
+/* Power/root/abs functions */
+
+
+
+
+
+extern double    invsqrt( double __x );
+extern float     invsqrtf( float __x );
+extern long double   invsqrtl( long double __x );
+
+/* Error and gamma functions */
+
+
+extern double    cdfnorminv( double __x );
+extern float     cdfnorminvf( float __x );
+extern double    erfinv( double __x );
+extern float     erfinvf( float __x );
+extern long double   erfinvl( long double __x );
+
+extern double    gamma_r( double __x, int *__signgam );
+extern float     gammaf_r( float __x, int *__signgam );
+extern long double   gammal_r( long double __x, int *__signgam );
+
+
+
+
+/* Nearest integer functions */
+
+
+
+
+
+
+
+/* Remainder functions */
+
+
+
+
+
+/* Manipulation functions */
+
+
+
+
+/* Maximum, minimum, and positive difference functions */
+
+
+/* Other - special functions */
+
+extern double    annuity( double __x, double __y );
+extern double    compound( double __x, double __y );
+
+extern float     annuityf( float __x, float __y );
+extern long double   annuityl( long double __x, long double __y );
+
+extern float     compoundf( float __x, float __y );
+extern long double   compoundl( long double __x, long double __y );
+
+
+
+
+
+
+
+
+/* MS compatible exception handling */
+
+/* Exception type passed in the type field of exception struct */
+
+
+typedef struct ____exception {
+    int     type;
+    const char  *name;
+    double  arg1;
+    double  arg2;
+    double  retval;
+} ___exception;
+
+
+typedef struct ____exceptionf {
+    int    type;
+    const char *name;
+    float  arg1;
+    float  arg2;
+    float  retval;
+} ___exceptionf;
+
+typedef struct ____exceptionl {
+    int      type;
+    const char   *name;
+    long double  arg1;
+    long double  arg2;
+    long double  retval;
+} ___exceptionl;
+
+extern int  matherrf( struct ____exceptionf *__e );
+extern int  matherrl( struct ____exceptionl *__e );
+
+/* User-installable exception handlers
+ *
+ *  Static redefinition of matherr() is useful only for statically linked
+ *  libraries. When Libm is built as a DLL, the Libm's matherr() is already
+ *  loaded into the DLL and (statically) linked.  In this case, the only way
+ *  to replace the library default matherr() with your matherr() is to use
+ *  the matherr() exchange functions (see description below).
+ *
+ *  1. In user code, implement your own substitute matherr() function.
+ *  2. To install it, call __libm_setusermatherr(), with your
+ *     function as an argument. Note that the __libm_setusermatherr()
+ *     returns the address of previously defined matherr. If you save
+ *     the address, you can use it later to restore the original matherr().
+ *  3. Your matherr() will now be installed! Your matherr() will be called
+ *     instead of the default matherr().
+ */
+
+typedef int (  *___pmatherr )( struct ____exception  *__e );
+typedef int (  *___pmatherrf )( struct ____exceptionf *__e );
+typedef int (  *___pmatherrl )( struct ____exceptionl *__e );
+
+extern ___pmatherr   __libm_setusermatherr( ___pmatherr  __user_matherr );
+extern ___pmatherrf  __libm_setusermatherrf( ___pmatherrf __user_matherrf );
+extern ___pmatherrl  __libm_setusermatherrl( ___pmatherrl __user_matherrl );
+
+/* Standard conformance support */
+
+
+extern _LIB_VERSION_TYPE  _LIB_VERSIONIMF;
+
+
+
+}
+
+
+
+
+
 // Get rid of those macros defined in <math.h> in lieu of real functions.
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
@@ -28063,72 +27616,87 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 // -*- C++ -*- C forwarding header.
 #pragma GCC system_header
 
-
-// -*- C++ -*- forwarding header.
-#pragma GCC system_header
-
-// -*- C++ -*- forwarding header.
-#pragma GCC system_header
-
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/* file: math.h */
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+** Copyright  (C) 1985-2007 Intel Corporation. All rights reserved.
+**
+** The information and source code contained herein is the exclusive property
+** of Intel Corporation and may not be disclosed, examined, or reproduced in
+** whole or in part without explicit written authorization from the Company.
+**
+*/
+
+
+/* Include_next should be before guard macros in order to at last reach system header */
+
+
+
+
+
+// -*- C++ -*- forwarding header.
+#pragma GCC system_header
+
+// -*- C++ -*- forwarding header.
+#pragma GCC system_header
+
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
+
+/*
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 
@@ -28205,32 +27773,32 @@ inline void klein(int & new_i, int & new_j, grid_info<2> const & grid) {
     return;
 }
 
-inline void klein_region(int i, grid_info<2> & grid, grid_info<2> const & initial_grid) {
+inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid) {
     grid_info<2> orig_grid = grid;
     const int l_arr_size_1 = initial_grid.x1[1] - initial_grid.x0[1];
     const int l_arr_size_0 = initial_grid.x1[0] - initial_grid.x0[0];
 
-    if (i == 1) {
-        if (grid.x0[1] >= initial_grid.x1[1]) {
-            grid.x0[1] -= l_arr_size_1;
-            grid.x1[1] -= l_arr_size_1;
-        } 
-    } else if (i == 0) {
-        if (grid.x0[0] >= initial_grid.x1[0]) {
-            grid.x0[0] -= l_arr_size_0;
-            grid.x1[0] -= l_arr_size_0;
-            if (grid.x0[1] >= initial_grid.x1[1]) {
-                grid.x0[1] -= l_arr_size_1;
-                grid.x1[1] -= l_arr_size_1;
-            } else if (grid.x1[1] < initial_grid.x0[1]) {
-                grid.x0[1] += l_arr_size_1;
-                grid.x1[1] += l_arr_size_1;
-            }
-            grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x0[1]);
-            grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x1[1]);
-            grid.dx0[1] = -orig_grid.dx1[1];
-            grid.dx1[1] = -orig_grid.dx0[1];
-        }
+    if (grid.x0[1] >= initial_grid.x1[1]) {
+        grid.x0[1] -= l_arr_size_1;
+        grid.x1[1] -= l_arr_size_1;
+    } else if (grid.x1[1] < initial_grid.x0[1]) {
+        grid.x0[1] += l_arr_size_1;
+        grid.x1[1] += l_arr_size_1;
+    } 
+    if (grid.x0[0] >= initial_grid.x1[0]) {
+        grid.x0[0] -= l_arr_size_0;
+        grid.x1[0] -= l_arr_size_0;
+        grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x1[1]);
+        grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x0[1]);
+        grid.dx0[1] = -orig_grid.dx1[1];
+        grid.dx1[1] = -orig_grid.dx0[1];
+    } else if (grid.x1[0] < initial_grid.x0[0]) {
+        grid.x0[0] += l_arr_size_0;
+        grid.x1[0] += l_arr_size_0;
+        grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x1[1]);
+        grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x0[1]);
+        grid.dx0[1] = -orig_grid.dx1[1];
+        grid.dx1[1] = -orig_grid.dx0[1];
     }
     return;
 }
@@ -28536,33 +28104,32 @@ extern template ostream& operator<<(ostream&, _Setfill<char>);
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 // -*- C++ -*- forwarding header.
@@ -28571,33 +28138,32 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 
@@ -28629,33 +28195,32 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
@@ -28910,33 +28475,32 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 // -*- C++ -*- forwarding header.
@@ -28945,33 +28509,32 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 // -*- C++ -*- forwarding header.
@@ -29139,6 +28702,10 @@ int __cilkrts_get_nworkers(void), __cilkrts_get_total_workers(void);
 extern __attribute__((visibility("default"),nothrow))
 int __cilkrts_get_worker_number(void);
 
+/* Return non-zero if force reduce mode is on */
+extern __attribute__((visibility("default"),nothrow))
+int __cilkrts_get_force_reduce(void);
+
 } // extern "C"
 using namespace std;
 
@@ -29299,10 +28866,15 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
     void set_slope(int const slope[]);
     inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
 
+    template <typename F>
+    inline void sim_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F>
+    inline void sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+
     template <typename F, typename BF>
     inline void sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF>
-    inline void sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    inline void sim_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 
     template <typename F> 
 	inline void base_case_kernel_interior(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
@@ -29343,6 +28915,10 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
     inline void naive_cut_space_ncores(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
     inline void cut_space_ncores_boundary(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+	void print_grid(FILE * fp, int t0, int t1, grid_info<N_RANK> const & grid);
+	void print_sync(FILE * fp);
+	void print_index(int t, int const idx[]);
+	void print_region(int t, int const head[], int const tail[]);
 };
 
 template <int N_RANK>
@@ -29413,6 +28989,105 @@ inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_in
 	}
 }
 
+template <int N_RANK>
+void Algorithm<N_RANK>::print_grid(FILE *fp, int t0, int t1, grid_info<N_RANK> const & grid)
+{
+    int i;
+    fprintf(fp, "{ BASE, ");
+    fprintf(fp, "t = {%d, %d}, {", t0, t1);
+
+    fprintf(fp, "x0 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print x0[3] */
+        fprintf(fp, "%lu, ", grid.x0[i]);
+    }
+    fprintf(fp, "%lu}, ", grid.x0[i]);
+
+    fprintf(fp, "x1 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print x1[3] */
+        fprintf(fp, "%lu, ", grid.x1[i]);
+    }
+    fprintf(fp, "%lu}, ", grid.x1[i]);
+
+    fprintf(fp, "dx0 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print dx0[3] */
+        fprintf(fp, "%d, ", grid.dx0[i]);
+    }
+    fprintf(fp, "%d}, ", grid.dx0[i]);
+
+    fprintf(fp, "dx1 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print dx1[3] */
+        fprintf(fp, "%d, ", grid.dx1[i]);
+    }
+    fprintf(fp, "%d}}}, \n", grid.dx1[i]);
+    fflush(fp);
+    return;
+}
+
+template <int N_RANK>
+void Algorithm<N_RANK>::print_sync(FILE * fp)
+{
+    int i;
+    fprintf(fp, "{ SYNC, ");
+    fprintf(fp, "t = {0, 0}, {");
+
+    fprintf(fp, "x0 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print x0[3] */
+        fprintf(fp, "0, ");
+    }
+    fprintf(fp, "0}, ");
+
+    fprintf(fp, "x1 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print x1[3] */
+        fprintf(fp, "0, ");
+    }
+    fprintf(fp, "0}, ");
+
+    fprintf(fp, "dx0 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print dx0[3] */
+        fprintf(fp, "0, ");
+    }
+    fprintf(fp, "0}, ");
+
+    fprintf(fp, "dx1 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print dx1[3] */
+        fprintf(fp, "0, ");
+    }
+    fprintf(fp, "0}}}, \n");
+    fflush(fp);
+    return;
+}
+
+template <int N_RANK>
+void Algorithm<N_RANK>::print_index(int t, int const idx[])
+{
+    printf("U(t=%lu, {", t);
+    for (int i = 0; i < N_RANK; ++i) {
+        printf("%lu ", idx[i]);
+    }
+    printf("}) ");
+    fflush(stdout);
+}
+
+template <int N_RANK>
+void Algorithm<N_RANK>::print_region(int t, int const head[], int const tail[])
+{
+    printf("%s:%lu t=%lu, {", __FUNCTION__, 426, t);
+    for (int i = 0; i < N_RANK; ++i) {
+        printf("{%lu, %lu} ", head[i], tail[i]);
+    }
+    printf("}\n");
+    fflush(stdout);
+
+}
+
 /*
  **********************************************************************************
  *  Copyright (C) 2010  Massachusetts Institute of Technology
@@ -29469,6 +29144,7 @@ template <int N_RANK>
 inline bool Algorithm<N_RANK>::within_boundary(int t0, int t1, grid_info<N_RANK> & grid)
 {
     bool l_touch_boundary = false;
+    int lt = t1 - t0;
     for (int i = 0; i < N_RANK; ++i) {
         l_touch_boundary |= touch_boundary(i, t1-t0, grid);
     }
@@ -29603,12 +29279,12 @@ inline void Algorithm<N_RANK>::walk_bicut(int t0, int t1, grid_info<N_RANK> cons
 
 
 
-template <int N_RANK> template <typename F, typename BF>
-inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
+/* This is for interior region space cut! */
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::sim_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     queue_info *l_father, *l_son;
-//    int curr_dep = 0;
-queue_info circular_queue_[2][200];
+    queue_info circular_queue_[2][200];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
 
     for (int i = 0; i < 2; ++i) {
@@ -29618,20 +29294,105 @@ queue_info circular_queue_[2][200];
     /* set up the initial grid */
     do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
     for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
-        int curr_dep_pointer = (curr_dep & 0x1);
+        const int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
             do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                _Cilk_spawn sim_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
+                _Cilk_spawn sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
             } else {
                 /* performing a space cut on dimension 'level' */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                grid_info<N_RANK> l_father_grid = l_father->grid, l_son_grid = l_father->grid;
-                int t0 = l_father->t0, t1 = l_father->t1;
-                int level = l_father->level;
+                const grid_info<N_RANK> l_father_grid = l_father->grid;
+                grid_info<N_RANK> l_son_grid = l_father->grid;
+                const int t0 = l_father->t0, t1 = l_father->t1;
+                const int level = l_father->level;
+                const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
+                const int sep = (int)lb/2;
+                const int r = 2;
+                const int l_start = (l_father_grid.x0[level]);
+                const int l_end = (l_father_grid.x1[level]);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_end;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* cilk_sync */
+                const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = -slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = slope_[level];
+                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                if (l_father_grid.dx0[level] != slope_[level]) {
+                    l_son_grid.x0[level] = l_start;
+                    l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                    l_son_grid.x1[level] = l_start;
+                    l_son_grid.dx1[level] = slope_[level];
+                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                }
+                if (l_father_grid.dx1[level] != -slope_[level]) {
+                    l_son_grid.x0[level] = l_end;
+                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.x1[level] = l_end;
+                    l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                }
+            }
+        } /* end while (queue_len_[curr_dep] > 0) */
+        _Cilk_sync;
+        (static_cast<void> (0));
+    } /* end for (curr_dep < N_RANK+1) */
+}
+
+/* This is for boundary region space cut! */
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
+{
+    queue_info *l_father, *l_son;
+    queue_info circular_queue_[2][200];
+    int queue_head_[2], queue_tail_[2], queue_len_[2];
+
+    for (int i = 0; i < 2; ++i) {
+        queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
+    }
+
+    /* set up the initial grid */
+    do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
+        const int curr_dep_pointer = (curr_dep & 0x1);
+        while (queue_len_[curr_dep_pointer] > 0) {
+            do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+            if (l_father->level == N_RANK) {
+                /* spawn all the grids in circular_queue_[curr_dep][] */
+                /* use cilk_spawn to spawn all the sub-grid */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
+                    _Cilk_spawn sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                } else {
+                    _Cilk_spawn sim_bicut_boundary_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
+                }
+            } else {
+                /* performing a space cut on dimension 'level' */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                const grid_info<N_RANK> l_father_grid = l_father->grid;
+                grid_info<N_RANK> l_son_grid = l_father->grid;
+                const int t0 = l_father->t0, t1 = l_father->t1;
+                const int level = l_father->level;
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
                 bool initial_cut = (lb == phys_length_[level]);
                 const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
@@ -29654,7 +29415,7 @@ queue_info circular_queue_[2][200];
                 do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                 /* cilk_sync */
-                int next_dep_pointer = (curr_dep + 1) & 0x1;
+                const int next_dep_pointer = (curr_dep + 1) & 0x1;
                 /* push one sub-grid into circular queue of (curr_dep + 1)*/
                 l_son_grid.x0[level] = l_start + sep;
                 l_son_grid.dx0[level] = -slope_[level];
@@ -29689,40 +29450,87 @@ queue_info circular_queue_[2][200];
         } /* end while (queue_len_[curr_dep] > 0) */
         _Cilk_sync;
         (static_cast<void> (0));
-//        ++curr_dep;
-} /* end for (curr_dep < N_RANK+1) */
+    } /* end for (curr_dep < N_RANK+1) */
 }
 
-template <int N_RANK> template <typename F, typename BF>
-inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
+/* This is the version for interior region cut! */
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
-    int lt = t1 - t0;
-    bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
-    bool can_cut = true, interior_flag = false;
+    const int lt = t1 - t0;
+    bool can_cut = true;
+    index_info lb, thres;
+    grid_info<N_RANK> l_son_grid;
+
+    for (int i = N_RANK-1; i >= 0; --i) {
+        lb[i] = (grid.x1[i] - grid.x0[i]);
+        thres[i] = 2 * (2 * slope_[i] * lt);
+        can_cut = can_cut && (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
+    }
+
+    if (can_cut) {
+        /* cut into space */
+        sim_space_cut(t0, t1, grid, f);
+        return;
+    } else if (lt > dt_recursive_) {
+        /* cut into time */
+        int halflt = lt / 2;
+        l_son_grid = grid;
+        sim_bicut(t0, t0+halflt, l_son_grid, f);
+
+        for (int i = 0; i < N_RANK; ++i) {
+            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
+            l_son_grid.dx0[i] = grid.dx0[i];
+            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
+            l_son_grid.dx1[i] = grid.dx1[i];
+        }
+        sim_bicut(t0+halflt, t1, l_son_grid, f);
+        return;
+    } else {
+        // base case
+base_case_kernel_interior(t0, t1, grid, f);
+        return;
+    }
+}
+
+/* This is the version for boundary region cut! */
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::sim_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
+{
+    const int lt = t1 - t0;
+    bool can_cut = true, call_boundary = false;
     index_info lb, thres;
     grid_info<N_RANK> l_father_grid = grid, l_son_grid;
+    bool l_touch_boundary[N_RANK];
+    int l_dt_stop;
 
     for (int i = N_RANK-1; i >= 0; --i) {
         /* l_father_grid may be mapped to a new region in touch_boundary() */
+        l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
+        call_boundary |= l_touch_boundary[i];
         lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
         thres[i] = 2 * (2 * slope_[i] * lt);
         /* for the initial cut, we exclude the begining and end point to minimize
          * the overhead on boundary
         */
-        can_cut &= (lb[i] == phys_length_[i]) ? (lb[i] - 2 * slope_[i] >= thres[i]) : (lb[i] >= thres[i]);
+        /* some dimension touches the boundary, some may NOT! */
+        can_cut = can_cut && ((l_touch_boundary[i]) ? ((lb[i] == phys_length_[i]) ? (lb[i] - 2 * slope_[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i])) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
     }
 
-    interior_flag = within_boundary(t0, t1, l_father_grid);
     if (can_cut) {
         /* cut into space */
         /* push the first grid that can be cut into the circular queue */
-        sim_space_cut_p(t0, t1, l_father_grid, f, bf);
+        /* boundary cuts! */
+        if (call_boundary) 
+            sim_space_cut_p(t0, t1, l_father_grid, f, bf);
+        else
+            sim_space_cut(t0, t1, l_father_grid, f);
         return;
-    } else if (interior_flag ? lt > dt_recursive_ : lt > dt_recursive_boundary_) {
+    } else if ((call_boundary) ? (lt > dt_recursive_boundary_) : (lt > dt_recursive_)) {
         /* cut into time */
         int halflt = lt / 2;
         l_son_grid = l_father_grid;
-        sim_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
+        sim_bicut_boundary_p(t0, t0+halflt, l_son_grid, f, bf);
 
         for (int i = 0; i < N_RANK; ++i) {
             l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
@@ -29730,14 +29538,14 @@ inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> con
             l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
             l_son_grid.dx1[i] = l_father_grid.dx1[i];
         }
-        sim_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
+        sim_bicut_boundary_p(t0+halflt, t1, l_son_grid, f, bf);
         return;
     } else {
         // base case
-if (interior_flag) {
-            base_case_kernel_interior(t0, t1, l_father_grid, f);
-        } else {
+if (call_boundary) {
             base_case_kernel_boundary(t0, t1, l_father_grid, bf);
+        } else {
+            base_case_kernel_interior(t0, t1, l_father_grid, f);
         }
         return;
     }
@@ -31523,9 +31331,9 @@ int total_size_;
             logic_start_[0] = 0; logic_end_[0] = sz0;
             stride_[0] = 1; 
             total_size_ = sz0;
-            view_ = __null;
+            view_ = (__null);
             view_ = new Storage<T>(TOGGLE * total_size_);
-            bv1_ = __null; bv2_ = __null; bv3_ = __null;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null);
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
         }
@@ -31537,9 +31345,9 @@ int total_size_;
             logic_start_[1] = 0; logic_end_[1] = sz1;
 			stride_[1] = sz0; stride_[0] = 1; 
 			total_size_ = phys_size_[0] * phys_size_[1];
-			view_ = __null;
+			view_ = (__null);
 			view_ = new Storage<T>(TOGGLE * total_size_) ;
-            bv1_ = __null; bv2_ = __null; bv3_ = __null;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null);
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
 		}
@@ -31556,10 +31364,10 @@ int total_size_;
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
 			}
-			view_ = __null;
+			view_ = (__null);
 			/* double the total_size_ because we are using toggle array */
 			view_ = new Storage<T>(TOGGLE*total_size_) ;
-            bv1_ = __null; bv2_ = __null; bv3_ = __null;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null);
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
 		}
@@ -31575,7 +31383,7 @@ int total_size_;
 				stride_[i] = orig.stride(i);
                 logic_start_[i] = 0; logic_end_[i] = logic_size_[i];
 			}
-			view_ = __null;
+			view_ = (__null);
 			view_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).view();
 			view_->inc_ref();
             /* We also get the BValue function pointer from orig */
@@ -31594,7 +31402,7 @@ int total_size_;
 				logic_size_[i] = orig.logic_size(i);
 				stride_[i] = orig.stride(i);
 			}
-			view_ = __null;
+			view_ = (__null);
 			view_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).view();
 			view_->inc_ref();
             /* We also get the BValue function pointer from orig */
@@ -31623,11 +31431,11 @@ int total_size_;
         BValue_3D bv_3D(void) { return bv3_; }
 
         /* guarantee that only one version of boundary function is registered ! */
-        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = __null; bv3_ = __null; }
-        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = __null; bv3_ = __null; }
-        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = __null; bv2_ = __null; }
+        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = (__null); bv3_ = (__null); }
+        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = (__null); bv3_ = (__null); }
+        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = (__null); bv2_ = (__null); }
 
-        void unregisterBV(void) { bv1_ = __null;  bv2_ = __null; bv3_ = __null; }
+        void unregisterBV(void) { bv1_ = (__null);  bv2_ = (__null); bv3_ = (__null); }
 
         void registerDomain(grid_info<N_RANK> initial_grid) {
             for (int i = 0; i < N_RANK; ++i) {
@@ -31680,13 +31488,13 @@ int total_size_;
             bool l_boundary = check_boundary(_idx);
             bool set_boundary = false;
             T l_bvalue = 0;
-            if (l_boundary && bv1_ != __null) {
+            if (l_boundary && bv1_ != (__null)) {
                 l_bvalue = bv1_(*this, _timestep, _idx[0]);
                 set_boundary = true;
-            } else if (l_boundary && bv2_ != __null) {
+            } else if (l_boundary && bv2_ != (__null)) {
                 l_bvalue = bv2_(*this, _timestep, _idx[1], _idx[0]);
                 set_boundary = true;
-            } else if (l_boundary && bv3_ != __null) {
+            } else if (l_boundary && bv3_ != (__null)) {
                 l_bvalue = bv3_(*this, _timestep, _idx[2], _idx[1], _idx[0]);
                 set_boundary = true;
             }
@@ -31704,48 +31512,48 @@ int total_size_;
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
-            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv1_ != __null);
+            T l_bvalue = (l_boundary && bv1_ != (__null)) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            bool set_boundary = (l_boundary && bv1_ != (__null));
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
 		}
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv2_ != __null);
+            T l_bvalue = (l_boundary && bv2_ != (__null)) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            bool set_boundary = (l_boundary && bv2_ != (__null));
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
 		}
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv3_ != __null);
+            T l_bvalue = (l_boundary && bv3_ != (__null)) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            bool set_boundary = (l_boundary && bv3_ != (__null));
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
 		}
 
 		inline SProxy<T> operator() (int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx1, _idx0);
-            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv1_ != __null);
+            T l_bvalue = (l_boundary && bv1_ != (__null)) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            bool set_boundary = (l_boundary && bv1_ != (__null));
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
 		}
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv2_ != __null);
+            T l_bvalue = (l_boundary && bv2_ != (__null)) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            bool set_boundary = (l_boundary && bv2_ != (__null));
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
 		}
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv3_ != __null);
+            T l_bvalue = (l_boundary && bv3_ != (__null)) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            bool set_boundary = (l_boundary && bv3_ != (__null));
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
 			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
 		}
@@ -32097,7 +31905,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     checkFlags();
-    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    fprintf(stderr, "Call SIM_BICUT_P\n");
+    algor.sim_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
@@ -32206,7 +32015,7 @@ for (int i = 0; i < N_SIZE; ++i) {
 	heat_2D.registerShape(heat_shape_2D);
 //    heat_2D.registerDomain(I, J);
 gettimeofday(&start, 0);
-    for (int times = 0; times < 3; ++times) {
+    for (int times = 0; times < 1; ++times) {
         {
 	#define a(t, i, j) a.interior(t, i, j)
 	auto macro_heat_2D_fn = [&] (int t, int i, int j) {
@@ -32219,13 +32028,13 @@ gettimeofday(&start, 0);
 	}
 	}
 	gettimeofday(&end, 0);
-	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
+	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/1 << "ms" << std::endl;
 
 //    b.registerShape(heat_shape_2D);
 b.registerBV(heat_bv_2D);
 
 	gettimeofday(&start, 0);
-    for (int times = 0; times < 3; ++times) {
+    for (int times = 0; times < 1; ++times) {
     /* cilk_for + zero-padding */
 	for (int t = 0; t < T_SIZE; ++t) {
     _Cilk_for (int i = 0; i <= N_SIZE-1; ++i) {
@@ -32233,7 +32042,7 @@ b.registerBV(heat_bv_2D);
         b(t+1, i, j) = 0.125 * (b(t, i+1, j) - 2.0 * b(t, i, j) + b(t, i-1, j)) + 0.125 * (b(t, i, j+1) - 2.0 * b(t, i, j) + b(t, i, j-1)) + b(t, i, j); } } }
     }
 	gettimeofday(&end, 0);
-	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/3 << "ms" << std::endl;
+	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/1 << "ms" << std::endl;
 
 	t = T_SIZE;
 	for (int i = 0; i <= N_SIZE-1; ++i) {

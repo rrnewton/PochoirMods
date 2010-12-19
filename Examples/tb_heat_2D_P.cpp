@@ -34,7 +34,7 @@
 #include <pochoir.hpp>
 
 using namespace std;
-#define TIMES 3
+#define TIMES 1
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
 // #define N_SIZE 555 

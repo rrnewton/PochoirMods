@@ -29,8 +29,8 @@
 #include <cstdio>
 #include <cassert>
 #include <iostream>
-#include <cilk.h>
-#include <cilk_api.h>
+#include <cilk/cilk.h>
+#include <cilk/cilk_api.h>
 #include "pochoir_common.hpp"
 
 using namespace std;
@@ -61,11 +61,11 @@ template <typename BF>
 struct meta_grid_boundary <2, BF>{
 	static inline void single_step(int t, grid_info<2> const & grid, grid_info<2> const & initial_grid, BF const & bf) {
 		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
-#if !KLEIN
+#if (KLEIN == 0)
             int new_i = pmod_lu(i, initial_grid.x0[1], initial_grid.x1[1]);
 #endif
 			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
-#if !KLEIN
+#if (KLEIN == 0)
                 int new_j = pmod_lu(j, initial_grid.x0[0], initial_grid.x1[0]);
 #else
                 int new_i = i, new_j = j;
@@ -169,7 +169,7 @@ struct Algorithm {
     bool boundarySet, physGridSet, slopeSet;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(50), dt_recursive_boundary_(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -178,8 +178,8 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 100;
-        dx_recursive_[0] = 100;
+            dx_recursive_[i] = 20;
+        dx_recursive_[0] = 20;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
@@ -207,10 +207,15 @@ struct Algorithm {
     void set_slope(int const slope[]);
     inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
 
+    template <typename F>
+    inline void sim_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F>
+    inline void sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+
     template <typename F, typename BF>
     inline void sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF>
-    inline void sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    inline void sim_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 
     template <typename F> 
 	inline void base_case_kernel_interior(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
