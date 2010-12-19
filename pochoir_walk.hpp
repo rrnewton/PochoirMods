@@ -179,7 +179,7 @@ struct Algorithm {
         }
         for (int i = N_RANK-1; i > 0; --i)
             dx_recursive_[i] = 20;
-        dx_recursive_[0] = 20;
+        dx_recursive_[0] = 1000;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
@@ -208,6 +208,16 @@ struct Algorithm {
     inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
 
     template <typename F>
+    inline void sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F>
+    inline void sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+
+    template <typename F, typename BF>
+    inline void sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    template <typename F, typename BF>
+    inline void sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+
+    template <typename F>
     inline void sim_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F>
     inline void sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
@@ -215,7 +225,7 @@ struct Algorithm {
     template <typename F, typename BF>
     inline void sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF>
-    inline void sim_bicut_boundary_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    inline void sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 
     template <typename F> 
 	inline void base_case_kernel_interior(int t0, int t1, grid_info<N_RANK> const grid, F const & f);

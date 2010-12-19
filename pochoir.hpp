@@ -252,8 +252,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
 #if 0
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #else
-    fprintf(stderr, "Call SIM_BICUT_P\n");
-    algor.sim_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    algor.sim_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #endif
 #else
     algor.walk_ncores_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
@@ -271,8 +270,11 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
 #if BICUT
+#if 0
     algor.obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
-//    algor.sim_bicut_zero(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+#else
+    algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+#endif
 #else
     algor.obase_adaptive(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 #endif
@@ -291,8 +293,11 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     timestep_ = timestep;
     checkFlags();
 #if BICUT
+#if 0
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
-//    algor.sim_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+#else
+    algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+#endif
 #else
     algor.obase_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #endif
