@@ -617,7 +617,8 @@ tableStmt = [[Postfix (reservedOp "++" >> return (PostUno "++")),
 
 termStmt :: GenParser Char ParserState Expr
 termStmt =  do try pArrayOfStructTermStmt
-        <|> do try pPArrayOfStructTermStmt
+        <|> do try ppArrayOfStructTermStmt
+--        <|> do try pPArrayOfStructTermStmt
         <|> do l_expr <- try (parens exprStmt) 
                return (PARENS l_expr)
         <|> do l_num <- try (number)
@@ -664,11 +665,19 @@ pPlainVarTermStmt =
 
 pArrayOfStructTermStmt :: GenParser Char ParserState Expr
 pArrayOfStructTermStmt =
-    do l_type <- pType
+    do l_type <- try pType
        l_pTerm <- parens pParenTermStmt
        l_connector <- symbol "." <|> symbol "->"
        l_field <- identifier
        return (SVAR l_type l_pTerm l_connector l_field)
+
+ppArrayOfStructTermStmt :: GenParser Char ParserState Expr
+ppArrayOfStructTermStmt =
+    do let opt_type = PType{basicType = PUserType, typeName = ""}
+       l_pTerm <- pParenTermStmt 
+       l_connector <- symbol "." <|> symbol "->"
+       l_field <- identifier
+       return (SVAR opt_type l_pTerm l_connector l_field)
 
 pPArrayOfStructTermStmt :: GenParser Char ParserState Expr
 pPArrayOfStructTermStmt =

@@ -805,95 +805,34 @@ extern void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid,
 
 
 /* Get size_t, wchar_t and NULL from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
+		/* macros */
+		/* type definitions */
+typedef long ptrdiff_t;
 
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-typedef unsigned long size_t;
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+typedef unsigned long	size_t;
 
 
 
+
+
+/*#endif*/ /* _STDDEF */
 
 extern "C" {
 
@@ -1420,94 +1359,32 @@ typedef __timer_t timer_t;
 typedef __useconds_t useconds_t;
 typedef __suseconds_t suseconds_t;
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
+
+
+
+/*#endif*/ /* _STDDEF */
 
 /* Old compatibility names for C types.  */
 typedef unsigned long int ulong;
@@ -2163,94 +2040,32 @@ extern void cfree (void *__ptr) throw ();
 
 
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
+
+
+
+/*#endif*/ /* _STDDEF */
 
 extern "C" {
 
@@ -2632,94 +2447,32 @@ extern int getloadavg (double __loadavg[], int __nelem)
 
 extern "C" {
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 
@@ -2777,94 +2530,32 @@ typedef struct _IO_FILE __FILE;
 
 /* Define types for libio in terms of the standard internal type names.  */
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
+
+
+
+/*#endif*/ /* _STDDEF */
 /* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -5073,103 +4764,32 @@ extern int futimesat (int __fd, __const char *__file,
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
-/* snaroff@next.com says the NeXT needs this.  */
-/* Irix 5.1 needs this.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-typedef long ptrdiff_t;
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -5882,6 +5502,20 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
     };
 
 }
+
+/* file: math.h */
+
+/*
+** Copyright  (C) 1985-2007 Intel Corporation. All rights reserved.
+**
+** The information and source code contained herein is the exclusive property
+** of Intel Corporation and may not be disclosed, examined, or reproduced in
+** whole or in part without explicit written authorization from the Company.
+**
+*/
+
+
+/* Include_next should be before guard macros in order to at last reach system header */
 
 /* Declarations for math functions.
    Copyright (C) 1991-1993, 1995-1999, 2001, 2002, 2004, 2006, 2009
@@ -7193,6 +6827,372 @@ extern int matherr (struct __exception *__exc) throw ();
 
 
 
+/* Check usage correctness */
+
+
+
+
+
+
+
+
+
+
+extern "C" {
+
+
+
+/* for Microsoft compatibility */
+
+
+/*-- Classification macros --*/
+
+
+
+
+
+extern int fpclassifyf    ( float              __x );
+extern int fpclassify     ( double               __x );
+extern int fpclassifyd    ( double             __x );
+extern int fpclassifyl    ( long double            __x );
+
+extern int __fpclassifyf  ( float              __x );
+extern int __fpclassify   ( double               __x );
+extern int __fpclassifyd  ( double             __x );
+extern int __fpclassifyl  ( long double            __x );
+
+extern int isinff         ( float              __x );
+extern int isinf          ( double               __x );
+extern int isinfd         ( double             __x );
+extern int isinfl         ( long double            __x );
+
+extern int __isinff       ( float              __x );
+extern int __isinf        ( double               __x );
+extern int __isinfd       ( double             __x );
+extern int __isinfl       ( long double            __x );
+
+extern int isnanf         ( float              __x );
+extern int isnan          ( double               __x );
+extern int isnand         ( double             __x );
+extern int isnanl         ( long double            __x );
+
+extern int __isnanf       ( float              __x );
+extern int __isnan        ( double               __x );
+extern int __isnand       ( double             __x );
+extern int __isnanl       ( long double            __x );
+
+extern int isnormalf      ( float              __x );
+extern int isnormal       ( double               __x );
+extern int isnormald      ( double             __x );
+extern int isnormall      ( long double            __x );
+
+extern int __isnormalf    ( float              __x );
+extern int __isnormal     ( double               __x );
+extern int __isnormald    ( double             __x );
+extern int __isnormall    ( long double            __x );
+
+extern int isfinitef      ( float              __x );
+extern int isfinite       ( double               __x );
+extern int isfinited      ( double             __x );
+extern int isfinitel      ( long double            __x );
+
+extern int __isfinitef    ( float              __x );
+extern int __isfinite     ( double               __x );
+extern int __isfinited    ( double             __x );
+extern int __isfinitel    ( long double            __x );
+
+extern int finitef        ( float              __x );
+extern int finite         ( double             __x );
+extern int finited        ( double             __x );
+extern int finitel        ( long double            __x );
+
+extern int __finitef      ( float              __x );
+extern int __finite       ( double             __x );
+extern int __finited      ( double             __x );
+extern int __finitel      ( long double            __x );
+
+extern int signbitf       ( float              __x );
+extern int signbit        ( double             __x );
+extern int signbitd       ( double             __x );
+extern int signbitl       ( long double            __x );
+
+extern int __signbitf     ( float              __x );
+extern int __signbit      ( double             __x );
+extern int __signbitd     ( double             __x );
+extern int __signbitl     ( long double            __x );
+
+
+
+
+
+
+
+
+/* Comparison macros */
+
+extern int isgreaterf( float xf, float yf );
+extern int isgreater( double xd, double yd );
+extern int isgreaterl( long double xl, long double yl );
+extern int __isgreaterf( float xf, float yf );
+extern int __isgreater( double xd, double yd );
+extern int __isgreaterl( long double xl, long double yl );
+
+extern int isgreaterequalf( float xf, float yf );
+extern int isgreaterequal( double xd, double yd );
+extern int isgreaterequall( long double xl, long double yl );
+extern int __isgreaterequalf( float xf, float yf );
+extern int __isgreaterequal( double xd, double yd );
+extern int __isgreaterequall( long double xl, long double yl );
+
+extern int islessf( float xf, float yf );
+extern int isless( double xd, double yd );
+extern int islessl( long double xl, long double yl );
+extern int __islessf( float xf, float yf );
+extern int __isless( double xd, double yd );
+extern int __islessl( long double xl, long double yl );
+
+extern int islessequalf( float xf, float yf );
+extern int islessequal( double xd, double yd );
+extern int islessequall( long double xl, long double yl );
+extern int __islessequalf( float xf, float yf );
+extern int __islessequal( double xd, double yd );
+extern int __islessequall( long double xl, long double yl );
+
+extern int islessgreaterf( float xf, float yf );
+extern int islessgreater( double xd, double yd );
+extern int islessgreaterl( long double xl, long double yl );
+extern int __islessgreaterf( float xf, float yf );
+extern int __islessgreater( double xd, double yd );
+extern int __islessgreaterl( long double xl, long double yl );
+
+extern int isunorderedf( float xf, float yf );
+extern int isunordered( double xd, double yd );
+extern int isunorderedl( long double xl, long double yl );
+extern int __isunorderedf( float xf, float yf );
+extern int __isunordered( double xd, double yd );
+extern int __isunorderedl( long double xl, long double yl );
+
+
+
+/*-- Real functions --*/
+
+/* Radian argument trigonometric functions */
+
+
+
+extern double    cot( double __x );
+extern float     cotf( float __x );
+extern long double   cotl( long double __x );
+
+
+/* Degree argument trigonometric functions */
+
+extern double    cosd( double __x );
+extern float     cosdf( float __x );
+extern long double   cosdl( long double __x );
+
+extern double    sind( double __x );
+extern float     sindf( float __x );
+extern long double   sindl( long double __x );
+
+extern double    tand( double __x );
+extern float     tandf( float __x );
+extern long double   tandl( long double __x );
+
+extern double    cotd( double __x );
+extern float     cotdf( float __x );
+extern long double   cotdl( long double __x );
+
+extern double    acosd( double __x );
+extern float     acosdf( float __x );
+extern long double   acosdl( long double __x );
+
+extern double    asind( double __x );
+extern float     asindf( float __x );
+extern long double   asindl( long double __x );
+
+extern double    atand( double __x );
+extern float     atandf( float __x );
+extern long double   atandl( long double __x );
+
+extern double    atand2( double __y, double __x );
+extern float     atand2f( float __y, float __x );
+extern long double   atand2l( long double __y, long double __x );
+
+extern double    atan2d( double __y, double __x );
+extern float     atan2df( float __y, float __x );
+extern long double   atan2dl( long double __y, long double __x );
+
+extern void      sincosd( double __x, double *__psin, double *__pcos );
+extern void      sincosdf( float __x, float *__psin, float *__pcos );
+extern void      sincosdl( long double __x, long double *__psin, long double *__pcos );
+
+/* Hyperbolic functions */
+
+
+extern void      sinhcosh( double __x, double *__psinh, double *__pcosh );
+extern void      sinhcoshf( float __x, float *__psinh, float *__pcosh );
+extern void      sinhcoshl( long double __x, long double *__psinh, long double *__pcosh );
+
+
+
+/* Exponential functions */
+
+
+
+
+
+
+
+
+
+
+
+/* Logarithmic functions */
+
+
+
+
+
+
+
+/* Power/root/abs functions */
+
+
+
+
+
+extern double    invsqrt( double __x );
+extern float     invsqrtf( float __x );
+extern long double   invsqrtl( long double __x );
+
+/* Error and gamma functions */
+
+
+extern double    cdfnorminv( double __x );
+extern float     cdfnorminvf( float __x );
+extern double    erfinv( double __x );
+extern float     erfinvf( float __x );
+extern long double   erfinvl( long double __x );
+
+extern double    gamma_r( double __x, int *__signgam );
+extern float     gammaf_r( float __x, int *__signgam );
+extern long double   gammal_r( long double __x, int *__signgam );
+
+
+
+
+/* Nearest integer functions */
+
+
+
+
+
+
+
+/* Remainder functions */
+
+
+
+
+
+/* Manipulation functions */
+
+
+
+
+/* Maximum, minimum, and positive difference functions */
+
+
+/* Other - special functions */
+
+extern double    annuity( double __x, double __y );
+extern double    compound( double __x, double __y );
+
+extern float     annuityf( float __x, float __y );
+extern long double   annuityl( long double __x, long double __y );
+
+extern float     compoundf( float __x, float __y );
+extern long double   compoundl( long double __x, long double __y );
+
+
+
+
+
+
+
+
+/* MS compatible exception handling */
+
+/* Exception type passed in the type field of exception struct */
+
+
+typedef struct ____exception {
+    int     type;
+    const char  *name;
+    double  arg1;
+    double  arg2;
+    double  retval;
+} ___exception;
+
+
+typedef struct ____exceptionf {
+    int    type;
+    const char *name;
+    float  arg1;
+    float  arg2;
+    float  retval;
+} ___exceptionf;
+
+typedef struct ____exceptionl {
+    int      type;
+    const char   *name;
+    long double  arg1;
+    long double  arg2;
+    long double  retval;
+} ___exceptionl;
+
+extern int  matherrf( struct ____exceptionf *__e );
+extern int  matherrl( struct ____exceptionl *__e );
+
+/* User-installable exception handlers
+ *
+ *  Static redefinition of matherr() is useful only for statically linked
+ *  libraries. When Libm is built as a DLL, the Libm's matherr() is already
+ *  loaded into the DLL and (statically) linked.  In this case, the only way
+ *  to replace the library default matherr() with your matherr() is to use
+ *  the matherr() exchange functions (see description below).
+ *
+ *  1. In user code, implement your own substitute matherr() function.
+ *  2. To install it, call __libm_setusermatherr(), with your
+ *     function as an argument. Note that the __libm_setusermatherr()
+ *     returns the address of previously defined matherr. If you save
+ *     the address, you can use it later to restore the original matherr().
+ *  3. Your matherr() will now be installed! Your matherr() will be called
+ *     instead of the default matherr().
+ */
+
+typedef int (  *___pmatherr )( struct ____exception  *__e );
+typedef int (  *___pmatherrf )( struct ____exceptionf *__e );
+typedef int (  *___pmatherrl )( struct ____exceptionl *__e );
+
+extern ___pmatherr   __libm_setusermatherr( ___pmatherr  __user_matherr );
+extern ___pmatherrf  __libm_setusermatherrf( ___pmatherrf __user_matherrf );
+extern ___pmatherrl  __libm_setusermatherrl( ___pmatherrl __user_matherrl );
+
+/* Standard conformance support */
+
+
+extern _LIB_VERSION_TYPE  _LIB_VERSIONIMF;
+
+
+
+}
+
+
+
+
+
 // Get rid of those macros defined in <math.h> in lieu of real functions.
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -7846,33 +7846,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 
@@ -8202,33 +8201,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 // Function-Based Exception Support -*- C++ -*-
 
@@ -8586,33 +8584,32 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 // Concept-checking control -*- C++ -*-
 
@@ -8887,33 +8884,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -11116,33 +11112,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 /* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
@@ -11234,102 +11229,34 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 
 /* Get size_t, wchar_t, wint_t and NULL from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
+		/* macros */
+		/* type definitions */
 
 
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
 
 
 typedef unsigned int wint_t;
 
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
 
 
-/* A null pointer constant.  */
-
-
-
-/* Offset of member MEMBER in a struct of type TYPE. */
-
-
+/*#endif*/ /* _STDDEF */
 
 /* Tell the caller that we provide correct C++ prototypes.  */
 
@@ -12305,33 +12232,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 /* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
@@ -12871,33 +12797,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 // Exception Handling support header for -*- C++ -*-
 
@@ -13474,100 +13399,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 /* Definition of locale category symbol values.
    Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -13786,33 +13643,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 
@@ -15709,100 +15565,32 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 /* Get type definitions.  */
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -16000,100 +15788,32 @@ extern "C" {
 
 
 /* Get size_t and NULL from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* This defines CLOCKS_PER_SEC, which is the number of processor clock
    ticks per second.  */
@@ -17659,100 +17379,32 @@ extern "C" {
 
 
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* The Single Unix specification says that some more types are
    available here.  */
@@ -18983,7 +18635,7 @@ static inline int
 __gthread_create (__gthread_t *__threadid, void *(*__func) (void*),
 		  void *__args)
 {
-  return __gthrw_pthread_create (__threadid, __null, __func, __args);
+  return __gthrw_pthread_create (__threadid, (__null), __func, __args);
 }
 
 static inline int
@@ -22896,6 +22548,56 @@ struct Pochoir_Shape {
 template <int N_RANK, size_t N>
 size_t ArraySize (Pochoir_Shape<N_RANK> (& arr)[N]) { return N; }
 
+
+inline void klein(int & new_i, int & new_j, grid_info<2> const & grid) {
+    int l_arr_size_1 = grid.x1[1] - grid.x0[1];
+    int l_arr_size_0 = grid.x1[0] - grid.x0[0];
+
+    if (new_i < grid.x0[1])
+        new_i += l_arr_size_1;
+    else if (new_i >= grid.x1[1])
+        new_i -= l_arr_size_1;
+    if (new_j < grid.x0[0]) {
+        new_j += l_arr_size_0;
+        new_i  = grid.x0[1] + (grid.x1[1] - 1 - new_i);
+    } else if (new_j >= grid.x1[0]) {
+        new_j -= l_arr_size_0;
+        new_i  = grid.x0[1] + (grid.x1[1] - 1 - new_i);
+    }
+    return;
+}
+
+inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid) {
+    grid_info<2> orig_grid;
+    const int l_arr_size_1 = initial_grid.x1[1] - initial_grid.x0[1];
+    const int l_arr_size_0 = initial_grid.x1[0] - initial_grid.x0[0];
+
+    if (grid.x0[1] >= initial_grid.x1[1]) {
+        grid.x0[1] -= l_arr_size_1;
+        grid.x1[1] -= l_arr_size_1;
+    } else if (grid.x1[1] < initial_grid.x0[1]) {
+        grid.x0[1] += l_arr_size_1;
+        grid.x1[1] += l_arr_size_1;
+    } 
+    orig_grid = grid;
+    if (grid.x0[0] >= initial_grid.x1[0]) {
+        grid.x0[0] -= l_arr_size_0;
+        grid.x1[0] -= l_arr_size_0;
+        grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x1[1]);
+        grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x0[1]);
+        grid.dx0[1] = -orig_grid.dx1[1];
+        grid.dx1[1] = -orig_grid.dx0[1];
+    } else if (grid.x1[0] < initial_grid.x0[0]) {
+        grid.x0[0] += l_arr_size_0;
+        grid.x1[0] += l_arr_size_0;
+        grid.x0[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x1[1]);
+        grid.x1[1] = initial_grid.x0[1] + (initial_grid.x1[1] - orig_grid.x0[1]);
+        grid.dx0[1] = -orig_grid.dx1[1];
+        grid.dx1[1] = -orig_grid.dx0[1];
+    }
+    return;
+}
+
 /* these lambda functions are for computing internal/boundary region,
  * the original 'f'/'bf'
  */
@@ -26163,100 +25865,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 
 /* Get wint_t from <stddef.h>.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
-/* Any one of these symbols __need_* means that GNU libc
-   wants us just to define one data type.  So don't define
-   the symbols that indicate this file's entire job has been done.  */
 
-/* This avoids lossage on SunOS but only if stdtypes.h comes first.
-   There's no way to win with the other order!  Sun lossage.  */
+/* stddef.h standard header */
 
-/* On 4.3bsd-net2, make sure ansi.h is included, so we have
-   one less case to deal with in the following.  */
-/* On FreeBSD 5, machine/ansi.h does not exist anymore... */
-
-/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
-   defined if the corresponding type is *not* defined.
-   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_ */
-
-/* Sequent's header files use _PTRDIFF_T_ in some conflicting way.
-   Just ignore it.  */
-
-/* On VxWorks, <type/vxTypesBase.h> may have defined macros like
-   _TYPE_size_t which will typedef size_t.  fixincludes patched the
-   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
-   not defined, and so that defining this macro defines _GCC_SIZE_T.
-   If we find that the macros are still defined at this point, we must
-   invoke them so that the type is defined as expected.  */
-
-/* In case nobody has defined these types, but we aren't running under
-   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
-   __WCHAR_TYPE__ have reasonable values.  This can happen if the
-   parts of GCC is compiled by an older compiler, that actually
-   include gstddef.h, such as collect2.  */
-
-/* Signed type of difference of two pointers.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-/* If this symbol has done its job, get rid of it.  */
-
-
-/* Unsigned type of `sizeof' something.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/* Wide character type.
-   Locale-writers should change this as necessary to
-   be big enough to hold unique values not between 0 and 127,
-   and not (wchar_t) -1, for each defined multibyte character.  */
-
-/* Define this type if we are doing the whole job,
-   or if we want this type in particular.  */
-
-
-/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-    are already defined.  */
-/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
-
-
-/* A null pointer constant.  */
+		/* macros */
+		/* type definitions */
 
 
 
-/* Offset of member MEMBER in a struct of type TYPE. */
 
 
+
+/*#endif*/ /* _STDDEF */
 
 /* Constant expression of type `wint_t' whose value does not correspond
    to any member of the extended character set.  */
@@ -28630,8 +28264,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       bool				_M_allocated;
 
       __numpunct_cache(size_t __refs = 0) : facet(__refs),
-      _M_grouping(__null), _M_grouping_size(0), _M_use_grouping(false),
-      _M_truename(__null), _M_truename_size(0), _M_falsename(__null),
+      _M_grouping((__null)), _M_grouping_size(0), _M_use_grouping(false),
+      _M_truename((__null)), _M_truename_size(0), _M_falsename((__null)),
       _M_falsename_size(0), _M_decimal_point(_CharT()),
       _M_thousands_sep(_CharT()), _M_allocated(false)
       { }
@@ -28698,7 +28332,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
        *  @param  refs  Refcount to pass to the base class.
        */
       explicit
-      numpunct(size_t __refs = 0) : facet(__refs), _M_data(__null)
+      numpunct(size_t __refs = 0) : facet(__refs), _M_data((__null))
       { _M_initialize_numpunct(); }
 
       /**
@@ -28726,7 +28360,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
        */
       explicit
       numpunct(__c_locale __cloc, size_t __refs = 0)
-      : facet(__refs), _M_data(__null)
+      : facet(__refs), _M_data((__null))
       { _M_initialize_numpunct(__cloc); }
 
       /**
@@ -28882,7 +28516,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
       // For use at construction time only.
       void
-      _M_initialize_numpunct(__c_locale __cloc = __null);
+      _M_initialize_numpunct(__c_locale __cloc = (__null));
     };
 
   template<typename _CharT>
@@ -29662,7 +29296,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 	const locale::facet** __caches = __loc._M_impl->_M_caches;
 	if (!__caches[__i])
 	  {
-	    __numpunct_cache<_CharT>* __tmp = __null;
+	    __numpunct_cache<_CharT>* __tmp = (__null);
 	    try
 	      {
 		__tmp = new __numpunct_cache<_CharT>;
@@ -34663,33 +34297,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 // -*- C++ -*- forwarding header.
@@ -34776,33 +34409,32 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 
@@ -34873,33 +34505,32 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 // -*- C++ -*- forwarding header.
 
@@ -35276,33 +34907,32 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 // -*- C++ -*- forwarding header.
@@ -35389,33 +35019,32 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 #pragma GCC system_header
 
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002, 2004, 2009
-   Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- * ISO C Standard:  7.17  Common definitions  <stddef.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
 
 
 // -*- C++ -*- forwarding header.
@@ -35624,6 +35253,10 @@ int __cilkrts_get_nworkers(void), __cilkrts_get_total_workers(void);
 extern __attribute__((visibility("default"),nothrow))
 int __cilkrts_get_worker_number(void);
 
+/* Return non-zero if force reduce mode is on */
+extern __attribute__((visibility("default"),nothrow))
+int __cilkrts_get_force_reduce(void);
+
 } // extern "C"
 
 
@@ -35740,21 +35373,22 @@ struct Algorithm {
 	public:
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     typedef int index_info[N_RANK];
+    typedef struct {
+        int level; /* level is how many dimensions we have cut so far */
+        int t0, t1;
+        grid_info<N_RANK> grid;
+    } queue_info;
 
-    grid_info<N_RANK> initial_grid_;
-    int initial_length_[N_RANK];
-    int logic_size_[N_RANK];
+    /* we can use toggled circular queue! */
+    grid_info<N_RANK> phys_grid_;
+    int phys_length_[N_RANK];
 	int slope_[N_RANK];
     int stride_[N_RANK];
     int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
-    bool boundarySet, initialGridSet, slopeSet;
+    bool boundarySet, physGridSet, slopeSet;
     
-// #pragma isat tuning name(tune_coarsening_factor) scope(M1_begin, M1_end) measure(M2_begin, M2_end) variable(tune_dt, range(1, 2, 1)) variable(tune_dt_boundary, range(1, 2, 1)) variable(tune_dx_boundary, range(1, 2, 1)) variable(tune_dx_i, range(1, 100, 50)) variable(tune_dx_0, range(1, 100, 50)) search(dependent)
     /* constructor */
-
-    /* constructor */
-// #pragma isat marker M1_begin
-    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(1), dt_recursive_boundary_(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -35763,27 +35397,51 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 3;
-        dx_recursive_[0] = 1000;
+            dx_recursive_[i] = 1;
+        dx_recursive_[0] = 1;
         boundarySet = false;
-        initialGridSet = false;
+        physGridSet = false;
         slopeSet = true;
         N_CORES = __cilkrts_get_nworkers();
 //        cout << " N_CORES = " << N_CORES << endl;
 
     }
-// #pragma isat marker M1_end
 
-    /* README!!!: set_initial_grid()/set_stride() must be called before call to 
+    /* README!!!: set_phys_grid()/set_stride() must be called before call to 
      * - walk_adaptive 
      * - walk_ncores_hybrid
      * - walk_ncores_boundary
      */
-    void set_initial_grid(grid_info<N_RANK> const & grid);
+    inline void push_queue(int dep, int level, int t0, int t1, grid_info<N_RANK> const & grid);
+    inline queue_info & top_queue(int dep);
+    inline void pop_queue(int dep);
+    inline bool within_boundary(int t0, int t1, grid_info<N_RANK> & grid);
+
+    void set_phys_grid(grid_info<N_RANK> const & grid);
     void set_stride(int const stride[]);
-    void set_logic_size(int const phys_size[]);
     void set_slope(int const slope[]);
     inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
+
+    template <typename F>
+    inline void sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F>
+    inline void sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+
+    template <typename F, typename BF>
+    inline void sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    template <typename F, typename BF>
+    inline void sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+
+    template <typename F>
+    inline void sim_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F>
+    inline void sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+
+    template <typename F, typename BF>
+    inline void sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    template <typename F, typename BF>
+    inline void sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+
     template <typename F> 
 	inline void base_case_kernel_interior(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename BF> 
@@ -35823,21 +35481,25 @@ struct Algorithm {
     inline void naive_cut_space_ncores(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
     inline void cut_space_ncores_boundary(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+	void print_grid(FILE * fp, int t0, int t1, grid_info<N_RANK> const & grid);
+	void print_sync(FILE * fp);
+	void print_index(int t, int const idx[]);
+	void print_region(int t, int const head[], int const tail[]);
 };
 
 template <int N_RANK>
-void Algorithm<N_RANK>::set_initial_grid(grid_info<N_RANK> const & grid)
+void Algorithm<N_RANK>::set_phys_grid(grid_info<N_RANK> const & grid)
 {
-    initial_grid_ = grid;
+    phys_grid_ = grid;
     for (int i = 0; i < N_RANK; ++i)
-        initial_length_[i] = grid.x1[i] - grid.x0[i];
-    initialGridSet = true;
+        phys_length_[i] = grid.x1[i] - grid.x0[i];
+    physGridSet = true;
     if (slopeSet) {
         /* set up the lb/ub_boundary */
         for (int i = 0; i < N_RANK; ++i) {
-            ulb_boundary[i] = initial_grid_.x1[i] - slope_[i];
-            uub_boundary[i] = initial_grid_.x1[i] + slope_[i];
-            lub_boundary[i] = initial_grid_.x0[i] + slope_[i];
+            ulb_boundary[i] = phys_grid_.x1[i] - slope_[i];
+            uub_boundary[i] = phys_grid_.x1[i] + slope_[i];
+            lub_boundary[i] = phys_grid_.x0[i] + slope_[i];
         }
     }
 }
@@ -35850,24 +35512,17 @@ void Algorithm<N_RANK>::set_stride(int const stride[])
 }
 
 template <int N_RANK>
-void Algorithm<N_RANK>::set_logic_size(int const logic_size[])
-{
-    for (int i = 0; i < N_RANK; ++i)
-        logic_size_[i] = logic_size[i];
-}
-
-template <int N_RANK>
 void Algorithm<N_RANK>::set_slope(int const slope[])
 {
     for (int i = 0; i < N_RANK; ++i)
         slope_[i] = slope[i];
     slopeSet = true;
-    if (initialGridSet) {
+    if (physGridSet) {
         /* set up the lb/ub_boundary */
         for (int i = 0; i < N_RANK; ++i) {
-            ulb_boundary[i] = initial_grid_.x1[i] - slope_[i];
-            uub_boundary[i] = initial_grid_.x1[i] + slope_[i];
-            lub_boundary[i] = initial_grid_.x0[i] + slope_[i];
+            ulb_boundary[i] = phys_grid_.x1[i] - slope_[i];
+            uub_boundary[i] = phys_grid_.x1[i] + slope_[i];
+            lub_boundary[i] = phys_grid_.x0[i] + slope_[i];
         }
     }
 }
@@ -35877,7 +35532,7 @@ inline void Algorithm<N_RANK>::base_case_kernel_interior(int t0, int t1, grid_in
 	grid_info<N_RANK> l_grid = grid;
 	for (int t = t0; t < t1; ++t) {
 		/* execute one single time step */
-		meta_grid_interior<N_RANK, F>::single_step(t, l_grid, initial_grid_, f);
+		meta_grid_interior<N_RANK, F>::single_step(t, l_grid, phys_grid_, f);
 
 		/* because the shape is trapezoid! */
 		for (int i = 0; i < N_RANK; ++i) {
@@ -35891,13 +35546,112 @@ inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_in
 	grid_info<N_RANK> l_grid = grid;
 	for (int t = t0; t < t1; ++t) {
 		/* execute one single time step */
-		meta_grid_boundary<N_RANK, BF>::single_step(t, l_grid, initial_grid_, bf);
+		meta_grid_boundary<N_RANK, BF>::single_step(t, l_grid, phys_grid_, bf);
 
 		/* because the shape is trapezoid! */
 		for (int i = 0; i < N_RANK; ++i) {
 			l_grid.x0[i] += l_grid.dx0[i]; l_grid.x1[i] += l_grid.dx1[i];
 		}
 	}
+}
+
+template <int N_RANK>
+void Algorithm<N_RANK>::print_grid(FILE *fp, int t0, int t1, grid_info<N_RANK> const & grid)
+{
+    int i;
+    fprintf(fp, "{ BASE, ");
+    fprintf(fp, "t = {%d, %d}, {", t0, t1);
+
+    fprintf(fp, "x0 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print x0[3] */
+        fprintf(fp, "%lu, ", grid.x0[i]);
+    }
+    fprintf(fp, "%lu}, ", grid.x0[i]);
+
+    fprintf(fp, "x1 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print x1[3] */
+        fprintf(fp, "%lu, ", grid.x1[i]);
+    }
+    fprintf(fp, "%lu}, ", grid.x1[i]);
+
+    fprintf(fp, "dx0 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print dx0[3] */
+        fprintf(fp, "%d, ", grid.dx0[i]);
+    }
+    fprintf(fp, "%d}, ", grid.dx0[i]);
+
+    fprintf(fp, "dx1 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print dx1[3] */
+        fprintf(fp, "%d, ", grid.dx1[i]);
+    }
+    fprintf(fp, "%d}}}, \n", grid.dx1[i]);
+    fflush(fp);
+    return;
+}
+
+template <int N_RANK>
+void Algorithm<N_RANK>::print_sync(FILE * fp)
+{
+    int i;
+    fprintf(fp, "{ SYNC, ");
+    fprintf(fp, "t = {0, 0}, {");
+
+    fprintf(fp, "x0 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print x0[3] */
+        fprintf(fp, "0, ");
+    }
+    fprintf(fp, "0}, ");
+
+    fprintf(fp, "x1 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print x1[3] */
+        fprintf(fp, "0, ");
+    }
+    fprintf(fp, "0}, ");
+
+    fprintf(fp, "dx0 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print dx0[3] */
+        fprintf(fp, "0, ");
+    }
+    fprintf(fp, "0}, ");
+
+    fprintf(fp, "dx1 = {");
+    for (i = 0; i < N_RANK-1; ++i) {
+        /* print dx1[3] */
+        fprintf(fp, "0, ");
+    }
+    fprintf(fp, "0}}}, \n");
+    fflush(fp);
+    return;
+}
+
+template <int N_RANK>
+void Algorithm<N_RANK>::print_index(int t, int const idx[])
+{
+    printf("U(t=%lu, {", t);
+    for (int i = 0; i < N_RANK; ++i) {
+        printf("%lu ", idx[i]);
+    }
+    printf("}) ");
+    fflush(stdout);
+}
+
+template <int N_RANK>
+void Algorithm<N_RANK>::print_region(int t, int const head[], int const tail[])
+{
+    printf("%s:%lu t=%lu, {", __FUNCTION__, 436, t);
+    for (int i = 0; i < N_RANK; ++i) {
+        printf("{%lu, %lu} ", head[i], tail[i]);
+    }
+    printf("}\n");
+    fflush(stdout);
+
 }
 
 /*
@@ -35927,7 +35681,7 @@ inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_in
 
 
 
-/* grid.x1[i] >= initial_grid_.x1[i] - stride_[i] - slope_[i] 
+/* grid.x1[i] >= phys_grid_.x1[i] - stride_[i] - slope_[i] 
  * because we compute the kernel with range [a, b)
  */
 template <int N_RANK>
@@ -35936,11 +35690,13 @@ inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> &
     bool interior = false;
     if (grid.x0[i] >= uub_boundary[i] 
      && grid.x0[i] + grid.dx0[i] * lt >= uub_boundary[i]) {
+        /* this is for NON klein bottle */
         interior = true;
-        grid.x0[i] -= initial_length_[i];
-        grid.x1[i] -= initial_length_[i];
-    } else if (grid.x1[i] < ulb_boundary[i] 
-            && grid.x1[i] + grid.dx1[i] * lt < ulb_boundary[i]
+        /* by this branch, we are assuming the shape is NOT a Klein bottle */
+        grid.x0[i] -= phys_length_[i];
+        grid.x1[i] -= phys_length_[i];
+    } else if (grid.x1[i] <= ulb_boundary[i] 
+            && grid.x1[i] + grid.dx1[i] * lt <= ulb_boundary[i]
             && grid.x0[i] >= lub_boundary[i]
             && grid.x0[i] + grid.dx0[i] * lt >= lub_boundary[i]) {
         interior = true;
@@ -35948,6 +35704,17 @@ inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> &
         interior = false;
     }
     return !interior;
+}
+
+template <int N_RANK>
+inline bool Algorithm<N_RANK>::within_boundary(int t0, int t1, grid_info<N_RANK> & grid)
+{
+    bool l_touch_boundary = false;
+    int lt = t1 - t0;
+    for (int i = 0; i < N_RANK; ++i) {
+        l_touch_boundary |= touch_boundary(i, t1-t0, grid);
+    }
+    return !l_touch_boundary;
 }
 
 template <int N_RANK> template <typename F>
@@ -36075,6 +35842,555 @@ inline void Algorithm<N_RANK>::walk_bicut(int t0, int t1, grid_info<N_RANK> cons
 	return;
 }
 
+
+
+
+/* This is for interior region space cut! */
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::sim_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
+{
+    queue_info *l_father, *l_son;
+    queue_info circular_queue_[2][200];
+    int queue_head_[2], queue_tail_[2], queue_len_[2];
+
+    for (int i = 0; i < 2; ++i) {
+        queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
+    }
+
+    /* set up the initial grid */
+    do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
+        const int curr_dep_pointer = (curr_dep & 0x1);
+        while (queue_len_[curr_dep_pointer] > 0) {
+            do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+            if (l_father->level == N_RANK) {
+                /* spawn all the grids in circular_queue_[curr_dep][] */
+                /* use cilk_spawn to spawn all the sub-grid */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                _Cilk_spawn sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+            } else {
+                /* performing a space cut on dimension 'level' */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                const grid_info<N_RANK> l_father_grid = l_father->grid;
+                grid_info<N_RANK> l_son_grid = l_father->grid;
+                const int t0 = l_father->t0, t1 = l_father->t1;
+                const int level = l_father->level;
+                const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
+                const int sep = (int)lb/2;
+                const int r = 2;
+                const int l_start = (l_father_grid.x0[level]);
+                const int l_end = (l_father_grid.x1[level]);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_end;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* cilk_sync */
+                const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = -slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = slope_[level];
+                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                if (l_father_grid.dx0[level] != slope_[level]) {
+                    l_son_grid.x0[level] = l_start;
+                    l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                    l_son_grid.x1[level] = l_start;
+                    l_son_grid.dx1[level] = slope_[level];
+                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                }
+                if (l_father_grid.dx1[level] != -slope_[level]) {
+                    l_son_grid.x0[level] = l_end;
+                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.x1[level] = l_end;
+                    l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                }
+            }
+        } /* end while (queue_len_[curr_dep] > 0) */
+        _Cilk_sync;
+        (static_cast<void> (0));
+    } /* end for (curr_dep < N_RANK+1) */
+}
+
+/* This is for boundary region space cut! */
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
+{
+    queue_info *l_father, *l_son;
+    queue_info circular_queue_[2][200];
+    int queue_head_[2], queue_tail_[2], queue_len_[2];
+
+    for (int i = 0; i < 2; ++i) {
+        queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
+    }
+
+    /* set up the initial grid */
+    do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
+        const int curr_dep_pointer = (curr_dep & 0x1);
+        while (queue_len_[curr_dep_pointer] > 0) {
+            do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+            if (l_father->level == N_RANK) {
+                /* spawn all the grids in circular_queue_[curr_dep][] */
+                /* use cilk_spawn to spawn all the sub-grid */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
+                    _Cilk_spawn sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                } else {
+                    _Cilk_spawn sim_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
+                }
+            } else {
+                /* performing a space cut on dimension 'level' */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                const grid_info<N_RANK> l_father_grid = l_father->grid;
+                grid_info<N_RANK> l_son_grid = l_father->grid;
+                const int t0 = l_father->t0, t1 = l_father->t1;
+                const int level = l_father->level;
+                const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
+                bool initial_cut = (lb == phys_length_[level]);
+                const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
+                const int r = 2;
+                const int l_start = (initial_cut) ? (l_father_grid.x0[level]+slope_[level]) : (l_father_grid.x0[level]);
+                const int l_end = (initial_cut) ? (l_father_grid.x1[level]-slope_[level]) : (l_father_grid.x1[level]);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_end;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* cilk_sync */
+                const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = -slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = slope_[level];
+                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                if (initial_cut) {
+                    /* merge triangles! */
+                    l_son_grid.x0[level] = l_end;
+                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.x1[level] = l_end+2*slope_[level];
+                    l_son_grid.dx1[level] = slope_[level];
+                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                } else {
+                    if (l_father_grid.dx0[level] != slope_[level]) {
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                        l_son_grid.x1[level] = l_start;
+                        l_son_grid.dx1[level] = slope_[level];
+                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    }
+                    if (l_father_grid.dx1[level] != -slope_[level]) {
+                        l_son_grid.x0[level] = l_end;
+                        l_son_grid.dx0[level] = -slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    }
+                }
+            }
+        } /* end while (queue_len_[curr_dep] > 0) */
+        _Cilk_sync;
+        (static_cast<void> (0));
+    } /* end for (curr_dep < N_RANK+1) */
+}
+
+/* This is the version for interior region cut! */
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
+{
+    const int lt = t1 - t0;
+    bool can_cut = true;
+    index_info lb, thres;
+    grid_info<N_RANK> l_son_grid;
+
+    for (int i = N_RANK-1; i >= 0; --i) {
+        lb[i] = (grid.x1[i] - grid.x0[i]);
+        thres[i] = 2 * (2 * slope_[i] * lt);
+        can_cut = can_cut && (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
+    }
+
+    if (can_cut) {
+        /* cut into space */
+        sim_space_cut(t0, t1, grid, f);
+        return;
+    } else if (lt > dt_recursive_) {
+        /* cut into time */
+        int halflt = lt / 2;
+        l_son_grid = grid;
+        sim_bicut(t0, t0+halflt, l_son_grid, f);
+
+        for (int i = 0; i < N_RANK; ++i) {
+            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
+            l_son_grid.dx0[i] = grid.dx0[i];
+            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
+            l_son_grid.dx1[i] = grid.dx1[i];
+        }
+        sim_bicut(t0+halflt, t1, l_son_grid, f);
+        return;
+    } else {
+        // base case
+        base_case_kernel_interior(t0, t1, grid, f);
+        return;
+    }
+}
+
+/* This is the version for boundary region cut! */
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
+{
+    const int lt = t1 - t0;
+    bool can_cut = true, call_boundary = false;
+    index_info lb, thres;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
+    bool l_touch_boundary[N_RANK];
+
+    for (int i = N_RANK-1; i >= 0; --i) {
+        /* l_father_grid may be mapped to a new region in touch_boundary() */
+        l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
+        call_boundary |= l_touch_boundary[i];
+        lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
+        thres[i] = 2 * (2 * slope_[i] * lt);
+        /* for the initial cut, we exclude the begining and end point to minimize
+         * the overhead on boundary
+        */
+        /* some dimension touches the boundary, some may NOT! */
+        can_cut = can_cut && ((l_touch_boundary[i]) ? ((lb[i] == phys_length_[i]) ? (lb[i] - 2 * slope_[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i])) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
+        // can_cut = can_cut && ((l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
+    }
+
+    if (can_cut) {
+        /* cut into space */
+        /* push the first grid that can be cut into the circular queue */
+        /* boundary cuts! */
+        if (call_boundary) 
+            sim_space_cut_p(t0, t1, l_father_grid, f, bf);
+        else
+            sim_space_cut(t0, t1, l_father_grid, f);
+        return;
+    } else if ((call_boundary) ? (lt > dt_recursive_boundary_) : (lt > dt_recursive_)) {
+        /* cut into time */
+        int halflt = lt / 2;
+        l_son_grid = l_father_grid;
+        sim_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
+
+        for (int i = 0; i < N_RANK; ++i) {
+            l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
+            l_son_grid.dx0[i] = l_father_grid.dx0[i];
+            l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
+            l_son_grid.dx1[i] = l_father_grid.dx1[i];
+        }
+        sim_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
+        return;
+    } else {
+        // base case
+        if (call_boundary) {
+            base_case_kernel_boundary(t0, t1, l_father_grid, bf);
+        } else {
+            base_case_kernel_interior(t0, t1, l_father_grid, f);
+        }
+        return;
+    }
+}
+/* ************************************************************************************** */
+/* following are the procedures for obase */
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
+{
+    queue_info *l_father, *l_son;
+    queue_info circular_queue_[2][200];
+    int queue_head_[2], queue_tail_[2], queue_len_[2];
+
+    for (int i = 0; i < 2; ++i) {
+        queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
+    }
+
+    /* set up the initial grid */
+    do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
+        const int curr_dep_pointer = (curr_dep & 0x1);
+        while (queue_len_[curr_dep_pointer] > 0) {
+            do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+            if (l_father->level == N_RANK) {
+                /* spawn all the grids in circular_queue_[curr_dep][] */
+                /* use cilk_spawn to spawn all the sub-grid */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+            } else {
+                /* performing a space cut on dimension 'level' */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                const grid_info<N_RANK> l_father_grid = l_father->grid;
+                grid_info<N_RANK> l_son_grid = l_father->grid;
+                const int t0 = l_father->t0, t1 = l_father->t1;
+                const int level = l_father->level;
+                const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
+                const int sep = (int)lb/2;
+                const int r = 2;
+                const int l_start = (l_father_grid.x0[level]);
+                const int l_end = (l_father_grid.x1[level]);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_end;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* cilk_sync */
+                const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = -slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = slope_[level];
+                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                if (l_father_grid.dx0[level] != slope_[level]) {
+                    l_son_grid.x0[level] = l_start;
+                    l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                    l_son_grid.x1[level] = l_start;
+                    l_son_grid.dx1[level] = slope_[level];
+                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                }
+                if (l_father_grid.dx1[level] != -slope_[level]) {
+                    l_son_grid.x0[level] = l_end;
+                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.x1[level] = l_end;
+                    l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                }
+            }
+        } /* end while (queue_len_[curr_dep] > 0) */
+        _Cilk_sync;
+        (static_cast<void> (0));
+    } /* end for (curr_dep < N_RANK+1) */
+}
+
+/* This is for boundary region space cut! */
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
+{
+    queue_info *l_father, *l_son;
+    queue_info circular_queue_[2][200];
+    int queue_head_[2], queue_tail_[2], queue_len_[2];
+
+    for (int i = 0; i < 2; ++i) {
+        queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
+    }
+
+    /* set up the initial grid */
+    do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
+        const int curr_dep_pointer = (curr_dep & 0x1);
+        while (queue_len_[curr_dep_pointer] > 0) {
+            do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+            if (l_father->level == N_RANK) {
+                /* spawn all the grids in circular_queue_[curr_dep][] */
+                /* use cilk_spawn to spawn all the sub-grid */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
+                    _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                } else {
+                    _Cilk_spawn sim_obase_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
+                }
+            } else {
+                /* performing a space cut on dimension 'level' */
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                const grid_info<N_RANK> l_father_grid = l_father->grid;
+                grid_info<N_RANK> l_son_grid = l_father->grid;
+                const int t0 = l_father->t0, t1 = l_father->t1;
+                const int level = l_father->level;
+                const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
+                bool initial_cut = (lb == phys_length_[level]);
+                const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
+                const int r = 2;
+                const int l_start = (initial_cut) ? (l_father_grid.x0[level]+slope_[level]) : (l_father_grid.x0[level]);
+                const int l_end = (initial_cut) ? (l_father_grid.x1[level]-slope_[level]) : (l_father_grid.x1[level]);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* push one sub-grid into circular queue of (curr_dep) */
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = slope_[level];
+                l_son_grid.x1[level] = l_end;
+                l_son_grid.dx1[level] = -slope_[level];
+                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                /* cilk_sync */
+                const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                l_son_grid.x0[level] = l_start + sep;
+                l_son_grid.dx0[level] = -slope_[level];
+                l_son_grid.x1[level] = l_start + sep;
+                l_son_grid.dx1[level] = slope_[level];
+                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                if (initial_cut) {
+                    /* merge triangles! */
+                    l_son_grid.x0[level] = l_end;
+                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.x1[level] = l_end+2*slope_[level];
+                    l_son_grid.dx1[level] = slope_[level];
+                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                } else {
+                    if (l_father_grid.dx0[level] != slope_[level]) {
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                        l_son_grid.x1[level] = l_start;
+                        l_son_grid.dx1[level] = slope_[level];
+                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    }
+                    if (l_father_grid.dx1[level] != -slope_[level]) {
+                        l_son_grid.x0[level] = l_end;
+                        l_son_grid.dx0[level] = -slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    }
+                }
+            }
+        } /* end while (queue_len_[curr_dep] > 0) */
+        _Cilk_sync;
+        (static_cast<void> (0));
+    } /* end for (curr_dep < N_RANK+1) */
+}
+
+/* This is the version for interior region cut! */
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
+{
+    const int lt = t1 - t0;
+    bool can_cut = true;
+    index_info lb, thres;
+    grid_info<N_RANK> l_son_grid;
+
+    for (int i = N_RANK-1; i >= 0; --i) {
+        lb[i] = (grid.x1[i] - grid.x0[i]);
+        thres[i] = 2 * (2 * slope_[i] * lt);
+        can_cut = can_cut && (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
+    }
+
+    if (can_cut) {
+        /* cut into space */
+        sim_obase_space_cut(t0, t1, grid, f);
+        return;
+    } else if (lt > dt_recursive_) {
+        /* cut into time */
+        int halflt = lt / 2;
+        l_son_grid = grid;
+        sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
+
+        for (int i = 0; i < N_RANK; ++i) {
+            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
+            l_son_grid.dx0[i] = grid.dx0[i];
+            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
+            l_son_grid.dx1[i] = grid.dx1[i];
+        }
+        sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
+        return;
+    } else {
+        // base case
+        f(t0, t1, grid);
+//        base_case_kernel_interior(t0, t1, grid, f);
+        return;
+    }
+}
+
+/* This is the version for boundary region cut! */
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
+{
+    const int lt = t1 - t0;
+    bool can_cut = true, call_boundary = false;
+    index_info lb, thres;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
+    bool l_touch_boundary[N_RANK];
+
+    for (int i = N_RANK-1; i >= 0; --i) {
+        /* l_father_grid may be mapped to a new region in touch_boundary() */
+        l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
+        call_boundary |= l_touch_boundary[i];
+        lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
+        thres[i] = 2 * (2 * slope_[i] * lt);
+        /* for the initial cut, we exclude the begining and end point to minimize
+         * the overhead on boundary
+        */
+        /* some dimension touches the boundary, some may NOT! */
+        can_cut = can_cut && ((l_touch_boundary[i]) ? ((lb[i] == phys_length_[i]) ? (lb[i] - 2 * slope_[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i])) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
+        // can_cut = can_cut && ((l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
+    }
+
+    if (can_cut) {
+        /* cut into space */
+        /* push the first grid that can be cut into the circular queue */
+        /* boundary cuts! */
+        if (call_boundary) 
+            sim_obase_space_cut_p(t0, t1, l_father_grid, f, bf);
+        else
+            sim_obase_space_cut(t0, t1, l_father_grid, f);
+        return;
+    } else if ((call_boundary) ? (lt > dt_recursive_boundary_) : (lt > dt_recursive_)) {
+        /* cut into time */
+        int halflt = lt / 2;
+        l_son_grid = l_father_grid;
+        sim_obase_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
+
+        for (int i = 0; i < N_RANK; ++i) {
+            l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
+            l_son_grid.dx0[i] = l_father_grid.dx0[i];
+            l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
+            l_son_grid.dx1[i] = l_father_grid.dx1[i];
+        }
+        sim_obase_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
+        return;
+    } else {
+        // base case
+        if (call_boundary) {
+            base_case_kernel_boundary(t0, t1, l_father_grid, bf);
+        } else {
+            //base_case_kernel_interior(t0, t1, l_father_grid, f);
+            f(t0, t1, l_father_grid);
+        }
+        return;
+    }
+}
+
 /* walk_adaptive() is just for interior region */
 template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::walk_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
@@ -36092,7 +36408,7 @@ inline void Algorithm<N_RANK>::walk_adaptive(int t0, int t1, grid_info<N_RANK> c
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
-		thres[i] = ((lb[i] == initial_length_[i])) ? N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
+		thres[i] = ((lb[i] == phys_length_[i])) ? N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
 		base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
 //		base_cube = base_cube && (lb[i] < thres[i]); 
 	}	
@@ -36104,8 +36420,8 @@ inline void Algorithm<N_RANK>::walk_adaptive(int t0, int t1, grid_info<N_RANK> c
 			if (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]) { 
 //			if (lb[i] >= thres[i]) { 
 				l_grid = grid;
-				int sep = ((lb[i] == initial_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
-				int r = ((lb[i] == initial_length_[i])) ? N_CORES : (lb[i]/sep);
+				int sep = ((lb[i] == phys_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
+				int r = ((lb[i] == phys_length_[i])) ? N_CORES : (lb[i]/sep);
 				int j;
 				for (j = 0; j < r-1; ++j) {
 					l_grid.x0[i] = grid.x0[i] + sep * j;
@@ -36221,7 +36537,7 @@ inline void Algorithm<N_RANK>::walk_bicut_boundary_p(int t0, int t1, grid_info<N
                 _Cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
             }
 
-			if (l_start == initial_grid_.x0[i] && l_end == initial_grid_.x1[i]) {
+			if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
         //        printf("merge triagles!\n");
 				l_son_grid.x0[i] = l_end;
 				l_son_grid.dx0[i] = -slope_[i];
@@ -36314,7 +36630,7 @@ inline void Algorithm<N_RANK>::walk_ncores_boundary_p(int t0, int t1, grid_info<
 	for (int i = 0; i < N_RANK; ++i) {
         l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
 		lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
-		thres[i] = ((lb[i] == initial_length_[i])) ?  N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
+		thres[i] = ((lb[i] == phys_length_[i])) ?  N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
 		call_boundary |= l_touch_boundary[i];
 		if (l_touch_boundary[i])
 			base_cube = base_cube && (lb[i] <= dx_recursive_boundary_[i] || lb[i] < thres[i]); 
@@ -36338,8 +36654,8 @@ inline void Algorithm<N_RANK>::walk_ncores_boundary_p(int t0, int t1, grid_info<
 			can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
 			if (can_cut) { 
 				l_son_grid = l_father_grid;
-                int sep = ((lb[i] == initial_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
-                int r = ((lb[i] == initial_length_[i])) ? N_CORES : (lb[i]/sep);
+                int sep = ((lb[i] == phys_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
+                int r = ((lb[i] == phys_length_[i])) ? N_CORES : (lb[i]/sep);
 				int l_start = (l_father_grid.x0[i]);
 				int l_end = (l_father_grid.x1[i]);
 				int j;
@@ -36375,7 +36691,7 @@ inline void Algorithm<N_RANK>::walk_ncores_boundary_p(int t0, int t1, grid_info<
                         _Cilk_spawn walk_adaptive(t0, t1, l_son_grid, f);
                     }
 				}
-				if (l_start == initial_grid_.x0[i] && l_end == initial_grid_.x1[i]) {
+				if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
             //        printf("merge triagles!\n");
 					l_son_grid.x0[i] = l_end;
 					l_son_grid.dx0[i] = -slope_[i];
@@ -36526,7 +36842,7 @@ inline void Algorithm<N_RANK>::obase_adaptive(int t0, int t1, grid_info<N_RANK> 
 
 	for (int i = 0; i < N_RANK; ++i) {
 		lb[i] = grid.x1[i] - grid.x0[i];
-		thres[i] = ((lb[i] == initial_length_[i])) ? N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
+		thres[i] = ((lb[i] == phys_length_[i])) ? N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
 		base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
 	}	
 	if (base_cube) {
@@ -36536,8 +36852,8 @@ inline void Algorithm<N_RANK>::obase_adaptive(int t0, int t1, grid_info<N_RANK> 
 		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
 			if (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]) { 
 				l_grid = grid;
-				int sep = ((lb[i] == initial_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
-				int r = ((lb[i] == initial_length_[i])) ? N_CORES : (lb[i]/sep);
+				int sep = ((lb[i] == phys_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
+				int r = ((lb[i] == phys_length_[i])) ? N_CORES : (lb[i]/sep);
 				int j;
 				for (j = 0; j < r-1; ++j) {
 					l_grid.x0[i] = grid.x0[i] + sep * j;
@@ -36637,7 +36953,7 @@ inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<
 			l_son_grid.x1[i] = l_start + sep;
 			l_son_grid.dx1[i] = slope_[i];
             _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
-			if (l_start == initial_grid_.x0[i] && l_end == initial_grid_.x1[i]) {
+			if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
         //        printf("merge triagles!\n");
 				l_son_grid.x0[i] = l_end;
 				l_son_grid.dx0[i] = -slope_[i];
@@ -36697,7 +37013,7 @@ inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK
 	for (int i = 0; i < N_RANK; ++i) {
         l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
 		lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
-		thres[i] = ((lb[i] == initial_length_[i])) ?  N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
+		thres[i] = ((lb[i] == phys_length_[i])) ?  N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
 		if (l_touch_boundary[i])
 			base_cube = base_cube && (lb[i] <= dx_recursive_boundary_[i] || lb[i] < thres[i]); 
 		else 
@@ -36713,7 +37029,7 @@ inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK
 			can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
 			if (can_cut) { 
 				l_son_grid = l_father_grid;
-                int sep = ((lb[i] == initial_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
+                int sep = ((lb[i] == phys_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
                 //int r = (initial_cut(i)) ? N_CORES : (lb[i]/sep);
                 int r = lb[i]/sep;
 				int l_start = (l_father_grid.x0[i]);
@@ -36739,7 +37055,7 @@ inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK
 					l_son_grid.dx1[i] = slope_[i];
                     _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, bf);
 				}
-				if (l_start == initial_grid_.x0[i] && l_end == initial_grid_.x1[i]) {
+				if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
             //        printf("merge triagles!\n");
 					l_son_grid.x0[i] = l_end;
 					l_son_grid.dx0[i] = -slope_[i];
@@ -36843,7 +37159,7 @@ inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<
                 _Cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
             }
 
-			if (l_start == initial_grid_.x0[i] && l_end == initial_grid_.x1[i]) {
+			if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
         //        printf("merge triagles!\n");
 				l_son_grid.x0[i] = l_end;
 				l_son_grid.dx0[i] = -slope_[i];
@@ -36935,7 +37251,7 @@ inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK
 	for (int i = 0; i < N_RANK; ++i) {
         l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
 		lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
-		thres[i] = ((lb[i] == initial_length_[i])) ?  N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
+		thres[i] = ((lb[i] == phys_length_[i])) ?  N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
 		if (l_touch_boundary[i])
 			base_cube = base_cube && (lb[i] <= dx_recursive_boundary_[i] || lb[i] < thres[i]); 
 		else 
@@ -36959,7 +37275,7 @@ inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK
 			can_cut = (l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
 			if (can_cut) { 
                 l_son_grid = l_father_grid;
-                int sep = ((lb[i] == initial_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
+                int sep = ((lb[i] == phys_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
                 //int r = (initial_cut(i)) ? N_CORES : (lb[i]/sep);
                 int r = lb[i]/sep;
 				int l_start = (l_father_grid.x0[i]);
@@ -36997,7 +37313,7 @@ inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK
                         _Cilk_spawn obase_adaptive(t0, t1, l_son_grid, f);
                     }
 				}
-				if (l_start == initial_grid_.x0[i] && l_end == initial_grid_.x1[i]) {
+				if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
             //        printf("merge triagles!\n");
 					l_son_grid.x0[i] = l_end;
 					l_son_grid.dx0[i] = -slope_[i];
@@ -37727,15 +38043,18 @@ class SProxy {
     private:
         T & value_;
         bool set_boundary_;
-        T bvalue_;
+        T & bvalue_;
     public:
-        explicit SProxy(T & _v, bool _set_boundary, T const & _bvalue) : value_(_v), set_boundary_(_set_boundary), bvalue_(_bvalue) { }
+        explicit SProxy (T & _v, bool _set_boundary, T & _bvalue) : value_(_v), set_boundary_(_set_boundary), bvalue_(_bvalue) { }
 
+        /* The type conversion/cast doesn't produce an Lvalue ,
+         * so type conversion won't work if it appears on the left-side
+         * of assignment '='
+         */
         inline operator T() const {
             /* type conversion only appears on the right side of '=' */
             return (set_boundary_) ? bvalue_ : value_;
         }
-
         inline SProxy<T> & operator= (T const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' 
              * Because currently, this Proxy can only be called from BValue point,
@@ -37750,7 +38069,6 @@ class SProxy {
 //            set_boundary_ = false;
             return *this;
         }
-
         inline T & value() { return value_; }
         inline T const & value() const { return value_; }
         inline bool set_boundary() const { return set_boundary_; }
@@ -37871,9 +38189,9 @@ class Pochoir_Array {
             logic_start_[0] = 0; logic_end_[0] = sz0;
             stride_[0] = 1; 
             total_size_ = sz0;
-            view_ = __null;
+            view_ = (__null);
             view_ = new Storage<T>(TOGGLE * total_size_);
-            bv1_ = __null; bv2_ = __null; bv3_ = __null;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null);
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
         }
@@ -37885,9 +38203,9 @@ class Pochoir_Array {
             logic_start_[1] = 0; logic_end_[1] = sz1;
 			stride_[1] = sz0; stride_[0] = 1; 
 			total_size_ = phys_size_[0] * phys_size_[1];
-			view_ = __null;
+			view_ = (__null);
 			view_ = new Storage<T>(TOGGLE * total_size_) ;
-            bv1_ = __null; bv2_ = __null; bv3_ = __null;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null);
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
 		}
@@ -37904,10 +38222,10 @@ class Pochoir_Array {
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
 			}
-			view_ = __null;
+			view_ = (__null);
 			/* double the total_size_ because we are using toggle array */
 			view_ = new Storage<T>(TOGGLE*total_size_) ;
-            bv1_ = __null; bv2_ = __null; bv3_ = __null;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null);
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
 		}
@@ -37923,7 +38241,7 @@ class Pochoir_Array {
 				stride_[i] = orig.stride(i);
                 logic_start_[i] = 0; logic_end_[i] = logic_size_[i];
 			}
-			view_ = __null;
+			view_ = (__null);
 			view_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).view();
 			view_->inc_ref();
             /* We also get the BValue function pointer from orig */
@@ -37942,7 +38260,7 @@ class Pochoir_Array {
 				logic_size_[i] = orig.logic_size(i);
 				stride_[i] = orig.stride(i);
 			}
-			view_ = __null;
+			view_ = (__null);
 			view_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).view();
 			view_->inc_ref();
             /* We also get the BValue function pointer from orig */
@@ -37971,11 +38289,11 @@ class Pochoir_Array {
         BValue_3D bv_3D(void) { return bv3_; }
 
         /* guarantee that only one version of boundary function is registered ! */
-        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = __null; bv3_ = __null; }
-        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = __null; bv3_ = __null; }
-        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = __null; bv2_ = __null; }
+        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = (__null); bv3_ = (__null); }
+        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = (__null); bv3_ = (__null); }
+        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = (__null); bv2_ = (__null); }
 
-        void unregisterBV(void) { bv1_ = __null;  bv2_ = __null; bv3_ = __null; }
+        void unregisterBV(void) { bv1_ = (__null);  bv2_ = (__null); bv3_ = (__null); }
 
         void registerDomain(grid_info<N_RANK> initial_grid) {
             for (int i = 0; i < N_RANK; ++i) {
@@ -38028,13 +38346,13 @@ class Pochoir_Array {
             bool l_boundary = check_boundary(_idx);
             bool set_boundary = false;
             T l_bvalue = 0;
-            if (l_boundary && bv1_ != __null) {
+            if (l_boundary && bv1_ != (__null)) {
                 l_bvalue = bv1_(*this, _timestep, _idx[0]);
                 set_boundary = true;
-            } else if (l_boundary && bv2_ != __null) {
+            } else if (l_boundary && bv2_ != (__null)) {
                 l_bvalue = bv2_(*this, _timestep, _idx[1], _idx[0]);
                 set_boundary = true;
-            } else if (l_boundary && bv3_ != __null) {
+            } else if (l_boundary && bv3_ != (__null)) {
                 l_bvalue = bv3_(*this, _timestep, _idx[2], _idx[1], _idx[0]);
                 set_boundary = true;
             }
@@ -38047,57 +38365,56 @@ class Pochoir_Array {
          * - The highest dimension is always time dimension
          * - this is the uninterior version
          */
-		inline SProxy<T> operator() (int _idx1, int _idx0) const {
+		inline T operator() (int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx1, _idx0);
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
-            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv1_ != __null);
+            bool set_boundary = (l_boundary && bv1_ != (__null));
+            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) const {
+		inline T operator() (int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv2_ != __null);
+            bool set_boundary = (l_boundary && bv2_ != (__null));
+            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
+		inline T operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv3_ != __null);
+            bool set_boundary = (l_boundary && bv3_ != (__null));
+            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx1, int _idx0) {
+		inline T & operator() (int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx1, _idx0);
-            T l_bvalue = (l_boundary && bv1_ != __null) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv1_ != __null);
+            bool set_boundary = (l_boundary && bv1_ != (__null));
+            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) {
+		inline T & operator() (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != __null) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv2_ != __null);
+            bool set_boundary = (l_boundary && bv2_ != (__null));
+            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
+		inline T & operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != __null) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv3_ != __null);
+            bool set_boundary = (l_boundary && bv3_ != (__null));
+            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
-
         /* set()/get() pair to set/get boundary value in user supplied bvalue function */
 		inline T & set (int _idx1, int _idx0) {
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
@@ -38237,9 +38554,9 @@ template <typename T, int N_RANK, int TOGGLE=2>
 class Pochoir {
     private:
         int slope_[N_RANK];
-        grid_info<N_RANK> grid_;
         int stride_[N_RANK];
-        int logic_size_[N_RANK];
+        grid_info<N_RANK> logic_grid_;
+        grid_info<N_RANK> phys_grid_;
         int time_shift_;
         int timestep_;
         Pochoir_Array<T, N_RANK, TOGGLE> ** arr_list_;
@@ -38248,22 +38565,23 @@ class Pochoir {
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
         int arr_len_;
         int arr_idx_;
-        bool regArrayFlag, regDomainFlag, regShapeFlag;
+        bool regArrayFlag, regLogicDomainFlag, regPhysDomainFlag, regShapeFlag;
         void checkFlag(bool flag, char const * str);
         void checkFlags(void);
-        void getDomainFromArray(void);
+        void getPhysDomainFromArray(void);
 
     public:
     Pochoir() {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = 0;
-            grid_.x0[i] = grid_.x1[i] = grid_.dx0[i] = grid_.dx1[i] = 0;
+            logic_grid_.x0[i] = logic_grid_.x1[i] = logic_grid_.dx0[i] = logic_grid_.dx1[i] = 0;
+            phys_grid_.x0[i] = phys_grid_.x1[i] = phys_grid_.dx0[i] = phys_grid_.dx1[i] = 0;
         }
         timestep_ = 0;
         arr_list_ = (Pochoir_Array<T, N_RANK, TOGGLE>**)calloc(10, sizeof(Pochoir_Array<T, N_RANK, TOGGLE>*));
         arr_len_ = 0;
         arr_idx_ = 0;
-        regArrayFlag = regDomainFlag = regShapeFlag = false;
+        regArrayFlag = regLogicDomainFlag = regPhysDomainFlag = regShapeFlag = false;
     }
     /* currently, we just compute the slope[] out of the shape[] */
     /* We get the grid_info out of arrayInUse */
@@ -38309,7 +38627,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register%s!\n", "/home/yuantang/Git/Pochoir/Release/pochoir.hpp", __FUNCTION__, 111, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register %s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir.hpp", __FUNCTION__, 112, str);
         exit(1);
     }
 }
@@ -38317,36 +38635,39 @@ void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlags(void) {
     checkFlag(regArrayFlag, "Array");
-    checkFlag(regDomainFlag, "Domain");
+    checkFlag(regLogicDomainFlag, "Logic Domain");
+    checkFlag(regPhysDomainFlag, "Physical Domain");
     checkFlag(regShapeFlag, "Shape");
     return;
 }
 
 template <typename T, int N_RANK, int TOGGLE> 
-void Pochoir<T, N_RANK, TOGGLE>::getDomainFromArray(void) {
-    if (!regDomainFlag) {
-        if (arr_len_ == 0) {
-            printf("No Pochoir_Array registered! Quit!\n");
-            exit(1);
+void Pochoir<T, N_RANK, TOGGLE>::getPhysDomainFromArray(void) {
+    if (arr_len_ == 0) {
+        printf("No Pochoir_Array registered! Quit!\n");
+        exit(1);
+    }
+    /* get the physical grid */
+    for (int i = 0; i < N_RANK; ++i) {
+        phys_grid_.x0[i] = 0; phys_grid_.x1[i] = arr_list_[0]->size(i);
+        /* if logic domain is not set, let's set it the same as physical grid */
+        if (!regLogicDomainFlag) {
+            logic_grid_.x0[i] = 0; logic_grid_.x1[i] = arr_list_[0]->size(i);
         }
-        /* get the initial grid */
-        for (int i = 0; i < N_RANK; ++i) {
-            grid_.x0[i] = 0; grid_.x1[i] = arr_list_[0]->size(i);
-            logic_size_[i] = arr_list_[0]->size(i);
-            stride_[i] = 1;
-        }
+        stride_[i] = 1;
+    }
 
-        /* check the consistency of all engaged Pochoir_Array */
-        for (int i = 1; i < arr_len_; ++i) {
-            for (int j = 0; j < N_RANK; ++j) {
-                if (arr_list_[i]->size(j) != grid_.x1[j]) {
-                    printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
-                    exit(1);
-                }
+    /* check the consistency of all engaged Pochoir_Array */
+    for (int i = 1; i < arr_len_; ++i) {
+        for (int j = 0; j < N_RANK; ++j) {
+            if (arr_list_[i]->size(j) != phys_grid_.x1[j]) {
+                printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
+                exit(1);
             }
         }
-        regDomainFlag = true;
     }
+    regPhysDomainFlag = true;
+    regLogicDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE>
@@ -38380,38 +38701,35 @@ void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
 void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k) {
-    grid_.x0[2] = r_i.first();
-    grid_.x1[2] = r_i.first() + r_i.size();
-    grid_.x0[1] = r_j.first();
-    grid_.x1[1] = r_j.first() + r_j.size();
-    grid_.x0[0] = r_k.first();
-    grid_.x1[0] = r_k.first() + r_k.size();
-    logic_size_[2] = r_i.size(); logic_size_[1] = r_j.size(); logic_size_[0] = r_k.size();
+    logic_grid_.x0[2] = r_i.first();
+    logic_grid_.x1[2] = r_i.first() + r_i.size();
+    logic_grid_.x0[1] = r_j.first();
+    logic_grid_.x1[1] = r_j.first() + r_j.size();
+    logic_grid_.x0[0] = r_k.first();
+    logic_grid_.x1[0] = r_k.first() + r_k.size();
     stride_[2] = r_i.stride();
     stride_[1] = r_j.stride();
     stride_[0] = r_k.stride();
-    regDomainFlag = true;
+    regLogicDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
 void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j) {
-    grid_.x0[1] = r_i.first();
-    grid_.x1[1] = r_i.first() + r_i.size();
-    grid_.x0[0] = r_j.first();
-    grid_.x1[0] = r_j.first() + r_j.size();
-    logic_size_[1] = r_i.size(); logic_size_[0] = r_j.size();
+    logic_grid_.x0[1] = r_i.first();
+    logic_grid_.x1[1] = r_i.first() + r_i.size();
+    logic_grid_.x0[0] = r_j.first();
+    logic_grid_.x1[0] = r_j.first() + r_j.size();
     stride_[1] = r_i.stride();
     stride_[0] = r_j.stride();
-    regDomainFlag = true;
+    regLogicDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
 void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i) {
-    grid_.x0[0] = r_i.first();
-    grid_.x1[0] = r_i.first() + r_i.size();
-    logic_size_[0] = r_i.size();
+    logic_grid_.x0[0] = r_i.first();
+    logic_grid_.x1[0] = r_i.first() + r_i.size();
     stride_[0] = r_i.stride();
-    regDomainFlag = true;
+    regLogicDomainFlag = true;
 }
 
 /* Executable Spec */
@@ -38421,81 +38739,68 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, BF const & bf) {
      * and 'bf' to compute boundary region
      */
     Algorithm<N_RANK> algor(slope_);
-    getDomainFromArray();
-    algor.set_initial_grid(grid_);
+    getPhysDomainFromArray();
+    algor.set_phys_grid(phys_grid_);
     algor.set_stride(stride_);
-    algor.set_logic_size(logic_size_);
     timestep_ = timestep;
-    for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerDomain(grid_);
-    }
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
     checkFlags();
-    algor.base_case_kernel_boundary(0 + time_shift_, timestep + time_shift_, grid_, bf);
+    algor.base_case_kernel_boundary(0 + time_shift_, timestep + time_shift_, logic_grid_, bf);
+    // algor.sim_bicut_zero(0 + time_shift_, timestep + time_shift_, logic_grid_, bf);
     /* obase_boundary_p() is a parallel divide-and-conquer algorithm, which checks
      * boundary for every point
      */
-    // algor.obase_boundary_p(0, timestep, grid_, bf);
+    // algor.obase_boundary_p(0, timestep, logic_grid_, bf);
 }
 
 /* safe/non-safe ExecSpec */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
     Algorithm<N_RANK> algor(slope_);
-    getDomainFromArray();
-    algor.set_initial_grid(grid_);
+    getPhysDomainFromArray();
+    algor.set_phys_grid(phys_grid_);
     algor.set_stride(stride_);
-    algor.set_logic_size(logic_size_);
     /* this version uses 'f' to compute interior region, 
      * and 'bf' to compute boundary region
      */
     timestep_ = timestep;
-    for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerDomain(grid_);
-    }
     checkFlags();
-    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
+    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
 template <typename T, int N_RANK, int TOGGLE> template <typename F>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     Algorithm<N_RANK> algor(slope_);
-    getDomainFromArray();
-    algor.set_initial_grid(grid_);
+    getPhysDomainFromArray();
+    algor.set_phys_grid(phys_grid_);
     algor.set_stride(stride_);
-    algor.set_logic_size(logic_size_);
     timestep_ = timestep;
-    for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerDomain(grid_);
-    }
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-    algor.obase_bicut(0+time_shift_, timestep+time_shift_, grid_, f);
+    algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const & bf) {
     Algorithm<N_RANK> algor(slope_);
-    getDomainFromArray();
-    algor.set_initial_grid(grid_);
+    getPhysDomainFromArray();
+    algor.set_phys_grid(phys_grid_);
     algor.set_stride(stride_);
-    algor.set_logic_size(logic_size_);
     /* this version uses 'f' to compute interior region, 
      * and 'bf' to compute boundary region
      */
     timestep_ = timestep;
-    for (int i = 0; i < arr_len_; ++i) {
-        arr_list_[i]->registerDomain(grid_);
-    }
     checkFlags();
-    algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, grid_, f, bf);
+    algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 }
 
 
 
+
+//#define DEBUG_MSG(msg) printf("%s\n", msg); fflush(stdout)
 
 /*############################################################################*/
 
@@ -38528,7 +38833,7 @@ void LBM_freeGrid( double** ptr ) {
   const size_t margin = 2*(1*(100))*(1*(100))*N_CELL_ENTRIES;
 
     free(*ptr-margin);
-	*ptr = __null;
+	*ptr = (__null);
 }
 
 /*############################################################################*/
@@ -39518,7 +39823,7 @@ void LBM_performStreamCollide_Orig ( LBM_Grid srcGrid, LBM_Grid dstGrid ) {
 }
 
 
-Pochoir_Array<PoCellEntry, 3> pa((2*1+(130)), (1*(100)), (1*(100)));
+Pochoir_Array<PoCellEntry, 3> pa((2*1+(130)), (1*(100)), (1*(100))); 
 Pochoir_Domain X(0, (1*(100))), Y(0, (1*(100))), Z(0+1, (130)+1);
 Pochoir_Shape<3>  lbm_shape[8] = {{1, 0, 0, 0},
                                   {0, 0, 0, 0},
@@ -39543,27 +39848,27 @@ static void CopyLbmGridToPochoirGrid(LBM_Grid lbmGrid, Pochoir_Array<PoCellEntry
         {
             for (int x=0; x<(1*(100)); x++)
             { 
-                const int i = ((0)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))));
-                PoCellEntry( parr(t, new_z, y, x) )._C  =  (((lbmGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._N  =  (((lbmGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._S  =  (((lbmGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._E  =  (((lbmGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._W  =  (((lbmGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._T  =  (((lbmGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._B  =  (((lbmGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._NE =  (((lbmGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._NW =  (((lbmGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._SE =  (((lbmGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._SW =  (((lbmGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._NT =  (((lbmGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._NB =  (((lbmGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._ST =  (((lbmGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._SB =  (((lbmGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._ET =  (((lbmGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._EB =  (((lbmGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._WT =  (((lbmGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._WB =  (((lbmGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
-                PoCellEntry( parr(t, new_z, y, x) )._FLAGS =  (((lbmGrid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                const int i = ((0)+N_CELL_ENTRIES*((z)+(y)*(1*(100))+(x)*(1*(100))*(1*(100))));
+                parr.interior(t, new_z, y, x)._C  =  (((lbmGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._N  =  (((lbmGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._S  =  (((lbmGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._E  =  (((lbmGrid)[((E)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._W  =  (((lbmGrid)[((W)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._T  =  (((lbmGrid)[((T)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._B  =  (((lbmGrid)[((B)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._NE =  (((lbmGrid)[((NE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._NW =  (((lbmGrid)[((NW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._SE =  (((lbmGrid)[((SE)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._SW =  (((lbmGrid)[((SW)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._NT =  (((lbmGrid)[((NT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._NB =  (((lbmGrid)[((NB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._ST =  (((lbmGrid)[((ST)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._SB =  (((lbmGrid)[((SB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._ET =  (((lbmGrid)[((ET)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._EB =  (((lbmGrid)[((EB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._WT =  (((lbmGrid)[((WT)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._WB =  (((lbmGrid)[((WB)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
+                parr.interior(t, new_z, y, x)._FLAGS =  (((lbmGrid)[((FLAGS)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]));
             }
         }
     }    
@@ -39571,14 +39876,14 @@ static void CopyLbmGridToPochoirGrid(LBM_Grid lbmGrid, Pochoir_Array<PoCellEntry
 
 static void CopyPochoirGridToLbmGrid(LBM_Grid lbmGrid, Pochoir_Array<PoCellEntry, 3>& parr, const int t)
 {
-for (int z=0; z<(130); z++)
+  for (int z=0; z<(130); z++)
     {
         const int new_z = z + 1;
         for (int y=0; y<(1*(100)); y++)
         {
             for (int x=0; x<(1*(100)); x++)
             {
-                const int i = ((0)+N_CELL_ENTRIES*((x)+(y)*(1*(100))+(z)*(1*(100))*(1*(100))));
+                const int i = ((0)+N_CELL_ENTRIES*((z)+(y)*(1*(100))+(x)*(1*(100))*(1*(100))));
                 (((lbmGrid)[((C)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._C;
                 (((lbmGrid)[((N)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._N;
                 (((lbmGrid)[((S)+N_CELL_ENTRIES*((0)+(0)*(1*(100))+(0)*(1*(100))*(1*(100))))+(i)]))  = PoCellEntry( parr(t, new_z, y, x) )._S;
@@ -39607,6 +39912,7 @@ for (int z=0; z<(130); z++)
     
 void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int numTimeSteps)
 {
+
   mySimType = simtype;      
   //printf("RunPochoir, numTimeSteps=%d\n", numTimeSteps);  
   Pochoir<PoCellEntry, 3> lbm;
@@ -39616,15 +39922,91 @@ void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int nu
   CopyLbmGridToPochoirGrid(dstGrid, pa, 1);
 
   lbm.registerShape(lbm_shape);
-  lbm.registerDomain(X, Y, Z);
+  lbm.registerDomain(Z, Y, X);
 
-  auto lbm_kernel = [&](int t, int x, int y, int z) {
-    if (z == (0 + 1)) { int z1 = z + 1; double rho1 = + PoCellEntry( pa( t, x, y, z1) ). _C + PoCellEntry( pa( t, x, y, z1) ). _N; + PoCellEntry( pa( t, x, y, z1) ). _S + PoCellEntry( pa( t, x, y, z1) ). _E + PoCellEntry( pa( t, x, y, z1) ). _W + PoCellEntry( pa( t, x, y, z1) ). _T + PoCellEntry( pa( t, x, y, z1) ). _B + PoCellEntry( pa( t, x, y, z1) ). _NE + PoCellEntry( pa( t, x, y, z1) ). _NW + PoCellEntry( pa( t, x, y, z1) ). _SE + PoCellEntry( pa( t, x, y, z1) ). _SW + PoCellEntry( pa( t, x, y, z1) ). _NT + PoCellEntry( pa( t, x, y, z1) ). _NB + PoCellEntry( pa( t, x, y, z1) ). _ST + PoCellEntry( pa( t, x, y, z1) ). _SB + PoCellEntry( pa( t, x, y, z1) ). _ET + PoCellEntry( pa( t, x, y, z1) ). _EB + PoCellEntry( pa( t, x, y, z1) ). _WT + PoCellEntry( pa( t, x, y, z1) ). _WB; int z2 = z + 2; double rho2 = + PoCellEntry( pa( t, x, y, z2) ). _C + PoCellEntry( pa( t, x, y, z2) ). _N; + PoCellEntry( pa( t, x, y, z2) ). _S + PoCellEntry( pa( t, x, y, z2) ). _E + PoCellEntry( pa( t, x, y, z2) ). _W + PoCellEntry( pa( t, x, y, z2) ). _T + PoCellEntry( pa( t, x, y, z2) ). _B + PoCellEntry( pa( t, x, y, z2) ). _NE + PoCellEntry( pa( t, x, y, z2) ). _NW + PoCellEntry( pa( t, x, y, z2) ). _SE + PoCellEntry( pa( t, x, y, z2) ). _SW + PoCellEntry( pa( t, x, y, z2) ). _NT + PoCellEntry( pa( t, x, y, z2) ). _NB + PoCellEntry( pa( t, x, y, z2) ). _ST + PoCellEntry( pa( t, x, y, z2) ). _SB + PoCellEntry( pa( t, x, y, z2) ). _ET + PoCellEntry( pa( t, x, y, z2) ). _EB + PoCellEntry( pa( t, x, y, z2) ). _WT + PoCellEntry( pa( t, x, y, z2) ). _WB; double rho = 2.0*rho1 - rho2; double px = (x / (0.5*((1*(100))-1))) - 1.0; double py = (y / (0.5*((1*(100))-1))) - 1.0; double ux = 0.00; double uy = 0.00; double uz = 0.01 * (1.0-px*px) * (1.0-py*py); double u2 = 1.5 * (ux*ux + uy*uy + uz*uz); PoCellEntry( pa(t, x, y, z) ). _C = (1.0/ 3.0) * rho * (1.0 - u2); PoCellEntry( pa(t, x, y, z) ). _N = (1.0/18.0)*rho*(1.0 + uy*(4.5*uy + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _S = (1.0/18.0)*rho*(1.0 + uy*(4.5*uy - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _E = (1.0/18.0)*rho*(1.0 + ux*(4.5*ux + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _W = (1.0/18.0)*rho*(1.0 + ux*(4.5*ux - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _T = (1.0/18.0)*rho*(1.0 + uz*(4.5*uz + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _B = (1.0/18.0)*rho*(1.0 + uz*(4.5*uz - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NE = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NW = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SE = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SW = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NT = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NB = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _ST = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SB = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _ET = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _EB = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _WT = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _WB = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); } if (z == ((130) - 1 + 1)) { int z1 = z - 1; double rho1 = + PoCellEntry( pa( t, x, y, z1) ). _C + PoCellEntry( pa( t, x, y, z1) ). _N; + PoCellEntry( pa( t, x, y, z1) ). _S + PoCellEntry( pa( t, x, y, z1) ). _E + PoCellEntry( pa( t, x, y, z1) ). _W + PoCellEntry( pa( t, x, y, z1) ). _T + PoCellEntry( pa( t, x, y, z1) ). _B + PoCellEntry( pa( t, x, y, z1) ). _NE + PoCellEntry( pa( t, x, y, z1) ). _NW + PoCellEntry( pa( t, x, y, z1) ). _SE + PoCellEntry( pa( t, x, y, z1) ). _SW + PoCellEntry( pa( t, x, y, z1) ). _NT + PoCellEntry( pa( t, x, y, z1) ). _NB + PoCellEntry( pa( t, x, y, z1) ). _ST + PoCellEntry( pa( t, x, y, z1) ). _SB + PoCellEntry( pa( t, x, y, z1) ). _ET + PoCellEntry( pa( t, x, y, z1) ). _EB + PoCellEntry( pa( t, x, y, z1) ). _WT + PoCellEntry( pa( t, x, y, z1) ). _WB; double ux1 = + PoCellEntry( pa(t, x, y, z1) ). _E - PoCellEntry( pa(t, x, y, z1) ). _W + PoCellEntry( pa(t, x, y, z1) ). _NE - PoCellEntry( pa(t, x, y, z1) ). _NW + PoCellEntry( pa(t, x, y, z1) ). _SE - PoCellEntry( pa(t, x, y, z1) ). _SW + PoCellEntry( pa(t, x, y, z1) ). _ET + PoCellEntry( pa(t, x, y, z1) ). _EB - PoCellEntry( pa(t, x, y, z1) ). _WT - PoCellEntry( pa(t, x, y, z1) ). _WB; double uy1 = + PoCellEntry( pa(t, x, y, z1) ). _N - PoCellEntry( pa(t, x, y, z1) ). _S + PoCellEntry( pa(t, x, y, z1) ). _NE + PoCellEntry( pa(t, x, y, z1) ). _NW - PoCellEntry( pa(t, x, y, z1) ). _SE - PoCellEntry( pa(t, x, y, z1) ). _SW + PoCellEntry( pa(t, x, y, z1) ). _NT + PoCellEntry( pa(t, x, y, z1) ). _NB - PoCellEntry( pa(t, x, y, z1) ). _ST - PoCellEntry( pa(t, x, y, z1) ). _SB; double uz1 = + PoCellEntry( pa(t, x, y, z1) ). _T - PoCellEntry( pa(t, x, y, z1) ). _B + PoCellEntry( pa(t, x, y, z1) ). _NT - PoCellEntry( pa(t, x, y, z1) ). _NB + PoCellEntry( pa(t, x, y, z1) ). _ST - PoCellEntry( pa(t, x, y, z1) ). _SB + PoCellEntry( pa(t, x, y, z1) ). _ET - PoCellEntry( pa(t, x, y, z1) ). _EB + PoCellEntry( pa(t, x, y, z1) ). _WT - PoCellEntry( pa(t, x, y, z1) ). _WB; ux1 /= rho1; uy1 /= rho1; uz1 /= rho1; int z2 = z - 2; double rho2 = + PoCellEntry( pa(t, x, y, z2) ). _C + PoCellEntry( pa(t, x, y, z2) ). _N + PoCellEntry( pa(t, x, y, z2) ). _S + PoCellEntry( pa(t, x, y, z2) ). _E + PoCellEntry( pa(t, x, y, z2) ). _W + PoCellEntry( pa(t, x, y, z2) ). _T + PoCellEntry( pa(t, x, y, z2) ). _B + PoCellEntry( pa(t, x, y, z2) ). _NE + PoCellEntry( pa(t, x, y, z2) ). _NW + PoCellEntry( pa(t, x, y, z2) ). _SE + PoCellEntry( pa(t, x, y, z2) ). _SW + PoCellEntry( pa(t, x, y, z2) ). _NT + PoCellEntry( pa(t, x, y, z2) ). _NB + PoCellEntry( pa(t, x, y, z2) ). _ST + PoCellEntry( pa(t, x, y, z2) ). _SB + PoCellEntry( pa(t, x, y, z2) ). _ET + PoCellEntry( pa(t, x, y, z2) ). _EB + PoCellEntry( pa(t, x, y, z2) ). _WT + PoCellEntry( pa(t, x, y, z2) ). _WB; double ux2 = + PoCellEntry( pa(t, x, y, z2) ). _E - PoCellEntry( pa(t, x, y, z2) ). _W + PoCellEntry( pa(t, x, y, z2) ). _NE - PoCellEntry( pa(t, x, y, z2) ). _NW + PoCellEntry( pa(t, x, y, z2) ). _SE - PoCellEntry( pa(t, x, y, z2) ). _SW + PoCellEntry( pa(t, x, y, z2) ). _ET + PoCellEntry( pa(t, x, y, z2) ). _EB - PoCellEntry( pa(t, x, y, z2) ). _WT - PoCellEntry( pa(t, x, y, z2) ). _WB; double uy2 = + PoCellEntry( pa(t, x, y, z2) ). _N - PoCellEntry( pa(t, x, y, z2) ). _S + PoCellEntry( pa(t, x, y, z2) ). _NE + PoCellEntry( pa(t, x, y, z2) ). _NW - PoCellEntry( pa(t, x, y, z2) ). _SE - PoCellEntry( pa(t, x, y, z2) ). _SW + PoCellEntry( pa(t, x, y, z2) ). _NT + PoCellEntry( pa(t, x, y, z2) ). _NB - PoCellEntry( pa(t, x, y, z2) ). _ST - PoCellEntry( pa(t, x, y, z2) ). _SB; double uz2 = + PoCellEntry( pa(t, x, y, z2) ). _T - PoCellEntry( pa(t, x, y, z2) ). _B + PoCellEntry( pa(t, x, y, z2) ). _NT - PoCellEntry( pa(t, x, y, z2) ). _NB + PoCellEntry( pa(t, x, y, z2) ). _ST - PoCellEntry( pa(t, x, y, z2) ). _SB + PoCellEntry( pa(t, x, y, z2) ). _ET - PoCellEntry( pa(t, x, y, z2) ). _EB + PoCellEntry( pa(t, x, y, z2) ). _WT - PoCellEntry( pa(t, x, y, z2) ). _WB; ux2 /= rho2; uy2 /= rho2; uz2 /= rho2; double rho = 1.0; double ux = 2*ux1 - ux2; double uy = 2*uy1 - uy2; double uz = 2*uz1 - uz2; double u2 = 1.5 * (ux*ux + uy*uy + uz*uz); PoCellEntry( pa(t, x, y, z) ). _C = (1.0/ 3.0)*rho*(1.0 - u2); PoCellEntry( pa(t, x, y, z) ). _N = (1.0/18.0)*rho*(1.0 + uy*(4.5*uy + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _S = (1.0/18.0)*rho*(1.0 + uy*(4.5*uy - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _E = (1.0/18.0)*rho*(1.0 + ux*(4.5*ux + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _W = (1.0/18.0)*rho*(1.0 + ux*(4.5*ux - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _T = (1.0/18.0)*rho*(1.0 + uz*(4.5*uz + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _B = (1.0/18.0)*rho*(1.0 + uz*(4.5*uz - 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NE = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NW = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SE = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SW = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NT = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _NB = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _ST = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _SB = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _ET = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _EB = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _WT = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); PoCellEntry( pa(t, x, y, z) ). _WB = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); };
-    const double src_c = PoCellEntry( pa(t, x, y, z) ). _C; const double src_n = PoCellEntry( pa(t, x, y, z) ). _N; const double src_s = PoCellEntry( pa(t, x, y, z) ). _S; const double src_e = PoCellEntry( pa(t, x, y, z) ). _E; const double src_w = PoCellEntry( pa(t, x, y, z) ). _W; const double src_t = PoCellEntry( pa(t, x, y, z) ). _T; const double src_b = PoCellEntry( pa(t, x, y, z) ). _B; const double src_ne = PoCellEntry( pa(t, x, y, z) ). _NE; const double src_nw = PoCellEntry( pa(t, x, y, z) ). _NW; const double src_se = PoCellEntry( pa(t, x, y, z) ). _SE; const double src_sw = PoCellEntry( pa(t, x, y, z) ). _SW; const double src_nt = PoCellEntry( pa(t, x, y, z) ). _NT; const double src_nb = PoCellEntry( pa(t, x, y, z) ). _NB; const double src_st = PoCellEntry( pa(t, x, y, z) ). _ST; const double src_sb = PoCellEntry( pa(t, x, y, z) ). _SB; const double src_et = PoCellEntry( pa(t, x, y, z) ). _ET; const double src_eb = PoCellEntry( pa(t, x, y, z) ). _EB; const double src_wt = PoCellEntry( pa(t, x, y, z) ). _WT; const double src_wb = PoCellEntry( pa(t, x, y, z) ). _WB; double* dst_c = &( PoCellEntry( pa(t+1, x, y, z) ). _C); double* dst_n = &( PoCellEntry( pa(t+1, x, y+1, z) ). _N); double* dst_s = &( PoCellEntry( pa(t+1, x, y-1, z) ). _S);;
+  auto lbm_kernel = [&](int t, int z, int y, int x) {
+//    Po_handleInOutFlow(t, z, y, x);
+    if (z == (0 + 1)) { 
+        /* inflow */ 
+        double rho1 = + PoCellEntry( pa( t, (z + 1), y, x) )._C + PoCellEntry( pa( t, (z + 1), y, x) )._N + PoCellEntry( pa( t, (z + 1), y, x) )._S + PoCellEntry( pa( t, (z + 1), y, x) )._E + PoCellEntry( pa( t, (z + 1), y, x) )._W + PoCellEntry( pa( t, (z + 1), y, x) )._T + PoCellEntry( pa( t, (z + 1), y, x) )._B + PoCellEntry( pa( t, (z + 1), y, x) )._NE + PoCellEntry( pa( t, (z + 1), y, x) )._NW + PoCellEntry( pa( t, (z + 1), y, x) )._SE + PoCellEntry( pa( t, (z + 1), y, x) )._SW + PoCellEntry( pa( t, (z + 1), y, x) )._NT + PoCellEntry( pa( t, (z + 1), y, x) )._NB + PoCellEntry( pa( t, (z + 1), y, x) )._ST + PoCellEntry( pa( t, (z + 1), y, x) )._SB + PoCellEntry( pa( t, (z + 1), y, x) )._ET + PoCellEntry( pa( t, (z + 1), y, x) )._EB + PoCellEntry( pa( t, (z + 1), y, x) )._WT + PoCellEntry( pa( t, (z + 1), y, x) )._WB; 
+        double rho2 = + PoCellEntry( pa( t, (z + 2), y, x) )._C + PoCellEntry( pa( t, (z + 2), y, x) )._N + PoCellEntry( pa( t, (z + 2), y, x) )._S + PoCellEntry( pa( t, (z + 2), y, x) )._E + PoCellEntry( pa( t, (z + 2), y, x) )._W + PoCellEntry( pa( t, (z + 2), y, x) )._T + PoCellEntry( pa( t, (z + 2), y, x) )._B + PoCellEntry( pa( t, (z + 2), y, x) )._NE + PoCellEntry( pa( t, (z + 2), y, x) )._NW + PoCellEntry( pa( t, (z + 2), y, x) )._SE + PoCellEntry( pa( t, (z + 2), y, x) )._SW + PoCellEntry( pa( t, (z + 2), y, x) )._NT + PoCellEntry( pa( t, (z + 2), y, x) )._NB + PoCellEntry( pa( t, (z + 2), y, x) )._ST + PoCellEntry( pa( t, (z + 2), y, x) )._SB + PoCellEntry( pa( t, (z + 2), y, x) )._ET + PoCellEntry( pa( t, (z + 2), y, x) )._EB + PoCellEntry( pa( t, (z + 2), y, x) )._WT + PoCellEntry( pa( t, (z + 2), y, x) )._WB; 
+        double rho = 2.0*rho1 - rho2; 
+        double px = (x / (0.5*((1*(100))-1))) - 1.0; 
+        double py = (y / (0.5*((1*(100))-1))) - 1.0; 
+        double ux = 0.00; 
+        double uy = 0.00; 
+        double uz = 0.01 * (1.0-px*px) * (1.0-py*py); 
+        double u2 = 1.5 * (ux*ux + uy*uy + uz*uz); 
+        PoCellEntry( pa(t, z, y, x) ). _C = (1.0/ 3.0) * rho * (1.0 - u2); 
+        PoCellEntry( pa(t, z, y, x) )._N = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._S = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._E = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._W = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._T = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._B = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._NE = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._NW = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._SE = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._SW = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._NT = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._NB = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._ST = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._SB = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._ET = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._EB = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._WT = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._WB = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); 
+    } 
+        if (z == ((130) - 1 + 1)) { 
+            /* outflow */ 
+            int (z + 1) = z - 1; 
+            double rho1 = + PoCellEntry( pa( t, (z + 1), y, x) )._C + PoCellEntry( pa( t, (z + 1), y, x) )._N + PoCellEntry( pa( t, (z + 1), y, x) )._S + PoCellEntry( pa( t, (z + 1), y, x) )._E + PoCellEntry( pa( t, (z + 1), y, x) )._W + PoCellEntry( pa( t, (z + 1), y, x) )._T + PoCellEntry( pa( t, (z + 1), y, x) )._B + PoCellEntry( pa( t, (z + 1), y, x) )._NE + PoCellEntry( pa( t, (z + 1), y, x) )._NW + PoCellEntry( pa( t, (z + 1), y, x) )._SE + PoCellEntry( pa( t, (z + 1), y, x) )._SW + PoCellEntry( pa( t, (z + 1), y, x) )._NT + PoCellEntry( pa( t, (z + 1), y, x) )._NB + PoCellEntry( pa( t, (z + 1), y, x) )._ST + PoCellEntry( pa( t, (z + 1), y, x) )._SB + PoCellEntry( pa( t, (z + 1), y, x) )._ET + PoCellEntry( pa( t, (z + 1), y, x) )._EB + PoCellEntry( pa( t, (z + 1), y, x) )._WT + PoCellEntry( pa( t, (z + 1), y, x) )._WB; 
+            double ux1 = + PoCellEntry( pa(t, (z + 1), y, x) )._E  - PoCellEntry( pa(t, (z + 1), y, x) )._W + PoCellEntry( pa(t, (z + 1), y, x) )._NE - PoCellEntry( pa(t, (z + 1), y, x) )._NW + PoCellEntry( pa(t, (z + 1), y, x) )._SE - PoCellEntry( pa(t, (z + 1), y, x) )._SW + PoCellEntry( pa(t, (z + 1), y, x) )._ET + PoCellEntry( pa(t, (z + 1), y, x) )._EB - PoCellEntry( pa(t, (z + 1), y, x) )._WT - PoCellEntry( pa(t, (z + 1), y, x) )._WB; 
+            double uy1 = + PoCellEntry( pa(t, (z + 1), y, x) )._N  - PoCellEntry( pa(t, (z + 1), y, x) )._S + PoCellEntry( pa(t, (z + 1), y, x) )._NE + PoCellEntry( pa(t, (z + 1), y, x) )._NW - PoCellEntry( pa(t, (z + 1), y, x) )._SE - PoCellEntry( pa(t, (z + 1), y, x) )._SW + PoCellEntry( pa(t, (z + 1), y, x) )._NT + PoCellEntry( pa(t, (z + 1), y, x) )._NB - PoCellEntry( pa(t, (z + 1), y, x) )._ST - PoCellEntry( pa(t, (z + 1), y, x) )._SB; 
+            double uz1 = + PoCellEntry( pa(t, (z + 1), y, x) )._T  - PoCellEntry( pa(t, (z + 1), y, x) )._B  + PoCellEntry( pa(t, (z + 1), y, x) )._NT - PoCellEntry( pa(t, (z + 1), y, x) )._NB + PoCellEntry( pa(t, (z + 1), y, x) )._ST - PoCellEntry( pa(t, (z + 1), y, x) )._SB + PoCellEntry( pa(t, (z + 1), y, x) )._ET - PoCellEntry( pa(t, (z + 1), y, x) )._EB + PoCellEntry( pa(t, (z + 1), y, x) )._WT - PoCellEntry( pa(t, (z + 1), y, x) )._WB; 
+            ux1 /= rho1; 
+            uy1 /= rho1; 
+            uz1 /= rho1; 
+            int (z + 2) = z - 2;		
+            double rho2 = + PoCellEntry( pa(t, (z + 2), y, x) )._C  + PoCellEntry( pa(t, (z + 2), y, x) )._N + PoCellEntry( pa(t, (z + 2), y, x) )._S  + PoCellEntry( pa(t, (z + 2), y, x) )._E + PoCellEntry( pa(t, (z + 2), y, x) )._W  + PoCellEntry( pa(t, (z + 2), y, x) )._T + PoCellEntry( pa(t, (z + 2), y, x) )._B  + PoCellEntry( pa(t, (z + 2), y, x) )._NE + PoCellEntry( pa(t, (z + 2), y, x) )._NW + PoCellEntry( pa(t, (z + 2), y, x) )._SE + PoCellEntry( pa(t, (z + 2), y, x) )._SW + PoCellEntry( pa(t, (z + 2), y, x) )._NT + PoCellEntry( pa(t, (z + 2), y, x) )._NB + PoCellEntry( pa(t, (z + 2), y, x) )._ST + PoCellEntry( pa(t, (z + 2), y, x) )._SB + PoCellEntry( pa(t, (z + 2), y, x) )._ET + PoCellEntry( pa(t, (z + 2), y, x) )._EB + PoCellEntry( pa(t, (z + 2), y, x) )._WT + PoCellEntry( pa(t, (z + 2), y, x) )._WB; 
+            double ux2 = + PoCellEntry( pa(t, (z + 2), y, x) )._E  - PoCellEntry( pa(t, (z + 2), y, x) )._W + PoCellEntry( pa(t, (z + 2), y, x) )._NE - PoCellEntry( pa(t, (z + 2), y, x) )._NW + PoCellEntry( pa(t, (z + 2), y, x) )._SE - PoCellEntry( pa(t, (z + 2), y, x) )._SW + PoCellEntry( pa(t, (z + 2), y, x) )._ET + PoCellEntry( pa(t, (z + 2), y, x) )._EB - PoCellEntry( pa(t, (z + 2), y, x) )._WT - PoCellEntry( pa(t, (z + 2), y, x) )._WB; 
+            double uy2 = + PoCellEntry( pa(t, (z + 2), y, x) )._N  - PoCellEntry( pa(t, (z + 2), y, x) )._S  + PoCellEntry( pa(t, (z + 2), y, x) )._NE + PoCellEntry( pa(t, (z + 2), y, x) )._NW - PoCellEntry( pa(t, (z + 2), y, x) )._SE - PoCellEntry( pa(t, (z + 2), y, x) )._SW + PoCellEntry( pa(t, (z + 2), y, x) )._NT + PoCellEntry( pa(t, (z + 2), y, x) )._NB - PoCellEntry( pa(t, (z + 2), y, x) )._ST - PoCellEntry( pa(t, (z + 2), y, x) )._SB; 
+            double uz2 = + PoCellEntry( pa(t, (z + 2), y, x) )._T  - PoCellEntry( pa(t, (z + 2), y, x) )._B  + PoCellEntry( pa(t, (z + 2), y, x) )._NT - PoCellEntry( pa(t, (z + 2), y, x) )._NB + PoCellEntry( pa(t, (z + 2), y, x) )._ST - PoCellEntry( pa(t, (z + 2), y, x) )._SB + PoCellEntry( pa(t, (z + 2), y, x) )._ET - PoCellEntry( pa(t, (z + 2), y, x) )._EB + PoCellEntry( pa(t, (z + 2), y, x) )._WT - PoCellEntry( pa(t, (z + 2), y, x) )._WB; 
+            ux2 /= rho2; 
+            uy2 /= rho2; 
+            uz2 /= rho2; 
+            double rho = 1.0; 
+            double ux = 2*ux1 - ux2; 
+            double uy = 2*uy1 - uy2; 
+            double uz = 2*uz1 - uz2; 
+            double u2 = 1.5 * (ux*ux + uy*uy + uz*uz); 
+            PoCellEntry( pa(t, z, y, x) )._C  = (1.0/ 3.0)*rho*(1.0 - u2); 
+            PoCellEntry( pa(t, z, y, x) )._N  = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._S  = (1.0/18.0)*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._E  = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._W  = (1.0/18.0)*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._T  = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._B  = (1.0/18.0)*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._NE = (1.0/36.0)*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._NW = (1.0/36.0)*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._SE = (1.0/36.0)*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._SW = (1.0/36.0)*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._NT = (1.0/36.0)*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._NB = (1.0/36.0)*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._ST = (1.0/36.0)*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._SB = (1.0/36.0)*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._ET = (1.0/36.0)*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._EB = (1.0/36.0)*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._WT = (1.0/36.0)*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._WB = (1.0/36.0)*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); 
+        }
+    ; const double src_c = PoCellEntry( pa(t, z, y, x) ). _C; const double src_n = PoCellEntry( pa(t, z, y, x) ). _N; const double src_s = PoCellEntry( pa(t, z, y, x) ). _S; const double src_e = PoCellEntry( pa(t, z, y, x) ). _E; const double src_w = PoCellEntry( pa(t, z, y, x) ). _W; const double src_t = PoCellEntry( pa(t, z, y, x) ). _T; const double src_b = PoCellEntry( pa(t, z, y, x) ). _B; const double src_ne = PoCellEntry( pa(t, z, y, x) ). _NE; const double src_nw = PoCellEntry( pa(t, z, y, x) ). _NW; const double src_se = PoCellEntry( pa(t, z, y, x) ). _SE; const double src_sw = PoCellEntry( pa(t, z, y, x) ). _SW; const double src_nt = PoCellEntry( pa(t, z, y, x) ). _NT; const double src_nb = PoCellEntry( pa(t, z, y, x) ). _NB; const double src_st = PoCellEntry( pa(t, z, y, x) ). _ST; const double src_sb = PoCellEntry( pa(t, z, y, x) ). _SB; const double src_et = PoCellEntry( pa(t, z, y, x) ). _ET; const double src_eb = PoCellEntry( pa(t, z, y, x) ). _EB; const double src_wt = PoCellEntry( pa(t, z, y, x) ). _WT; const double src_wb = PoCellEntry( pa(t, z, y, x) ). _WB; const double*src_flag_addr = &( PoCellEntry( pa(t, z, y, x) ). _FLAGS); ; double* dst_c = &( PoCellEntry( pa(t+1, z, y, x) ). _C); double* dst_n = &( PoCellEntry( pa(t+1, z, y+1, x) ). _N); double* dst_s = &( PoCellEntry( pa(t+1, z, y-1, x) ). _S); double* dst_e = &( PoCellEntry( pa(t+1, z, y, x+1) ). _E); double* dst_w = &( PoCellEntry( pa(t+1, z, y, x-1) ). _W); double* dst_t = &( PoCellEntry( pa(t+1, z+1, y, x) ). _T); double* dst_b = &( PoCellEntry( pa(t+1, z-1, y, x) ). _B); double* dst_ne = &( PoCellEntry( pa(t+1, z, y+1, x+1) ). _NE); double* dst_nw = &( PoCellEntry( pa(t+1, z, y+1, x-1) ). _NW); double* dst_se = &( PoCellEntry( pa(t+1, z, y-1, x+1) ). _SE); double* dst_sw = &( PoCellEntry( pa(t+1, z, y-1, x-1) ). _SW); double* dst_nt = &( PoCellEntry( pa(t+1, z+1, y+1, x) ). _NT); double* dst_nb = &( PoCellEntry( pa(t+1, z-1, y+1, x) ). _NB); double* dst_st = &( PoCellEntry( pa(t+1, z+1, y-1, x) ). _ST); double* dst_sb = &( PoCellEntry( pa(t+1, z-1, y-1, x) ). _SB); double* dst_et = &( PoCellEntry( pa(t+1, z+1, y, x+1) ). _ET); double* dst_eb = &( PoCellEntry( pa(t+1, z-1, y, x+1) ). _EB); double* dst_wt = &( PoCellEntry( pa(t+1, z+1, y, x-1) ). _WT); double* dst_wb = &( PoCellEntry( pa(t+1, z-1, y, x-1) ). _WB); ; if ( *((unsigned int*)src_flag_addr) & OBSTACLE) { ; *dst_c = src_c; *dst_s = src_n; *dst_n = src_s; *dst_w = src_e; *dst_e = src_w; *dst_b = src_t; *dst_t = src_b; *dst_sw = src_ne; *dst_se = src_nw; *dst_nw = src_se; *dst_ne = src_sw; *dst_sb = src_nt; *dst_st = src_nb; *dst_nb = src_st; *dst_nt = src_sb; *dst_wb = src_et; *dst_wt = src_eb; *dst_eb = src_wt; *dst_et = src_wb; ; } else { ; double rho = + src_c + src_n + src_s + src_e + src_w + src_t + src_b + src_ne + src_nw + src_se + src_sw + src_nt + src_nb + src_st + src_sb + src_et + src_eb + src_wt + src_wb; double ux = + src_e - src_w + src_ne - src_nw + src_se - src_sw + src_et + src_eb - src_wt - src_wb; double uy = + src_n - src_s + src_ne + src_nw - src_se - src_sw + src_nt + src_nb - src_st - src_sb; double uz = + src_t - src_b + src_nt - src_nb + src_st - src_sb + src_et - src_eb + src_wt - src_wb; ux /= rho; uy /= rho; uz /= rho; if( *((unsigned int*)src_flag_addr) & ACCEL) { ux = 0.005; uy = 0.002; uz = 0.000; } const double u2 = 1.5 * (ux*ux + uy*uy + uz*uz); const double k0 = (1.0-(1.95)); const double k1 = ((1.0/ 3.0)*(1.95)*rho); const double k2 = ((1.0/18.0)*(1.95)*rho); const double k3 = ((1.0/36.0)*(1.95)*rho); *dst_c = k0*src_c + k1*(1.0 - u2); *dst_n = k0*src_n + k2*(1.0 + uy*(4.5*uy + 3.0) - u2); *dst_s = k0*src_s + k2*(1.0 + uy*(4.5*uy - 3.0) - u2); *dst_e = k0*src_e + k2*(1.0 + ux*(4.5*ux + 3.0) - u2); *dst_w = k0*src_w + k2*(1.0 + ux*(4.5*ux - 3.0) - u2); *dst_t = k0*src_t + k2*(1.0 + uz*(4.5*uz + 3.0) - u2); *dst_b = k0*src_b + k2*(1.0 + uz*(4.5*uz - 3.0) - u2); *dst_ne = k0*src_ne + k3*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); *dst_nw = k0*src_nw + k3*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); *dst_se = k0*src_se + k3*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); *dst_sw = k0*src_sw + k3*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); *dst_nt = k0*src_nt + k3*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); *dst_nb = k0*src_nb + k3*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); *dst_st = k0*src_st + k3*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); *dst_sb = k0*src_sb + k3*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); *dst_et = k0*src_et + k3*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); *dst_eb = k0*src_eb + k3*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); *dst_wt = k0*src_wt + k3*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); *dst_wb = k0*src_wb + k3*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); ; };
   };
 
-  lbm.run(numTimeSteps, lbm_kernel);
-
+  lbm.run(numTimeSteps, lbm_kernel);   
+   
   CopyPochoirGridToLbmGrid(srcGrid, pa, 0);
   CopyPochoirGridToLbmGrid(dstGrid, pa, 1);
 }
+
+

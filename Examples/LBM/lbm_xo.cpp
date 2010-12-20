@@ -25,6 +25,9 @@
 #define MY_FREE(x)   free(x)
 #endif
 
+//#define DEBUG_MSG(msg) printf("%s\n", msg); fflush(stdout)
+#define DEBUG_MSG(msg)
+
 /*############################################################################*/
 
 #define DFL1 (1.0/ 3.0)
@@ -1259,7 +1262,7 @@ void LBM_performStreamCollide_Orig ( LBM_Grid srcGrid, LBM_Grid dstGrid ) {
 }
 
 
-Pochoir_Array<PoCellEntry, 3> pa((2*MARGIN_Z+SIZE_Z), SIZE_Y, SIZE_X);
+Pochoir_Array<PoCellEntry, 3> pa((2*MARGIN_Z+SIZE_Z), SIZE_Y, SIZE_X); 
 Pochoir_Domain X(0, SIZE_X), Y(0, SIZE_Y), Z(0+MARGIN_Z, SIZE_Z+MARGIN_Z);
 Pochoir_Shape<3>  lbm_shape[8] = {{1, 0, 0, 0},
                                   {0, 0, 0, 0},
@@ -1267,30 +1270,30 @@ Pochoir_Shape<3>  lbm_shape[8] = {{1, 0, 0, 0},
                                   {0, 0, +1, 0},  {0, 0, -1, 0},
                                   {0, +1, 0, 0},  {0, -1, 0, 0}};
 
-#define Po_handleInOutFlow(t, x, y, z)  if (z == (0 + MARGIN_Z)) { \
+#define Po_handleInOutFlow(t, z, y, x)  if (z == (0 + MARGIN_Z)) { \
                                            /* inflow */						   \
                                           int z1 = z + 1;							\
-                                          MY_TYPE rho1 = + PoCellEntry( pa( t, x, y, z1) )._C + PoCellEntry( pa( t, x, y, z1) )._N; \
-					                 + PoCellEntry( pa( t, x, y, z1) )._S + PoCellEntry( pa( t, x, y, z1) )._E \
-							 + PoCellEntry( pa( t, x, y, z1) )._W + PoCellEntry( pa( t, x, y, z1) )._T \
-							 + PoCellEntry( pa( t, x, y, z1) )._B + PoCellEntry( pa( t, x, y, z1) )._NE \
-							 + PoCellEntry( pa( t, x, y, z1) )._NW + PoCellEntry( pa( t, x, y, z1) )._SE \
-							 + PoCellEntry( pa( t, x, y, z1) )._SW + PoCellEntry( pa( t, x, y, z1) )._NT \
-							 + PoCellEntry( pa( t, x, y, z1) )._NB + PoCellEntry( pa( t, x, y, z1) )._ST \
-							 + PoCellEntry( pa( t, x, y, z1) )._SB + PoCellEntry( pa( t, x, y, z1) )._ET \
-							 + PoCellEntry( pa( t, x, y, z1) )._EB + PoCellEntry( pa( t, x, y, z1) )._WT \
-							 + PoCellEntry( pa( t, x, y, z1) )._WB; \
+                                          MY_TYPE rho1 = + PoCellEntry( pa( t, z1, y, x) )._C + PoCellEntry( pa( t, z1, y, x) )._N \
+					                 + PoCellEntry( pa( t, z1, y, x) )._S + PoCellEntry( pa( t, z1, y, x) )._E \
+							 + PoCellEntry( pa( t, z1, y, x) )._W + PoCellEntry( pa( t, z1, y, x) )._T \
+							 + PoCellEntry( pa( t, z1, y, x) )._B + PoCellEntry( pa( t, z1, y, x) )._NE \
+							 + PoCellEntry( pa( t, z1, y, x) )._NW + PoCellEntry( pa( t, z1, y, x) )._SE \
+							 + PoCellEntry( pa( t, z1, y, x) )._SW + PoCellEntry( pa( t, z1, y, x) )._NT \
+							 + PoCellEntry( pa( t, z1, y, x) )._NB + PoCellEntry( pa( t, z1, y, x) )._ST \
+							 + PoCellEntry( pa( t, z1, y, x) )._SB + PoCellEntry( pa( t, z1, y, x) )._ET \
+							 + PoCellEntry( pa( t, z1, y, x) )._EB + PoCellEntry( pa( t, z1, y, x) )._WT \
+							 + PoCellEntry( pa( t, z1, y, x) )._WB; \
 					  int z2 = z + 2; \
-                                          MY_TYPE rho2 = + PoCellEntry( pa( t, x, y, z2) )._C + PoCellEntry( pa( t, x, y, z2) )._N; \
-					                 + PoCellEntry( pa( t, x, y, z2) )._S + PoCellEntry( pa( t, x, y, z2) )._E \
-							 + PoCellEntry( pa( t, x, y, z2) )._W + PoCellEntry( pa( t, x, y, z2) )._T \
-							 + PoCellEntry( pa( t, x, y, z2) )._B + PoCellEntry( pa( t, x, y, z2) )._NE \
-							 + PoCellEntry( pa( t, x, y, z2) )._NW + PoCellEntry( pa( t, x, y, z2) )._SE \
-							 + PoCellEntry( pa( t, x, y, z2) )._SW + PoCellEntry( pa( t, x, y, z2) )._NT \
-							 + PoCellEntry( pa( t, x, y, z2) )._NB + PoCellEntry( pa( t, x, y, z2) )._ST \
-							 + PoCellEntry( pa( t, x, y, z2) )._SB + PoCellEntry( pa( t, x, y, z2) )._ET \
-							 + PoCellEntry( pa( t, x, y, z2) )._EB + PoCellEntry( pa( t, x, y, z2) )._WT \
-							 + PoCellEntry( pa( t, x, y, z2) )._WB; \
+                                          MY_TYPE rho2 = + PoCellEntry( pa( t, z2, y, x) )._C + PoCellEntry( pa( t, z2, y, x) )._N \
+					                 + PoCellEntry( pa( t, z2, y, x) )._S + PoCellEntry( pa( t, z2, y, x) )._E \
+							 + PoCellEntry( pa( t, z2, y, x) )._W + PoCellEntry( pa( t, z2, y, x) )._T \
+							 + PoCellEntry( pa( t, z2, y, x) )._B + PoCellEntry( pa( t, z2, y, x) )._NE \
+							 + PoCellEntry( pa( t, z2, y, x) )._NW + PoCellEntry( pa( t, z2, y, x) )._SE \
+							 + PoCellEntry( pa( t, z2, y, x) )._SW + PoCellEntry( pa( t, z2, y, x) )._NT \
+							 + PoCellEntry( pa( t, z2, y, x) )._NB + PoCellEntry( pa( t, z2, y, x) )._ST \
+							 + PoCellEntry( pa( t, z2, y, x) )._SB + PoCellEntry( pa( t, z2, y, x) )._ET \
+							 + PoCellEntry( pa( t, z2, y, x) )._EB + PoCellEntry( pa( t, z2, y, x) )._WT \
+							 + PoCellEntry( pa( t, z2, y, x) )._WB; \
 					  MY_TYPE rho = 2.0*rho1 - rho2; \
                                           MY_TYPE px = (x / (0.5*(SIZE_X-1))) - 1.0; \
 					  MY_TYPE py = (y / (0.5*(SIZE_Y-1))) - 1.0; \
@@ -1298,83 +1301,83 @@ Pochoir_Shape<3>  lbm_shape[8] = {{1, 0, 0, 0},
 					  MY_TYPE uy = 0.00; \
 					  MY_TYPE uz = 0.01 * (1.0-px*px) * (1.0-py*py); \
 					  MY_TYPE u2 = 1.5 * (ux*ux + uy*uy + uz*uz); \
-					  PoCellEntry( pa(t, x, y, z) ). _C = DFL1 * rho * (1.0 - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._N = DFL2*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._S = DFL2*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._E = DFL2*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._W = DFL2*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._T = DFL2*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._B = DFL2*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._NE = DFL3*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._NW = DFL3*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._SE = DFL3*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._SW = DFL3*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._NT = DFL3*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._NB = DFL3*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._ST = DFL3*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._SB = DFL3*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._ET = DFL3*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._EB = DFL3*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._WT = DFL3*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); \
-					  PoCellEntry( pa(t, x, y, z) )._WB = DFL3*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) ). _C = DFL1 * rho * (1.0 - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._N = DFL2*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._S = DFL2*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._E = DFL2*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._W = DFL2*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._T = DFL2*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._B = DFL2*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._NE = DFL3*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._NW = DFL3*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._SE = DFL3*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._SW = DFL3*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._NT = DFL3*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._NB = DFL3*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._ST = DFL3*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._SB = DFL3*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._ET = DFL3*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._EB = DFL3*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._WT = DFL3*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); \
+					  PoCellEntry( pa(t, z, y, x) )._WB = DFL3*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); \
                                         } \
                                         if (z == (SIZE_Z - 1 + MARGIN_Z)) { \
 					   /* outflow */ \
 					  int z1 = z - 1; \
-					  MY_TYPE rho1 = + PoCellEntry( pa( t, x, y, z1) )._C + PoCellEntry( pa( t, x, y, z1) )._N; \
-					                 + PoCellEntry( pa( t, x, y, z1) )._S + PoCellEntry( pa( t, x, y, z1) )._E \
-							 + PoCellEntry( pa( t, x, y, z1) )._W + PoCellEntry( pa( t, x, y, z1) )._T \
-							 + PoCellEntry( pa( t, x, y, z1) )._B + PoCellEntry( pa( t, x, y, z1) )._NE \
-							 + PoCellEntry( pa( t, x, y, z1) )._NW + PoCellEntry( pa( t, x, y, z1) )._SE \
-							 + PoCellEntry( pa( t, x, y, z1) )._SW + PoCellEntry( pa( t, x, y, z1) )._NT \
-							 + PoCellEntry( pa( t, x, y, z1) )._NB + PoCellEntry( pa( t, x, y, z1) )._ST \
-							 + PoCellEntry( pa( t, x, y, z1) )._SB + PoCellEntry( pa( t, x, y, z1) )._ET \
-							 + PoCellEntry( pa( t, x, y, z1) )._EB + PoCellEntry( pa( t, x, y, z1) )._WT \
-							 + PoCellEntry( pa( t, x, y, z1) )._WB; \
-					  MY_TYPE ux1 = + PoCellEntry( pa(t, x, y, z1) )._E  - PoCellEntry( pa(t, x, y, z1) )._W \
-					    + PoCellEntry( pa(t, x, y, z1) )._NE - PoCellEntry( pa(t, x, y, z1) )._NW \
-					    + PoCellEntry( pa(t, x, y, z1) )._SE - PoCellEntry( pa(t, x, y, z1) )._SW \
-					    + PoCellEntry( pa(t, x, y, z1) )._ET + PoCellEntry( pa(t, x, y, z1) )._EB \
-					    - PoCellEntry( pa(t, x, y, z1) )._WT - PoCellEntry( pa(t, x, y, z1) )._WB; \
-					  MY_TYPE uy1 = + PoCellEntry( pa(t, x, y, z1) )._N  - PoCellEntry( pa(t, x, y, z1) )._S \
-					    + PoCellEntry( pa(t, x, y, z1) )._NE + PoCellEntry( pa(t, x, y, z1) )._NW \
-					    - PoCellEntry( pa(t, x, y, z1) )._SE - PoCellEntry( pa(t, x, y, z1) )._SW \
-					    + PoCellEntry( pa(t, x, y, z1) )._NT + PoCellEntry( pa(t, x, y, z1) )._NB \
-					    - PoCellEntry( pa(t, x, y, z1) )._ST - PoCellEntry( pa(t, x, y, z1) )._SB; \
-					  MY_TYPE uz1 = + PoCellEntry( pa(t, x, y, z1) )._T  - PoCellEntry( pa(t, x, y, z1) )._B  \
-					    + PoCellEntry( pa(t, x, y, z1) )._NT - PoCellEntry( pa(t, x, y, z1) )._NB \
-					    + PoCellEntry( pa(t, x, y, z1) )._ST - PoCellEntry( pa(t, x, y, z1) )._SB \
-					    + PoCellEntry( pa(t, x, y, z1) )._ET - PoCellEntry( pa(t, x, y, z1) )._EB \
-					    + PoCellEntry( pa(t, x, y, z1) )._WT - PoCellEntry( pa(t, x, y, z1) )._WB; \
+					  MY_TYPE rho1 = + PoCellEntry( pa( t, z1, y, x) )._C + PoCellEntry( pa( t, z1, y, x) )._N \
+					                 + PoCellEntry( pa( t, z1, y, x) )._S + PoCellEntry( pa( t, z1, y, x) )._E \
+							 + PoCellEntry( pa( t, z1, y, x) )._W + PoCellEntry( pa( t, z1, y, x) )._T \
+							 + PoCellEntry( pa( t, z1, y, x) )._B + PoCellEntry( pa( t, z1, y, x) )._NE \
+							 + PoCellEntry( pa( t, z1, y, x) )._NW + PoCellEntry( pa( t, z1, y, x) )._SE \
+							 + PoCellEntry( pa( t, z1, y, x) )._SW + PoCellEntry( pa( t, z1, y, x) )._NT \
+							 + PoCellEntry( pa( t, z1, y, x) )._NB + PoCellEntry( pa( t, z1, y, x) )._ST \
+							 + PoCellEntry( pa( t, z1, y, x) )._SB + PoCellEntry( pa( t, z1, y, x) )._ET \
+							 + PoCellEntry( pa( t, z1, y, x) )._EB + PoCellEntry( pa( t, z1, y, x) )._WT \
+							 + PoCellEntry( pa( t, z1, y, x) )._WB; \
+					  MY_TYPE ux1 = + PoCellEntry( pa(t, z1, y, x) )._E  - PoCellEntry( pa(t, z1, y, x) )._W \
+					    + PoCellEntry( pa(t, z1, y, x) )._NE - PoCellEntry( pa(t, z1, y, x) )._NW \
+					    + PoCellEntry( pa(t, z1, y, x) )._SE - PoCellEntry( pa(t, z1, y, x) )._SW \
+					    + PoCellEntry( pa(t, z1, y, x) )._ET + PoCellEntry( pa(t, z1, y, x) )._EB \
+					    - PoCellEntry( pa(t, z1, y, x) )._WT - PoCellEntry( pa(t, z1, y, x) )._WB; \
+					  MY_TYPE uy1 = + PoCellEntry( pa(t, z1, y, x) )._N  - PoCellEntry( pa(t, z1, y, x) )._S \
+					    + PoCellEntry( pa(t, z1, y, x) )._NE + PoCellEntry( pa(t, z1, y, x) )._NW \
+					    - PoCellEntry( pa(t, z1, y, x) )._SE - PoCellEntry( pa(t, z1, y, x) )._SW \
+					    + PoCellEntry( pa(t, z1, y, x) )._NT + PoCellEntry( pa(t, z1, y, x) )._NB \
+					    - PoCellEntry( pa(t, z1, y, x) )._ST - PoCellEntry( pa(t, z1, y, x) )._SB; \
+					  MY_TYPE uz1 = + PoCellEntry( pa(t, z1, y, x) )._T  - PoCellEntry( pa(t, z1, y, x) )._B  \
+					    + PoCellEntry( pa(t, z1, y, x) )._NT - PoCellEntry( pa(t, z1, y, x) )._NB \
+					    + PoCellEntry( pa(t, z1, y, x) )._ST - PoCellEntry( pa(t, z1, y, x) )._SB \
+					    + PoCellEntry( pa(t, z1, y, x) )._ET - PoCellEntry( pa(t, z1, y, x) )._EB \
+					    + PoCellEntry( pa(t, z1, y, x) )._WT - PoCellEntry( pa(t, z1, y, x) )._WB; \
 					  ux1 /= rho1; \
                                           uy1 /= rho1; \
 					  uz1 /= rho1; \
 					  int z2 = z - 2;		\
-					  MY_TYPE rho2 = + PoCellEntry( pa(t, x, y, z2) )._C  + PoCellEntry( pa(t, x, y, z2) )._N \
-					    + PoCellEntry( pa(t, x, y, z2) )._S  + PoCellEntry( pa(t, x, y, z2) )._E \
-					    + PoCellEntry( pa(t, x, y, z2) )._W  + PoCellEntry( pa(t, x, y, z2) )._T \
-					    + PoCellEntry( pa(t, x, y, z2) )._B  + PoCellEntry( pa(t, x, y, z2) )._NE \
-					    + PoCellEntry( pa(t, x, y, z2) )._NW + PoCellEntry( pa(t, x, y, z2) )._SE \
-					    + PoCellEntry( pa(t, x, y, z2) )._SW + PoCellEntry( pa(t, x, y, z2) )._NT \
-					    + PoCellEntry( pa(t, x, y, z2) )._NB + PoCellEntry( pa(t, x, y, z2) )._ST \
-					    + PoCellEntry( pa(t, x, y, z2) )._SB + PoCellEntry( pa(t, x, y, z2) )._ET \
-					    + PoCellEntry( pa(t, x, y, z2) )._EB + PoCellEntry( pa(t, x, y, z2) )._WT \
-					    + PoCellEntry( pa(t, x, y, z2) )._WB; \                
-                                         MY_TYPE ux2 = + PoCellEntry( pa(t, x, y, z2) )._E  - PoCellEntry( pa(t, x, y, z2) )._W \
-					   + PoCellEntry( pa(t, x, y, z2) )._NE - PoCellEntry( pa(t, x, y, z2) )._NW \
-					   + PoCellEntry( pa(t, x, y, z2) )._SE - PoCellEntry( pa(t, x, y, z2) )._SW \
-					   + PoCellEntry( pa(t, x, y, z2) )._ET + PoCellEntry( pa(t, x, y, z2) )._EB \
-					   - PoCellEntry( pa(t, x, y, z2) )._WT - PoCellEntry( pa(t, x, y, z2) )._WB; \
-                                         MY_TYPE uy2 = + PoCellEntry( pa(t, x, y, z2) )._N  - PoCellEntry( pa(t, x, y, z2) )._S  \
-					   + PoCellEntry( pa(t, x, y, z2) )._NE + PoCellEntry( pa(t, x, y, z2) )._NW \
-					   - PoCellEntry( pa(t, x, y, z2) )._SE - PoCellEntry( pa(t, x, y, z2) )._SW \
-					   + PoCellEntry( pa(t, x, y, z2) )._NT + PoCellEntry( pa(t, x, y, z2) )._NB \
-					   - PoCellEntry( pa(t, x, y, z2) )._ST - PoCellEntry( pa(t, x, y, z2) )._SB; \
-                                         MY_TYPE uz2 = + PoCellEntry( pa(t, x, y, z2) )._T  - PoCellEntry( pa(t, x, y, z2) )._B  \
-					   + PoCellEntry( pa(t, x, y, z2) )._NT - PoCellEntry( pa(t, x, y, z2) )._NB \
-					   + PoCellEntry( pa(t, x, y, z2) )._ST - PoCellEntry( pa(t, x, y, z2) )._SB \
-					   + PoCellEntry( pa(t, x, y, z2) )._ET - PoCellEntry( pa(t, x, y, z2) )._EB \
-					   + PoCellEntry( pa(t, x, y, z2) )._WT - PoCellEntry( pa(t, x, y, z2) )._WB; \
+					  MY_TYPE rho2 = + PoCellEntry( pa(t, z2, y, x) )._C  + PoCellEntry( pa(t, z2, y, x) )._N \
+					    + PoCellEntry( pa(t, z2, y, x) )._S  + PoCellEntry( pa(t, z2, y, x) )._E \
+					    + PoCellEntry( pa(t, z2, y, x) )._W  + PoCellEntry( pa(t, z2, y, x) )._T \
+					    + PoCellEntry( pa(t, z2, y, x) )._B  + PoCellEntry( pa(t, z2, y, x) )._NE \
+					    + PoCellEntry( pa(t, z2, y, x) )._NW + PoCellEntry( pa(t, z2, y, x) )._SE \
+					    + PoCellEntry( pa(t, z2, y, x) )._SW + PoCellEntry( pa(t, z2, y, x) )._NT \
+					    + PoCellEntry( pa(t, z2, y, x) )._NB + PoCellEntry( pa(t, z2, y, x) )._ST \
+					    + PoCellEntry( pa(t, z2, y, x) )._SB + PoCellEntry( pa(t, z2, y, x) )._ET \
+					    + PoCellEntry( pa(t, z2, y, x) )._EB + PoCellEntry( pa(t, z2, y, x) )._WT \
+					    + PoCellEntry( pa(t, z2, y, x) )._WB; \
+                                            MY_TYPE ux2 = + PoCellEntry( pa(t, z2, y, x) )._E  - PoCellEntry( pa(t, z2, y, x) )._W \
+					   + PoCellEntry( pa(t, z2, y, x) )._NE - PoCellEntry( pa(t, z2, y, x) )._NW \
+					   + PoCellEntry( pa(t, z2, y, x) )._SE - PoCellEntry( pa(t, z2, y, x) )._SW \
+					   + PoCellEntry( pa(t, z2, y, x) )._ET + PoCellEntry( pa(t, z2, y, x) )._EB \
+					   - PoCellEntry( pa(t, z2, y, x) )._WT - PoCellEntry( pa(t, z2, y, x) )._WB; \
+                                         MY_TYPE uy2 = + PoCellEntry( pa(t, z2, y, x) )._N  - PoCellEntry( pa(t, z2, y, x) )._S  \
+					   + PoCellEntry( pa(t, z2, y, x) )._NE + PoCellEntry( pa(t, z2, y, x) )._NW \
+					   - PoCellEntry( pa(t, z2, y, x) )._SE - PoCellEntry( pa(t, z2, y, x) )._SW \
+					   + PoCellEntry( pa(t, z2, y, x) )._NT + PoCellEntry( pa(t, z2, y, x) )._NB \
+					   - PoCellEntry( pa(t, z2, y, x) )._ST - PoCellEntry( pa(t, z2, y, x) )._SB; \
+                                         MY_TYPE uz2 = + PoCellEntry( pa(t, z2, y, x) )._T  - PoCellEntry( pa(t, z2, y, x) )._B  \
+					   + PoCellEntry( pa(t, z2, y, x) )._NT - PoCellEntry( pa(t, z2, y, x) )._NB \
+					   + PoCellEntry( pa(t, z2, y, x) )._ST - PoCellEntry( pa(t, z2, y, x) )._SB \
+					   + PoCellEntry( pa(t, z2, y, x) )._ET - PoCellEntry( pa(t, z2, y, x) )._EB \
+					   + PoCellEntry( pa(t, z2, y, x) )._WT - PoCellEntry( pa(t, z2, y, x) )._WB; \
                                          ux2 /= rho2; \
                                          uy2 /= rho2; \
                                          uz2 /= rho2; \
@@ -1383,50 +1386,153 @@ Pochoir_Shape<3>  lbm_shape[8] = {{1, 0, 0, 0},
                                          MY_TYPE uy = 2*uy1 - uy2; \
                                          MY_TYPE uz = 2*uz1 - uz2; \
                                          MY_TYPE u2 = 1.5 * (ux*ux + uy*uy + uz*uz); \
-                                         PoCellEntry( pa(t, x, y, z) )._C  = DFL1*rho*(1.0                                 - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._N  = DFL2*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._S  = DFL2*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._E  = DFL2*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._W  = DFL2*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._T  = DFL2*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._B  = DFL2*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._NE = DFL3*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._NW = DFL3*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._SE = DFL3*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._SW = DFL3*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._NT = DFL3*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._NB = DFL3*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._ST = DFL3*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._SB = DFL3*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._ET = DFL3*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._EB = DFL3*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._WT = DFL3*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); \
-                                         PoCellEntry( pa(t, x, y, z) )._WB = DFL3*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._C  = DFL1*rho*(1.0                                 - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._N  = DFL2*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._S  = DFL2*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._E  = DFL2*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._W  = DFL2*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._T  = DFL2*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._B  = DFL2*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._NE = DFL3*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._NW = DFL3*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._SE = DFL3*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._SW = DFL3*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._NT = DFL3*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._NB = DFL3*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._ST = DFL3*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._SB = DFL3*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._ET = DFL3*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._EB = DFL3*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._WT = DFL3*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); \
+                                         PoCellEntry( pa(t, z, y, x) )._WB = DFL3*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); \
                                        }
 
-#define Po_performStreamCollide(t, x, y, z)			\
-  const MY_TYPE src_c = PoCellEntry( pa(t, x, y, z) )._C;	\
-  const MY_TYPE src_n = PoCellEntry( pa(t, x, y, z) )._N;	\
-  const MY_TYPE src_s = PoCellEntry( pa(t, x, y, z) )._S;	\
-  const MY_TYPE src_e = PoCellEntry( pa(t, x, y, z) )._E;	\
-  const MY_TYPE src_w = PoCellEntry( pa(t, x, y, z) )._W;	\
-  const MY_TYPE src_t = PoCellEntry( pa(t, x, y, z) )._T;	\
-  const MY_TYPE src_b = PoCellEntry( pa(t, x, y, z) )._B;	\
-  const MY_TYPE src_ne = PoCellEntry( pa(t, x, y, z) )._NE;     \
-  const MY_TYPE src_nw = PoCellEntry( pa(t, x, y, z) )._NW;     \
-  const MY_TYPE src_se = PoCellEntry( pa(t, x, y, z) )._SE;     \
-  const MY_TYPE src_sw = PoCellEntry( pa(t, x, y, z) )._SW;     \
-  const MY_TYPE src_nt = PoCellEntry( pa(t, x, y, z) )._NT;     \
-  const MY_TYPE src_nb = PoCellEntry( pa(t, x, y, z) )._NB;     \
-  const MY_TYPE src_st = PoCellEntry( pa(t, x, y, z) )._ST;     \
-  const MY_TYPE src_sb = PoCellEntry( pa(t, x, y, z) )._SB;     \
-  const MY_TYPE src_et = PoCellEntry( pa(t, x, y, z) )._ET;     \
-  const MY_TYPE src_eb = PoCellEntry( pa(t, x, y, z) )._EB;     \
-  const MY_TYPE src_wt = PoCellEntry( pa(t, x, y, z) )._WT;     \
-  const MY_TYPE src_wb = PoCellEntry( pa(t, x, y, z) )._WB;     \
-  MY_TYPE* dst_c = &( PoCellEntry( pa(t+1, x, y, z) )._C);  \
-  MY_TYPE* dst_n = &( PoCellEntry( pa(t+1, x, y+1, z) )._N);  \
-  MY_TYPE* dst_s = &( PoCellEntry( pa(t+1, x, y-1, z) )._S); 
+#define Po_performStreamCollide(t, z, y, x)			\
+  DEBUG_MSG("line 1");						\
+  const MY_TYPE src_c = PoCellEntry( pa(t, z, y, x) )._C;	\
+  const MY_TYPE src_n = PoCellEntry( pa(t, z, y, x) )._N;	\
+  const MY_TYPE src_s = PoCellEntry( pa(t, z, y, x) )._S;	\
+  const MY_TYPE src_e = PoCellEntry( pa(t, z, y, x) )._E;	\
+  const MY_TYPE src_w = PoCellEntry( pa(t, z, y, x) )._W;	\
+  const MY_TYPE src_t = PoCellEntry( pa(t, z, y, x) )._T;	\
+  const MY_TYPE src_b = PoCellEntry( pa(t, z, y, x) )._B;	\
+  const MY_TYPE src_ne = PoCellEntry( pa(t, z, y, x) )._NE;     \
+  const MY_TYPE src_nw = PoCellEntry( pa(t, z, y, x) )._NW;     \
+  const MY_TYPE src_se = PoCellEntry( pa(t, z, y, x) )._SE;     \
+  const MY_TYPE src_sw = PoCellEntry( pa(t, z, y, x) )._SW;     \
+  const MY_TYPE src_nt = PoCellEntry( pa(t, z, y, x) )._NT;     \
+  const MY_TYPE src_nb = PoCellEntry( pa(t, z, y, x) )._NB;     \
+  const MY_TYPE src_st = PoCellEntry( pa(t, z, y, x) )._ST;     \
+  const MY_TYPE src_sb = PoCellEntry( pa(t, z, y, x) )._SB;     \
+  const MY_TYPE src_et = PoCellEntry( pa(t, z, y, x) )._ET;     \
+  const MY_TYPE src_eb = PoCellEntry( pa(t, z, y, x) )._EB;     \
+  const MY_TYPE src_wt = PoCellEntry( pa(t, z, y, x) )._WT;     \
+  const MY_TYPE src_wb = PoCellEntry( pa(t, z, y, x) )._WB;     \
+  const MY_TYPE*src_flag_addr = &( PoCellEntry( pa(t, z, y, x) )._FLAGS); \
+  DEBUG_MSG("line 2"); \
+  MY_TYPE* dst_c = &( PoCellEntry( pa(t+1, z, y, x) )._C);    \
+  MY_TYPE* dst_n = &( PoCellEntry( pa(t+1, z, y+1, x) )._N);  \
+  MY_TYPE* dst_s = &( PoCellEntry( pa(t+1, z, y-1, x) )._S); \
+  MY_TYPE* dst_e = &( PoCellEntry( pa(t+1, z, y, x+1) )._E); \
+  MY_TYPE* dst_w = &( PoCellEntry( pa(t+1, z, y, x-1) )._W); \
+  MY_TYPE* dst_t = &( PoCellEntry( pa(t+1, z+1, y, x) )._T);    \
+  MY_TYPE* dst_b = &( PoCellEntry( pa(t+1, z-1, y, x) )._B);    \
+  MY_TYPE* dst_ne = &( PoCellEntry( pa(t+1, z, y+1, x+1) )._NE);	\
+  MY_TYPE* dst_nw = &( PoCellEntry( pa(t+1, z, y+1, x-1) )._NW);	\
+  MY_TYPE* dst_se = &( PoCellEntry( pa(t+1, z, y-1, x+1) )._SE);	\
+  MY_TYPE* dst_sw = &( PoCellEntry( pa(t+1, z, y-1, x-1) )._SW);	\
+  MY_TYPE* dst_nt = &( PoCellEntry( pa(t+1, z+1, y+1, x) )._NT);	\
+  MY_TYPE* dst_nb = &( PoCellEntry( pa(t+1, z-1, y+1, x) )._NB);	\
+  MY_TYPE* dst_st = &( PoCellEntry( pa(t+1, z+1, y-1, x) )._ST);	\
+  MY_TYPE* dst_sb = &( PoCellEntry( pa(t+1, z-1, y-1, x) )._SB);	\
+  MY_TYPE* dst_et = &( PoCellEntry( pa(t+1, z+1, y, x+1) )._ET);    \
+  MY_TYPE* dst_eb = &( PoCellEntry( pa(t+1, z-1, y, x+1) )._EB);    \
+  MY_TYPE* dst_wt = &( PoCellEntry( pa(t+1, z+1, y, x-1) )._WT);    \
+  MY_TYPE* dst_wb = &( PoCellEntry( pa(t+1, z-1, y, x-1) )._WB); \
+  DEBUG_MSG("line 3"); \
+  if ( *((unsigned int*)src_flag_addr) & OBSTACLE) {		 \
+    DEBUG_MSG("line 4"); \
+      *dst_c  = src_c; \
+      *dst_s  = src_n; \
+      *dst_n  = src_s; \
+      *dst_w  = src_e; \
+      *dst_e  = src_w; \
+      *dst_b  = src_t; \
+      *dst_t  = src_b; \
+      *dst_sw = src_ne; \
+      *dst_se = src_nw; \
+      *dst_nw = src_se; \
+      *dst_ne = src_sw; \
+      *dst_sb = src_nt; \
+      *dst_st = src_nb; \
+      *dst_nb = src_st; \
+      *dst_nt = src_sb; \
+      *dst_wb = src_et; \
+      *dst_wt = src_eb; \
+      *dst_eb = src_wt; \
+      *dst_et = src_wb; \
+  DEBUG_MSG("line 5"); \
+  } else { \
+      DEBUG_MSG("line 6");		      \
+      MY_TYPE rho = + src_c  + src_n  \
+                      + src_s  + src_e \
+                      + src_w  + src_t  \
+                      + src_b  + src_ne \
+                      + src_nw + src_se \
+                      + src_sw + src_nt \
+                      + src_nb + src_st \
+                      + src_sb + src_et \
+                      + src_eb + src_wt \
+                      + src_wb; \
+      MY_TYPE ux = + src_e  - src_w \
+                     + src_ne - src_nw \
+                     + src_se - src_sw \
+                     + src_et + src_eb \
+                     - src_wt - src_wb; \
+      MY_TYPE uy = + src_n  - src_s \
+                     + src_ne + src_nw \
+                     - src_se - src_sw \
+                     + src_nt + src_nb \
+                     - src_st - src_sb; \
+      MY_TYPE uz = + src_t  - src_b \
+	             + src_nt - src_nb \
+                     + src_st - src_sb \
+                     + src_et - src_eb \
+                     + src_wt - src_wb; \
+      ux /= rho; \
+      uy /= rho; \
+      uz /= rho; \
+      if( *((unsigned int*)src_flag_addr) & ACCEL) { \
+         ux = 0.005; \
+	 uy = 0.002; \
+	 uz = 0.000; \
+      } \
+      const MY_TYPE u2 = 1.5 * (ux*ux + uy*uy + uz*uz); \
+      const MY_TYPE k0 = (1.0-OMEGA); \
+      const MY_TYPE k1 = (DFL1*OMEGA*rho); \
+      const MY_TYPE k2 = (DFL2*OMEGA*rho); \
+      const MY_TYPE k3 = (DFL3*OMEGA*rho); \		
+      *dst_c  = k0*src_c  + k1*(1.0                                 - u2); \                
+      *dst_n  = k0*src_n  + k2*(1.0 +       uy*(4.5*uy       + 3.0) - u2); \
+      *dst_s  = k0*src_s  + k2*(1.0 +       uy*(4.5*uy       - 3.0) - u2); \
+      *dst_e  = k0*src_e  + k2*(1.0 +       ux*(4.5*ux       + 3.0) - u2); \
+      *dst_w  = k0*src_w  + k2*(1.0 +       ux*(4.5*ux       - 3.0) - u2); \
+      *dst_t  = k0*src_t  + k2*(1.0 +       uz*(4.5*uz       + 3.0) - u2); \
+      *dst_b  = k0*src_b  + k2*(1.0 +       uz*(4.5*uz       - 3.0) - u2); \        
+      *dst_ne = k0*src_ne + k3*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); \
+      *dst_nw = k0*src_nw + k3*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); \
+      *dst_se = k0*src_se + k3*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); \
+      *dst_sw = k0*src_sw + k3*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); \
+      *dst_nt = k0*src_nt + k3*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); \
+      *dst_nb = k0*src_nb + k3*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); \
+      *dst_st = k0*src_st + k3*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); \
+      *dst_sb = k0*src_sb + k3*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); \
+      *dst_et = k0*src_et + k3*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); \
+      *dst_eb = k0*src_eb + k3*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); \
+      *dst_wt = k0*src_wt + k3*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); \
+      *dst_wb = k0*src_wb + k3*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); \
+    DEBUG_MSG("line 7");					 \
+  }
 
 static MAIN_SimType mySimType;
 
@@ -1443,27 +1549,27 @@ static void CopyLbmGridToPochoirGrid(LBM_Grid lbmGrid, Pochoir_Array<PoCellEntry
         {
             for (int x=0; x<SIZE_X; x++)
             { 
-                const int i = CALC_INDEX(x, y, z, 0);
-                PoCellEntry( parr(t, new_z, y, x) )._C  =  LOCAL(lbmGrid, C);
-                PoCellEntry( parr(t, new_z, y, x) )._N  =  LOCAL(lbmGrid, N);
-                PoCellEntry( parr(t, new_z, y, x) )._S  =  LOCAL(lbmGrid, S);
-                PoCellEntry( parr(t, new_z, y, x) )._E  =  LOCAL(lbmGrid, E);
-                PoCellEntry( parr(t, new_z, y, x) )._W  =  LOCAL(lbmGrid, W);
-                PoCellEntry( parr(t, new_z, y, x) )._T  =  LOCAL(lbmGrid, T);
-                PoCellEntry( parr(t, new_z, y, x) )._B  =  LOCAL(lbmGrid, B);
-                PoCellEntry( parr(t, new_z, y, x) )._NE =  LOCAL(lbmGrid, NE);
-                PoCellEntry( parr(t, new_z, y, x) )._NW =  LOCAL(lbmGrid, NW);
-                PoCellEntry( parr(t, new_z, y, x) )._SE =  LOCAL(lbmGrid, SE);
-                PoCellEntry( parr(t, new_z, y, x) )._SW =  LOCAL(lbmGrid, SW);
-                PoCellEntry( parr(t, new_z, y, x) )._NT =  LOCAL(lbmGrid, NT);
-                PoCellEntry( parr(t, new_z, y, x) )._NB =  LOCAL(lbmGrid, NB);
-                PoCellEntry( parr(t, new_z, y, x) )._ST =  LOCAL(lbmGrid, ST);
-                PoCellEntry( parr(t, new_z, y, x) )._SB =  LOCAL(lbmGrid, SB);
-                PoCellEntry( parr(t, new_z, y, x) )._ET =  LOCAL(lbmGrid, ET);
-                PoCellEntry( parr(t, new_z, y, x) )._EB =  LOCAL(lbmGrid, EB);
-                PoCellEntry( parr(t, new_z, y, x) )._WT =  LOCAL(lbmGrid, WT);
-                PoCellEntry( parr(t, new_z, y, x) )._WB =  LOCAL(lbmGrid, WB);
-                PoCellEntry( parr(t, new_z, y, x) )._FLAGS =  LOCAL(lbmGrid, FLAGS);
+                const int i = CALC_INDEX(z, y, x, 0);
+                parr.interior(t, new_z, y, x)._C  =  LOCAL(lbmGrid, C);
+                parr.interior(t, new_z, y, x)._N  =  LOCAL(lbmGrid, N);
+                parr.interior(t, new_z, y, x)._S  =  LOCAL(lbmGrid, S);
+                parr.interior(t, new_z, y, x)._E  =  LOCAL(lbmGrid, E);
+                parr.interior(t, new_z, y, x)._W  =  LOCAL(lbmGrid, W);
+                parr.interior(t, new_z, y, x)._T  =  LOCAL(lbmGrid, T);
+                parr.interior(t, new_z, y, x)._B  =  LOCAL(lbmGrid, B);
+                parr.interior(t, new_z, y, x)._NE =  LOCAL(lbmGrid, NE);
+                parr.interior(t, new_z, y, x)._NW =  LOCAL(lbmGrid, NW);
+                parr.interior(t, new_z, y, x)._SE =  LOCAL(lbmGrid, SE);
+                parr.interior(t, new_z, y, x)._SW =  LOCAL(lbmGrid, SW);
+                parr.interior(t, new_z, y, x)._NT =  LOCAL(lbmGrid, NT);
+                parr.interior(t, new_z, y, x)._NB =  LOCAL(lbmGrid, NB);
+                parr.interior(t, new_z, y, x)._ST =  LOCAL(lbmGrid, ST);
+                parr.interior(t, new_z, y, x)._SB =  LOCAL(lbmGrid, SB);
+                parr.interior(t, new_z, y, x)._ET =  LOCAL(lbmGrid, ET);
+                parr.interior(t, new_z, y, x)._EB =  LOCAL(lbmGrid, EB);
+                parr.interior(t, new_z, y, x)._WT =  LOCAL(lbmGrid, WT);
+                parr.interior(t, new_z, y, x)._WB =  LOCAL(lbmGrid, WB);
+                parr.interior(t, new_z, y, x)._FLAGS =  LOCAL(lbmGrid, FLAGS);
             }
         }
     }    
@@ -1471,14 +1577,14 @@ static void CopyLbmGridToPochoirGrid(LBM_Grid lbmGrid, Pochoir_Array<PoCellEntry
 
 static void CopyPochoirGridToLbmGrid(LBM_Grid lbmGrid, Pochoir_Array<PoCellEntry, 3>& parr, const int t)
 {
-for (int z=0; z<SIZE_Z; z++)
+  for (int z=0; z<SIZE_Z; z++)
     {
         const int new_z = z + MARGIN_Z;
         for (int y=0; y<SIZE_Y; y++)
         {
             for (int x=0; x<SIZE_X; x++)
             {
-                const int i = CALC_INDEX(x, y, z, 0);
+                const int i = CALC_INDEX(z, y, x, 0);
                 LOCAL(lbmGrid, C)  = PoCellEntry( parr(t, new_z, y, x) )._C;
                 LOCAL(lbmGrid, N)  = PoCellEntry( parr(t, new_z, y, x) )._N;
                 LOCAL(lbmGrid, S)  = PoCellEntry( parr(t, new_z, y, x) )._S;
@@ -1504,9 +1610,34 @@ for (int z=0; z<SIZE_Z; z++)
     }    
 }
 
+#if 0
+static void ValidateCopyingBetweenPochoirGridAndLbmGrid(LBM_Grid lbmGrid, Pochoir_Array<PoCellEntry, 3>& parr, const int t)
+{
+  for (int z=0; z<SIZE_Z; z++)
+    {
+      const int new_z = z + MARGIN_Z;
+        for (int y=0; y<SIZE_Y; y++)
+        {
+            for (int x=0; x<SIZE_X; x++)
+            {
+                const int i = CALC_INDEX(z, y, x, 0);
+		const MY_TYPE orig = LOCAL(lbmGrid, FLAGS);
+		PoCellEntry( parr(t, new_z, y, x) )._FLAGS = orig;
+		const MY_TYPE tmp = PoCellEntry( parr(t, new_z, y, x) )._FLAGS;
+		if (orig != tmp) {
+		  printf("ValidateCopying failed at x=%d, y=%d, z=%d\n", z, y, x);
+		  exit(-1);
+		}
+	    }
+	}
+    }
+  printf("ValidateCopying succeeded\n");
+}
+#endif
     
 void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int numTimeSteps)
 {
+
   mySimType = simtype;      
   //printf("RunPochoir, numTimeSteps=%d\n", numTimeSteps);  
   Pochoir<PoCellEntry, 3> lbm;
@@ -1516,15 +1647,93 @@ void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int nu
   CopyLbmGridToPochoirGrid(dstGrid, pa, 1);
 
   lbm.registerShape(lbm_shape);
-  lbm.registerDomain(X, Y, Z);
+  lbm.registerDomain(Z, Y, X);
 
-  Pochoir_kernel_3D(lbm_kernel, t, x, y, z)
-    Po_handleInOutFlow(t, x, y, z);
-    Po_performStreamCollide(t, x, y, z);
+#define z1 (z + 1)
+#define z2 (z + 2)
+  Pochoir_kernel_3D(lbm_kernel, t, z, y, x)
+//    Po_handleInOutFlow(t, z, y, x);
+    if (z == (0 + MARGIN_Z)) { 
+        /* inflow */ 
+        MY_TYPE rho1 = + PoCellEntry( pa( t, z1, y, x) )._C + PoCellEntry( pa( t, z1, y, x) )._N + PoCellEntry( pa( t, z1, y, x) )._S + PoCellEntry( pa( t, z1, y, x) )._E + PoCellEntry( pa( t, z1, y, x) )._W + PoCellEntry( pa( t, z1, y, x) )._T + PoCellEntry( pa( t, z1, y, x) )._B + PoCellEntry( pa( t, z1, y, x) )._NE + PoCellEntry( pa( t, z1, y, x) )._NW + PoCellEntry( pa( t, z1, y, x) )._SE + PoCellEntry( pa( t, z1, y, x) )._SW + PoCellEntry( pa( t, z1, y, x) )._NT + PoCellEntry( pa( t, z1, y, x) )._NB + PoCellEntry( pa( t, z1, y, x) )._ST + PoCellEntry( pa( t, z1, y, x) )._SB + PoCellEntry( pa( t, z1, y, x) )._ET + PoCellEntry( pa( t, z1, y, x) )._EB + PoCellEntry( pa( t, z1, y, x) )._WT + PoCellEntry( pa( t, z1, y, x) )._WB; 
+        MY_TYPE rho2 = + PoCellEntry( pa( t, z2, y, x) )._C + PoCellEntry( pa( t, z2, y, x) )._N + PoCellEntry( pa( t, z2, y, x) )._S + PoCellEntry( pa( t, z2, y, x) )._E + PoCellEntry( pa( t, z2, y, x) )._W + PoCellEntry( pa( t, z2, y, x) )._T + PoCellEntry( pa( t, z2, y, x) )._B + PoCellEntry( pa( t, z2, y, x) )._NE + PoCellEntry( pa( t, z2, y, x) )._NW + PoCellEntry( pa( t, z2, y, x) )._SE + PoCellEntry( pa( t, z2, y, x) )._SW + PoCellEntry( pa( t, z2, y, x) )._NT + PoCellEntry( pa( t, z2, y, x) )._NB + PoCellEntry( pa( t, z2, y, x) )._ST + PoCellEntry( pa( t, z2, y, x) )._SB + PoCellEntry( pa( t, z2, y, x) )._ET + PoCellEntry( pa( t, z2, y, x) )._EB + PoCellEntry( pa( t, z2, y, x) )._WT + PoCellEntry( pa( t, z2, y, x) )._WB; 
+        MY_TYPE rho = 2.0*rho1 - rho2; 
+        MY_TYPE px = (x / (0.5*(SIZE_X-1))) - 1.0; 
+        MY_TYPE py = (y / (0.5*(SIZE_Y-1))) - 1.0; 
+        MY_TYPE ux = 0.00; 
+        MY_TYPE uy = 0.00; 
+        MY_TYPE uz = 0.01 * (1.0-px*px) * (1.0-py*py); 
+        MY_TYPE u2 = 1.5 * (ux*ux + uy*uy + uz*uz); 
+        PoCellEntry( pa(t, z, y, x) ). _C = DFL1 * rho * (1.0 - u2); 
+        PoCellEntry( pa(t, z, y, x) )._N = DFL2*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._S = DFL2*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._E = DFL2*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._W = DFL2*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._T = DFL2*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._B = DFL2*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._NE = DFL3*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._NW = DFL3*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._SE = DFL3*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._SW = DFL3*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._NT = DFL3*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._NB = DFL3*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._ST = DFL3*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._SB = DFL3*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._ET = DFL3*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._EB = DFL3*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._WT = DFL3*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); 
+        PoCellEntry( pa(t, z, y, x) )._WB = DFL3*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); 
+    } 
+        if (z == (SIZE_Z - 1 + MARGIN_Z)) { 
+            /* outflow */ 
+            int z1 = z - 1; 
+            MY_TYPE rho1 = + PoCellEntry( pa( t, z1, y, x) )._C + PoCellEntry( pa( t, z1, y, x) )._N + PoCellEntry( pa( t, z1, y, x) )._S + PoCellEntry( pa( t, z1, y, x) )._E + PoCellEntry( pa( t, z1, y, x) )._W + PoCellEntry( pa( t, z1, y, x) )._T + PoCellEntry( pa( t, z1, y, x) )._B + PoCellEntry( pa( t, z1, y, x) )._NE + PoCellEntry( pa( t, z1, y, x) )._NW + PoCellEntry( pa( t, z1, y, x) )._SE + PoCellEntry( pa( t, z1, y, x) )._SW + PoCellEntry( pa( t, z1, y, x) )._NT + PoCellEntry( pa( t, z1, y, x) )._NB + PoCellEntry( pa( t, z1, y, x) )._ST + PoCellEntry( pa( t, z1, y, x) )._SB + PoCellEntry( pa( t, z1, y, x) )._ET + PoCellEntry( pa( t, z1, y, x) )._EB + PoCellEntry( pa( t, z1, y, x) )._WT + PoCellEntry( pa( t, z1, y, x) )._WB; 
+            MY_TYPE ux1 = + PoCellEntry( pa(t, z1, y, x) )._E  - PoCellEntry( pa(t, z1, y, x) )._W + PoCellEntry( pa(t, z1, y, x) )._NE - PoCellEntry( pa(t, z1, y, x) )._NW + PoCellEntry( pa(t, z1, y, x) )._SE - PoCellEntry( pa(t, z1, y, x) )._SW + PoCellEntry( pa(t, z1, y, x) )._ET + PoCellEntry( pa(t, z1, y, x) )._EB - PoCellEntry( pa(t, z1, y, x) )._WT - PoCellEntry( pa(t, z1, y, x) )._WB; 
+            MY_TYPE uy1 = + PoCellEntry( pa(t, z1, y, x) )._N  - PoCellEntry( pa(t, z1, y, x) )._S + PoCellEntry( pa(t, z1, y, x) )._NE + PoCellEntry( pa(t, z1, y, x) )._NW - PoCellEntry( pa(t, z1, y, x) )._SE - PoCellEntry( pa(t, z1, y, x) )._SW + PoCellEntry( pa(t, z1, y, x) )._NT + PoCellEntry( pa(t, z1, y, x) )._NB - PoCellEntry( pa(t, z1, y, x) )._ST - PoCellEntry( pa(t, z1, y, x) )._SB; 
+            MY_TYPE uz1 = + PoCellEntry( pa(t, z1, y, x) )._T  - PoCellEntry( pa(t, z1, y, x) )._B  + PoCellEntry( pa(t, z1, y, x) )._NT - PoCellEntry( pa(t, z1, y, x) )._NB + PoCellEntry( pa(t, z1, y, x) )._ST - PoCellEntry( pa(t, z1, y, x) )._SB + PoCellEntry( pa(t, z1, y, x) )._ET - PoCellEntry( pa(t, z1, y, x) )._EB + PoCellEntry( pa(t, z1, y, x) )._WT - PoCellEntry( pa(t, z1, y, x) )._WB; 
+            ux1 /= rho1; 
+            uy1 /= rho1; 
+            uz1 /= rho1; 
+            int z2 = z - 2;		
+            MY_TYPE rho2 = + PoCellEntry( pa(t, z2, y, x) )._C  + PoCellEntry( pa(t, z2, y, x) )._N + PoCellEntry( pa(t, z2, y, x) )._S  + PoCellEntry( pa(t, z2, y, x) )._E + PoCellEntry( pa(t, z2, y, x) )._W  + PoCellEntry( pa(t, z2, y, x) )._T + PoCellEntry( pa(t, z2, y, x) )._B  + PoCellEntry( pa(t, z2, y, x) )._NE + PoCellEntry( pa(t, z2, y, x) )._NW + PoCellEntry( pa(t, z2, y, x) )._SE + PoCellEntry( pa(t, z2, y, x) )._SW + PoCellEntry( pa(t, z2, y, x) )._NT + PoCellEntry( pa(t, z2, y, x) )._NB + PoCellEntry( pa(t, z2, y, x) )._ST + PoCellEntry( pa(t, z2, y, x) )._SB + PoCellEntry( pa(t, z2, y, x) )._ET + PoCellEntry( pa(t, z2, y, x) )._EB + PoCellEntry( pa(t, z2, y, x) )._WT + PoCellEntry( pa(t, z2, y, x) )._WB; 
+            MY_TYPE ux2 = + PoCellEntry( pa(t, z2, y, x) )._E  - PoCellEntry( pa(t, z2, y, x) )._W + PoCellEntry( pa(t, z2, y, x) )._NE - PoCellEntry( pa(t, z2, y, x) )._NW + PoCellEntry( pa(t, z2, y, x) )._SE - PoCellEntry( pa(t, z2, y, x) )._SW + PoCellEntry( pa(t, z2, y, x) )._ET + PoCellEntry( pa(t, z2, y, x) )._EB - PoCellEntry( pa(t, z2, y, x) )._WT - PoCellEntry( pa(t, z2, y, x) )._WB; 
+            MY_TYPE uy2 = + PoCellEntry( pa(t, z2, y, x) )._N  - PoCellEntry( pa(t, z2, y, x) )._S  + PoCellEntry( pa(t, z2, y, x) )._NE + PoCellEntry( pa(t, z2, y, x) )._NW - PoCellEntry( pa(t, z2, y, x) )._SE - PoCellEntry( pa(t, z2, y, x) )._SW + PoCellEntry( pa(t, z2, y, x) )._NT + PoCellEntry( pa(t, z2, y, x) )._NB - PoCellEntry( pa(t, z2, y, x) )._ST - PoCellEntry( pa(t, z2, y, x) )._SB; 
+            MY_TYPE uz2 = + PoCellEntry( pa(t, z2, y, x) )._T  - PoCellEntry( pa(t, z2, y, x) )._B  + PoCellEntry( pa(t, z2, y, x) )._NT - PoCellEntry( pa(t, z2, y, x) )._NB + PoCellEntry( pa(t, z2, y, x) )._ST - PoCellEntry( pa(t, z2, y, x) )._SB + PoCellEntry( pa(t, z2, y, x) )._ET - PoCellEntry( pa(t, z2, y, x) )._EB + PoCellEntry( pa(t, z2, y, x) )._WT - PoCellEntry( pa(t, z2, y, x) )._WB; 
+            ux2 /= rho2; 
+            uy2 /= rho2; 
+            uz2 /= rho2; 
+            MY_TYPE rho = 1.0; 
+            MY_TYPE ux = 2*ux1 - ux2; 
+            MY_TYPE uy = 2*uy1 - uy2; 
+            MY_TYPE uz = 2*uz1 - uz2; 
+            MY_TYPE u2 = 1.5 * (ux*ux + uy*uy + uz*uz); 
+            PoCellEntry( pa(t, z, y, x) )._C  = DFL1*rho*(1.0 - u2); 
+            PoCellEntry( pa(t, z, y, x) )._N  = DFL2*rho*(1.0 +       uy*(4.5*uy       + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._S  = DFL2*rho*(1.0 +       uy*(4.5*uy       - 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._E  = DFL2*rho*(1.0 +       ux*(4.5*ux       + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._W  = DFL2*rho*(1.0 +       ux*(4.5*ux       - 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._T  = DFL2*rho*(1.0 +       uz*(4.5*uz       + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._B  = DFL2*rho*(1.0 +       uz*(4.5*uz       - 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._NE = DFL3*rho*(1.0 + (+ux+uy)*(4.5*(+ux+uy) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._NW = DFL3*rho*(1.0 + (-ux+uy)*(4.5*(-ux+uy) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._SE = DFL3*rho*(1.0 + (+ux-uy)*(4.5*(+ux-uy) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._SW = DFL3*rho*(1.0 + (-ux-uy)*(4.5*(-ux-uy) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._NT = DFL3*rho*(1.0 + (+uy+uz)*(4.5*(+uy+uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._NB = DFL3*rho*(1.0 + (+uy-uz)*(4.5*(+uy-uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._ST = DFL3*rho*(1.0 + (-uy+uz)*(4.5*(-uy+uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._SB = DFL3*rho*(1.0 + (-uy-uz)*(4.5*(-uy-uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._ET = DFL3*rho*(1.0 + (+ux+uz)*(4.5*(+ux+uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._EB = DFL3*rho*(1.0 + (+ux-uz)*(4.5*(+ux-uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._WT = DFL3*rho*(1.0 + (-ux+uz)*(4.5*(-ux+uz) + 3.0) - u2); 
+            PoCellEntry( pa(t, z, y, x) )._WB = DFL3*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); 
+        }
+    Po_performStreamCollide(t, z, y, x);
   Pochoir_kernel_end
 
-  lbm.run(numTimeSteps, lbm_kernel);
-
+  lbm.run(numTimeSteps, lbm_kernel);   
+   
   CopyPochoirGridToLbmGrid(srcGrid, pa, 0);
   CopyPochoirGridToLbmGrid(dstGrid, pa, 1);
 }
+
+

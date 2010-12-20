@@ -121,15 +121,25 @@ class SProxy {
     private:
         T & value_;
         bool set_boundary_;
-        T bvalue_;
+        T & bvalue_;
     public:
-        explicit SProxy(T & _v, bool _set_boundary, T const & _bvalue) : value_(_v), set_boundary_(_set_boundary), bvalue_(_bvalue) { }
+        explicit SProxy (T & _v, bool _set_boundary, T & _bvalue) : value_(_v), set_boundary_(_set_boundary), bvalue_(_bvalue) { }
 
+#if 1
+        /* The type conversion/cast doesn't produce an Lvalue ,
+         * so type conversion won't work if it appears on the left-side
+         * of assignment '='
+         */
         inline operator T() const {
             /* type conversion only appears on the right side of '=' */
             return (set_boundary_) ? bvalue_ : value_;
         }
-
+#else
+        inline operator T&() {
+            /* type conversion only appears on the right side of '=' */
+            return (set_boundary_) ? bvalue_ : value_;
+        }
+#endif
         inline SProxy<T> & operator= (T const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' 
              * Because currently, this Proxy can only be called from BValue point,
@@ -144,7 +154,6 @@ class SProxy {
 //            set_boundary_ = false;
             return *this;
         }
-
         inline T & value() { return value_; }
         inline T const & value() const { return value_; }
         inline bool set_boundary() const { return set_boundary_; }

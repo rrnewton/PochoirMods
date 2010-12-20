@@ -318,57 +318,109 @@ class Pochoir_Array {
          * - The highest dimension is always time dimension
          * - this is the uninterior version
          */
+#if 0
 		inline SProxy<T> operator() (int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx1, _idx0);
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
-            T l_bvalue = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            (*l_null) = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != NULL);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
 		}
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            (*l_null) = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
 		}
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            (*l_null) = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
 		}
 
 		inline SProxy<T> operator() (int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx1, _idx0);
-            T l_bvalue = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            (*l_null) = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != NULL);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
 		}
 
 		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            (*l_null) = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
 		}
 
 		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            (*l_null) = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != NULL);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
+		}
+#else
+		inline T operator() (int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary(_idx1, _idx0);
+            /* we have to guard the use of bv_ by conditional, 
+             * otherwise it may lead to some segmentation fault!
+             */
+            bool set_boundary = (l_boundary && bv1_ != NULL);
+            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
+		inline T operator() (int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv2_ != NULL);
+            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv3_ != NULL);
+            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & operator() (int _idx1, int _idx0) {
+            bool l_boundary = check_boundary(_idx1, _idx0);
+            bool set_boundary = (l_boundary && bv1_ != NULL);
+            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & operator() (int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv2_ != NULL);
+            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv3_ != NULL);
+            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+#endif
         /* set()/get() pair to set/get boundary value in user supplied bvalue function */
 		inline T & set (int _idx1, int _idx0) {
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;

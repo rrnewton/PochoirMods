@@ -292,6 +292,7 @@ pShowOptPointerKernel l_name l_kernel =
 
 pShowPragma :: String
 pShowPragma = "#pragma ivdep"
+-- pShowPragma = "#pragma ivdep" ++ breakline ++ "#pragma simd"
 
 pShowArrayInfo :: [PArray] -> String
 pShowArrayInfo [] = ""
@@ -557,6 +558,8 @@ pShowPointerForHeader 1 iL pL =
                            pShowIterComma iL ++
                            breakline ++ intercalate (", " ++ breakline) 
                                         (map ((++) "++" . getIterName) iL) ++ ") {"
+--                                        (map ((flip (++) "+=1") . getIterName) iL) ++ ") {"
+
 pShowPointerForHeader n iL pL = 
                            breakline ++ pShowForHeader (n-1) (unionArrayIter iL) pL ++ 
                            pShowIterComma iL ++
@@ -579,8 +582,8 @@ pShowForHeader i aL pL =
         l_rank = show i
     in  adjustGap i aL ++ "for (int " ++ idx ++ 
         " = l_grid.x0[" ++ l_rank ++
-        "]; " ++ idx ++ " < l_grid.x1[" ++ l_rank ++ "]; ++" ++ 
-        idx 
+        "]; " ++ idx ++ " < l_grid.x1[" ++ l_rank ++ "]; ++" ++ idx 
+--        "]; " ++ idx ++ " < l_grid.x1[" ++ l_rank ++ "]; " ++ idx ++ "+=1"
                     
 adjustGap :: Int -> [PArray] -> String
 adjustGap i [] = ""

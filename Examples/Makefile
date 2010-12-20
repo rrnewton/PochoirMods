@@ -5,14 +5,16 @@ heat_NP : tb_heat_2D_NP.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo -split-macro-shadow tb_heat_2D_NP.cpp
 	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_heat_2D_NP.cpp
 heat_P : tb_heat_2D_P.cpp
-	${CC} -o tb_heat_2D_P_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_heat_2D_P.cpp
-#	${CC} -o tb_heat_2D_P_pochoir -O0 -g3 -DDEBUG -std=c++0x -Wall -Werror -ipo -debug -split-macro-shadow tb_heat_2D_P.cpp
+#	${CC} -o tb_heat_2D_P_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_heat_2D_P.cpp
+	${CC} -o tb_heat_2D_P_pochoir -O0 -g3 -DDEBUG -std=c++0x -Wall -Werror -ipo -debug -split-macro-shadow tb_heat_2D_P.cpp
 life : tb_life.cpp
 	${CC} -o tb_life_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_life.cpp
 rna : rna.cpp
 	${CC} -o rna_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo rna.cpp
 psa : psa.cpp
 	${CC} -o psa_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo psa.cpp
+psa_struct : psa_struct.cpp
+	${CC} -o psa_struct_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo psa_struct.cpp
 rna_struct : rna_struct.cpp
 	${CC} -o rna_struct_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo rna_struct.cpp
 3dfd : tb_3dfd.cpp

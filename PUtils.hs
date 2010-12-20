@@ -129,6 +129,8 @@ transDimExpr kL [] = []
 transDimExpr kL dL@(d:ds) = [d] ++ (transSpaceDimExpr ds)
     where transSpaceDimExpr [] = []
           transSpaceDimExpr (d:ds) = (transSpaceDimExprItem d) ++ (transSpaceDimExpr ds)
+          transSpaceDimExprItem (DimParen e) =
+                        transSpaceDimExprItem e
           transSpaceDimExprItem (DimVAR v) =
                         if elem v kL then [(DimVAR v)]
                                      else []

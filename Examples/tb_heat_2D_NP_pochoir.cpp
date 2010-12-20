@@ -28834,7 +28834,7 @@ struct Algorithm {
     bool boundarySet, physGridSet, slopeSet;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(50), dt_recursive_boundary_(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(80), dt_recursive_boundary_(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -28843,8 +28843,8 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
 }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 20;
-        dx_recursive_[0] = 20;
+            dx_recursive_[i] = 10;
+        dx_recursive_[0] = 10;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
@@ -31473,15 +31473,18 @@ class SProxy {
     private:
         T & value_;
         bool set_boundary_;
-        T bvalue_;
+        T & bvalue_;
     public:
-        explicit SProxy(T & _v, bool _set_boundary, T const & _bvalue) : value_(_v), set_boundary_(_set_boundary), bvalue_(_bvalue) { }
+        explicit SProxy (T & _v, bool _set_boundary, T & _bvalue) : value_(_v), set_boundary_(_set_boundary), bvalue_(_bvalue) { }
 
+        /* The type conversion/cast doesn't produce an Lvalue ,
+         * so type conversion won't work if it appears on the left-side
+         * of assignment '='
+         */
         inline operator T() const {
             /* type conversion only appears on the right side of '=' */
             return (set_boundary_) ? bvalue_ : value_;
         }
-
         inline SProxy<T> & operator= (T const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' 
              * Because currently, this Proxy can only be called from BValue point,
@@ -31496,7 +31499,6 @@ class SProxy {
 //            set_boundary_ = false;
 return *this;
         }
-
         inline T & value() { return value_; }
         inline T const & value() const { return value_; }
         inline bool set_boundary() const { return set_boundary_; }
@@ -31792,57 +31794,56 @@ int total_size_;
          * - The highest dimension is always time dimension
          * - this is the uninterior version
          */
-		inline SProxy<T> operator() (int _idx1, int _idx0) const {
+		inline T operator() (int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx1, _idx0);
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
-            T l_bvalue = (l_boundary && bv1_ != (__null)) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != (__null));
+            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) const {
+		inline T operator() (int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != (__null)) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != (__null));
+            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
+		inline T operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != (__null)) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != (__null));
+            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx1, int _idx0) {
+		inline T & operator() (int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx1, _idx0);
-            T l_bvalue = (l_boundary && bv1_ != (__null)) ? bv1_(*this, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv1_ != (__null));
+            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) {
+		inline T & operator() (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv2_ != (__null)) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv2_ != (__null));
+            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
 
-		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
+		inline T & operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            T l_bvalue = (l_boundary && bv3_ != (__null)) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
             bool set_boundary = (l_boundary && bv3_ != (__null));
+            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, l_bvalue);
+            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
 		}
-
         /* set()/get() pair to set/get boundary value in user supplied bvalue function */
 		inline T & set (int _idx1, int _idx0) {
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;

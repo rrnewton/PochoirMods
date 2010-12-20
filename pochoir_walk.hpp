@@ -169,7 +169,7 @@ struct Algorithm {
     bool boundarySet, physGridSet, slopeSet;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(50), dt_recursive_boundary_(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(1), dt_recursive_boundary_(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -178,8 +178,8 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 20;
-        dx_recursive_[0] = 1000;
+            dx_recursive_[i] = 1;
+        dx_recursive_[0] = 1;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
