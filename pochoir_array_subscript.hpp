@@ -376,49 +376,49 @@ class Pochoir_Array {
              * otherwise it may lead to some segmentation fault!
              */
             bool set_boundary = (l_boundary && bv1_ != NULL);
-            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? (l_bvalue) : (*view_)[l_idx]);
 		}
 
 		inline T operator() (int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv2_ != NULL);
-            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv3_ != NULL);
-            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx1, _idx0);
             bool set_boundary = (l_boundary && bv1_ != NULL);
-            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv2_ != NULL);
-            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv3_ != NULL);
-            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 #endif
         /* set()/get() pair to set/get boundary value in user supplied bvalue function */

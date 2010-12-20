@@ -96,10 +96,12 @@ int main(int argc, char * argv[])
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
+#if 0
         if (i == 0 || i == N_SIZE-1
             || j == 0 || j == N_SIZE-1) {
             a(0, i, j) = a(1, i, j) = 0;
         } else {
+#endif
 #if DEBUG 
 		    a(0, i, j) = i * N_SIZE + j;
 		    a(1, i, j) = 0;
@@ -107,7 +109,9 @@ int main(int argc, char * argv[])
             a(0, i, j) = 1.0 * (rand() % BASE); 
             a(1, i, j) = 0; 
 #endif
+#if 0
         }
+#endif
         b(0, i, j) = a(0, i, j);
         b(1, i, j) = 0;
 	} }

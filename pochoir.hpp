@@ -249,7 +249,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
     timestep_ = timestep;
     checkFlags();
 #if BICUT
-#if 1
+#if 0
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #else
     algor.sim_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
@@ -293,7 +293,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     timestep_ = timestep;
     checkFlags();
 #if BICUT
-#if 1
+#if 0
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #else
     algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);

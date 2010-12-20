@@ -154,7 +154,7 @@ class SProxy {
 //            set_boundary_ = false;
             return *this;
         }
-        inline T & value() { return value_; }
+//        inline T & value() { return value_; }
         inline T const & value() const { return value_; }
         inline bool set_boundary() const { return set_boundary_; }
         inline T bvalue() const { return bvalue_; }
