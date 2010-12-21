@@ -169,7 +169,7 @@ struct Algorithm {
     bool boundarySet, physGridSet, slopeSet;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(80), dt_recursive_boundary_(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(1), dt_recursive_boundary_(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -178,8 +178,8 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 20;
-        dx_recursive_[0] = 20;
+            dx_recursive_[i] = 1;
+        dx_recursive_[0] = 1;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
@@ -210,10 +210,14 @@ struct Algorithm {
     template <typename F>
     inline void sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F>
+    inline void obase_one_space_cut(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F>
     inline void sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
 
     template <typename F, typename BF>
     inline void sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    template <typename F, typename BF>
+    inline void obase_one_space_cut_p(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF>
     inline void sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 

@@ -2,11 +2,11 @@ CC = ./pochoir
 ICC = icc
 all : clean klein 3dfd life heat_P heat_NP psa rna rna_struct
 heat_NP : tb_heat_2D_NP.cpp
-#	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo -split-macro-shadow tb_heat_2D_NP.cpp
+#	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP.cpp
 	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_heat_2D_NP.cpp
 heat_P : tb_heat_2D_P.cpp
-	${CC} -o tb_heat_2D_P_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_heat_2D_P.cpp
-#	${CC} -o tb_heat_2D_P_pochoir -O0 -g3 -DDEBUG -std=c++0x -Wall -Werror -ipo -debug -split-macro-shadow tb_heat_2D_P.cpp
+#	${CC} -o tb_heat_2D_P_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_heat_2D_P.cpp
+	${CC} -o tb_heat_2D_P_pochoir -O0 -g3 -DDEBUG -std=c++0x -Wall -Werror -ipo -debug tb_heat_2D_P.cpp
 life : tb_life.cpp
 	${CC} -o tb_life_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -ipo tb_life.cpp
 rna : rna.cpp

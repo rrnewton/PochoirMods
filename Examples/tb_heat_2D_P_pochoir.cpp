@@ -1,3 +1,40 @@
+/* cilk_stub.h                  -*-C++-*-
+ *
+ *************************************************************************
+ *                         INTEL CONFIDENTIAL
+ *
+ * Copyright 2010 Intel Corporation All Rights Reserved.
+ *
+ * The source code contained or described herein and all documents related
+ * to the source code ("Material") are owned by Intel Corporation or its
+ * suppliers or licensors.  Title to the Material remains with Intel
+ * Corporation or its suppliers and licensors.  The Material contains
+ * trade secrets and proprietary and confidential information of Intel
+ * or its suppliers and licensors.  The Material is protected by worldwide
+ * copyright and trade secret laws and treaty provisions.  No part of the
+ * Material may be used, copied, reproduced, modified, published, uploaded,
+ * posted, transmitted, distributed, or disclosed in any way without
+ * Intel's prior express written permission.
+ *
+ * No license under any patent, copyright, trade secret or other
+ * intellectual property right is granted to or conferred upon you by
+ * disclosure or delivery of the Materials, either expressly, by
+ * implication, inducement, estoppel or otherwise.  Any license under such
+ * intellectual property rights must be express and approved by Intel in
+ * writing.
+ *
+ **************************************************************************/
+
+
+/* Definitions for creating a serialization from a Cilk program.
+ * These definitions are suitable for use by a compiler that is not
+ * Cilk-enabled.
+ */
+
+/* Pretend we are a non-Cilk compiler */
+
+/* Replace Cilk keywords with serial equivalents */
+
 /*
  **********************************************************************************
  *  Copyright (C) 2010  Massachusetts Institute of Technology
@@ -28258,13 +28295,35 @@ extern template ostream& operator<<(ostream&, _Setfill<char>);
    If not, and EXPRESSION is zero, print an error message and abort.  */
 
 
+extern "C" {
 
-/* void assert_perror (int errnum);
+/* This prints an "Assertion failed" message and aborts.  */
+extern void __assert_fail (__const char *__assertion, __const char *__file,
+			   unsigned int __line, __const char *__function)
+     throw () __attribute__ ((__noreturn__));
 
-   If NDEBUG is defined, do nothing.  If not, and ERRNUM is not zero, print an
-   error message with the error text for ERRNUM and abort.
-   (This is a GNU extension.) */
+/* Likewise, but prints the error text for ERRNUM.  */
+extern void __assert_perror_fail (int __errnum, __const char *__file,
+				  unsigned int __line,
+				  __const char *__function)
+     throw () __attribute__ ((__noreturn__));
 
+
+/* The following is not at all used here but needed for standard
+   compliance.  */
+extern void __assert (const char *__assertion, const char *__file, int __line)
+     throw () __attribute__ ((__noreturn__));
+
+
+}
+
+
+
+/* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
+   which contains the name of the function currently being defined.
+   This is broken in G++ before version 2.6.
+   C9x has a similar variable called __func__, but prefer the GCC one since
+   it demangles C++ function names.  */
 
 
 /* Pochoir Range */
@@ -28444,6 +28503,40 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
  ********************************************************************************/
 
 
+// -*- C++ -*- forwarding header.
+#pragma GCC system_header
+
+// -*- C++ -*- forwarding header.
+#pragma GCC system_header
+
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
+
+/*
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
+
+
 
 /*
  **********************************************************************************
@@ -28577,12 +28670,13 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 
 
 
-/* void assert_perror (int errnum);
 
-   If NDEBUG is defined, do nothing.  If not, and ERRNUM is not zero, print an
-   error message with the error text for ERRNUM and abort.
-   (This is a GNU extension.) */
 
+/* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
+   which contains the name of the function currently being defined.
+   This is broken in G++ before version 2.6.
+   C9x has a similar variable called __func__, but prefer the GCC one since
+   it demangles C++ function names.  */
 
 /* cilk.h                  -*-C++-*-
  *
@@ -28636,78 +28730,10 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 
 
 
-/*
- *  Copyright 2009-2010 Intel Corporation.  All Rights Reserved.
- *
- *  The source code contained or described herein and all documents related
- *  to the source code ("Material") are owned by Intel Corporation or its
- *  suppliers or licensors.  Title to the Material remains with Intel
- *  Corporation or its suppliers and licensors.  The Material is protected
- *  by worldwide copyright laws and treaty provisions.  No part of the
- *  Material may be used, copied, reproduced, modified, published, uploaded,
- *  posted, transmitted, distributed, or disclosed in any way without
- *  Intel's prior express written permission.
- *
- *  No license under any patent, copyright, trade secret or other
- *  intellectual property right is granted to or conferred upon you by
- *  disclosure or delivery of the Materials, either expressly, by
- *  implication, inducement, estoppel or otherwise.  Any license under such
- *  intellectual property rights must be express and approved by Intel in
- *  writing.
- *
- */
+/* Stubs for the api functions */
 
 
-/* Cilk API -- functions called by the user.  All of these are optional. */
 
-extern "C" {
-
-/* Runtime control.  First argument is parameter name, second value.
- *
- * Allowable names:
- *
- * "nworkers" -- number of processors that should run Cilk code.
- * The value is a number to be parsed by strtol.
- *
- * "force reduce" -- test reducer callbacks by allocating new views
- * for every spawn within which a reducer is accessed.  This can
- * significantly reduce performance.  The value is "1" or "true"
- * to enable, "0" or "false" to disable.
- *
- * Return value is zero on success, nonzero on failure (unrecognized
- * parameter, invalid value, called at the wrong time, or other failure). */
-extern __attribute__((visibility("default"),nothrow,nonnull(1)))
-int __cilkrts_set_param(const char *, const char *);
-
-/* Shut down and deallocate all Cilk state.  The runtime will abort
- * if Cilk is still in use by this thread.  Otherwise the runtime
- * will wait for all other threads using Cilk to exit. */
-extern __attribute__((visibility("default"),nothrow))
-void __cilkrts_end_cilk(void);
-
-/* Allocate Cilk data structures. */
-extern __attribute__((visibility("default"),nothrow))
-void __cilkrts_init(void);
-
-/* get_workers returns the number of worker threads that this instance
- * of Cilk will attempt to use simultaneously.  get_total_workers returns
- * the number of worker descriptors allocated; this number is usually
- * greater than the return value of get_workers.  Both values are constant
- * within a program. */
-extern __attribute__((visibility("default"),nothrow))
-int __cilkrts_get_nworkers(void), __cilkrts_get_total_workers(void);
-
-/* get_worker_number return a small integer indicating which Cilk
- * worker the function is currently running on.  The number is in
- * the range 0..get_total_workers()-1.  */
-extern __attribute__((visibility("default"),nothrow))
-int __cilkrts_get_worker_number(void);
-
-/* Return non-zero if force reduce mode is on */
-extern __attribute__((visibility("default"),nothrow))
-int __cilkrts_get_force_reduce(void);
-
-} // extern "C"
 using namespace std;
 
 template <int N_RANK, typename BF>
@@ -28796,7 +28822,7 @@ struct meta_grid_interior <1, F>{
 
 static inline void set_worker_count(const char * nstr) 
 {
-    if (0 != __cilkrts_set_param("nworkers", nstr)) {
+    if (0 != ((nstr), 0)) {
         printf("Failed to set worker count\n");
     } else {
         printf("Successfully set worker count to %s\n", nstr);
@@ -28834,7 +28860,7 @@ struct Algorithm {
     bool boundarySet, physGridSet, slopeSet;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(80), dt_recursive_boundary_(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(1), dt_recursive_boundary_(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -28843,12 +28869,12 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
 }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 20;
-        dx_recursive_[0] = 20;
+            dx_recursive_[i] = 1;
+        dx_recursive_[0] = 1;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
-        N_CORES = __cilkrts_get_nworkers();
+        N_CORES = 2;
 //        cout << " N_CORES = " << N_CORES << endl;
 }
 
@@ -28870,10 +28896,14 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
     template <typename F>
     inline void sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F>
+    inline void obase_one_space_cut(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F>
     inline void sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
 
     template <typename F, typename BF>
     inline void sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    template <typename F, typename BF>
+    inline void obase_one_space_cut_p(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF>
     inline void sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 
@@ -29090,7 +29120,7 @@ void Algorithm<N_RANK>::print_index(int t, int const idx[])
 template <int N_RANK>
 void Algorithm<N_RANK>::print_region(int t, int const head[], int const tail[])
 {
-    printf("%s:%lu t=%lu, {", __FUNCTION__, 436, t);
+    printf("%s:%lu t=%lu, {", __FUNCTION__, 440, t);
     for (int i = 0; i < N_RANK; ++i) {
         printf("{%lu, %lu} ", head[i], tail[i]);
     }
@@ -29180,6 +29210,7 @@ inline void Algorithm<N_RANK>::walk_serial(int t0, int t1, grid_info<N_RANK> con
     }
 
     if (base_cube) {
+        print_grid(stdout, t0, t1, grid);
         base_case_kernel_boundary(t0, t1, grid, f);
         return;
     } else  {
@@ -29201,6 +29232,7 @@ inline void Algorithm<N_RANK>::walk_serial(int t0, int t1, grid_info<N_RANK> con
             int halflt = lt / 2;
             l_grid = grid;
             walk_serial(t0, t0+halflt, l_grid, f);
+            print_sync(stdout);
 
             for (int i = 0; i < N_RANK; ++i) {
                 l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
@@ -29211,7 +29243,7 @@ inline void Algorithm<N_RANK>::walk_serial(int t0, int t1, grid_info<N_RANK> con
             walk_serial(t0+halflt, t1, l_grid, f);
             cut_yet = true;
         }
-        (static_cast<void> (0));
+        ((cut_yet) ? static_cast<void> (0) : __assert_fail ("cut_yet", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 151, __PRETTY_FUNCTION__));
         return;
     }
 }
@@ -29237,35 +29269,39 @@ inline void Algorithm<N_RANK>::walk_bicut(int t0, int t1, grid_info<N_RANK> cons
 			l_grid = grid;
 			const int sep = (int)lb[i]/2;
 			const int r = 2;
-			l_grid.x0[i] = grid.x0[i];
+//			printf("initial_cut = %s, lb[%d] = %d, sep = %d, r = %d\n", initial_cut(i) ? "True" : "False", i, lb[i], sep, r);
+l_grid.x0[i] = grid.x0[i];
 			l_grid.dx0[i] = slope_[i];
 			l_grid.x1[i] = grid.x0[i] + sep;
 			l_grid.dx1[i] = -slope_[i];
-			_Cilk_spawn walk_bicut(t0, t1, l_grid, f);
+			 walk_bicut(t0, t1, l_grid, f);
 
 			l_grid.x0[i] = grid.x0[i] + sep;
 			l_grid.dx0[i] = slope_[i];
 			l_grid.x1[i] = grid.x1[i];
 			l_grid.dx1[i] = -slope_[i];
-			_Cilk_spawn walk_bicut(t0, t1, l_grid, f);
-			_Cilk_sync;
+			 walk_bicut(t0, t1, l_grid, f);
+//			print_sync(stdout);
+;
 			if (grid.dx0[i] != slope_[i]) {
 				l_grid.x0[i] = grid.x0[i]; l_grid.dx0[i] = grid.dx0[i];
 				l_grid.x1[i] = grid.x0[i]; l_grid.dx1[i] = slope_[i];
-				_Cilk_spawn walk_bicut(t0, t1, l_grid, f);
+				 walk_bicut(t0, t1, l_grid, f);
 			}
 
 			l_grid.x0[i] = grid.x0[i] + sep;
 			l_grid.dx0[i] = -slope_[i];
 			l_grid.x1[i] = grid.x0[i] + sep;
 			l_grid.dx1[i] = slope_[i];
-			_Cilk_spawn walk_bicut(t0, t1, l_grid, f);
+			 walk_bicut(t0, t1, l_grid, f);
 
 			if (grid.dx1[i] != -slope_[i]) {
 				l_grid.x0[i] = grid.x1[i]; l_grid.dx0[i] = -slope_[i];
 				l_grid.x1[i] = grid.x1[i]; l_grid.dx1[i] = grid.dx1[i];
-				_Cilk_spawn walk_bicut(t0, t1, l_grid, f);
+				 walk_bicut(t0, t1, l_grid, f);
 			}
+			printf("%s:%d cut into %d dim\n", __FUNCTION__, 213, i);
+			fflush(stdout);
             return;
 		}/* end if */
 	} /* end for */
@@ -29273,17 +29309,21 @@ inline void Algorithm<N_RANK>::walk_bicut(int t0, int t1, grid_info<N_RANK> cons
 		int halflt = lt / 2;
 		l_grid = grid;
 		walk_bicut(t0, t0+halflt, l_grid, f);
-		for (int i = 0; i < N_RANK; ++i) {
+//		print_sync(stdout);
+for (int i = 0; i < N_RANK; ++i) {
 			l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
 			l_grid.dx0[i] = grid.dx0[i];
 			l_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
 			l_grid.dx1[i] = grid.dx1[i];
 		}
 		walk_bicut(t0+halflt, t1, l_grid, f);
+//		printf("%s:%d cut into time dim\n", __FUNCTION__, __LINE__);
+fflush(stdout);
         return;
 	}
     /* base case */
-	base_case_kernel_interior(t0, t1, grid, f);
+//    printf("call Adaptive! ");
+base_case_kernel_interior(t0, t1, grid, f);
 	return;
 }
 
@@ -29310,9 +29350,10 @@ inline void Algorithm<N_RANK>::sim_space_cut(int t0, int t1, grid_info<N_RANK> c
             do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
+                printf("call all sub_grid in dep (%d)\n", curr_dep);
                 /* use cilk_spawn to spawn all the sub-grid */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                _Cilk_spawn sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                 sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
             } else {
                 /* performing a space cut on dimension 'level' */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
@@ -29365,8 +29406,8 @@ inline void Algorithm<N_RANK>::sim_space_cut(int t0, int t1, grid_info<N_RANK> c
                 }
             }
         } /* end while (queue_len_[curr_dep] > 0) */
-        _Cilk_sync;
-        (static_cast<void> (0));
+        ;
+        ((queue_len_[curr_dep_pointer] == 0) ? static_cast<void> (0) : __assert_fail ("queue_len_[curr_dep_pointer] == 0", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 378, __PRETTY_FUNCTION__));
     } /* end for (curr_dep < N_RANK+1) */
 }
 
@@ -29390,12 +29431,17 @@ inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK>
             do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
+                printf("call all sub_grid in dep (%d)\n", curr_dep);
                 /* use cilk_spawn to spawn all the sub-grid */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
                 if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
-                    _Cilk_spawn sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                    printf("call interior!\n");
+                    print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
+                     sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
                 } else {
-                    _Cilk_spawn sim_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
+                    printf("call boundary!\n");
+                    print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
+                     sim_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
                 }
             } else {
                 /* performing a space cut on dimension 'level' */
@@ -29459,8 +29505,8 @@ inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK>
                 }
             }
         } /* end while (queue_len_[curr_dep] > 0) */
-        _Cilk_sync;
-        (static_cast<void> (0));
+        ;
+        ((queue_len_[curr_dep_pointer] == 0) ? static_cast<void> (0) : __assert_fail ("queue_len_[curr_dep_pointer] == 0", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 510, __PRETTY_FUNCTION__));
     } /* end for (curr_dep < N_RANK+1) */
 }
 
@@ -29469,7 +29515,7 @@ template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     const int lt = t1 - t0;
-    bool can_cut = true;
+    bool can_cut = true, base_cube_t = (lt <= dt_recursive_), base_cube_s = true;
     index_info lb, thres;
     grid_info<N_RANK> l_son_grid;
 
@@ -29477,13 +29523,20 @@ inline void Algorithm<N_RANK>::sim_bicut(int t0, int t1, grid_info<N_RANK> const
         lb[i] = (grid.x1[i] - grid.x0[i]);
         thres[i] = 2 * (2 * slope_[i] * lt);
         can_cut = can_cut && (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
+        base_cube_s = base_cube_s && (lb[i] <= dx_recursive_[i]);
     }
 
-    if (can_cut) {
+    if (base_cube_t || base_cube_s) {
+        // base case
+printf("call interior!\n");
+        print_grid(stdout, t0, t1, grid);
+        base_case_kernel_interior(t0, t1, grid, f);
+        return;
+    } else if (can_cut) {
         /* cut into space */
         sim_space_cut(t0, t1, grid, f);
         return;
-    } else if (lt > dt_recursive_) {
+    } else {
         /* cut into time */
         int halflt = lt / 2;
         l_son_grid = grid;
@@ -29497,11 +29550,7 @@ inline void Algorithm<N_RANK>::sim_bicut(int t0, int t1, grid_info<N_RANK> const
         }
         sim_bicut(t0+halflt, t1, l_son_grid, f);
         return;
-    } else {
-        // base case
-base_case_kernel_interior(t0, t1, grid, f);
-        return;
-    }
+    } 
 }
 
 /* This is the version for boundary region cut! */
@@ -29509,7 +29558,7 @@ template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
     const int lt = t1 - t0;
-    bool can_cut = true, call_boundary = false;
+    bool can_cut = true, call_boundary = false, base_cube_t = (lt <= dt_recursive_), base_cube_s = true;
     index_info lb, thres;
     grid_info<N_RANK> l_father_grid = grid, l_son_grid;
     bool l_touch_boundary[N_RANK];
@@ -29526,9 +29575,22 @@ inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> con
         /* some dimension touches the boundary, some may NOT! */
         can_cut = can_cut && ((l_touch_boundary[i]) ? ((lb[i] == phys_length_[i]) ? (lb[i] - 2 * slope_[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i])) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
         // can_cut = can_cut && ((l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
-}
+base_cube_s = base_cube_s && (l_touch_boundary[i] ? (lb[i] <= dx_recursive_boundary_[i]) : (lb[i] <= dx_recursive_[i]));
+    }
 
-    if (can_cut) {
+    if (base_cube_t || base_cube_s) {
+        // base case
+if (call_boundary) {
+            printf("call boundary!\n");
+            print_grid(stdout, t0, t1, l_father_grid);
+            base_case_kernel_boundary(t0, t1, l_father_grid, bf);
+        } else {
+            printf("call interior!\n");
+            print_grid(stdout, t0, t1, l_father_grid);
+            base_case_kernel_interior(t0, t1, l_father_grid, f);
+        }
+        return;
+    } else if (can_cut) {
         /* cut into space */
         /* push the first grid that can be cut into the circular queue */
         /* boundary cuts! */
@@ -29537,7 +29599,7 @@ inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> con
         else
             sim_space_cut(t0, t1, l_father_grid, f);
         return;
-    } else if ((call_boundary) ? (lt > dt_recursive_boundary_) : (lt > dt_recursive_)) {
+    } else {
         /* cut into time */
         int halflt = lt / 2;
         l_son_grid = l_father_grid;
@@ -29551,15 +29613,7 @@ inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> con
         }
         sim_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
         return;
-    } else {
-        // base case
-if (call_boundary) {
-            base_case_kernel_boundary(t0, t1, l_father_grid, bf);
-        } else {
-            base_case_kernel_interior(t0, t1, l_father_grid, f);
-        }
-        return;
-    }
+    } 
 }
 /* ************************************************************************************** */
 /* following are the procedures for obase */
@@ -29582,9 +29636,10 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
             do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
+                printf("call all sub_grid in dep (%d)\n", curr_dep);
                 /* use cilk_spawn to spawn all the sub-grid */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                 sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
             } else {
                 /* performing a space cut on dimension 'level' */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
@@ -29592,53 +29647,91 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                 grid_info<N_RANK> l_son_grid = l_father->grid;
                 const int t0 = l_father->t0, t1 = l_father->t1;
                 const int level = l_father->level;
+                const bool cut_lb = (l_father_grid.dx0[level] >= 0 && l_father_grid.dx1[level] <= 0);
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
-                const int sep = (int)lb/2;
-                const int r = 2;
-                const int l_start = (l_father_grid.x0[level]);
-                const int l_end = (l_father_grid.x1[level]);
+                if (cut_lb) {
+                    /* cut_lb */
+                    const int sep = (int)lb/2;
+                    const int r = 2;
+                    const int l_start = (l_father_grid.x0[level]);
+                    const int l_end = (l_father_grid.x1[level]);
 
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start;
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 686, __PRETTY_FUNCTION__));
+                    do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_end;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start + sep;
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_end;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 694, __PRETTY_FUNCTION__));
+                    do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
-                /* cilk_sync */
-                const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = -slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = slope_[level];
-                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    /* cilk_sync */
+                    const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                    /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                    l_son_grid.x0[level] = l_start + sep;
+                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
+                    l_son_grid.dx1[level] = slope_[level];
+                    ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 704, __PRETTY_FUNCTION__));
+                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
-                if (l_father_grid.dx0[level] != slope_[level]) {
+                    if (l_father_grid.dx0[level] != slope_[level]) {
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                        l_son_grid.x1[level] = l_start;
+                        l_son_grid.dx1[level] = slope_[level];
+                        ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 712, __PRETTY_FUNCTION__));
+                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    }
+                    if (l_father_grid.dx1[level] != -slope_[level]) {
+                        l_son_grid.x0[level] = l_end;
+                        l_son_grid.dx0[level] = -slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                        ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 720, __PRETTY_FUNCTION__));
+                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    }
+                } /* end if (cut_lb) */ else {
+                    /* cut_tb */
+                    const int l_start = (l_father_grid.x0[level]);
+                    const int l_end = (l_father_grid.x1[level]);
+
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start;
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_end;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 733, __PRETTY_FUNCTION__));
+                    do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                    /* cilk_sync */
+                    const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                    /* push one sub-grid into circular queue of (curr_dep + 1)*/
                     l_son_grid.x0[level] = l_start;
                     l_son_grid.dx0[level] = l_father_grid.dx0[level];
                     l_son_grid.x1[level] = l_start;
                     l_son_grid.dx1[level] = slope_[level];
+                    ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 743, __PRETTY_FUNCTION__));
                     do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                }
-                if (l_father_grid.dx1[level] != -slope_[level]) {
+
                     l_son_grid.x0[level] = l_end;
                     l_son_grid.dx0[level] = -slope_[level];
                     l_son_grid.x1[level] = l_end;
                     l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                    ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 750, __PRETTY_FUNCTION__));
                     do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                 }
             }
         } /* end while (queue_len_[curr_dep] > 0) */
-        _Cilk_sync;
-        (static_cast<void> (0));
+        ;
+        ((queue_len_[curr_dep_pointer] == 0) ? static_cast<void> (0) : __assert_fail ("queue_len_[curr_dep_pointer] == 0", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 758, __PRETTY_FUNCTION__));
     } /* end for (curr_dep < N_RANK+1) */
 }
 
@@ -29662,12 +29755,17 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
             do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
+                printf("call all sub_grid in dep (%d)\n", curr_dep);
                 /* use cilk_spawn to spawn all the sub-grid */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
                 if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
-                    _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                    printf("call interior!\n");
+                    print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
+                     sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
                 } else {
-                    _Cilk_spawn sim_obase_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
+                    printf("call boundary!\n");
+                    print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
+                     sim_obase_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
                 }
             } else {
                 /* performing a space cut on dimension 'level' */
@@ -29688,6 +29786,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                 l_son_grid.dx0[level] = slope_[level];
                 l_son_grid.x1[level] = l_start + sep;
                 l_son_grid.dx1[level] = -slope_[level];
+                ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 844, __PRETTY_FUNCTION__));
                 do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                 /* push one sub-grid into circular queue of (curr_dep) */
@@ -29695,6 +29794,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                 l_son_grid.dx0[level] = slope_[level];
                 l_son_grid.x1[level] = l_end;
                 l_son_grid.dx1[level] = -slope_[level];
+                ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 852, __PRETTY_FUNCTION__));
                 do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                 /* cilk_sync */
@@ -29704,6 +29804,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                 l_son_grid.dx0[level] = -slope_[level];
                 l_son_grid.x1[level] = l_start + sep;
                 l_son_grid.dx1[level] = slope_[level];
+                ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 862, __PRETTY_FUNCTION__));
                 do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                 if (initial_cut) {
@@ -29712,6 +29813,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                     l_son_grid.dx0[level] = -slope_[level];
                     l_son_grid.x1[level] = l_end+2*slope_[level];
                     l_son_grid.dx1[level] = slope_[level];
+                    ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 871, __PRETTY_FUNCTION__));
                     do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                 } else {
                     if (l_father_grid.dx0[level] != slope_[level]) {
@@ -29719,6 +29821,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.dx0[level] = l_father_grid.dx0[level];
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
+                        ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 879, __PRETTY_FUNCTION__));
                         do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                     }
                     if (l_father_grid.dx1[level] != -slope_[level]) {
@@ -29726,36 +29829,265 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                        ((l_son_grid . x0[level] <= l_son_grid . x1[level]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[level] <= l_son_grid.x1[level]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 887, __PRETTY_FUNCTION__));
                         do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                     }
                 }
             }
         } /* end while (queue_len_[curr_dep] > 0) */
-        _Cilk_sync;
-        (static_cast<void> (0));
+        ;
+        ((queue_len_[curr_dep_pointer] == 0) ? static_cast<void> (0) : __assert_fail ("queue_len_[curr_dep_pointer] == 0", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 896, __PRETTY_FUNCTION__));
     } /* end for (curr_dep < N_RANK+1) */
 }
+
+/* following are the procedures for obase one-space dimension cut! */
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::obase_one_space_cut(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
+{
+    /* performing a space cut on dimension 'level' */
+    grid_info<N_RANK> l_son_grid = grid;
+    const bool cut_lb = (grid.dx0[dim] >= 0 && grid.dx1[dim] <= 0);
+    if (cut_lb) {
+        /* cut_lb */
+        const int lb = (grid.x1[dim] - grid.x0[dim]);
+        const int sep = (int)lb/2;
+        const int r = 2;
+        const int l_start = (grid.x0[dim]);
+        const int l_end = (grid.x1[dim]);
+
+        /* push one sub-grid into circular queue of (curr_dep) */
+        l_son_grid.x0[dim] = l_start;
+        l_son_grid.dx0[dim] = slope_[dim];
+        l_son_grid.x1[dim] = l_start + sep;
+        l_son_grid.dx1[dim] = -slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 920, __PRETTY_FUNCTION__));
+         sim_obase_bicut(t0, t1, l_son_grid, f);
+
+        /* push one sub-grid into circular queue of (curr_dep) */
+        l_son_grid.x0[dim] = l_start + sep;
+        l_son_grid.dx0[dim] = slope_[dim];
+        l_son_grid.x1[dim] = l_end;
+        l_son_grid.dx1[dim] = -slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 928, __PRETTY_FUNCTION__));
+        sim_obase_bicut(t0, t1, l_son_grid, f);
+
+        ;
+        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+        l_son_grid.x0[dim] = l_start + sep;
+        l_son_grid.dx0[dim] = -slope_[dim];
+        l_son_grid.x1[dim] = l_start + sep;
+        l_son_grid.dx1[dim] = slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 937, __PRETTY_FUNCTION__));
+        sim_obase_bicut(t0, t1, l_son_grid, f);
+
+        if (grid.dx0[dim] != slope_[dim]) {
+            l_son_grid.x0[dim] = l_start;
+            l_son_grid.dx0[dim] = grid.dx0[dim];
+            l_son_grid.x1[dim] = l_start;
+            l_son_grid.dx1[dim] = slope_[dim];
+            ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 945, __PRETTY_FUNCTION__));
+            sim_obase_bicut(t0, t1, l_son_grid, f);
+        }
+        if (grid.dx1[dim] != -slope_[dim]) {
+            l_son_grid.x0[dim] = l_end;
+            l_son_grid.dx0[dim] = -slope_[dim];
+            l_son_grid.x1[dim] = l_end;
+            l_son_grid.dx1[dim] = grid.dx1[dim];
+            ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 953, __PRETTY_FUNCTION__));
+            sim_obase_bicut(t0, t1, l_son_grid, f);
+        }
+    } /* end if (cut_lb) */ else {
+        /* cut_tb */
+        const int l_start = (grid.x0[dim]);
+        const int l_end = (grid.x1[dim]);
+
+        /* push one sub-grid into circular queue of (curr_dep) */
+        l_son_grid.x0[dim] = l_start;
+        l_son_grid.dx0[dim] = slope_[dim];
+        l_son_grid.x1[dim] = l_end;
+        l_son_grid.dx1[dim] = -slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 966, __PRETTY_FUNCTION__));
+        sim_obase_bicut(t0, t1, l_son_grid, f);
+
+        ;
+        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+        l_son_grid.x0[dim] = l_start;
+        l_son_grid.dx0[dim] = grid.dx0[dim];
+        l_son_grid.x1[dim] = l_start;
+        l_son_grid.dx1[dim] = slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 975, __PRETTY_FUNCTION__));
+         sim_obase_bicut(t0, t1, l_son_grid, f);
+
+        l_son_grid.x0[dim] = l_end;
+        l_son_grid.dx0[dim] = -slope_[dim];
+        l_son_grid.x1[dim] = l_end;
+        l_son_grid.dx1[dim] = grid.dx1[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 982, __PRETTY_FUNCTION__));
+         sim_obase_bicut(t0, t1, l_son_grid, f);
+    }
+    return;
+}
+
+/* following are the procedures for obase_p one-space dimension cut! */
+template <int N_RANK> template <typename F, typename BF>
+inline void Algorithm<N_RANK>::obase_one_space_cut_p(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
+{
+    /* performing a space cut on dimension 'level' */
+    grid_info<N_RANK> l_son_grid = grid;
+    const bool cut_lb = (grid.dx0[dim] >= 0 && grid.dx1[dim] <= 0);
+    if (cut_lb) {
+        /* cut_lb */
+        const int lb = (grid.x1[dim] - grid.x0[dim]);
+        const int sep = (int)lb/2;
+        const int r = 2;
+        const int l_start = (grid.x0[dim]);
+        const int l_end = (grid.x1[dim]);
+
+        /* push one sub-grid into circular queue of (curr_dep) */
+        l_son_grid.x0[dim] = l_start;
+        l_son_grid.dx0[dim] = slope_[dim];
+        l_son_grid.x1[dim] = l_start + sep;
+        l_son_grid.dx1[dim] = -slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1008, __PRETTY_FUNCTION__));
+        if (within_boundary(t0, t1, l_son_grid)) {
+             sim_obase_bicut(t0, t1, l_son_grid, f);
+        } else {
+             sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+        }
+
+        /* push one sub-grid into circular queue of (curr_dep) */
+        l_son_grid.x0[dim] = l_start + sep;
+        l_son_grid.dx0[dim] = slope_[dim];
+        l_son_grid.x1[dim] = l_end;
+        l_son_grid.dx1[dim] = -slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1020, __PRETTY_FUNCTION__));
+        if (within_boundary(t0, t1, l_son_grid)) {
+            sim_obase_bicut(t0, t1, l_son_grid, f);
+        } else {
+            sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+        }
+
+        ;
+        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+        l_son_grid.x0[dim] = l_start + sep;
+        l_son_grid.dx0[dim] = -slope_[dim];
+        l_son_grid.x1[dim] = l_start + sep;
+        l_son_grid.dx1[dim] = slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1033, __PRETTY_FUNCTION__));
+        if (within_boundary(t0, t1, l_son_grid)) {
+             sim_obase_bicut(t0, t1, l_son_grid, f);
+        } else {
+             sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+        }
+
+        if (grid.dx0[dim] != slope_[dim]) {
+            l_son_grid.x0[dim] = l_start;
+            l_son_grid.dx0[dim] = grid.dx0[dim];
+            l_son_grid.x1[dim] = l_start;
+            l_son_grid.dx1[dim] = slope_[dim];
+            ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1045, __PRETTY_FUNCTION__));
+            if (within_boundary(t0, t1, l_son_grid)) {
+                 sim_obase_bicut(t0, t1, l_son_grid, f);
+            } else {
+                 sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+            }
+        }
+        if (grid.dx1[dim] != -slope_[dim]) {
+            l_son_grid.x0[dim] = l_end;
+            l_son_grid.dx0[dim] = -slope_[dim];
+            l_son_grid.x1[dim] = l_end;
+            l_son_grid.dx1[dim] = grid.dx1[dim];
+            ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1057, __PRETTY_FUNCTION__));
+            if (within_boundary(t0, t1, l_son_grid)) {
+                 sim_obase_bicut(t0, t1, l_son_grid, f);
+            } else {
+                 sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+            }
+        }
+    } /* end if (cut_lb) */ else {
+        /* cut_tb */
+        const int l_start = (grid.x0[dim]);
+        const int l_end = (grid.x1[dim]);
+
+        /* push one sub-grid into circular queue of (curr_dep) */
+        l_son_grid.x0[dim] = l_start;
+        l_son_grid.dx0[dim] = slope_[dim];
+        l_son_grid.x1[dim] = l_end;
+        l_son_grid.dx1[dim] = -slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1074, __PRETTY_FUNCTION__));
+        if (within_boundary(t0, t1, l_son_grid)) {
+             sim_obase_bicut(t0, t1, l_son_grid, f);
+        } else {
+             sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+        }
+
+        ;
+        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+        l_son_grid.x0[dim] = l_start;
+        l_son_grid.dx0[dim] = grid.dx0[dim];
+        l_son_grid.x1[dim] = l_start;
+        l_son_grid.dx1[dim] = slope_[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1087, __PRETTY_FUNCTION__));
+        if (within_boundary(t0, t1, l_son_grid)) {
+             sim_obase_bicut(t0, t1, l_son_grid, f);
+        } else {
+             sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+        }
+
+        l_son_grid.x0[dim] = l_end;
+        l_son_grid.dx0[dim] = -slope_[dim];
+        l_son_grid.x1[dim] = l_end;
+        l_son_grid.dx1[dim] = grid.dx1[dim];
+        ((l_son_grid . x0[dim] <= l_son_grid . x1[dim]) ? static_cast<void> (0) : __assert_fail ("l_son_grid.x0[dim] <= l_son_grid.x1[dim]", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1098, __PRETTY_FUNCTION__));
+        if (within_boundary(t0, t1, l_son_grid)) {
+             sim_obase_bicut(t0, t1, l_son_grid, f);
+        } else {
+             sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+        }
+    }
+    return;
+}
+
 
 /* This is the version for interior region cut! */
 template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     const int lt = t1 - t0;
-    bool can_cut = true;
-    index_info lb, thres;
+    bool sim_can_cut = true, base_cube_t = (lt <= dt_recursive_), base_cube_s = true;
+    int largest_dim = -1, largest_dim_size = 0;
     grid_info<N_RANK> l_son_grid;
 
     for (int i = N_RANK-1; i >= 0; --i) {
-        lb[i] = (grid.x1[i] - grid.x0[i]);
-        thres[i] = 2 * (2 * slope_[i] * lt);
-        can_cut = can_cut && (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
+        int lb, thres, tb;
+        lb = (grid.x1[i] - grid.x0[i]);
+        tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
+        /* cut_lb = '/ \' */
+        bool cut_lb = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
+        thres = (2 * slope_[i] * lt);
+        bool l_can_cut = (cut_lb ? (lb >= 2 * thres && lb > dx_recursive_[i]) : (lb >= thres && tb > dx_recursive_[i]));
+        sim_can_cut = sim_can_cut && l_can_cut; 
+        largest_dim = (l_can_cut ? (cut_lb ? ((lb > largest_dim_size) ? i : largest_dim) : ((tb > largest_dim_size) ? i : largest_dim)) : largest_dim); 
+        largest_dim_size = (l_can_cut ? (cut_lb ? (lb > largest_dim_size ? lb : largest_dim_size) : (tb > largest_dim_size ? tb : largest_dim_size)) : largest_dim_size); 
+        base_cube_s = base_cube_s && (cut_lb ? (lb <= dx_recursive_[i]) : (tb <= dx_recursive_[i]));
     }
 
-    if (can_cut) {
+    if (base_cube_s || base_cube_t) {
+        // base case
+printf("call interior!\n");
+        print_grid(stdout, t0, t1, grid);
+        f(t0, t1, grid);
+//        base_case_kernel_interior(t0, t1, grid, f);
+return;
+    } else if (sim_can_cut) {
         /* cut into space */
         sim_obase_space_cut(t0, t1, grid, f);
         return;
-    } else if (lt > dt_recursive_) {
+    } else if (largest_dim_size > 0) {
+        /* cut into dim 'largest_dim' */
+        ((largest_dim >= 0) ? static_cast<void> (0) : __assert_fail ("largest_dim >= 0", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1147, __PRETTY_FUNCTION__));
+        obase_one_space_cut(largest_dim, t0, t1, grid, f);
+    } else {
         /* cut into time */
         int halflt = lt / 2;
         l_son_grid = grid;
@@ -29769,12 +30101,7 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         }
         sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
         return;
-    } else {
-        // base case
-f(t0, t1, grid);
-//        base_case_kernel_interior(t0, t1, grid, f);
-return;
-    }
+    } 
 }
 
 /* This is the version for boundary region cut! */
@@ -29782,60 +30109,82 @@ template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
     const int lt = t1 - t0;
-    bool can_cut = true, call_boundary = false;
-    index_info lb, thres;
-    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
-    bool l_touch_boundary[N_RANK];
+    bool sim_can_cut = true, base_cube_t = (lt <= dt_recursive_boundary_), base_cube_s = true;
+    int largest_dim = -1, largest_dim_size = 0;
+    grid_info<N_RANK> l_son_grid;
+        int lb, thres, tb;
+        bool cut_lb, l_can_cut;
 
     for (int i = N_RANK-1; i >= 0; --i) {
+        lb = (grid.x1[i] - grid.x0[i]);
+        tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
+        /* cut_lb = '/ \' */
+        cut_lb = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
+        thres = (2 * slope_[i] * lt);
         /* l_father_grid may be mapped to a new region in touch_boundary() */
-        l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
-        call_boundary |= l_touch_boundary[i];
-        lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
-        thres[i] = 2 * (2 * slope_[i] * lt);
         /* for the initial cut, we exclude the begining and end point to minimize
          * the overhead on boundary
         */
-        /* some dimension touches the boundary, some may NOT! */
-        can_cut = can_cut && ((l_touch_boundary[i]) ? ((lb[i] == phys_length_[i]) ? (lb[i] - 2 * slope_[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i])) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
-        // can_cut = can_cut && ((l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
-}
+//        l_can_cut = (cut_lb ? ((lb == phys_length_[i]) ? (lb - 2 * slope_[i] >= 2 * thres && lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres && lb > dx_recursive_boundary_[i])) : (lb >= thres && tb > dx_recursive_boundary_[i]));
+if (cut_lb) {
+            if (lb == phys_length_[i]) {
+                l_can_cut = (lb - 2 * slope_[i] >= 2 * thres && lb > dx_recursive_boundary_[i]);
+            } else {
+                l_can_cut = (lb >= 2 * thres && lb > dx_recursive_boundary_[i]);
+            }
+        } else {
+            l_can_cut = (lb >= thres && tb > dx_recursive_boundary_[i]);
+        }
+        sim_can_cut = sim_can_cut && l_can_cut;
+        largest_dim = (l_can_cut ? (cut_lb ? ((lb > largest_dim_size) ? i : largest_dim) : ((tb > largest_dim_size) ? i : largest_dim)) : largest_dim);
+        largest_dim_size = (l_can_cut ? (cut_lb ? ((lb > largest_dim_size) ? lb : largest_dim_size) : ((tb > largest_dim_size) ? tb : largest_dim_size)) : largest_dim_size);
+        base_cube_s = base_cube_s && (cut_lb ? (lb <= dx_recursive_boundary_[i]) : (tb <= dx_recursive_boundary_[i]));
+    }
 
-    if (can_cut) {
+    if (base_cube_s || base_cube_t) {
+        /* for base_cube_t: -- prevent too small time cut! 
+         *      (cut_lb && lb > dx_recursive_boundary_ && lb < 2 * thres)
+         *  ||  (!cut_lb && tb > dx_recursive_boundary_ && lb < thres)
+         */
+        // base case
+base_case_kernel_boundary(t0, t1, grid, bf);
+        return;
+    } else if (sim_can_cut) {
         /* cut into space */
         /* push the first grid that can be cut into the circular queue */
         /* boundary cuts! */
-        if (call_boundary) 
-            sim_obase_space_cut_p(t0, t1, l_father_grid, f, bf);
-        else
-            sim_obase_space_cut(t0, t1, l_father_grid, f);
+        sim_obase_space_cut_p(t0, t1, grid, f, bf);
         return;
-    } else if ((call_boundary) ? (lt > dt_recursive_boundary_) : (lt > dt_recursive_)) {
+    } else if (largest_dim_size > 0) {
+        /* cut into dim 'largest_dim' */
+        ((largest_dim >= 0) ? static_cast<void> (0) : __assert_fail ("largest_dim >= 0", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1219, __PRETTY_FUNCTION__));
+        obase_one_space_cut_p(largest_dim, t0, t1, grid, f, bf);
+    } else {
         /* cut into time */
         int halflt = lt / 2;
-        l_son_grid = l_father_grid;
-        sim_obase_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
+        l_son_grid = grid;
+        if (within_boundary(t0, t0+halflt, l_son_grid)) {
+            sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
+        } else {
+            sim_obase_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
+        }
 
         for (int i = 0; i < N_RANK; ++i) {
-            l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
-            l_son_grid.dx0[i] = l_father_grid.dx0[i];
-            l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
-            l_son_grid.dx1[i] = l_father_grid.dx1[i];
+            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
+            l_son_grid.dx0[i] = grid.dx0[i];
+            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
+            l_son_grid.dx1[i] = grid.dx1[i];
         }
-        sim_obase_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
-        return;
-    } else {
-        // base case
-if (call_boundary) {
-            base_case_kernel_boundary(t0, t1, l_father_grid, bf);
+        if (within_boundary(t0+halflt, t1, l_son_grid)) {
+            sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
         } else {
-            //base_case_kernel_interior(t0, t1, l_father_grid, f);
-f(t0, t1, l_father_grid);
+            sim_obase_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
         }
         return;
-    }
+    } 
 }
 
+/* ************************************************************************************** */
 /* walk_adaptive() is just for interior region */
 template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::walk_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
@@ -29857,6 +30206,8 @@ index_info lb, thres;
 //		base_cube = base_cube && (lb[i] < thres[i]); 
 }	
 	if (base_cube) {
+        printf("call Adaptive! ");
+		print_grid(stdout, t0, t1, grid);
 		base_case_kernel_interior(t0, t1, grid, f);
 		return;
 	} else  {
@@ -29866,37 +30217,39 @@ index_info lb, thres;
 l_grid = grid;
 				int sep = ((lb[i] == phys_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
 				int r = ((lb[i] == phys_length_[i])) ? N_CORES : (lb[i]/sep);
+				printf("initial_cut = %s, lb[%d] = %d, sep = %d, r = %d\n", (lb[i] == phys_length_[i]) ? "True" : "False", i, lb[i], sep, r);
 				int j;
 				for (j = 0; j < r-1; ++j) {
 					l_grid.x0[i] = grid.x0[i] + sep * j;
 					l_grid.dx0[i] = slope_[i];
 					l_grid.x1[i] = grid.x0[i] + sep * (j+1);
 					l_grid.dx1[i] = -slope_[i];
-					_Cilk_spawn walk_adaptive(t0, t1, l_grid, f);
+					 walk_adaptive(t0, t1, l_grid, f);
 				}
 	//			j_loc = r-1;
 l_grid.x0[i] = grid.x0[i] + sep * (r-1);
 				l_grid.dx0[i] = slope_[i];
 				l_grid.x1[i] = grid.x1[i];
 				l_grid.dx1[i] = -slope_[i];
-				_Cilk_spawn walk_adaptive(t0, t1, l_grid, f);
-				_Cilk_sync;
+				 walk_adaptive(t0, t1, l_grid, f);
+//				print_sync(stdout);
+;
 				if (grid.dx0[i] != slope_[i]) {
 					l_grid.x0[i] = grid.x0[i]; l_grid.dx0[i] = grid.dx0[i];
 					l_grid.x1[i] = grid.x0[i]; l_grid.dx1[i] = slope_[i];
-					_Cilk_spawn walk_adaptive(t0, t1, l_grid, f);
+					 walk_adaptive(t0, t1, l_grid, f);
 				}
 				for (int j = 1; j < r; ++j) {
 					l_grid.x0[i] = grid.x0[i] + sep * j;
 					l_grid.dx0[i] = -slope_[i];
 					l_grid.x1[i] = grid.x0[i] + sep * j;
 					l_grid.dx1[i] = slope_[i];
-					_Cilk_spawn walk_adaptive(t0, t1, l_grid, f);
+					 walk_adaptive(t0, t1, l_grid, f);
 				}
 				if (grid.dx1[i] != -slope_[i]) {
 					l_grid.x0[i] = grid.x1[i]; l_grid.dx0[i] = -slope_[i];
 					l_grid.x1[i] = grid.x1[i]; l_grid.dx1[i] = grid.dx1[i];
-					_Cilk_spawn walk_adaptive(t0, t1, l_grid, f);
+					 walk_adaptive(t0, t1, l_grid, f);
 				}
 				cut_yet = true;
 			}/* end if */
@@ -29905,7 +30258,8 @@ l_grid.x0[i] = grid.x0[i] + sep * (r-1);
 			int halflt = lt / 2;
 			l_grid = grid;
 			walk_adaptive(t0, t0+halflt, l_grid, f);
-			for (int i = 0; i < N_RANK; ++i) {
+//			print_sync(stdout);
+for (int i = 0; i < N_RANK; ++i) {
 				l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
 				l_grid.dx0[i] = grid.dx0[i];
 				l_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
@@ -29914,11 +30268,13 @@ l_grid.x0[i] = grid.x0[i] + sep * (r-1);
 			walk_adaptive(t0+halflt, t1, l_grid, f);
 			cut_yet = true;
 		}
-		(static_cast<void> (0));
+		((cut_yet) ? static_cast<void> (0) : __assert_fail ("cut_yet", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1347, __PRETTY_FUNCTION__));
 		return;
 	}
 }
 
+static int count_boundary = 0;
+static int count_internal = 0;
 
 /* walk_ncores_boundary_p() will be called for -split-shadow mode */
 template <int N_RANK> template <typename F, typename BF>
@@ -29955,9 +30311,9 @@ inline void Algorithm<N_RANK>::walk_bicut_boundary_p(int t0, int t1, grid_info<N
 			l_son_grid.x1[i] = l_start + sep;
 			l_son_grid.dx1[i] = -slope_[i];
             if (call_boundary) {
-                _Cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                 walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
             } else {
-                _Cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+                 walk_bicut(t0, t1, l_son_grid, f);
             }
 
 			l_son_grid.x0[i] = l_start + sep;
@@ -29969,16 +30325,17 @@ inline void Algorithm<N_RANK>::walk_bicut_boundary_p(int t0, int t1, grid_info<N
             } else {
                 walk_bicut(t0, t1, l_son_grid, f);
             }
-			_Cilk_sync;
+			print_sync(stdout);
+			;
 
 			l_son_grid.x0[i] = l_start + sep;
 			l_son_grid.dx0[i] = -slope_[i];
 			l_son_grid.x1[i] = l_start + sep;
 			l_son_grid.dx1[i] = slope_[i];
             if (call_boundary) {
-                _Cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                 walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
             } else {
-                _Cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+                 walk_bicut(t0, t1, l_son_grid, f);
             }
 
 			if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
@@ -29988,9 +30345,9 @@ l_son_grid.x0[i] = l_end;
 				l_son_grid.x1[i] = l_end;
 				l_son_grid.dx1[i] = slope_[i];
                 if (call_boundary) {
-                    _Cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                     walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
                 } else {
-                    _Cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+                     walk_bicut(t0, t1, l_son_grid, f);
                 }
 			} else {
 				if (l_father_grid.dx0[i] != slope_[i]) {
@@ -29999,9 +30356,9 @@ l_son_grid.x0[i] = l_end;
 					l_son_grid.x1[i] = l_start; 
 					l_son_grid.dx1[i] = slope_[i];
                     if (call_boundary) {
-                        _Cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                         walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+                         walk_bicut(t0, t1, l_son_grid, f);
                     }
 				}
 				if (l_father_grid.dx1[i] != -slope_[i]) {
@@ -30010,9 +30367,9 @@ l_son_grid.x0[i] = l_end;
 					l_son_grid.x1[i] = l_end; 
 					l_son_grid.dx1[i] = l_father_grid.dx1[i];
                     if (call_boundary) {
-                        _Cilk_spawn walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                         walk_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn walk_bicut(t0, t1, l_son_grid, f);
+                         walk_bicut(t0, t1, l_son_grid, f);
                     }
 				}
 			}
@@ -30031,6 +30388,7 @@ l_son_grid.x0[i] = l_end;
         } else {
             walk_bicut(t0, t0+halflt, l_son_grid, f);
         }
+		print_sync(stdout);
 		for (int i = 0; i < N_RANK; ++i) {
 			l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
 			l_son_grid.dx0[i] = l_father_grid.dx0[i];
@@ -30050,8 +30408,12 @@ if (call_boundary) {
          * requires special treatment of 'BF' (usually requires modulo operation
          * to wrap-up the index)
          */
+        printf("call Boundary! ");
+        print_grid(stdout, t0, t1, l_father_grid);
 		base_case_kernel_boundary(t0, t1, l_father_grid, bf);
     } else {
+        printf("call Interior! ");
+	    print_grid(stdout, t0, t1, l_father_grid);
 	    base_case_kernel_interior(t0, t1, l_father_grid, f);
     }
     return;
@@ -30088,8 +30450,12 @@ inline void Algorithm<N_RANK>::walk_ncores_boundary_p(int t0, int t1, grid_info<
              * requires special treatment of 'BF' (usually requires modulo operation
              * to wrap-up the index)
              */
+	        printf("call Boundary! ");
+            print_grid(stdout, t0, t1, l_father_grid);
 			base_case_kernel_boundary(t0, t1, l_father_grid, bf);
         } else {
+            printf("call Interior! ");
+	    	print_grid(stdout, t0, t1, l_father_grid);
 			base_case_kernel_interior(t0, t1, l_father_grid, f);
         }
 		return;
@@ -30109,9 +30475,9 @@ inline void Algorithm<N_RANK>::walk_ncores_boundary_p(int t0, int t1, grid_info<
 					l_son_grid.x1[i] = l_start + sep * (j+1);
 					l_son_grid.dx1[i] = -slope_[i];
                     if (call_boundary) {
-                        _Cilk_spawn walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
+                         walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn walk_adaptive(t0, t1, l_son_grid, f);
+                         walk_adaptive(t0, t1, l_son_grid, f);
                     }
 				}
 				l_son_grid.x0[i] = l_start + sep * j;
@@ -30123,16 +30489,17 @@ inline void Algorithm<N_RANK>::walk_ncores_boundary_p(int t0, int t1, grid_info<
                 } else {
                     walk_adaptive(t0, t1, l_son_grid, f);
                 }
-				_Cilk_sync;
+//				print_sync(stdout);
+;
 				for (j = 1; j < r; ++j) {
 					l_son_grid.x0[i] = l_start + sep * j;
 					l_son_grid.dx0[i] = -slope_[i];
 					l_son_grid.x1[i] = l_start + sep * j;
 					l_son_grid.dx1[i] = slope_[i];
                     if (call_boundary) {
-                        _Cilk_spawn walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
+                         walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn walk_adaptive(t0, t1, l_son_grid, f);
+                         walk_adaptive(t0, t1, l_son_grid, f);
                     }
 				}
 				if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
@@ -30142,9 +30509,9 @@ l_son_grid.x0[i] = l_end;
 					l_son_grid.x1[i] = l_end;
 					l_son_grid.dx1[i] = slope_[i];
                     if (call_boundary) {
-                        _Cilk_spawn walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
+                         walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn walk_adaptive(t0, t1, l_son_grid, f);
+                         walk_adaptive(t0, t1, l_son_grid, f);
                     }
 				} else {
 					if (l_father_grid.dx0[i] != slope_[i]) {
@@ -30153,9 +30520,9 @@ l_son_grid.x0[i] = l_end;
 						l_son_grid.x1[i] = l_start; 
 						l_son_grid.dx1[i] = slope_[i];
                         if (call_boundary) {
-                            _Cilk_spawn walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
+                             walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
                         } else {
-                            _Cilk_spawn walk_adaptive(t0, t1, l_son_grid, f);
+                             walk_adaptive(t0, t1, l_son_grid, f);
                         }
 					}
 					if (l_father_grid.dx1[i] != -slope_[i]) {
@@ -30164,9 +30531,9 @@ l_son_grid.x0[i] = l_end;
 						l_son_grid.x1[i] = l_end; 
 						l_son_grid.dx1[i] = l_father_grid.dx1[i];
                         if (call_boundary) {
-                            _Cilk_spawn walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
+                             walk_ncores_boundary_p(t0, t1, l_son_grid, f, bf);
                         } else {
-                            _Cilk_spawn walk_adaptive(t0, t1, l_son_grid, f);
+                             walk_adaptive(t0, t1, l_son_grid, f);
                         }
 					}
 				}
@@ -30181,7 +30548,8 @@ l_son_grid.x0[i] = l_end;
             } else {
                 walk_adaptive(t0, t0+halflt, l_son_grid, f);
             }
-			for (int i = 0; i < N_RANK; ++i) {
+//			print_sync(stdout);
+for (int i = 0; i < N_RANK; ++i) {
 				l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
 				l_son_grid.dx0[i] = l_father_grid.dx0[i];
 				l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
@@ -30194,7 +30562,7 @@ l_son_grid.x0[i] = l_end;
             }
 			cut_yet = true;
 		}
-		(static_cast<void> (0));
+		((cut_yet) ? static_cast<void> (0) : __assert_fail ("cut_yet", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1659, __PRETTY_FUNCTION__));
 		return;
 	}
 }
@@ -30219,35 +30587,39 @@ inline void Algorithm<N_RANK>::obase_bicut(int t0, int t1, grid_info<N_RANK> con
 			l_grid = grid;
 			int sep = (int)lb[i]/2;
 			int r = 2;
+			printf("initial_cut = %s, lb[%d] = %d, sep = %d, r = %d\n", (lb[i] == phys_length_[i]) ? "True" : "False", i, lb[i], sep, r);
 			l_grid.x0[i] = grid.x0[i];
 			l_grid.dx0[i] = slope_[i];
 			l_grid.x1[i] = grid.x0[i] + sep;
 			l_grid.dx1[i] = -slope_[i];
-			_Cilk_spawn obase_bicut(t0, t1, l_grid, f);
+			 obase_bicut(t0, t1, l_grid, f);
 
 			l_grid.x0[i] = grid.x0[i] + sep;
 			l_grid.dx0[i] = slope_[i];
 			l_grid.x1[i] = grid.x1[i];
 			l_grid.dx1[i] = -slope_[i];
-			_Cilk_spawn obase_bicut(t0, t1, l_grid, f);
-			_Cilk_sync;
+			 obase_bicut(t0, t1, l_grid, f);
+//			print_sync(stdout);
+;
 			if (grid.dx0[i] != slope_[i]) {
 				l_grid.x0[i] = grid.x0[i]; l_grid.dx0[i] = grid.dx0[i];
 				l_grid.x1[i] = grid.x0[i]; l_grid.dx1[i] = slope_[i];
-				_Cilk_spawn obase_bicut(t0, t1, l_grid, f);
+				 obase_bicut(t0, t1, l_grid, f);
 			}
 
 			l_grid.x0[i] = grid.x0[i] + sep;
 			l_grid.dx0[i] = -slope_[i];
 			l_grid.x1[i] = grid.x0[i] + sep;
 			l_grid.dx1[i] = slope_[i];
-			_Cilk_spawn obase_bicut(t0, t1, l_grid, f);
+			 obase_bicut(t0, t1, l_grid, f);
 
 			if (grid.dx1[i] != -slope_[i]) {
 				l_grid.x0[i] = grid.x1[i]; l_grid.dx0[i] = -slope_[i];
 				l_grid.x1[i] = grid.x1[i]; l_grid.dx1[i] = grid.dx1[i];
-				_Cilk_spawn obase_bicut(t0, t1, l_grid, f);
+				 obase_bicut(t0, t1, l_grid, f);
 			}
+			printf("%s:%d cut into %d dim\n", __FUNCTION__, 1720, i);
+			fflush(stdout);
             return;
 		}/* end if */
 	} /* end for */
@@ -30255,15 +30627,20 @@ inline void Algorithm<N_RANK>::obase_bicut(int t0, int t1, grid_info<N_RANK> con
 		int halflt = lt / 2;
 		l_grid = grid;
 		obase_bicut(t0, t0+halflt, l_grid, f);
-		for (int i = 0; i < N_RANK; ++i) {
+//		print_sync(stdout);
+for (int i = 0; i < N_RANK; ++i) {
 			l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
 			l_grid.dx0[i] = grid.dx0[i];
 			l_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
 			l_grid.dx1[i] = grid.dx1[i];
 		}
 		obase_bicut(t0+halflt, t1, l_grid, f);
+		printf("%s:%d cut into time dim\n", __FUNCTION__, 1741);
+		fflush(stdout);
         return;
 	}
+    printf("call obase_bicut! ");
+    print_grid(stdout, t0, t1, grid);
 	f(t0, t1, grid);
 	return;
 }
@@ -30289,6 +30666,8 @@ index_info lb, thres;
 		base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
 	}	
 	if (base_cube) {
+        printf("call Adaptive! ");
+		print_grid(stdout, t0, t1, grid);
 		f(t0, t1, grid);
 		return;
 	} else  {
@@ -30297,37 +30676,39 @@ index_info lb, thres;
 				l_grid = grid;
 				int sep = ((lb[i] == phys_length_[i])) ? lb[i]/N_CORES : (2 * slope_[i] * lt);
 				int r = ((lb[i] == phys_length_[i])) ? N_CORES : (lb[i]/sep);
+				printf("initial_cut = %s, lb[%d] = %d, sep = %d, r = %d\n", (lb[i] == phys_length_[i]) ? "True" : "False", i, lb[i], sep, r);
 				int j;
 				for (j = 0; j < r-1; ++j) {
 					l_grid.x0[i] = grid.x0[i] + sep * j;
 					l_grid.dx0[i] = slope_[i];
 					l_grid.x1[i] = grid.x0[i] + sep * (j+1);
 					l_grid.dx1[i] = -slope_[i];
-					_Cilk_spawn obase_adaptive(t0, t1, l_grid, f);
+					 obase_adaptive(t0, t1, l_grid, f);
 				}
 	//			j_loc = r-1;
 l_grid.x0[i] = grid.x0[i] + sep * (r-1);
 				l_grid.dx0[i] = slope_[i];
 				l_grid.x1[i] = grid.x1[i];
 				l_grid.dx1[i] = -slope_[i];
-				_Cilk_spawn obase_adaptive(t0, t1, l_grid, f);
-				_Cilk_sync;
+				 obase_adaptive(t0, t1, l_grid, f);
+//				print_sync(stdout);
+;
 				if (grid.dx0[i] != slope_[i]) {
 					l_grid.x0[i] = grid.x0[i]; l_grid.dx0[i] = grid.dx0[i];
 					l_grid.x1[i] = grid.x0[i]; l_grid.dx1[i] = slope_[i];
-					_Cilk_spawn obase_adaptive(t0, t1, l_grid, f);
+					 obase_adaptive(t0, t1, l_grid, f);
 				}
 				for (int j = 1; j < r; ++j) {
 					l_grid.x0[i] = grid.x0[i] + sep * j;
 					l_grid.dx0[i] = -slope_[i];
 					l_grid.x1[i] = grid.x0[i] + sep * j;
 					l_grid.dx1[i] = slope_[i];
-					_Cilk_spawn obase_adaptive(t0, t1, l_grid, f);
+					 obase_adaptive(t0, t1, l_grid, f);
 				}
 				if (grid.dx1[i] != -slope_[i]) {
 					l_grid.x0[i] = grid.x1[i]; l_grid.dx0[i] = -slope_[i];
 					l_grid.x1[i] = grid.x1[i]; l_grid.dx1[i] = grid.dx1[i];
-					_Cilk_spawn obase_adaptive(t0, t1, l_grid, f);
+					 obase_adaptive(t0, t1, l_grid, f);
 				}
 				cut_yet = true;
 			}/* end if */
@@ -30336,7 +30717,8 @@ l_grid.x0[i] = grid.x0[i] + sep * (r-1);
 			int halflt = lt / 2;
 			l_grid = grid;
 			obase_adaptive(t0, t0+halflt, l_grid, f);
-			for (int i = 0; i < N_RANK; ++i) {
+//			print_sync(stdout);
+for (int i = 0; i < N_RANK; ++i) {
 				l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
 				l_grid.dx0[i] = grid.dx0[i];
 				l_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
@@ -30345,7 +30727,7 @@ l_grid.x0[i] = grid.x0[i] + sep * (r-1);
 			obase_adaptive(t0+halflt, t1, l_grid, f);
 			cut_yet = true;
 		}
-		(static_cast<void> (0));
+		((cut_yet) ? static_cast<void> (0) : __assert_fail ("cut_yet", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 1853, __PRETTY_FUNCTION__));
 		return;
 	}
 }
@@ -30383,40 +30765,41 @@ inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<
 			l_son_grid.dx0[i] = slope_[i];
 			l_son_grid.x1[i] = l_start + sep;
 			l_son_grid.dx1[i] = -slope_[i];
-            _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+             obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
 
 			l_son_grid.x0[i] = l_start + sep * j;
 			l_son_grid.dx0[i] = slope_[i];
 			l_son_grid.x1[i] = l_end;
 			l_son_grid.dx1[i] = -slope_[i];
             obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
-			_Cilk_sync;
+//			print_sync(stdout);
+;
 			l_son_grid.x0[i] = l_start + sep;
 			l_son_grid.dx0[i] = -slope_[i];
 			l_son_grid.x1[i] = l_start + sep;
 			l_son_grid.dx1[i] = slope_[i];
-            _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+             obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
 			if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
         //        printf("merge triagles!\n");
 l_son_grid.x0[i] = l_end;
 				l_son_grid.dx0[i] = -slope_[i];
 				l_son_grid.x1[i] = l_end;
 				l_son_grid.dx1[i] = slope_[i];
-                _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+                 obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
 			} else {
 				if (l_father_grid.dx0[i] != slope_[i]) {
 					l_son_grid.x0[i] = l_start; 
 					l_son_grid.dx0[i] = l_father_grid.dx0[i];
 					l_son_grid.x1[i] = l_start; 
 					l_son_grid.dx1[i] = slope_[i];
-                    _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+                     obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
 				}
 				if (l_father_grid.dx1[i] != -slope_[i]) {
 					l_son_grid.x0[i] = l_end; 
 					l_son_grid.dx0[i] = -slope_[i];
 					l_son_grid.x1[i] = l_end; 
 					l_son_grid.dx1[i] = l_father_grid.dx1[i];
-                    _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
+                     obase_bicut_boundary_p(t0, t1, l_son_grid, bf);
 				}
 			}
             return;
@@ -30426,7 +30809,8 @@ l_son_grid.x0[i] = l_end;
 		int halflt = lt / 2;
 		l_son_grid = l_father_grid;
         obase_bicut_boundary_p(t0, t0+halflt, l_son_grid, bf);
-		for (int i = 0; i < N_RANK; ++i) {
+//		print_sync(stdout);
+for (int i = 0; i < N_RANK; ++i) {
 			l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
 			l_son_grid.dx0[i] = l_father_grid.dx0[i];
 			l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
@@ -30483,20 +30867,21 @@ int r = lb[i]/sep;
 					l_son_grid.dx0[i] = slope_[i];
 					l_son_grid.x1[i] = l_start + sep * (j+1);
 					l_son_grid.dx1[i] = -slope_[i];
-                    _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, bf);
+                     obase_boundary_p(t0, t1, l_son_grid, bf);
 				}
 				l_son_grid.x0[i] = l_start + sep * j;
 				l_son_grid.dx0[i] = slope_[i];
 				l_son_grid.x1[i] = l_end;
 				l_son_grid.dx1[i] = -slope_[i];
                 obase_boundary_p(t0, t1, l_son_grid, bf);
-				_Cilk_sync;
+//				print_sync(stdout);
+;
 				for (j = 1; j < r; ++j) {
 					l_son_grid.x0[i] = l_start + sep * j;
 					l_son_grid.dx0[i] = -slope_[i];
 					l_son_grid.x1[i] = l_start + sep * j;
 					l_son_grid.dx1[i] = slope_[i];
-                    _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, bf);
+                     obase_boundary_p(t0, t1, l_son_grid, bf);
 				}
 				if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
             //        printf("merge triagles!\n");
@@ -30504,21 +30889,21 @@ l_son_grid.x0[i] = l_end;
 					l_son_grid.dx0[i] = -slope_[i];
 					l_son_grid.x1[i] = l_end;
 					l_son_grid.dx1[i] = slope_[i];
-                    _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, bf);
+                     obase_boundary_p(t0, t1, l_son_grid, bf);
 				} else {
 					if (l_father_grid.dx0[i] != slope_[i]) {
 						l_son_grid.x0[i] = l_start; 
 						l_son_grid.dx0[i] = l_father_grid.dx0[i];
 						l_son_grid.x1[i] = l_start; 
 						l_son_grid.dx1[i] = slope_[i];
-                        _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, bf);
+                         obase_boundary_p(t0, t1, l_son_grid, bf);
 					}
 					if (l_father_grid.dx1[i] != -slope_[i]) {
 						l_son_grid.x0[i] = l_end; 
 						l_son_grid.dx0[i] = -slope_[i];
 						l_son_grid.x1[i] = l_end; 
 						l_son_grid.dx1[i] = l_father_grid.dx1[i];
-                        _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, bf);
+                         obase_boundary_p(t0, t1, l_son_grid, bf);
 					}
 				}
 				cut_yet = true;
@@ -30528,7 +30913,8 @@ l_son_grid.x0[i] = l_end;
 			int halflt = lt / 2;
 			l_son_grid = l_father_grid;
             obase_boundary_p(t0, t0+halflt, l_son_grid, bf);
-			for (int i = 0; i < N_RANK; ++i) {
+//			print_sync(stdout);
+for (int i = 0; i < N_RANK; ++i) {
 				l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
 				l_son_grid.dx0[i] = l_father_grid.dx0[i];
 				l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
@@ -30537,7 +30923,7 @@ l_son_grid.x0[i] = l_end;
             obase_boundary_p(t0+halflt, t1, l_son_grid, bf);
 			cut_yet = true;
 		}
-		(static_cast<void> (0));
+		((cut_yet) ? static_cast<void> (0) : __assert_fail ("cut_yet", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 2057, __PRETTY_FUNCTION__));
 		return;
 	}
 }
@@ -30576,9 +30962,9 @@ inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<
 			l_son_grid.x1[i] = l_start + sep;
 			l_son_grid.dx1[i] = -slope_[i];
             if (call_boundary) {
-                _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                 obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
             } else {
-                _Cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+                 obase_bicut(t0, t1, l_son_grid, f);
             }
 
 			l_son_grid.x0[i] = l_start + sep;
@@ -30590,16 +30976,16 @@ inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<
             } else {
                 obase_bicut(t0, t1, l_son_grid, f);
             }
-			_Cilk_sync;
+			;
 
 			l_son_grid.x0[i] = l_start + sep;
 			l_son_grid.dx0[i] = -slope_[i];
 			l_son_grid.x1[i] = l_start + sep;
 			l_son_grid.dx1[i] = slope_[i];
             if (call_boundary) {
-                _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                 obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
             } else {
-                _Cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+                 obase_bicut(t0, t1, l_son_grid, f);
             }
 
 			if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
@@ -30609,9 +30995,9 @@ l_son_grid.x0[i] = l_end;
 				l_son_grid.x1[i] = l_end;
 				l_son_grid.dx1[i] = slope_[i];
                 if (call_boundary) {
-                    _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                     obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
                 } else {
-                    _Cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+                     obase_bicut(t0, t1, l_son_grid, f);
                 }
 			} else {
 				if (l_father_grid.dx0[i] != slope_[i]) {
@@ -30620,9 +31006,9 @@ l_son_grid.x0[i] = l_end;
 					l_son_grid.x1[i] = l_start; 
 					l_son_grid.dx1[i] = slope_[i];
                     if (call_boundary) {
-                        _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                         obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+                         obase_bicut(t0, t1, l_son_grid, f);
                     }
 				}
 				if (l_father_grid.dx1[i] != -slope_[i]) {
@@ -30631,9 +31017,9 @@ l_son_grid.x0[i] = l_end;
 					l_son_grid.x1[i] = l_end; 
 					l_son_grid.dx1[i] = l_father_grid.dx1[i];
                     if (call_boundary) {
-                        _Cilk_spawn obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
+                         obase_bicut_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn obase_bicut(t0, t1, l_son_grid, f);
+                         obase_bicut(t0, t1, l_son_grid, f);
                     }
 				}
 			}
@@ -30670,9 +31056,13 @@ l_son_grid.x0[i] = l_end;
         /* for periodic stencils, all elements falling within boundary region
          * requires special treatment 'BF' (usually requires modulo operation)
         */
+	    printf("call Boundary! ");
+        print_grid(stdout, t0, t1, l_father_grid);
 		//bf(t0, t1, grid);
 base_case_kernel_boundary(t0, t1, l_father_grid, bf);
     } else {
+        printf("call Interior! ");
+		print_grid(stdout, t0, t1, l_father_grid);
 		f(t0, t1, l_father_grid);
     }
 	return;
@@ -30707,9 +31097,13 @@ inline void Algorithm<N_RANK>::obase_boundary_p(int t0, int t1, grid_info<N_RANK
             /* for periodic stencils, all elements falling within boundary region
              * requires special treatment 'BF' (usually requires modulo operation)
             */
+	        printf("call Boundary! ");
+            print_grid(stdout, t0, t1, l_father_grid);
 			//bf(t0, t1, grid);
 base_case_kernel_boundary(t0, t1, l_father_grid, bf);
         } else {
+            printf("call Interior! ");
+	    	print_grid(stdout, t0, t1, l_father_grid);
 			f(t0, t1, l_father_grid);
         }
 		return;
@@ -30730,9 +31124,9 @@ int r = lb[i]/sep;
 					l_son_grid.x1[i] = l_start + sep * (j+1);
 					l_son_grid.dx1[i] = -slope_[i];
                     if (call_boundary) {
-                        _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, f, bf);
+                         obase_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn obase_adaptive(t0, t1, l_son_grid, f);
+                         obase_adaptive(t0, t1, l_son_grid, f);
                     }
 				}
 				l_son_grid.x0[i] = l_start + sep * j;
@@ -30744,16 +31138,17 @@ int r = lb[i]/sep;
                 } else {
                     obase_adaptive(t0, t1, l_son_grid, f);
                 }
-				_Cilk_sync;
+//				print_sync(stdout);
+;
 				for (j = 1; j < r; ++j) {
 					l_son_grid.x0[i] = l_start + sep * j;
 					l_son_grid.dx0[i] = -slope_[i];
 					l_son_grid.x1[i] = l_start + sep * j;
 					l_son_grid.dx1[i] = slope_[i];
                     if (call_boundary) {
-                        _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, f, bf);
+                         obase_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn obase_adaptive(t0, t1, l_son_grid, f);
+                         obase_adaptive(t0, t1, l_son_grid, f);
                     }
 				}
 				if (l_start == phys_grid_.x0[i] && l_end == phys_grid_.x1[i]) {
@@ -30763,9 +31158,9 @@ l_son_grid.x0[i] = l_end;
 					l_son_grid.x1[i] = l_end;
 					l_son_grid.dx1[i] = slope_[i];
                     if (call_boundary) {
-                        _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, f, bf);
+                         obase_boundary_p(t0, t1, l_son_grid, f, bf);
                     } else {
-                        _Cilk_spawn obase_adaptive(t0, t1, l_son_grid, f);
+                         obase_adaptive(t0, t1, l_son_grid, f);
                     }
 				} else {
 					if (l_father_grid.dx0[i] != slope_[i]) {
@@ -30774,9 +31169,9 @@ l_son_grid.x0[i] = l_end;
 						l_son_grid.x1[i] = l_start; 
 						l_son_grid.dx1[i] = slope_[i];
                         if (call_boundary) {
-                            _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, f, bf);
+                             obase_boundary_p(t0, t1, l_son_grid, f, bf);
                         } else {
-                            _Cilk_spawn obase_adaptive(t0, t1, l_son_grid, f);
+                             obase_adaptive(t0, t1, l_son_grid, f);
                         }
 					}
 					if (l_father_grid.dx1[i] != -slope_[i]) {
@@ -30785,9 +31180,9 @@ l_son_grid.x0[i] = l_end;
 						l_son_grid.x1[i] = l_end; 
 						l_son_grid.dx1[i] = l_father_grid.dx1[i];
                         if (call_boundary) {
-                            _Cilk_spawn obase_boundary_p(t0, t1, l_son_grid, f, bf);
+                             obase_boundary_p(t0, t1, l_son_grid, f, bf);
                         } else {
-                            _Cilk_spawn obase_adaptive(t0, t1, l_son_grid, f);
+                             obase_adaptive(t0, t1, l_son_grid, f);
                         }
 					}
 				}
@@ -30802,7 +31197,8 @@ l_son_grid.x0[i] = l_end;
             } else {
                 obase_adaptive(t0, t0+halflt, l_son_grid, f);
             }
-			for (int i = 0; i < N_RANK; ++i) {
+//			print_sync(stdout);
+for (int i = 0; i < N_RANK; ++i) {
 				l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
 				l_son_grid.dx0[i] = l_father_grid.dx0[i];
 				l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
@@ -30815,7 +31211,7 @@ l_son_grid.x0[i] = l_end;
             }
 			cut_yet = true;
 		}
-		(static_cast<void> (0));
+		((cut_yet) ? static_cast<void> (0) : __assert_fail ("cut_yet", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_recursive.hpp", 2357, __PRETTY_FUNCTION__));
 		return;
 	}
 }
@@ -30860,17 +31256,18 @@ inline void Algorithm<N_RANK>::naive_cut_space_mp(int dim, int t0, int t1, grid_
 	int lx = (dim < N_RANK) ? (grid.x1[dim] - grid.x0[dim]) : 0;
 	bool can_cut = (dim < N_RANK) ? (lx/bl >= 2) : false;
 
-	if (!can_cut || dim == N_RANK) {
+//	printf("dim = %d :", dim);
+if (!can_cut || dim == N_RANK) {
 		if (dim < N_RANK)
 			naive_cut_space_mp(dim+1, t0, t1, grid, f);
 		else {
-			(static_cast<void> (0));
-//			base_case_kernel(t0, t1, grid);
+			((dim == N_RANK) ? static_cast<void> (0) : __assert_fail ("dim == N_RANK", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_loops.hpp", 53, __PRETTY_FUNCTION__));
+	//		printf("%s:%d base_case_kernel\n", __FUNCTION__, __LINE__);
 base_case_kernel(t0, t1, grid, f);
 		}
 		return;
 	} else {
-		(static_cast<void> (0));
+		((can_cut) ? static_cast<void> (0) : __assert_fail ("can_cut", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_loops.hpp", 63, __PRETTY_FUNCTION__));
 		grid_info<N_RANK> l_grid = grid;
 		int r = lx / bl;
 		int sep = bl;
@@ -30879,35 +31276,35 @@ base_case_kernel(t0, t1, grid, f);
 			l_grid.dx0[dim] = slope_[dim];
 			l_grid.x1[dim] = grid.x0[dim] + (i + 1) * sep;
 			l_grid.dx1[dim] = -slope_[dim];
-			_Cilk_spawn naive_cut_space_mp(dim+1, t0, t1, l_grid, f);
+			 naive_cut_space_mp(dim+1, t0, t1, l_grid, f);
 		}
 		l_grid.x0[dim] = grid.x0[dim] + i * sep;
 		l_grid.dx0[dim] = slope_[dim];
 		l_grid.x1[dim] = grid.x1[dim];
 		l_grid.dx1[dim] = -slope_[dim];
 		naive_cut_space_mp(dim+1, t0, t1, l_grid, f);
-		_Cilk_sync;
+		;
 
 		if (grid.dx0[dim] != slope_[dim]) {
 			l_grid.x0[dim] = grid.x0[dim];
 			l_grid.dx0[dim] = grid.dx0[dim];
 			l_grid.x1[dim] = grid.x0[dim];
 			l_grid.dx1[dim] = slope_[dim];
-			_Cilk_spawn naive_cut_space_mp(dim+1, t0, t1, l_grid, f);
+			 naive_cut_space_mp(dim+1, t0, t1, l_grid, f);
 		}
 		for (i = 1; i < r; i++) {
 			l_grid.x0[dim] = grid.x0[dim] + i * sep;
 			l_grid.dx0[dim] = -slope_[dim];
 			l_grid.x1[dim] = grid.x0[dim] + i * sep;
 			l_grid.dx1[dim] = slope_[dim];
-			_Cilk_spawn naive_cut_space_mp(dim+1, t0, t1, l_grid, f);
+			 naive_cut_space_mp(dim+1, t0, t1, l_grid, f);
 		}
 		if (grid.dx1[dim] != -slope_[dim]) {
 			l_grid.x0[dim] = grid.x1[dim];
 			l_grid.dx0[dim] = -slope_[dim];
 			l_grid.x1[dim] = grid.x1[dim];
 			l_grid.dx1[dim] = grid.dx1[dim];
-			_Cilk_spawn naive_cut_space_mp(dim+1, t0, t1, l_grid, f);
+			 naive_cut_space_mp(dim+1, t0, t1, l_grid, f);
 		}
 		return;
 	}
@@ -30927,14 +31324,14 @@ if (!can_cut || dim == N_RANK) {
 		if (dim < N_RANK)
 			naive_cut_space_ncores(dim+1, t0, t1, grid, f);
 		else {
-			(static_cast<void> (0));
-//			base_case_kernel(t0, t1, grid);
+			((dim == N_RANK) ? static_cast<void> (0) : __assert_fail ("dim == N_RANK", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_loops.hpp", 125, __PRETTY_FUNCTION__));
+//			print_grid(stdout, t0, t1, grid);
 base_case_kernel(t0, t1, grid, f);
 
 		}
 		return;
 	} else {
-		(static_cast<void> (0));
+		((can_cut) ? static_cast<void> (0) : __assert_fail ("can_cut", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_loops.hpp", 135, __PRETTY_FUNCTION__));
 		grid_info<N_RANK> l_grid = grid;
 		int sep = lx / N_CORES;
 		for (i = 0; i < N_CORES - 1; i++) {
@@ -30942,35 +31339,36 @@ base_case_kernel(t0, t1, grid, f);
 			l_grid.dx0[dim] = slope_[dim];
 			l_grid.x1[dim] = grid.x0[dim] + (i + 1) * sep;
 			l_grid.dx1[dim] = -slope_[dim];
-			_Cilk_spawn naive_cut_space_ncores(dim+1, t0, t1, l_grid, f);
+			 naive_cut_space_ncores(dim+1, t0, t1, l_grid, f);
 		}
 		l_grid.x0[dim] = grid.x0[dim] + i * sep;
 		l_grid.dx0[dim] = slope_[dim];
 		l_grid.x1[dim] = grid.x1[dim];
 		l_grid.dx1[dim] = -slope_[dim];
 		naive_cut_space_ncores(dim+1, t0, t1, l_grid, f);
-		_Cilk_sync;
+//		fprintf(stdout, "cilk_sync\n");
+;
 
 		if (grid.dx0[dim] != slope_[dim]) {
 			l_grid.x0[dim] = grid.x0[dim];
 			l_grid.dx0[dim] = grid.dx0[dim];
 			l_grid.x1[dim] = grid.x0[dim];
 			l_grid.dx1[dim] = slope_[dim];
-			_Cilk_spawn naive_cut_space_ncores(dim+1, t0, t1, l_grid, f);
+			 naive_cut_space_ncores(dim+1, t0, t1, l_grid, f);
 		}
 		for (i = 1; i < N_CORES; i++) {
 			l_grid.x0[dim] = grid.x0[dim] + i * sep;
 			l_grid.dx0[dim] = -slope_[dim];
 			l_grid.x1[dim] = grid.x0[dim] + i * sep;
 			l_grid.dx1[dim] = slope_[dim];
-			_Cilk_spawn naive_cut_space_ncores(dim+1, t0, t1, l_grid, f);
+			 naive_cut_space_ncores(dim+1, t0, t1, l_grid, f);
 		}
 		if (grid.dx1[dim] != -slope_[dim]) {
 			l_grid.x0[dim] = grid.x1[dim];
 			l_grid.dx0[dim] = -slope_[dim];
 			l_grid.x1[dim] = grid.x1[dim];
 			l_grid.dx1[dim] = grid.dx1[dim];
-			_Cilk_spawn naive_cut_space_ncores(dim+1, t0, t1, l_grid, f);
+			 naive_cut_space_ncores(dim+1, t0, t1, l_grid, f);
 		}
 		return;
 	}
@@ -30996,8 +31394,9 @@ if (!can_cut || dim == N_RANK) {
 		if (dim < N_RANK) {
 			cut_space_ncores_boundary(dim+1, t0, t1, grid, f);
 		} else {
-			(static_cast<void> (0));
-			call_boundary = false;
+			((dim == N_RANK) ? static_cast<void> (0) : __assert_fail ("dim == N_RANK", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_loops.hpp", 206, __PRETTY_FUNCTION__));
+//			print_grid(stdout, t0, t1, grid);
+call_boundary = false;
 			for (int i = 0; i < N_RANK; i++) {
 				call_boundary |= (grid.x0[i] == initial_grid_.x0[i] || grid.x1[i] == initial_grid_.x1[i]);
 			}
@@ -31009,7 +31408,7 @@ base_case_kernel(t0, t1, grid, f);
 		}
 		return;
 	} else {
-		(static_cast<void> (0));
+		((can_cut) ? static_cast<void> (0) : __assert_fail ("can_cut", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_loops.hpp", 223, __PRETTY_FUNCTION__));
 		grid_info<N_RANK> l_grid = grid;
 		int sep = lx / N_CORES;
 		int l_start = (grid.x0[dim]);
@@ -31019,35 +31418,36 @@ base_case_kernel(t0, t1, grid, f);
 			l_grid.dx0[dim] = slope_[dim];
 			l_grid.x1[dim] = l_start + (i + 1) * sep;
 			l_grid.dx1[dim] = -slope_[dim];
-			_Cilk_spawn cut_space_ncores_boundary(dim+1, t0, t1, l_grid, f);
+			 cut_space_ncores_boundary(dim+1, t0, t1, l_grid, f);
 		}
 		l_grid.x0[dim] = l_start + i * sep;
 		l_grid.dx0[dim] = slope_[dim];
 		l_grid.x1[dim] = l_end;
 		l_grid.dx1[dim] = -slope_[dim];
 		cut_space_ncores_boundary(dim+1, t0, t1, l_grid, f);
-		_Cilk_sync;
+//		fprintf(stdout, "cilk_sync\n");
+;
 
 		if (grid.dx0[dim] != slope_[dim]) {
 			l_grid.x0[dim] = grid.x0[dim];
 			l_grid.dx0[dim] = grid.dx0[dim];
 			l_grid.x1[dim] = grid.x0[dim];
 			l_grid.dx1[dim] = slope_[dim];
-			_Cilk_spawn cut_space_ncores_boundary(dim+1, t0, t1, l_grid, f);
+			 cut_space_ncores_boundary(dim+1, t0, t1, l_grid, f);
 		}
 		for (i = 1; i < N_CORES; i++) {
 			l_grid.x0[dim] = grid.x0[dim] + i * sep;
 			l_grid.dx0[dim] = -slope_[dim];
 			l_grid.x1[dim] = grid.x0[dim] + i * sep;
 			l_grid.dx1[dim] = slope_[dim];
-			_Cilk_spawn cut_space_ncores_boundary(dim+1, t0, t1, l_grid, f);
+			 cut_space_ncores_boundary(dim+1, t0, t1, l_grid, f);
 		}
 		if (grid.dx1[dim] != -slope_[dim]) {
 			l_grid.x0[dim] = grid.x1[dim];
 			l_grid.dx0[dim] = -slope_[dim];
 			l_grid.x1[dim] = grid.x1[dim];
 			l_grid.dx1[dim] = grid.dx1[dim];
-			_Cilk_spawn cut_space_ncores_boundary(dim+1, t0, t1, l_grid, f);
+			 cut_space_ncores_boundary(dim+1, t0, t1, l_grid, f);
 		}
 
 		return;
@@ -31076,12 +31476,13 @@ inline void Algorithm<N_RANK>::cut_time(algor_type algor, int t0, int t1, grid_i
 		}
 		return;
 	} else {
-		(static_cast<void> (0));
+		((r_t >= 2) ? static_cast<void> (0) : __assert_fail ("r_t >= 2", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir_walk_loops.hpp", 294, __PRETTY_FUNCTION__));
 		for (i = 0; i < r_t; i++) {
 			switch(algor) {
 			case TILE_NCORES: 
 				naive_cut_space_ncores(0, t0+i*dt_recursive_, t0+(i+1)*dt_recursive_, grid, f);
-				break;
+//				fprintf(stdout, "cilk_sync\n");
+break;
 			case TILE_BOUNDARY:
 				cut_space_ncores_boundary(0, t0+i*dt_recursive_, t0+(i+1)*dt_recursive_, grid, f);
 				break;
@@ -32204,7 +32605,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     timestep_ = timestep;
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+fprintf(stderr, "Call sim_obase_bicut\n");
+    algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -32219,6 +32621,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     checkFlags();
+    fprintf(stderr, "Call sim_obase_bicut_P\n");
     algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 }
 
@@ -32278,8 +32681,8 @@ int main(int argc, char * argv[])
 	Pochoir_Shape <2> heat_shape_2D [5] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
 for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
-            a(0, i, j) = 1.0 * (rand() % BASE); 
-            a(1, i, j) = 0; 
+		    a(0, i, j) = i * N_SIZE + j;
+		    a(1, i, j) = 0;
         b(0, i, j) = a(0, i, j);
         b(1, i, j) = 0;
 	} }
@@ -32360,7 +32763,7 @@ b.registerBV(heat_bv_2D);
     for (int times = 0; times < 1; ++times) {
     /* cilk_for + zero-padding */
 	for (int t = 0; t < T_SIZE; ++t) {
-    _Cilk_for (int i = 0; i <= N_SIZE-1; ++i) {
+    for (int i = 0; i <= N_SIZE-1; ++i) {
 	for (int j = 0; j <= N_SIZE-1; ++j) {
         b(t+1, i, j) = 0.125 * (b(t, i+1, j) - 2.0 * b(t, i, j) + b(t, i-1, j)) + 0.125 * (b(t, i, j+1) - 2.0 * b(t, i, j) + b(t, i, j-1)) + b(t, i, j); } } }
     }
