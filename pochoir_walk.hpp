@@ -149,6 +149,7 @@ struct Algorithm {
         int dx_recursive_boundary_[N_RANK];
         const int dt_recursive_;
         const int dt_recursive_boundary_;
+        const int r_t; /* # of pieces cut in time dimension */
         int N_CORES;
 	public:
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
@@ -169,7 +170,7 @@ struct Algorithm {
     bool boundarySet, physGridSet, slopeSet;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(1), dt_recursive_boundary_(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(2), r_t(2) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -178,8 +179,8 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 1;
-        dx_recursive_[0] = 1;
+            dx_recursive_[i] = 150;
+        dx_recursive_[0] = 150;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;

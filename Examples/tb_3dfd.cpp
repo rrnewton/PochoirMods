@@ -42,11 +42,16 @@ int Ny = 100;
 int Nz = 100;
 int T = 40;
 static const int NPIECES = 2;
+int N_CORES=2;
+#if 0
 static const int dt_threshold = 3;
 static const int dx_threshold = 1000;
 static const int dyz_threshold = 3;
-int N_CORES=2;
-
+#else
+static const int dt_threshold = 5;
+static const int dx_threshold = 150;
+static const int dyz_threshold = 150;
+#endif
 float **A;
 
 float coef[ds + 1];
