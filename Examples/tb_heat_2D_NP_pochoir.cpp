@@ -29604,93 +29604,114 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                 /* performing a space cut on dimension 'level' */
                 do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
                 const grid_info<N_RANK> l_father_grid = l_father->grid;
-                grid_info<N_RANK> l_son_grid = l_father->grid;
                 const int t0 = l_father->t0, t1 = l_father->t1;
+                const int lt = (t1 - t0);
                 const int level = l_father->level;
                 const bool cut_lb = (l_father_grid.dx0[level] >= 0 && l_father_grid.dx1[level] <= 0);
+                const int thres = 2 * slope_[level] * (t1 - t0);
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
+                const int tb = (l_father_grid.x1[level] + l_father_grid.dx1[level] * lt - l_father_grid.x0[level] - l_father_grid.dx0[level] * lt);
                 if (cut_lb) {
                     /* cut_lb */
-                    const int sep = (int)lb/2;
-                    const int r = 2;
-                    const int l_start = (l_father_grid.x0[level]);
-                    const int l_end = (l_father_grid.x1[level]);
+                    const bool can_cut = (lb >= 2 * thres && lb > dx_recursive_[level]);
+                    if (!can_cut) {
+                        /* if we can't cut into this dimension, just directly push 
+                         * it into the circular queue 
+                         */
+                        do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    } else {
+                        /* can_cut! */
+                        const int sep = (int)lb/2;
+                        const int r = 2;
+                        grid_info<N_RANK> l_son_grid = l_father->grid;
+                        const int l_start = (l_father_grid.x0[level]);
+                        const int l_end = (l_father_grid.x1[level]);
 
-                    /* push one sub-grid into circular queue of (curr_dep) */
-                    l_son_grid.x0[level] = l_start;
-                    l_son_grid.dx0[level] = slope_[level];
-                    l_son_grid.x1[level] = l_start + sep;
-                    l_son_grid.dx1[level] = -slope_[level];
-                    (static_cast<void> (0));
-                    do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        /* push one sub-grid into circular queue of (curr_dep) */
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = slope_[level];
+                        l_son_grid.x1[level] = l_start + sep;
+                        l_son_grid.dx1[level] = -slope_[level];
+                        (static_cast<void> (0));
+                        do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
-                    /* push one sub-grid into circular queue of (curr_dep) */
-                    l_son_grid.x0[level] = l_start + sep;
-                    l_son_grid.dx0[level] = slope_[level];
-                    l_son_grid.x1[level] = l_end;
-                    l_son_grid.dx1[level] = -slope_[level];
-                    (static_cast<void> (0));
-                    do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        /* push one sub-grid into circular queue of (curr_dep) */
+                        l_son_grid.x0[level] = l_start + sep;
+                        l_son_grid.dx0[level] = slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = -slope_[level];
+                        (static_cast<void> (0));
+                        do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
-                    /* cilk_sync */
-                    const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                    /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                    l_son_grid.x0[level] = l_start + sep;
-                    l_son_grid.dx0[level] = -slope_[level];
-                    l_son_grid.x1[level] = l_start + sep;
-                    l_son_grid.dx1[level] = slope_[level];
-                    (static_cast<void> (0));
-                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        /* cilk_sync */
+                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                        l_son_grid.x0[level] = l_start + sep;
+                        l_son_grid.dx0[level] = -slope_[level];
+                        l_son_grid.x1[level] = l_start + sep;
+                        l_son_grid.dx1[level] = slope_[level];
+                        (static_cast<void> (0));
+                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
-                    if (l_father_grid.dx0[level] != slope_[level]) {
+                        if (l_father_grid.dx0[level] != slope_[level]) {
+                            l_son_grid.x0[level] = l_start;
+                            l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                            l_son_grid.x1[level] = l_start;
+                            l_son_grid.dx1[level] = slope_[level];
+                            (static_cast<void> (0));
+                            do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        }
+                        if (l_father_grid.dx1[level] != -slope_[level]) {
+                            l_son_grid.x0[level] = l_end;
+                            l_son_grid.dx0[level] = -slope_[level];
+                            l_son_grid.x1[level] = l_end;
+                            l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                            (static_cast<void> (0));
+                            do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        }
+                    } /* end if (can_cut) */
+                } /* end if (cut_lb) */ else {
+                    /* cut_tb */
+                    const bool can_cut = (lb >= thres && tb > dx_recursive_[level]);
+                    if (!can_cut) {
+                        /* if we can't cut into this dimension, just directly push 
+                         * it into the circular queue 
+                         */
+                        do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                    } else {
+                        grid_info<N_RANK> l_son_grid = l_father->grid;
+                        const int l_start = (l_father_grid.x0[level]);
+                        const int l_end = (l_father_grid.x1[level]);
+
+                        (static_cast<void> (0));
+                        (static_cast<void> (0));
+                        /* push one sub-grid into circular queue of (curr_dep) */
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = -slope_[level];
+                        (static_cast<void> (0));
+                        do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+
+                        /* cilk_sync */
+                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
                         l_son_grid.x0[level] = l_start;
                         l_son_grid.dx0[level] = l_father_grid.dx0[level];
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
                         do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                    }
-                    if (l_father_grid.dx1[level] != -slope_[level]) {
+
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
                         (static_cast<void> (0));
                         do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                    }
-                } /* end if (cut_lb) */ else {
-                    /* cut_tb */
-                    const int l_start = (l_father_grid.x0[level]);
-                    const int l_end = (l_father_grid.x1[level]);
-
-                    (static_cast<void> (0));
-                    (static_cast<void> (0));
-                    /* push one sub-grid into circular queue of (curr_dep) */
-                    l_son_grid.x0[level] = l_start;
-                    l_son_grid.dx0[level] = slope_[level];
-                    l_son_grid.x1[level] = l_end;
-                    l_son_grid.dx1[level] = -slope_[level];
-                    (static_cast<void> (0));
-                    do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                    /* cilk_sync */
-                    const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                    /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                    l_son_grid.x0[level] = l_start;
-                    l_son_grid.dx0[level] = l_father_grid.dx0[level];
-                    l_son_grid.x1[level] = l_start;
-                    l_son_grid.dx1[level] = slope_[level];
-                    (static_cast<void> (0));
-                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                    l_son_grid.x0[level] = l_end;
-                    l_son_grid.dx0[level] = -slope_[level];
-                    l_son_grid.x1[level] = l_end;
-                    l_son_grid.dx1[level] = l_father_grid.dx1[level];
-                    (static_cast<void> (0));
-                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                }
-            }
+                    } /* end if (can_cut) */
+                } /* end if (cut_tb) */
+            } /* end if (performing a space cut) */
         } /* end while (queue_len_[curr_dep] > 0) */
         _Cilk_sync;
         (static_cast<void> (0));
@@ -30063,7 +30084,7 @@ template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     const int lt = t1 - t0;
-    bool sim_can_cut = true, base_cube_t = (lt <= dt_recursive_), base_cube_s = true;
+    bool sim_can_cut = false, base_cube_t = (lt <= dt_recursive_), base_cube_s = true;
     int largest_dim = -1, largest_dim_size = 0;
     int smallest_dim = -1, smallest_dim_size = 100000000;
     bool smallest_cut_lb;
@@ -30077,10 +30098,10 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         bool cut_lb = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
         thres = (2 * slope_[i] * lt);
         bool l_can_cut = (cut_lb ? (lb >= 2 * thres && lb > dx_recursive_[i]) : (lb >= thres && tb > dx_recursive_[i]));
-        sim_can_cut = sim_can_cut && l_can_cut; 
-        /* largest_dim is the largest dim which can be cut */
-        largest_dim = (l_can_cut ? (cut_lb ? ((lb > largest_dim_size) ? i : largest_dim) : ((tb > largest_dim_size) ? i : largest_dim)) : largest_dim); 
-        largest_dim_size = (l_can_cut ? (cut_lb ? (lb > largest_dim_size ? lb : largest_dim_size) : (tb > largest_dim_size ? tb : largest_dim_size)) : largest_dim_size); 
+        /* as long as there's one dimension can conduct a cut, we conduct a 
+         * multi-dimensional cut!
+         */
+        sim_can_cut |= l_can_cut; 
         base_cube_s = base_cube_s && (cut_lb ? (lb <= dx_recursive_[i]) : (tb <= dx_recursive_[i]));
     }
 
@@ -30099,11 +30120,8 @@ return;
         /* cut into space */
         sim_obase_space_cut(t0, t1, grid, f);
         return;
-    } else if (largest_dim_size > 0) {
-        /* cut into dim 'largest_dim' */
-        (static_cast<void> (0));
-        obase_one_space_cut(largest_dim, t0, t1, grid, f);
-    } else {
+    } 
+    else {
         /* cut into time */
         (static_cast<void> (0));
         int l_r_t = r_t;
@@ -32665,7 +32683,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     checkFlags();
-    algor.walk_ncores_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
@@ -32678,7 +32696,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     timestep_ = timestep;
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.obase_m(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+algor.obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -32693,7 +32711,11 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     checkFlags();
-    algor.obase_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+//    fprintf(stderr, "Call sim_obase_bicut_P\n");
+algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    fprintf(stderr, "count_sim_space = %ld, count_one_space = %ld\n", count_sim_space, count_one_space);
+    fprintf(stderr, "count_interior_region = %ld, count_boundary_region = %ld\n", count_interior_region, count_boundary_region);
+    fprintf(stderr, "count_interior_points = %ld, count_boundary_points = %ld, ratio = %f\n", count_interior_points, count_boundary_points, (float)count_boundary_points/count_interior_points);
 }
 
 
