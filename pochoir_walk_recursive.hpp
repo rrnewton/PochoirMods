@@ -627,6 +627,7 @@ inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> con
 template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
+    ++count_sim_space;
     queue_info *l_father, *l_son;
     queue_info circular_queue_[2][ALGOR_QUEUE_SIZE];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
@@ -643,9 +644,6 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
             top_queue(curr_dep_pointer, l_father);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
-#if DEBUG
-                printf("call all sub_grid in dep (%d)\n", curr_dep);
-#endif
 #if USE_CILK_FOR 
                 /* use cilk_for to spawn all the sub-grid */
                 cilk_for (int j = 0; j < queue_len_[curr_dep_pointer]; ++j) {
@@ -765,6 +763,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
 template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
+    ++count_sim_space;
     queue_info *l_father, *l_son;
     queue_info circular_queue_[2][ALGOR_QUEUE_SIZE];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
@@ -781,9 +780,6 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
             top_queue(curr_dep_pointer, l_father);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
-#if DEBUG
-                printf("call all sub_grid in dep (%d)\n", curr_dep);
-#endif
 #if USE_CILK_FOR 
                 /* use cilk_for to spawn all the sub-grid */
                 cilk_for (int j = 0; j < queue_len_[curr_dep_pointer]; ++j) {
@@ -804,16 +800,8 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                 /* use cilk_spawn to spawn all the sub-grid */
                 pop_queue(curr_dep_pointer);
                 if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
-#if DEBUG
-                    printf("call interior!\n");
-                    print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
-#endif
                     cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
                 } else {
-#if DEBUG
-                    printf("call boundary!\n");
-                    print_grid(stdout, l_father->t0, l_father->t1, l_father->grid);
-#endif
                     cilk_spawn sim_obase_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
                 }
 #endif
@@ -939,6 +927,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
 template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::obase_one_space_cut(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
+    ++count_one_space;
     /* performing a space cut on dimension 'level' */
     grid_info<N_RANK> l_son_grid = grid;
     const bool cut_lb = (grid.dx0[dim] >= 0 && grid.dx1[dim] <= 0);
@@ -1027,18 +1016,19 @@ inline void Algorithm<N_RANK>::obase_one_space_cut(int dim, int t0, int t1, grid
 template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::obase_one_space_cut_p(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
-    /* performing a space cut on dimension 'level' */
+    ++count_one_space;
+    /* performing a space cut on dimension 'dim' */
     grid_info<N_RANK> l_son_grid = grid;
     const bool cut_lb = (grid.dx0[dim] >= 0 && grid.dx1[dim] <= 0);
     if (cut_lb) {
         /* cut_lb */
         const int lb = (grid.x1[dim] - grid.x0[dim]);
-        const int sep = (int)lb/2;
+        const bool initial_cut = (lb == phys_length_[dim]);
+        const int sep = (initial_cut) ? (int)(lb-2*slope_[dim])/2 : (int)lb/2;
         const int r = 2;
-        const int l_start = (grid.x0[dim]);
-        const int l_end = (grid.x1[dim]);
+        const int l_start = (initial_cut) ? (grid.x0[dim] + slope_[dim]) : (grid.x0[dim]);
+        const int l_end = (initial_cut) ? (grid.x1[dim] - slope_[dim]) : (grid.x1[dim]);
 
-        /* push one sub-grid into circular queue of (curr_dep) */
         l_son_grid.x0[dim] = l_start;
         l_son_grid.dx0[dim] = slope_[dim];
         l_son_grid.x1[dim] = l_start + sep;
@@ -1050,7 +1040,6 @@ inline void Algorithm<N_RANK>::obase_one_space_cut_p(int dim, int t0, int t1, gr
             cilk_spawn sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
         }
 
-        /* push one sub-grid into circular queue of (curr_dep) */
         l_son_grid.x0[dim] = l_start + sep;
         l_son_grid.dx0[dim] = slope_[dim];
         l_son_grid.x1[dim] = l_end;
@@ -1063,7 +1052,6 @@ inline void Algorithm<N_RANK>::obase_one_space_cut_p(int dim, int t0, int t1, gr
         }
 
         cilk_sync;
-        /* push one sub-grid into circular queue of (curr_dep + 1)*/
         l_son_grid.x0[dim] = l_start + sep;
         l_son_grid.dx0[dim] = -slope_[dim];
         l_son_grid.x1[dim] = l_start + sep;
@@ -1075,28 +1063,43 @@ inline void Algorithm<N_RANK>::obase_one_space_cut_p(int dim, int t0, int t1, gr
             cilk_spawn sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
         }
 
-        if (grid.dx0[dim] != slope_[dim]) {
-            l_son_grid.x0[dim] = l_start;
-            l_son_grid.dx0[dim] = grid.dx0[dim];
-            l_son_grid.x1[dim] = l_start;
+        if (initial_cut) {
+            /* merge triangles! */
+            l_son_grid.x0[dim] = l_end;
+            l_son_grid.dx0[dim] = -slope_[dim];
+            l_son_grid.x1[dim] = l_end+2*slope_[dim];
             l_son_grid.dx1[dim] = slope_[dim];
             assert(l_son_grid.x0[dim] <= l_son_grid.x1[dim]);
             if (within_boundary(t0, t1, l_son_grid)) {
+                assert(0);
                 cilk_spawn sim_obase_bicut(t0, t1, l_son_grid, f);
             } else {
                 cilk_spawn sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
             }
-        }
-        if (grid.dx1[dim] != -slope_[dim]) {
-            l_son_grid.x0[dim] = l_end;
-            l_son_grid.dx0[dim] = -slope_[dim];
-            l_son_grid.x1[dim] = l_end;
-            l_son_grid.dx1[dim] = grid.dx1[dim];
-            assert(l_son_grid.x0[dim] <= l_son_grid.x1[dim]);
-            if (within_boundary(t0, t1, l_son_grid)) {
-                cilk_spawn sim_obase_bicut(t0, t1, l_son_grid, f);
-            } else {
-                cilk_spawn sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+        } else {
+            if (grid.dx0[dim] != slope_[dim]) {
+                l_son_grid.x0[dim] = l_start;
+                l_son_grid.dx0[dim] = grid.dx0[dim];
+                l_son_grid.x1[dim] = l_start;
+                l_son_grid.dx1[dim] = slope_[dim];
+                assert(l_son_grid.x0[dim] <= l_son_grid.x1[dim]);
+                if (within_boundary(t0, t1, l_son_grid)) {
+                    cilk_spawn sim_obase_bicut(t0, t1, l_son_grid, f);
+                } else {
+                    cilk_spawn sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+                }
+            }
+            if (grid.dx1[dim] != -slope_[dim]) {
+                l_son_grid.x0[dim] = l_end;
+                l_son_grid.dx0[dim] = -slope_[dim];
+                l_son_grid.x1[dim] = l_end;
+                l_son_grid.dx1[dim] = grid.dx1[dim];
+                assert(l_son_grid.x0[dim] <= l_son_grid.x1[dim]);
+                if (within_boundary(t0, t1, l_son_grid)) {
+                    cilk_spawn sim_obase_bicut(t0, t1, l_son_grid, f);
+                } else {
+                    cilk_spawn sim_obase_bicut_p(t0, t1, l_son_grid, f, bf);
+                }
             }
         }
     } /* end if (cut_lb) */ else {
@@ -1151,6 +1154,8 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
     const int lt = t1 - t0;
     bool sim_can_cut = true, base_cube_t = (lt <= dt_recursive_), base_cube_s = true;
     int largest_dim = -1, largest_dim_size = 0;
+    int smallest_dim = -1, smallest_dim_size = INF;
+    bool smallest_cut_lb;
     grid_info<N_RANK> l_son_grid;
 
     for (int i = N_RANK-1; i >= 0; --i) {
@@ -1162,6 +1167,7 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         thres = (2 * slope_[i] * lt);
         bool l_can_cut = (cut_lb ? (lb >= 2 * thres && lb > dx_recursive_[i]) : (lb >= thres && tb > dx_recursive_[i]));
         sim_can_cut = sim_can_cut && l_can_cut; 
+        /* largest_dim is the largest dim which can be cut */
         largest_dim = (l_can_cut ? (cut_lb ? ((lb > largest_dim_size) ? i : largest_dim) : ((tb > largest_dim_size) ? i : largest_dim)) : largest_dim); 
         largest_dim_size = (l_can_cut ? (cut_lb ? (lb > largest_dim_size ? lb : largest_dim_size) : (tb > largest_dim_size ? tb : largest_dim_size)) : largest_dim_size); 
         base_cube_s = base_cube_s && (cut_lb ? (lb <= dx_recursive_[i]) : (tb <= dx_recursive_[i]));
@@ -1173,6 +1179,12 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         printf("call interior!\n");
         print_grid(stdout, t0, t1, grid);
 #endif
+        ++count_interior_region;
+        long long l_count_interior_points=1;
+        for (int i = 0; i < N_RANK; ++i) {
+            l_count_interior_points *= ((grid.x1[i] - grid.x0[i] + grid.x1[i] + grid.dx1[i] * (t1 - t0) - grid.x0[i] - grid.x0[i] - grid.dx0[i] * (t1 - t0)) * (t1 - t0) / 2);
+        }
+        count_interior_points += l_count_interior_points;
         f(t0, t1, grid);
 //        base_case_kernel_interior(t0, t1, grid, f);
         return;
@@ -1187,12 +1199,14 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
     } else {
         /* cut into time */
         assert(dt_recursive_ >= r_t);
-        int halflt = lt / r_t;
+        int l_r_t = r_t;
+        l_r_t = r_t;
+        int halflt = lt / l_r_t;
         l_son_grid = grid;
         sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
 
         int j;
-        for (j = 1; j < r_t-1; ++j) {
+        for (j = 1; j < l_r_t-1; ++j) {
             for (int i = 0; i < N_RANK; ++i) {
                 l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * j * halflt;
                 l_son_grid.dx0[i] = grid.dx0[i];
@@ -1246,12 +1260,22 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
          *  ||  (!cut_lb && tb > dx_recursive_boundary_ && lb < thres)
          */
         // base case
+        ++count_boundary_region;
+        long long l_count_boundary_points=1;
+        for (int i = 0; i < N_RANK; ++i) {
+            l_count_boundary_points *= ((grid.x1[i] - grid.x0[i] + grid.x1[i] + grid.dx1[i] * (t1 - t0) - grid.x0[i] - grid.x0[i] - grid.dx0[i] * (t1 - t0)) * (t1 - t0) / 2);
+        }
+        count_boundary_points += l_count_boundary_points;
         base_case_kernel_boundary(t0, t1, grid, bf);
         return;
     } else if (sim_can_cut) {
         /* cut into space */
         /* push the first l_father_grid that can be cut into the circular queue */
         /* boundary cuts! */
+#if DEBUG
+        printf("call boundary!\n");
+        print_grid(stdout, t0, t1, grid);
+#endif
         sim_obase_space_cut_p(t0, t1, grid, f, bf);
         return;
     } else if (largest_dim_size > 0) {

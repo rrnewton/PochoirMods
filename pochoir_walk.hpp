@@ -137,6 +137,9 @@ static inline void set_worker_count(const char * nstr)
 #endif
 }
 
+static long long count_sim_space, count_one_space;
+static long long count_interior_region, count_boundary_region;
+static long long count_interior_points, count_boundary_points;
 template <int N_RANK>
 struct Algorithm {
 	private:
@@ -170,7 +173,7 @@ struct Algorithm {
     bool boundarySet, physGridSet, slopeSet;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(2), r_t(2) {
+    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1), r_t(2) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -184,6 +187,9 @@ struct Algorithm {
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
+        count_sim_space = count_one_space = 0;
+        count_interior_region = count_boundary_region = 0;
+        count_interior_points = count_boundary_points = 0;
 #if DEBUG
         N_CORES = 2;
 #else

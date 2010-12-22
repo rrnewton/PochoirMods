@@ -54,6 +54,7 @@ int StrToInt(const std::string& s)
  * let's disable it for now!!!
  */
 #define BIT_TRICK 0
+#define INF 100000000
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define min(a, b) ((a) < (b) ? (a) : (b))
