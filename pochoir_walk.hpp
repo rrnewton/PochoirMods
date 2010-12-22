@@ -252,6 +252,8 @@ struct Algorithm {
     inline void walk_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     /* recursive algorithm for obase */
     template <typename F> 
+    inline void obase_m(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F> 
     inline void obase_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
     inline void obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);

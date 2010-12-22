@@ -29,7 +29,6 @@
 #include "pochoir_common.hpp"
 #include "pochoir_array.hpp"
 #include "pochoir_iter.hpp"
-#define BICUT 1
 /* assuming there won't be more than 10 Pochoir_Array in one Pochoir object! */
 #define ARRAY_SIZE 10
 template <typename T, int N_RANK, int TOGGLE=2>
@@ -270,7 +269,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
 #if BICUT
-#if 0
+#if 1
 //    fprintf(stderr, "Call obase_bicut\n");
     algor.obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 #else
@@ -281,7 +280,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     fprintf(stderr, "count_interior_points = %ld, count_boundary_points = %ld\n", count_interior_points, count_boundary_points);
 #endif
 #else
-    algor.obase_adaptive(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+    algor.obase_m(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 #endif
 }
 

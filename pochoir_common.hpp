@@ -99,8 +99,9 @@ struct Pochoir_Shape {
 template <int N_RANK, size_t N>
 size_t ArraySize (Pochoir_Shape<N_RANK> (& arr)[N]) { return N; }
 
-#define KLEIN 0
+#define KLEIN 1
 #define USE_CILK_FOR 0
+#define BICUT 0
 
 inline void klein(int & new_i, int & new_j, grid_info<2> const & grid) {
     int l_arr_size_1 = grid.x1[1] - grid.x0[1];

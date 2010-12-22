@@ -28736,9 +28736,9 @@ template <typename BF>
 struct meta_grid_boundary <2, BF>{
 	static inline void single_step(int t, grid_info<2> const & grid, grid_info<2> const & initial_grid, BF const & bf) {
 		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
-            int new_i = ((i) - (((initial_grid . x1[1])-(initial_grid . x0[1])) & -((i)>=(initial_grid . x1[1]))));
 			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
-                int new_j = ((j) - (((initial_grid . x1[0])-(initial_grid . x0[0])) & -((j)>=(initial_grid . x1[0]))));
+                int new_i = i, new_j = j;
+                klein(new_i, new_j, initial_grid);
                 bf(t, new_i, new_j);
 			}
 		}
@@ -28911,6 +28911,8 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
     template <typename F> 
     inline void walk_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     /* recursive algorithm for obase */
+    template <typename F> 
+    inline void obase_m(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
     inline void obase_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
@@ -29101,7 +29103,7 @@ void Algorithm<N_RANK>::print_index(int t, int const idx[])
 template <int N_RANK>
 void Algorithm<N_RANK>::print_region(int t, int const head[], int const tail[])
 {
-    printf("%s:%lu t=%lu, {", __FUNCTION__, 447, t);
+    printf("%s:%lu t=%lu, {", __FUNCTION__, 449, t);
     for (int i = 0; i < N_RANK; ++i) {
         printf("{%lu, %lu} ", head[i], tail[i]);
     }
@@ -29146,11 +29148,10 @@ inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> &
     bool interior = false;
     if (grid.x0[i] >= uub_boundary[i] 
      && grid.x0[i] + grid.dx0[i] * lt >= uub_boundary[i]) {
-        /* this is for NON klein bottle */
+        /* this is for klein bottle! */
         interior = true;
-        /* by this branch, we are assuming the shape is NOT a Klein bottle */
-        grid.x0[i] -= phys_length_[i];
-        grid.x1[i] -= phys_length_[i];
+//        fprintf(stderr, "call klein_region!\n");
+klein_region(grid, phys_grid_);
     } else if (grid.x1[i] <= ulb_boundary[i] 
             && grid.x1[i] + grid.dx1[i] * lt <= ulb_boundary[i]
             && grid.x0[i] >= lub_boundary[i]
@@ -30657,6 +30658,90 @@ inline void Algorithm<N_RANK>::obase_bicut(int t0, int t1, grid_info<N_RANK> con
 	return;
 }
 
+
+/* this is for interior region */
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::obase_m(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
+{
+	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
+	   for the rest cut into that dimension, cut into as many as we can!
+	 */
+	int lt = t1 - t0;
+	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
+	bool cut_yet = false;
+	//int lb[N_RANK];
+index_info lb, thres, tb;
+    bool cut_lb[N_RANK];
+	grid_info<N_RANK> l_grid;
+
+	for (int i = 0; i < N_RANK; ++i) {
+		lb[i] = grid.x1[i] - grid.x0[i];
+        tb[i] = (grid.x1[i] + grid.dx1[i] * lt) - (grid.x0[i] + grid.dx0[i] * lt);
+        cut_lb[i] = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
+		thres[i] = 2 * (2 * slope_[i] * lt);
+		base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
+	}	
+	if (base_cube) {
+		f(t0, t1, grid);
+		return;
+	} else  {
+		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
+			if (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]) { 
+				l_grid = grid;
+				int sep = (2 * slope_[i] * lt);
+				int r = (lb[i]/sep);
+				int j;
+				for (j = 0; j < r-1; ++j) {
+					l_grid.x0[i] = grid.x0[i] + sep * j;
+					l_grid.dx0[i] = slope_[i];
+					l_grid.x1[i] = grid.x0[i] + sep * (j+1);
+					l_grid.dx1[i] = -slope_[i];
+					_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+	//			j_loc = r-1;
+l_grid.x0[i] = grid.x0[i] + sep * (r-1);
+				l_grid.dx0[i] = slope_[i];
+				l_grid.x1[i] = grid.x1[i];
+				l_grid.dx1[i] = -slope_[i];
+				_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				_Cilk_sync;
+				if (grid.dx0[i] != slope_[i]) {
+					l_grid.x0[i] = grid.x0[i]; l_grid.dx0[i] = grid.dx0[i];
+					l_grid.x1[i] = grid.x0[i]; l_grid.dx1[i] = slope_[i];
+					_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+				for (int j = 1; j < r; ++j) {
+					l_grid.x0[i] = grid.x0[i] + sep * j;
+					l_grid.dx0[i] = -slope_[i];
+					l_grid.x1[i] = grid.x0[i] + sep * j;
+					l_grid.dx1[i] = slope_[i];
+					_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+				if (grid.dx1[i] != -slope_[i]) {
+					l_grid.x0[i] = grid.x1[i]; l_grid.dx0[i] = -slope_[i];
+					l_grid.x1[i] = grid.x1[i]; l_grid.dx1[i] = grid.dx1[i];
+					_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+				cut_yet = true;
+			}/* end if */
+		} /* end for */
+		if (!cut_yet && lt > dt_recursive_) {
+			int halflt = lt / 2;
+			l_grid = grid;
+			obase_m(t0, t0+halflt, l_grid, f);
+			for (int i = 0; i < N_RANK; ++i) {
+				l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
+				l_grid.dx0[i] = grid.dx0[i];
+				l_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
+				l_grid.dx1[i] = grid.dx1[i];
+			}
+			obase_m(t0+halflt, t1, l_grid, f);
+			cut_yet = true;
+		}
+		(static_cast<void> (0));
+		return;
+	}
+}
 
 /* this is for interior region */
 template <int N_RANK> template <typename F>
@@ -32445,7 +32530,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register %s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir.hpp", __FUNCTION__, 112, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register %s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir.hpp", __FUNCTION__, 111, str);
         exit(1);
     }
 }
@@ -32580,7 +32665,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     checkFlags();
-    algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    algor.walk_ncores_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 }
 
 /* obase for zero-padded area! */
@@ -32593,10 +32678,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     timestep_ = timestep;
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
-    fprintf(stderr, "count_sim_space = %ld, count_one_space = %ld\n", count_sim_space, count_one_space);
-    fprintf(stderr, "count_interior_region = %ld, count_boundary_region = %ld\n", count_interior_region, count_boundary_region);
-    fprintf(stderr, "count_interior_points = %ld, count_boundary_points = %ld\n", count_interior_points, count_boundary_points);
+algor.obase_m(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
@@ -32611,11 +32693,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     checkFlags();
-//    fprintf(stderr, "Call sim_obase_bicut_P\n");
-algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
-    fprintf(stderr, "count_sim_space = %ld, count_one_space = %ld\n", count_sim_space, count_one_space);
-    fprintf(stderr, "count_interior_region = %ld, count_boundary_region = %ld\n", count_interior_region, count_boundary_region);
-    fprintf(stderr, "count_interior_points = %ld, count_boundary_points = %ld, ratio = %f\n", count_interior_points, count_boundary_points, (float)count_boundary_points/count_interior_points);
+    algor.obase_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 }
 
 

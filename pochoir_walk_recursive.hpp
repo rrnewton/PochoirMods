@@ -668,6 +668,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                 const int t0 = l_father->t0, t1 = l_father->t1;
                 const int level = l_father->level;
                 const bool cut_lb = (l_father_grid.dx0[level] >= 0 && l_father_grid.dx1[level] <= 0);
+                const int thres = 2 * slope_[level] * (t1 - t0);
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
                 if (cut_lb) {
                     /* cut_lb */
@@ -1830,6 +1831,112 @@ inline void Algorithm<N_RANK>::obase_bicut(int t0, int t1, grid_info<N_RANK> con
 	return;
 }
 
+
+/* this is for interior region */
+template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::obase_m(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
+{
+	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
+	   for the rest cut into that dimension, cut into as many as we can!
+	 */
+	int lt = t1 - t0;
+	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
+	bool cut_yet = false;
+	//int lb[N_RANK];
+	//int thres[N_RANK];
+	index_info lb, thres, tb;
+    bool cut_lb[N_RANK];
+	grid_info<N_RANK> l_grid;
+
+	for (int i = 0; i < N_RANK; ++i) {
+		lb[i] = grid.x1[i] - grid.x0[i];
+        tb[i] = (grid.x1[i] + grid.dx1[i] * lt) - (grid.x0[i] + grid.dx0[i] * lt);
+        cut_lb[i] = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
+		thres[i] = 2 * (2 * slope_[i] * lt);
+		base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
+	}	
+	if (base_cube) {
+#if DEBUG
+        printf("call Obase_m! ");
+		print_grid(stdout, t0, t1, grid);
+#endif
+		f(t0, t1, grid);
+		return;
+	} else  {
+		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
+			if (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]) { 
+				l_grid = grid;
+				int sep = (2 * slope_[i] * lt);
+				int r = (lb[i]/sep);
+#if DEBUG
+				printf("initial_cut = %s, lb[%d] = %d, sep = %d, r = %d\n", initial_cut(i) ? "True" : "False", i, lb[i], sep, r);
+#endif
+				int j;
+				for (j = 0; j < r-1; ++j) {
+					l_grid.x0[i] = grid.x0[i] + sep * j;
+					l_grid.dx0[i] = slope_[i];
+					l_grid.x1[i] = grid.x0[i] + sep * (j+1);
+					l_grid.dx1[i] = -slope_[i];
+					cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+	//			j_loc = r-1;
+				l_grid.x0[i] = grid.x0[i] + sep * (r-1);
+				l_grid.dx0[i] = slope_[i];
+				l_grid.x1[i] = grid.x1[i];
+				l_grid.dx1[i] = -slope_[i];
+				cilk_spawn obase_m(t0, t1, l_grid, f);
+#if DEBUG
+//				print_sync(stdout);
+#endif
+				cilk_sync;
+				if (grid.dx0[i] != slope_[i]) {
+					l_grid.x0[i] = grid.x0[i]; l_grid.dx0[i] = grid.dx0[i];
+					l_grid.x1[i] = grid.x0[i]; l_grid.dx1[i] = slope_[i];
+					cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+				for (int j = 1; j < r; ++j) {
+					l_grid.x0[i] = grid.x0[i] + sep * j;
+					l_grid.dx0[i] = -slope_[i];
+					l_grid.x1[i] = grid.x0[i] + sep * j;
+					l_grid.dx1[i] = slope_[i];
+					cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+				if (grid.dx1[i] != -slope_[i]) {
+					l_grid.x0[i] = grid.x1[i]; l_grid.dx0[i] = -slope_[i];
+					l_grid.x1[i] = grid.x1[i]; l_grid.dx1[i] = grid.dx1[i];
+					cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+#if 0
+				printf("%s:%d cut into %d dim\n", __FUNCTION__, __LINE__, i);
+				fflush(stdout);
+#endif
+				cut_yet = true;
+			}/* end if */
+		} /* end for */
+		if (!cut_yet && lt > dt_recursive_) {
+			int halflt = lt / 2;
+			l_grid = grid;
+			obase_m(t0, t0+halflt, l_grid, f);
+#if DEBUG
+//			print_sync(stdout);
+#endif
+			for (int i = 0; i < N_RANK; ++i) {
+				l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
+				l_grid.dx0[i] = grid.dx0[i];
+				l_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
+				l_grid.dx1[i] = grid.dx1[i];
+			}
+			obase_m(t0+halflt, t1, l_grid, f);
+#if 0
+			printf("%s:%d cut into time dim\n", __FUNCTION__, __LINE__);
+			fflush(stdout);
+#endif
+			cut_yet = true;
+		}
+		assert(cut_yet);
+		return;
+	}
+}
 
 /* this is for interior region */
 template <int N_RANK> template <typename F>
