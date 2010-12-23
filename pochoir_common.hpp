@@ -100,7 +100,7 @@ struct Pochoir_Shape {
 template <int N_RANK, size_t N>
 size_t ArraySize (Pochoir_Shape<N_RANK> (& arr)[N]) { return N; }
 
-#define KLEIN 1
+#define KLEIN 0
 #define USE_CILK_FOR 0
 #define BICUT 1
 #define STAT 1

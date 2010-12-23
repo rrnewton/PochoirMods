@@ -67,6 +67,8 @@ void check_result(int t, int j, int i, double a, double b)
             new_j += arr.size(0);
         else if (new_j >= arr.size(0))
             new_j -= arr.size(0);
+        if (new_i == i && new_j == j)
+            printf("a(%d, %d) called without changing index!", i, j);
         return arr.get(t, new_i, new_j);
     Pochoir_Boundary_end
 

@@ -31,6 +31,7 @@
 #include <iostream>
 #include <cilk/cilk.h>
 #include <cilk/cilk_api.h>
+#include <cilk/reducer_opadd.h>
 #include "pochoir_common.hpp"
 
 using namespace std;
@@ -137,10 +138,6 @@ static inline void set_worker_count(const char * nstr)
 #endif
 }
 
-#if STAT
-static long long sim_count_cut[SUPPORT_RANK];
-#endif
-
 template <int N_RANK>
 struct Algorithm {
 	private:
@@ -156,26 +153,33 @@ struct Algorithm {
         int Z;
         const int r_t; /* # of pieces cut in time dimension */
         int N_CORES;
-	public:
-    typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
-    typedef int index_info[N_RANK];
-    typedef struct {
-        int level; /* level is how many dimensions we have cut so far */
-        int t0, t1;
-        grid_info<N_RANK> grid;
-    } queue_info;
+        typedef int index_info[N_RANK];
+        typedef struct {
+            int level; /* level is how many dimensions we have cut so far */
+            int t0, t1;
+            grid_info<N_RANK> grid;
+        } queue_info;
 
 #define ALGOR_QUEUE_SIZE 200
-    /* we can use toggled circular queue! */
-    grid_info<N_RANK> phys_grid_;
-    int phys_length_[N_RANK];
-	int slope_[N_RANK];
-    int stride_[N_RANK];
-    int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
-    bool boundarySet, physGridSet, slopeSet;
+        /* we can use toggled circular queue! */
+        grid_info<N_RANK> phys_grid_;
+        int phys_length_[N_RANK];
+        int slope_[N_RANK];
+        int stride_[N_RANK];
+        int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
+        bool boundarySet, physGridSet, slopeSet;
+	public:
+#if STAT
+    /* sim_count_cut will be accessed outside Algorithm object */
+    cilk::reducer_opadd<int> sim_count_cut[SUPPORT_RANK];
+    cilk::reducer_opadd<int> interior_region_count, boundary_region_count;
+    cilk::reducer_opadd<int> interior_points_count, boundary_points_count;
+#endif
+
+    typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1), r_t(2) {
+    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(2) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -184,17 +188,16 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 150;
-        dx_recursive_[0] = 150;
-        Z = 22500;
+            dx_recursive_[i] = 3;
+        dx_recursive_[0] = 1000;
+        Z = 10000;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
 #if STAT
-        for (int i = 0; i < SUPPORT_RANK; ++i) {
-            sim_count_cut[i] = 0;
-        }
-        N_CORES = 2;
+//        for (int i = 0; i < SUPPORT_RANK; ++i) {
+//            sim_count_cut[i] = 0;
+//        }
 #else
         N_CORES = __cilkrts_get_nworkers();
 #endif
@@ -226,16 +229,6 @@ struct Algorithm {
     inline void sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF>
     inline void sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
-
-    template <typename F>
-    inline void sim_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
-    template <typename F>
-    inline void sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
-
-    template <typename F, typename BF>
-    inline void sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
-    template <typename F, typename BF>
-    inline void sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 
     template <typename F> 
 	inline void base_case_kernel_interior(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
@@ -278,7 +271,7 @@ struct Algorithm {
     inline void naive_cut_space_ncores(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
     inline void cut_space_ncores_boundary(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
-#if 1
+#if DEBUG 
 	void print_grid(FILE * fp, int t0, int t1, grid_info<N_RANK> const & grid);
 	void print_sync(FILE * fp);
 	void print_index(int t, int const idx[]);
@@ -354,7 +347,7 @@ inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_in
 	}
 }
 
-#if 1
+#if DEBUG 
 template <int N_RANK>
 void Algorithm<N_RANK>::print_grid(FILE *fp, int t0, int t1, grid_info<N_RANK> const & grid)
 {

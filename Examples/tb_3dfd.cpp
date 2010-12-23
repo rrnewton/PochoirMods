@@ -43,7 +43,7 @@ int Nz = 100;
 int T = 40;
 static const int NPIECES = 2;
 int N_CORES=2;
-#if 0
+#if 1
 static const int dt_threshold = 3;
 static const int dx_threshold = 1000;
 static const int dyz_threshold = 3;

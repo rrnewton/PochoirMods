@@ -277,7 +277,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 #if STAT
     for (int i = 1; i < SUPPORT_RANK; ++i) {
-        fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, sim_count_cut[i]);
+        fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, algor.sim_count_cut[i].get_value());
     }
 #endif
 #endif
@@ -289,6 +289,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
 /* obase for interior and ExecSpec for boundary */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const & bf) {
+    int l_total_points = 1;
     Algorithm<N_RANK> algor(slope_);
     getPhysDomainFromArray();
     algor.set_phys_grid(phys_grid_);
@@ -307,8 +308,16 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #if STAT
     for (int i = 1; i < SUPPORT_RANK; ++i) {
-        fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, sim_count_cut[i]);
+        fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, algor.sim_count_cut[i].get_value());
     }
+    for (int i = 0; i < N_RANK; ++i) {
+        l_total_points *= (phys_grid_.x1[i] - phys_grid_.x0[i]);
+    }
+    l_total_points *= timestep;
+    fprintf(stderr, "interior_region_count = %d, boundary_region_count = %d\n", algor.interior_region_count.get_value(), algor.boundary_region_count.get_value());
+    int l_interior_points = algor.interior_points_count.get_value();
+    int l_boundary_points = algor.boundary_points_count.get_value();
+    fprintf(stderr, "interior_points_count = %d, boundary_points_count = %d, initial_total_points = %d, ratio = %.5f\n", l_interior_points, l_boundary_points, l_total_points, (float)l_boundary_points/(l_boundary_points + l_interior_points));
 #endif
 #endif
 #else
