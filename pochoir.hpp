@@ -275,10 +275,10 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
 #else
     fprintf(stderr, "Call sim_obase_bicut\n");
     algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
-#if 0
-    fprintf(stderr, "count_sim_space = %ld, count_one_space = %ld\n", count_sim_space, count_one_space);
-    fprintf(stderr, "count_interior_region = %ld, count_boundary_region = %ld\n", count_interior_region, count_boundary_region);
-    fprintf(stderr, "count_interior_points = %ld, count_boundary_points = %ld\n", count_interior_points, count_boundary_points);
+#if STAT
+    for (int i = 1; i < SUPPORT_RANK; ++i) {
+        fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, sim_count_cut[i]);
+    }
 #endif
 #endif
 #else
@@ -300,14 +300,16 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     checkFlags();
 #if BICUT
 #if 0
-//    fprintf(stderr, "Call obase_bicut_boundary_P\n");
+    fprintf(stderr, "Call obase_bicut_boundary_P\n");
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #else
-//    fprintf(stderr, "Call sim_obase_bicut_P\n");
+    fprintf(stderr, "Call sim_obase_bicut_P\n");
     algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
-    fprintf(stderr, "count_sim_space = %ld, count_one_space = %ld\n", count_sim_space, count_one_space);
-    fprintf(stderr, "count_interior_region = %ld, count_boundary_region = %ld\n", count_interior_region, count_boundary_region);
-    fprintf(stderr, "count_interior_points = %ld, count_boundary_points = %ld, ratio = %f\n", count_interior_points, count_boundary_points, (float)count_boundary_points/count_interior_points);
+#if STAT
+    for (int i = 1; i < SUPPORT_RANK; ++i) {
+        fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, sim_count_cut[i]);
+    }
+#endif
 #endif
 #else
     algor.obase_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);

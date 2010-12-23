@@ -137,9 +137,10 @@ static inline void set_worker_count(const char * nstr)
 #endif
 }
 
-static long long count_sim_space, count_one_space;
-static long long count_interior_region, count_boundary_region;
-static long long count_interior_points, count_boundary_points;
+#if STAT
+static long long sim_count_cut[SUPPORT_RANK];
+#endif
+
 template <int N_RANK>
 struct Algorithm {
 	private:
@@ -152,6 +153,7 @@ struct Algorithm {
         int dx_recursive_boundary_[N_RANK];
         const int dt_recursive_;
         const int dt_recursive_boundary_;
+        int Z;
         const int r_t; /* # of pieces cut in time dimension */
         int N_CORES;
 	public:
@@ -184,13 +186,14 @@ struct Algorithm {
         for (int i = N_RANK-1; i > 0; --i)
             dx_recursive_[i] = 150;
         dx_recursive_[0] = 150;
+        Z = 22500;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
-        count_sim_space = count_one_space = 0;
-        count_interior_region = count_boundary_region = 0;
-        count_interior_points = count_boundary_points = 0;
-#if DEBUG
+#if STAT
+        for (int i = 0; i < SUPPORT_RANK; ++i) {
+            sim_count_cut[i] = 0;
+        }
         N_CORES = 2;
 #else
         N_CORES = __cilkrts_get_nworkers();
@@ -217,14 +220,10 @@ struct Algorithm {
     template <typename F>
     inline void sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F>
-    inline void obase_one_space_cut(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
-    template <typename F>
     inline void sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
 
     template <typename F, typename BF>
     inline void sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
-    template <typename F, typename BF>
-    inline void obase_one_space_cut_p(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
     template <typename F, typename BF>
     inline void sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 

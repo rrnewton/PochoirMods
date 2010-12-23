@@ -19,6 +19,7 @@ psa_struct : psa_struct.cpp
 rna_struct : rna_struct.cpp
 	${CC} -o rna_struct_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} rna_struct.cpp
 3dfd : tb_3dfd.cpp
+#	${CC} -o tb_3dfd_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_3dfd.cpp
 	${CC} -o tb_3dfd_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3dfd.cpp
 klein : tb_life_klein.cpp
 	${CC} -o klein_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_life_klein.cpp
