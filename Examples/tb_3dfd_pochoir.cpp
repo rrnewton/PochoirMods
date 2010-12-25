@@ -30125,6 +30125,16 @@ static inline void set_worker_count(const char * nstr)
 }
 
 template <int N_RANK>
+struct power {
+    enum { value = 3 * power<N_RANK-1>::value };
+};
+
+template <>
+struct power<1> {
+    enum {value = 3};
+}; 
+
+template <int N_RANK>
 struct Algorithm {
 	private:
         /* different stencils will have different slopes */
@@ -30145,6 +30155,7 @@ struct Algorithm {
             int t0, t1;
             grid_info<N_RANK> grid;
         } queue_info;
+
 
         /* we can use toggled circular queue! */
         grid_info<N_RANK> phys_grid_;
@@ -30177,7 +30188,8 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
-//        for (int i = 0; i < SUPPORT_RANK; ++i) {
+        /* ALGOR_QUEUE_SIZE = 3^N_RANK */
+        // ALGOR_QUEUE_SIZE = power<N_RANK>::value;
 }
 
     /* README!!!: set_phys_grid()/set_stride() must be called before call to 
@@ -30513,7 +30525,7 @@ template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     queue_info *l_father, *l_son;
-    queue_info circular_queue_[2][1200];
+    queue_info circular_queue_[2][27];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
 
     for (int i = 0; i < 2; ++i) {
@@ -30521,7 +30533,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
     }
 
     /* set up the initial grid */
-    do { if (queue_len_[0] < 1200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((1200) & -(((queue_tail_[0] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+    do { if (queue_len_[0] < 27) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((27) & -(((queue_tail_[0] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
     for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         const int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
@@ -30529,11 +30541,11 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_head_[curr_dep_pointer] + 1))>=(1200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((27) & -(((queue_head_[curr_dep_pointer] + 1))>=(27)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
                 _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
             } else {
                 /* performing a space cut on dimension 'level' */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_head_[curr_dep_pointer] + 1))>=(1200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((27) & -(((queue_head_[curr_dep_pointer] + 1))>=(27)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
                 const grid_info<N_RANK> l_father_grid = l_father->grid;
                 const int t0 = l_father->t0, t1 = l_father->t1;
                 const int lt = (t1 - t0);
@@ -30549,7 +30561,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         /* if we can't cut into this dimension, just directly push 
                          * it into the circular queue 
                          */
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                     } else {
                         /* can_cut! */
                         const int sep = (int)lb/2;
@@ -30564,7 +30576,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         /* push one sub-grid into circular queue of (curr_dep) */
                         l_son_grid.x0[level] = l_start + sep;
@@ -30572,7 +30584,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -30582,7 +30594,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         if (l_father_grid.dx0[level] != slope_[level]) {
                             l_son_grid.x0[level] = l_start;
@@ -30590,7 +30602,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                             l_son_grid.x1[level] = l_start;
                             l_son_grid.dx1[level] = slope_[level];
                             (static_cast<void> (0));
-                            do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                            do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                         }
                         if (l_father_grid.dx1[level] != -slope_[level]) {
                             l_son_grid.x0[level] = l_end;
@@ -30598,7 +30610,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                             l_son_grid.x1[level] = l_end;
                             l_son_grid.dx1[level] = l_father_grid.dx1[level];
                             (static_cast<void> (0));
-                            do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                            do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                         }
                     } /* end if (can_cut) */
                 } /* end if (cut_lb) */ else {
@@ -30608,7 +30620,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         /* if we can't cut into this dimension, just directly push 
                          * it into the circular queue 
                          */
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                     } else {
                         grid_info<N_RANK> l_son_grid = l_father_grid;
                         const int l_start = (l_father_grid.x0[level]);
@@ -30622,7 +30634,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -30632,14 +30644,14 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                     } /* end if (can_cut) */
                 } /* end if (cut_tb) */
             } /* end if (performing a space cut) */
@@ -30654,7 +30666,7 @@ template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
     queue_info *l_father, *l_son;
-    queue_info circular_queue_[2][1200];
+    queue_info circular_queue_[2][27];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
 
     for (int i = 0; i < 2; ++i) {
@@ -30662,7 +30674,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
     }
 
     /* set up the initial grid */
-    do { if (queue_len_[0] < 1200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((1200) & -(((queue_tail_[0] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+    do { if (queue_len_[0] < 27) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((27) & -(((queue_tail_[0] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
     for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         const int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
@@ -30670,7 +30682,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_head_[curr_dep_pointer] + 1))>=(1200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((27) & -(((queue_head_[curr_dep_pointer] + 1))>=(27)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
                 if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
                     _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
                 } else {
@@ -30678,7 +30690,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                 }
             } else {
                 /* performing a space cut on dimension 'level' */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_head_[curr_dep_pointer] + 1))>=(1200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((27) & -(((queue_head_[curr_dep_pointer] + 1))>=(27)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
                 const grid_info<N_RANK> l_father_grid = l_father->grid;
                 const int t0 = l_father->t0, t1 = l_father->t1;
                 const int lt = (t1 - t0);
@@ -30695,7 +30707,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         /* if we can't cut into this dimension, just directly push
                          * it into the circular queue
                         */
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                     } else {
                         /* can_cut */
                         const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
@@ -30710,7 +30722,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         /* push one sub-grid into circular queue of (curr_dep) */
                         l_son_grid.x0[level] = l_start + sep;
@@ -30718,7 +30730,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -30728,7 +30740,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         if (initial_cut) {
                             /* merge triangles! */
@@ -30737,7 +30749,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                             l_son_grid.x1[level] = l_end+2*slope_[level];
                             l_son_grid.dx1[level] = slope_[level];
                             (static_cast<void> (0));
-                            do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                            do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                         } else {
                             if (l_father_grid.dx0[level] != slope_[level]) {
                                 l_son_grid.x0[level] = l_start;
@@ -30745,7 +30757,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                                 l_son_grid.x1[level] = l_start;
                                 l_son_grid.dx1[level] = slope_[level];
                                 (static_cast<void> (0));
-                                do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                                do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                             }
                             if (l_father_grid.dx1[level] != -slope_[level]) {
                                 l_son_grid.x0[level] = l_end;
@@ -30753,7 +30765,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                                 l_son_grid.x1[level] = l_end;
                                 l_son_grid.dx1[level] = l_father_grid.dx1[level];
                                 (static_cast<void> (0));
-                                do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                                do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                             }
                         }
                     } /* end if (can_cut) */
@@ -30765,7 +30777,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         /* if we can't cut into this dimension, just directly push 
                          * it into the circular queue
                         */
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                     } else {
                         /* can_cut! */
                         grid_info<N_RANK> l_son_grid = l_father_grid;
@@ -30780,7 +30792,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[curr_dep_pointer] < 1200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[curr_dep_pointer] < 27) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((27) & -(((queue_tail_[curr_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -30790,14 +30802,14 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
 
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
                         (static_cast<void> (0));
-                        do { if (queue_len_[next_dep_pointer] < 1200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((1200) & -(((queue_tail_[next_dep_pointer] + 1))>=(1200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        do { if (queue_len_[next_dep_pointer] < 27) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((27) & -(((queue_tail_[next_dep_pointer] + 1))>=(27)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
                     } /* end if (can_cut) */
                 } /* end if (cut_tb) */
             } /* end if (performing a space cut) */
@@ -30848,28 +30860,17 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         /* cut into time */
 //        assert(dt_recursive_ >= r_t);
 (static_cast<void> (0));
-        int l_r_t = r_t;
-        int halflt = lt / l_r_t;
+        int halflt = lt / 2;
         l_son_grid = grid;
         sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
 
-        int j;
-        for (j = 1; j < l_r_t-1; ++j) {
-            for (int i = 0; i < N_RANK; ++i) {
-                l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * j * halflt;
-                l_son_grid.dx0[i] = grid.dx0[i];
-                l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * j * halflt;
-                l_son_grid.dx1[i] = grid.dx1[i];
-            }
-            sim_obase_bicut(t0+j*halflt, t0+(j+1)*halflt, l_son_grid, f);
-        }
         for (int i = 0; i < N_RANK; ++i) {
-            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * j * halflt;
+            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
             l_son_grid.dx0[i] = grid.dx0[i];
-            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * j * halflt;
+            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
             l_son_grid.dx1[i] = grid.dx1[i];
         }
-        sim_obase_bicut(t0+j*halflt, t1, l_son_grid, f);
+        sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
         return;
     } else {
         // base case
@@ -30923,8 +30924,7 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
         return;
     } else if (lt > dt_recursive_boundary_) {
         /* cut into time */
-        int l_r_t = r_t;
-        int halflt = lt / l_r_t;
+        int halflt = lt / 2;
         l_son_grid = grid;
         if (within_boundary(t0, t0+halflt, l_son_grid)) {
             sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
@@ -30932,30 +30932,16 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
             sim_obase_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
         }
 
-        int j;
-        for (j = 1; j < l_r_t-1; ++j) {
-            for (int i = 0; i < N_RANK; ++i) {
-                l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * j * halflt;
-                l_son_grid.dx0[i] = grid.dx0[i];
-                l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * j * halflt;
-                l_son_grid.dx1[i] = grid.dx1[i];
-            }
-            if (within_boundary(t0+j*halflt, t0+(j+1)*halflt, l_son_grid)) {
-                sim_obase_bicut(t0+j*halflt, t0+(j+1)*halflt, l_son_grid, f);
-            } else {
-                sim_obase_bicut_p(t0+j*halflt, t0+(j+1)*halflt, l_son_grid, f, bf);
-            }
-        }
         for (int i = 0; i < N_RANK; ++i) {
-            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * j * halflt;
+            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
             l_son_grid.dx0[i] = grid.dx0[i];
-            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * j * halflt;
+            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
             l_son_grid.dx1[i] = grid.dx1[i];
         }
-        if (within_boundary(t0+j*halflt, t1, l_son_grid)) {
-            sim_obase_bicut(t0+j*halflt, t1, l_son_grid, f);
+        if (within_boundary(t0+halflt, t1, l_son_grid)) {
+            sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
         } else {
-            sim_obase_bicut_p(t0+j*halflt, t1, l_son_grid, f, bf);
+            sim_obase_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
         }
         return;
     } else {
@@ -33074,14 +33060,14 @@ int total_size_;
         BValue_8D bv_8D(void) { return bv8_; }
 
         /* guarantee that only one version of boundary function is registered ! */
-        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null)}
-        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null)}
-        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = (__null); bv2_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null)}
-        void registerBV(BValue_4D _bv4) { bv4_ = _bv4;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null)}
-        void registerBV(BValue_5D _bv5) { bv5_ = _bv5;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null)}
-        void registerBV(BValue_6D _bv6) { bv6_ = _bv6;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv7_ = (__null); bv8_ = (__null)}
-        void registerBV(BValue_7D _bv7) { bv7_ = _bv7;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv8_ = (__null)}
-        void registerBV(BValue_8D _bv8) { bv8_ = _bv8;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null)}
+        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = (__null); bv2_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_4D _bv4) { bv4_ = _bv4;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_5D _bv5) { bv5_ = _bv5;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_6D _bv6) { bv6_ = _bv6;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_7D _bv7) { bv7_ = _bv7;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_8D _bv8) { bv8_ = _bv8;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null);}
 
         void unregisterBV(void) { bv1_ = (__null);  bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); ; bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null)}
 
@@ -33928,7 +33914,9 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     checkFlags();
+#pragma isat marker M2_begin
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+#pragma isat marker M2_end
 }
 
 /* obase for zero-padded area! */
@@ -33942,7 +33930,9 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
 fprintf(stderr, "Call sim_obase_bicut\n");
+#pragma isat marker M2_begin
     algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+#pragma isat marker M2_end
     for (int i = 1; i < 9; ++i) {
         fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, algor.sim_count_cut[i].get_value());
     }
@@ -33962,7 +33952,9 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     timestep_ = timestep;
     checkFlags();
     fprintf(stderr, "Call sim_obase_bicut_P\n");
+#pragma isat marker M2_begin
     algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+#pragma isat marker M2_end
     for (int i = 1; i < 9; ++i) {
         fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, algor.sim_count_cut[i].get_value());
     }
@@ -34416,10 +34408,34 @@ fd_3D.registerArray (pa); /* register Array */
   start = cilk_ticks_to_seconds(cilk_getticks());
 #pragma isat marker M2_begin
   
-	auto Default_fd_3D_fn = [&] (int t0, int t1, grid_info<3> const & grid) {
+	auto Opt_Pointer_fd_3D_fn = [&] (int t0, int t1, grid_info<3> const & grid) {
 	grid_info<3> l_grid = grid;
-	float * pt_pa_1;
-	float * pt_pa_0;
+	float * iter25;
+	float * iter24;
+	float * iter23;
+	float * iter22;
+	float * iter21;
+	float * iter20;
+	float * iter19;
+	float * iter18;
+	float * iter17;
+	float * iter16;
+	float * iter15;
+	float * iter14;
+	float * iter13;
+	float * iter12;
+	float * iter11;
+	float * iter10;
+	float * iter9;
+	float * iter8;
+	float * iter7;
+	float * iter6;
+	float * iter5;
+	float * iter4;
+	float * iter3;
+	float * iter2;
+	float * iter1;
+	float * iter0;
 	
 	float * pa_base = pa.data();
 	const int l_pa_total_size = pa.total_size();
@@ -34428,25 +34444,125 @@ fd_3D.registerArray (pa); /* register Array */
 	const int l_stride_pa_2 = pa.stride(2), l_stride_pa_1 = pa.stride(1), l_stride_pa_0 = pa.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_pa_0 = pa_base + ((t) & 0x1) * l_pa_total_size + (l_grid.x0[2]) * l_stride_pa_2 + (l_grid.x0[1]) * l_stride_pa_1 + (l_grid.x0[0]) * l_stride_pa_0;
-	pt_pa_1 = pa_base + ((t + 1) & 0x1) * l_pa_total_size + (l_grid.x0[2]) * l_stride_pa_2 + (l_grid.x0[1]) * l_stride_pa_1 + (l_grid.x0[0]) * l_stride_pa_0;
+	float * baseIter_1;
+	float * baseIter_0;
+	baseIter_0 = pa_base + ((t) & 0x1) * l_pa_total_size + (l_grid.x0[2]) * l_stride_pa_2 + (l_grid.x0[1]) * l_stride_pa_1 + (l_grid.x0[0]) * l_stride_pa_0;
+	baseIter_1 = pa_base + ((t + 1) & 0x1) * l_pa_total_size + (l_grid.x0[2]) * l_stride_pa_2 + (l_grid.x0[1]) * l_stride_pa_1 + (l_grid.x0[0]) * l_stride_pa_0;
+	iter0 = baseIter_0 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter1 = baseIter_0 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (1) * l_stride_pa_0;
+	iter2 = baseIter_0 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (-1) * l_stride_pa_0;
+	iter3 = baseIter_0 + (0) * l_stride_pa_2 + (1) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter4 = baseIter_0 + (0) * l_stride_pa_2 + (-1) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter5 = baseIter_0 + (1) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter6 = baseIter_0 + (-1) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter7 = baseIter_0 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (2) * l_stride_pa_0;
+	iter8 = baseIter_0 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (-2) * l_stride_pa_0;
+	iter9 = baseIter_0 + (0) * l_stride_pa_2 + (2) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter10 = baseIter_0 + (0) * l_stride_pa_2 + (-2) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter11 = baseIter_0 + (2) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter12 = baseIter_0 + (-2) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter13 = baseIter_0 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (3) * l_stride_pa_0;
+	iter14 = baseIter_0 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (-3) * l_stride_pa_0;
+	iter15 = baseIter_0 + (0) * l_stride_pa_2 + (3) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter16 = baseIter_0 + (0) * l_stride_pa_2 + (-3) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter17 = baseIter_0 + (3) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter18 = baseIter_0 + (-3) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter19 = baseIter_0 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (4) * l_stride_pa_0;
+	iter20 = baseIter_0 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (-4) * l_stride_pa_0;
+	iter21 = baseIter_0 + (0) * l_stride_pa_2 + (4) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter22 = baseIter_0 + (0) * l_stride_pa_2 + (-4) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter23 = baseIter_0 + (4) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter24 = baseIter_0 + (-4) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
+	iter25 = baseIter_1 + (0) * l_stride_pa_2 + (0) * l_stride_pa_1 + (0) * l_stride_pa_0;
 	
 	gap_pa_2 = l_stride_pa_2 + (l_grid.x0[1] - l_grid.x1[1]) * l_stride_pa_1;
 	for (int i = l_grid.x0[2]; i < l_grid.x1[2]; ++i, 
-	pt_pa_0 += gap_pa_2, 
-	pt_pa_1 += gap_pa_2) {
+	iter0 += gap_pa_2, 
+	iter1 += gap_pa_2, 
+	iter2 += gap_pa_2, 
+	iter3 += gap_pa_2, 
+	iter4 += gap_pa_2, 
+	iter5 += gap_pa_2, 
+	iter6 += gap_pa_2, 
+	iter7 += gap_pa_2, 
+	iter8 += gap_pa_2, 
+	iter9 += gap_pa_2, 
+	iter10 += gap_pa_2, 
+	iter11 += gap_pa_2, 
+	iter12 += gap_pa_2, 
+	iter13 += gap_pa_2, 
+	iter14 += gap_pa_2, 
+	iter15 += gap_pa_2, 
+	iter16 += gap_pa_2, 
+	iter17 += gap_pa_2, 
+	iter18 += gap_pa_2, 
+	iter19 += gap_pa_2, 
+	iter20 += gap_pa_2, 
+	iter21 += gap_pa_2, 
+	iter22 += gap_pa_2, 
+	iter23 += gap_pa_2, 
+	iter24 += gap_pa_2, 
+	iter25 += gap_pa_2) {
 	gap_pa_1 = l_stride_pa_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_pa_0;
 	for (int j = l_grid.x0[1]; j < l_grid.x1[1]; ++j, 
-	pt_pa_0 += gap_pa_1, 
-	pt_pa_1 += gap_pa_1) {
+	iter0 += gap_pa_1, 
+	iter1 += gap_pa_1, 
+	iter2 += gap_pa_1, 
+	iter3 += gap_pa_1, 
+	iter4 += gap_pa_1, 
+	iter5 += gap_pa_1, 
+	iter6 += gap_pa_1, 
+	iter7 += gap_pa_1, 
+	iter8 += gap_pa_1, 
+	iter9 += gap_pa_1, 
+	iter10 += gap_pa_1, 
+	iter11 += gap_pa_1, 
+	iter12 += gap_pa_1, 
+	iter13 += gap_pa_1, 
+	iter14 += gap_pa_1, 
+	iter15 += gap_pa_1, 
+	iter16 += gap_pa_1, 
+	iter17 += gap_pa_1, 
+	iter18 += gap_pa_1, 
+	iter19 += gap_pa_1, 
+	iter20 += gap_pa_1, 
+	iter21 += gap_pa_1, 
+	iter22 += gap_pa_1, 
+	iter23 += gap_pa_1, 
+	iter24 += gap_pa_1, 
+	iter25 += gap_pa_1) {
 	#pragma ivdep
 	for (int k = l_grid.x0[0]; k < l_grid.x1[0]; ++k, 
-	++pt_pa_0, 
-	++pt_pa_1) {
+	++iter0, 
+	++iter1, 
+	++iter2, 
+	++iter3, 
+	++iter4, 
+	++iter5, 
+	++iter6, 
+	++iter7, 
+	++iter8, 
+	++iter9, 
+	++iter10, 
+	++iter11, 
+	++iter12, 
+	++iter13, 
+	++iter14, 
+	++iter15, 
+	++iter16, 
+	++iter17, 
+	++iter18, 
+	++iter19, 
+	++iter20, 
+	++iter21, 
+	++iter22, 
+	++iter23, 
+	++iter24, 
+	++iter25) {
 	
 	float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
-	float div = c0 * pt_pa_0[0] + c1 * ((pt_pa_0[l_stride_pa_0 * (1)] + pt_pa_0[l_stride_pa_0 * (-1)]) + (pt_pa_0[l_stride_pa_1 * (1)] + pt_pa_0[l_stride_pa_1 * (-1)]) + (pt_pa_0[l_stride_pa_2 * (1)] + pt_pa_0[l_stride_pa_2 * (-1)])) + c2 * ((pt_pa_0[l_stride_pa_0 * (2)] + pt_pa_0[l_stride_pa_0 * (-2)]) + (pt_pa_0[l_stride_pa_1 * (2)] + pt_pa_0[l_stride_pa_1 * (-2)]) + (pt_pa_0[l_stride_pa_2 * (2)] + pt_pa_0[l_stride_pa_2 * (-2)])) + c3 * ((pt_pa_0[l_stride_pa_0 * (3)] + pt_pa_0[l_stride_pa_0 * (-3)]) + (pt_pa_0[l_stride_pa_1 * (3)] + pt_pa_0[l_stride_pa_1 * (-3)]) + (pt_pa_0[l_stride_pa_2 * (3)] + pt_pa_0[l_stride_pa_2 * (-3)])) + c4 * ((pt_pa_0[l_stride_pa_0 * (4)] + pt_pa_0[l_stride_pa_0 * (-4)]) + (pt_pa_0[l_stride_pa_1 * (4)] + pt_pa_0[l_stride_pa_1 * (-4)]) + (pt_pa_0[l_stride_pa_2 * (4)] + pt_pa_0[l_stride_pa_2 * (-4)]));
-	pt_pa_1[0] = 2 * pt_pa_0[0] - pt_pa_1[0] + vsq[i * Nxy + j * Nx + k] * div;
+	float div = c0 * (*iter0) + c1 * (((*iter1) + (*iter2)) + ((*iter3) + (*iter4)) + ((*iter5) + (*iter6))) + c2 * (((*iter7) + (*iter8)) + ((*iter9) + (*iter10)) + ((*iter11) + (*iter12))) + c3 * (((*iter13) + (*iter14)) + ((*iter15) + (*iter16)) + ((*iter17) + (*iter18))) + c4 * (((*iter19) + (*iter20)) + ((*iter21) + (*iter22)) + ((*iter23) + (*iter24)));
+	(*iter25) = 2 * (*iter0) - (*iter25) + vsq[i * Nxy + j * Nx + k] * div;
 	} } } /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
 	for (int i = 0; i < 3; ++i) {
@@ -34455,7 +34571,7 @@ fd_3D.registerArray (pa); /* register Array */
 	} /* end for t */
 	};
 
-	fd_3D.run_obase(T, Default_fd_3D_fn);
+	fd_3D.run_obase(T, Opt_Pointer_fd_3D_fn);
 	#pragma isat marker M2_end
   stop = cilk_ticks_to_seconds(cilk_getticks());
   print_summary("Pochoir", stop - start);

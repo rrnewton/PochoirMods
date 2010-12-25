@@ -397,6 +397,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     checkFlags();
+#pragma isat marker M2_begin
 #if BICUT
 #if 1
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
@@ -406,6 +407,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
 #else
     algor.walk_ncores_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #endif
+#pragma isat marker M2_end
 }
 
 /* obase for zero-padded area! */
@@ -421,10 +423,14 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
 #if BICUT
 #if 0
     fprintf(stderr, "Call obase_bicut\n");
+#pragma isat marker M2_begin
     algor.obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+#pragma isat marker M2_end
 #else
     fprintf(stderr, "Call sim_obase_bicut\n");
+#pragma isat marker M2_begin
     algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+#pragma isat marker M2_end
 #if STAT
     for (int i = 1; i < SUPPORT_RANK; ++i) {
         fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, algor.sim_count_cut[i].get_value());
@@ -452,10 +458,14 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
 #if BICUT
 #if 0
     fprintf(stderr, "Call obase_bicut_boundary_P\n");
+#pragma isat marker M2_begin
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+#pragma isat marker M2_end
 #else
     fprintf(stderr, "Call sim_obase_bicut_P\n");
+#pragma isat marker M2_begin
     algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+#pragma isat marker M2_end
 #if STAT
     for (int i = 1; i < SUPPORT_RANK; ++i) {
         fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, algor.sim_count_cut[i].get_value());
@@ -471,7 +481,9 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
 #endif
 #endif
 #else
+#pragma isat marker M2_begin
     algor.obase_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+#pragma isat marker M2_end
 #endif
 }
 

@@ -382,14 +382,14 @@ class Pochoir_Array {
         BValue_8D bv_8D(void) { return bv8_; }
 
         /* guarantee that only one version of boundary function is registered ! */
-        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL}
-        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL}
-        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = NULL; bv2_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL}
-        void registerBV(BValue_4D _bv4) { bv4_ = _bv4;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL}
-        void registerBV(BValue_5D _bv5) { bv5_ = _bv5;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL}
-        void registerBV(BValue_6D _bv6) { bv6_ = _bv6;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv7_ = NULL; bv8_ = NULL}
-        void registerBV(BValue_7D _bv7) { bv7_ = _bv7;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv8_ = NULL}
-        void registerBV(BValue_8D _bv8) { bv8_ = _bv8;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL}
+        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL;}
+        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL;}
+        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = NULL; bv2_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL;}
+        void registerBV(BValue_4D _bv4) { bv4_ = _bv4;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL;}
+        void registerBV(BValue_5D _bv5) { bv5_ = _bv5;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL;}
+        void registerBV(BValue_6D _bv6) { bv6_ = _bv6;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv7_ = NULL; bv8_ = NULL;}
+        void registerBV(BValue_7D _bv7) { bv7_ = _bv7;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv8_ = NULL;}
+        void registerBV(BValue_8D _bv8) { bv8_ = _bv8;  bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL;}
 
         void unregisterBV(void) { bv1_ = NULL;  bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; ; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL}
 

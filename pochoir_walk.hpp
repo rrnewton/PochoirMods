@@ -314,6 +314,16 @@ static inline void set_worker_count(const char * nstr)
 }
 
 template <int N_RANK>
+struct power {
+    enum { value = 3 * power<N_RANK-1>::value };
+};
+
+template <>
+struct power<1> {
+    enum {value = 3};
+}; 
+
+template <int N_RANK>
 struct Algorithm {
 	private:
         /* different stencils will have different slopes */
@@ -335,7 +345,8 @@ struct Algorithm {
             grid_info<N_RANK> grid;
         } queue_info;
 
-#define ALGOR_QUEUE_SIZE 1200
+        int ALGOR_QUEUE_SIZE;
+
         /* we can use toggled circular queue! */
         grid_info<N_RANK> phys_grid_;
         int phys_length_[N_RANK];
@@ -369,6 +380,8 @@ struct Algorithm {
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
+        /* ALGOR_QUEUE_SIZE = 3^N_RANK */
+        ALGOR_QUEUE_SIZE = power<N_RANK>::value;
 #if STAT
 //        for (int i = 0; i < SUPPORT_RANK; ++i) {
 //            sim_count_cut[i] = 0;

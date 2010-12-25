@@ -664,28 +664,17 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         /* cut into time */
 //        assert(dt_recursive_ >= r_t);
         assert(lt > dt_recursive_);
-        int l_r_t = r_t;
-        int halflt = lt / l_r_t;
+        int halflt = lt / 2;
         l_son_grid = grid;
         sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
 
-        int j;
-        for (j = 1; j < l_r_t-1; ++j) {
-            for (int i = 0; i < N_RANK; ++i) {
-                l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * j * halflt;
-                l_son_grid.dx0[i] = grid.dx0[i];
-                l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * j * halflt;
-                l_son_grid.dx1[i] = grid.dx1[i];
-            }
-            sim_obase_bicut(t0+j*halflt, t0+(j+1)*halflt, l_son_grid, f);
-        }
         for (int i = 0; i < N_RANK; ++i) {
-            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * j * halflt;
+            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
             l_son_grid.dx0[i] = grid.dx0[i];
-            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * j * halflt;
+            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
             l_son_grid.dx1[i] = grid.dx1[i];
         }
-        sim_obase_bicut(t0+j*halflt, t1, l_son_grid, f);
+        sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
         return;
     } else {
         // base case
@@ -754,8 +743,7 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
         return;
     } else if (lt > dt_recursive_boundary_) {
         /* cut into time */
-        int l_r_t = r_t;
-        int halflt = lt / l_r_t;
+        int halflt = lt / 2;
         l_son_grid = grid;
         if (within_boundary(t0, t0+halflt, l_son_grid)) {
             sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
@@ -763,30 +751,16 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
             sim_obase_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
         }
 
-        int j;
-        for (j = 1; j < l_r_t-1; ++j) {
-            for (int i = 0; i < N_RANK; ++i) {
-                l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * j * halflt;
-                l_son_grid.dx0[i] = grid.dx0[i];
-                l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * j * halflt;
-                l_son_grid.dx1[i] = grid.dx1[i];
-            }
-            if (within_boundary(t0+j*halflt, t0+(j+1)*halflt, l_son_grid)) {
-                sim_obase_bicut(t0+j*halflt, t0+(j+1)*halflt, l_son_grid, f);
-            } else {
-                sim_obase_bicut_p(t0+j*halflt, t0+(j+1)*halflt, l_son_grid, f, bf);
-            }
-        }
         for (int i = 0; i < N_RANK; ++i) {
-            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * j * halflt;
+            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
             l_son_grid.dx0[i] = grid.dx0[i];
-            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * j * halflt;
+            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
             l_son_grid.dx1[i] = grid.dx1[i];
         }
-        if (within_boundary(t0+j*halflt, t1, l_son_grid)) {
-            sim_obase_bicut(t0+j*halflt, t1, l_son_grid, f);
+        if (within_boundary(t0+halflt, t1, l_son_grid)) {
+            sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
         } else {
-            sim_obase_bicut_p(t0+j*halflt, t1, l_son_grid, f, bf);
+            sim_obase_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
         }
         return;
     } else {

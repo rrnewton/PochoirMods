@@ -57,10 +57,7 @@ void check_result(int t, int j, int i, double a, double b)
          * so the following code to set boundary index and
          * boundary rvalue is not necessary!!! 
          */
-        if (i <= 0 || i >= arr.size(1)-1 || j <= 0 || j >= arr.size(0)-1)
-            return 0;
-        else
-            return arr.get(t, i, j);
+        return 0;
     Pochoir_Boundary_end
 
     template <typename Array>
@@ -132,10 +129,10 @@ int main(int argc, char * argv[])
      * the boundary region and when to call the user supplied boundary
      * value function
      */
-//    heat_2D.registerBoundaryFn(a, heat_bv_2D);
-    heat_2D.registerArray(a);
+    heat_2D.registerBoundaryFn(a, heat_bv_2D);
+//    heat_2D.registerArray(a);
     heat_2D.registerShape(heat_shape_2D);
-    heat_2D.registerDomain(I, J);
+//    heat_2D.registerDomain(I, J);
 
 #if 1
     for (int times = 0; times < TIMES; ++times) {
@@ -146,8 +143,8 @@ int main(int argc, char * argv[])
     }
 	std::cout << "Pochoir ET: consumed time :" << min_tdiff << "ms" << std::endl;
 
-//    b.registerShape(heat_shape_2D);
-//    b.registerBV(heat_bv_2D);
+    // b.registerShape(heat_shape_2D);
+    b.registerBV(heat_bv_2D);
 #endif
 #if 1
     min_tdiff = INF;
@@ -155,13 +152,13 @@ int main(int argc, char * argv[])
     for (int times = 0; times < TIMES; ++times) {
 	gettimeofday(&start, 0);
 	for (int t = 0; t < T_SIZE; ++t) {
-    cilk_for (int i = 1; i < N_SIZE-1; ++i) {
-	for (int j = 1; j < N_SIZE-1; ++j) {
+    cilk_for (int i = 0; i < N_SIZE; ++i) {
+	for (int j = 0; j < N_SIZE; ++j) {
 #if DEBUG
        b(t+1, i, j) = b(t, i-1, j-1) + 0.01; 
 #else
 //       b.interior(t+1, i, j) = b.interior(t, i-1, j-1) + b.interior(t, i, j-1) + 0.01; 
-       b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); 
+       b(t+1, i, j) = 0.125 * (b(t, i+1, j) - 2.0 * b(t, i, j) + b(t, i-1, j)) + 0.125 * (b(t, i, j+1) - 2.0 * b(t, i, j) + b(t, i, j-1)) + b(t, i, j); 
 #endif
     } } }
 	gettimeofday(&end, 0);
