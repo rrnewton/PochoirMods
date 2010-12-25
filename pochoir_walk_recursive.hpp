@@ -620,13 +620,13 @@ template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     const int lt = t1 - t0;
-    bool sim_can_cut = false, base_cube_t = (lt <= dt_recursive_), base_cube_s = true;
+    bool sim_can_cut = false;
     grid_info<N_RANK> l_son_grid;
-    int l_total_area = 1;
 #if STAT
     int l_count_cut = 0;
     int l_bottom_total_area = 1;
     int l_top_total_area = 1;
+    int l_total_points;
 #endif
 
     for (int i = N_RANK-1; i >= 0; --i) {
@@ -635,7 +635,6 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
         /* cut_lb = '/ \' */
         bool cut_lb = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
-        l_total_area *= (cut_lb ? lb : tb);
         thres = (2 * slope_[i] * lt);
         bool l_can_cut = (cut_lb ? (lb >= 2 * thres && lb > dx_recursive_[i]) : (lb >= thres && tb > dx_recursive_[i]));
         /* as long as there's one dimension can conduct a cut, we conduct a 
@@ -647,35 +646,24 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         l_bottom_total_area *= (cut_lb ? lb : tb);
         l_top_total_area *= (cut_lb ? tb : lb);
 #endif
-        base_cube_s = base_cube_s && (cut_lb ? (lb <= dx_recursive_[i]) : (tb <= dx_recursive_[i]));
     }
 
 #if STAT
+    l_total_points = l_bottom_total_area * t1 / 3 - l_top_total_area * t0 / 3;
+#endif
+    if (sim_can_cut) {
+        /* cut into space */
+#if STAT
     // sim_count_cut[l_count_cut] = (l_count_cut > 0 ? sim_count_cut[l_count_cut] + 1 : sim_count_cut[l_count_cut]);
-    if (l_count_cut > 0)
         ++sim_count_cut[l_count_cut];
 #endif
-    if (base_cube_s || base_cube_t) {
-    // if (l_total_area <= Z || base_cube_s || base_cube_t) {
-        // base case
-#if DEBUG
-        printf("call interior!\n");
-        print_grid(stdout, t0, t1, grid);
-#endif
-#if STAT
-        ++interior_region_count;
-        interior_points_count += (((l_bottom_total_area - l_top_total_area) * lt) / 3);
-#endif
-        f(t0, t1, grid);
-//        base_case_kernel_interior(t0, t1, grid, f);
-        return;
-    } else if (sim_can_cut) {
-        /* cut into space */
         sim_obase_space_cut(t0, t1, grid, f);
         return;
-    } else {
+    // } else if (lt > dt_recursive_ && l_total_points > Z) {
+    } else if (lt > dt_recursive_) {
         /* cut into time */
 //        assert(dt_recursive_ >= r_t);
+        assert(lt > dt_recursive_);
         int l_r_t = r_t;
         int halflt = lt / l_r_t;
         l_son_grid = grid;
@@ -699,7 +687,21 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         }
         sim_obase_bicut(t0+j*halflt, t1, l_son_grid, f);
         return;
-    } 
+    } else {
+        // base case
+#if DEBUG
+        printf("call interior!\n");
+        print_grid(stdout, t0, t1, grid);
+        // fprintf(stderr, "l_total_points = %d\n", l_total_points);
+#endif
+#if STAT
+        ++interior_region_count;
+        interior_points_count += l_total_points;
+#endif
+        f(t0, t1, grid);
+//        base_case_kernel_interior(t0, t1, grid, f);
+        return;
+    }  
 }
 
 /* This is the version for boundary region cut! */
@@ -707,12 +709,13 @@ template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
     const int lt = t1 - t0;
-    bool sim_can_cut = false, base_cube_t = (lt <= dt_recursive_boundary_), base_cube_s = true;
+    bool sim_can_cut = false;
     grid_info<N_RANK> l_son_grid;
 #if STAT
     int l_count_cut = 0;
     int l_bottom_total_area = 1;
     int l_top_total_area = 1;
+    int l_total_points;
 #endif
 
     for (int i = N_RANK-1; i >= 0; --i) {
@@ -733,38 +736,23 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
         l_top_total_area *= (cut_lb ? tb : lb);
 #endif
         sim_can_cut |= l_can_cut;
-        base_cube_s = base_cube_s && (cut_lb ? (lb <= dx_recursive_boundary_[i]) : (tb <= dx_recursive_boundary_[i]));
     }
 
 #if STAT
-    // sim_count_cut[l_count_cut] = (l_count_cut > 0 ? sim_count_cut[l_count_cut] + 1 : sim_count_cut[l_count_cut]);
-    if (l_count_cut > 0)
-        ++sim_count_cut[l_count_cut];
+    l_total_points = l_bottom_total_area * t1 / 3 - l_top_total_area * t0 / 3;
 #endif
-    if (base_cube_s || base_cube_t) {
-    // if (l_total_area <= Z || base_cube_t) {
-        /* for base_cube_t: -- prevent too small time cut! 
-         *      (cut_lb && lb > dx_recursive_boundary_ && lb < 2 * thres)
-         *  ||  (!cut_lb && tb > dx_recursive_boundary_ && lb < thres)
-         */
-        // base case
-#if DEBUG
-        printf("call interior!\n");
-        print_grid(stdout, t0, t1, grid);
-#endif
-#if STAT
-        ++boundary_region_count;
-        boundary_points_count += (((l_bottom_total_area - l_top_total_area) * lt) / 3);
-#endif
-        base_case_kernel_boundary(t0, t1, grid, bf);
-        return;
-    } else if (sim_can_cut) {
+
+    if (sim_can_cut) {
         /* cut into space */
         /* push the first l_father_grid that can be cut into the circular queue */
         /* boundary cuts! */
+#if STAT
+    // sim_count_cut[l_count_cut] = (l_count_cut > 0 ? sim_count_cut[l_count_cut] + 1 : sim_count_cut[l_count_cut]);
+        ++sim_count_cut[l_count_cut];
+#endif
         sim_obase_space_cut_p(t0, t1, grid, f, bf);
         return;
-    } else {
+    } else if (lt > dt_recursive_boundary_) {
         /* cut into time */
         int l_r_t = r_t;
         int halflt = lt / l_r_t;
@@ -800,6 +788,23 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
         } else {
             sim_obase_bicut_p(t0+j*halflt, t1, l_son_grid, f, bf);
         }
+        return;
+    } else {
+    // if (l_total_area <= Z || base_cube_t) {
+        /* for base_cube_t: -- prevent too small time cut! 
+         *      (cut_lb && lb > dx_recursive_boundary_ && lb < 2 * thres)
+         *  ||  (!cut_lb && tb > dx_recursive_boundary_ && lb < thres)
+         */
+        // base case
+#if DEBUG
+        printf("call boundary!\n");
+        print_grid(stdout, t0, t1, grid);
+#endif
+#if STAT
+        ++boundary_region_count;
+        boundary_points_count += l_total_points;
+#endif
+        base_case_kernel_boundary(t0, t1, grid, bf);
         return;
     } 
 }

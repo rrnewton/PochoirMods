@@ -24,6 +24,24 @@ rna_struct : rna_struct.cpp
 klein : tb_life_klein.cpp
 	${CC} -o klein_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_life_klein.cpp
 #	${CC} -o klein_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -g3 -debug -split-macro-shadow tb_life_klein.cpp
+heat_3D_NP : tb_heat_3D_NP.cpp
+	${CC} -o tb_heat_3D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_3D_NP.cpp
+#	${CC} -o tb_heat_3D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_3D_NP.cpp
+heat_4D_NP : tb_heat_4D_NP.cpp
+	${CC} -o tb_heat_4D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_4D_NP.cpp
+#	${CC} -o tb_heat_4D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_4D_NP.cpp
+heat_5D_NP : tb_heat_5D_NP.cpp
+	${CC} -o tb_heat_5D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_5D_NP.cpp
+#	${CC} -o tb_heat_5D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_5D_NP.cpp
+heat_6D_NP : tb_heat_6D_NP.cpp
+	${CC} -o tb_heat_6D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_6D_NP.cpp
+#	${CC} -o tb_heat_6D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_6D_NP.cpp
+heat_7D_NP : tb_heat_7D_NP.cpp
+	${CC} -o tb_heat_7D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_7D_NP.cpp
+#	${CC} -o tb_heat_7D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_7D_NP.cpp
+heat_8D_NP : tb_heat_8D_NP.cpp
+	${CC} -o tb_heat_8D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_8D_NP.cpp
+#	${CC} -o tb_heat_8D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_8D_NP.cpp
 clean: 
 	rm -f *.o *.i
 	rm -f ./tb_3dfd_pochoir ./tb_life_pochoir ./tb_heat_2D_NP_pochoir ./tb_heat_2D_P_pochoir

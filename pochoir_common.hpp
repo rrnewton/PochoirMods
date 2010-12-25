@@ -55,7 +55,7 @@ int StrToInt(const std::string& s)
  */
 #define BIT_TRICK 0
 #define INF 100000000
-#define SUPPORT_RANK 4
+#define SUPPORT_RANK 9
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define min(a, b) ((a) < (b) ? (a) : (b))
@@ -166,6 +166,21 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 #define Pochoir_kernel_3D(name, t, i, j, k) \
     auto name = [&](int t, int i, int j, int k) {
 
+#define Pochoir_kernel_4D(name, t, i, j, k, l) \
+    auto name = [&](int t, int i, int j, int k, int l) {
+
+#define Pochoir_kernel_5D(name, t, i, j, k, l, m) \
+    auto name = [&](int t, int i, int j, int k, int l, int m) {
+
+#define Pochoir_kernel_6D(name, t, i, j, k, l, m, n) \
+    auto name = [&](int t, int i, int j, int k, int l, int m, int n) {
+
+#define Pochoir_kernel_7D(name, t, i, j, k, l, m, n, o) \
+    auto name = [&](int t, int i, int j, int k, int l, int m, int n, int o) {
+
+#define Pochoir_kernel_8D(name, t, i, j, k, l, m, n, o, p) \
+    auto name = [&](int t, int i, int j, int k, int l, int m, int n, int o, int p) {
+
 #define Pochoir_kernel_end }; 
 
 #define Pochoir_obase_fn_1D(name, t0, t1, grid) \
@@ -177,26 +192,27 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 #define Pochoir_obase_fn_3D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<3> const & grid) {
 
+#define Pochoir_obase_fn_4D(name, t0, t1, grid) \
+    auto name = [&](int t0, int t1, grid_info<4> const & grid) {
+
+#define Pochoir_obase_fn_5D(name, t0, t1, grid) \
+    auto name = [&](int t0, int t1, grid_info<5> const & grid) {
+
+#define Pochoir_obase_fn_6D(name, t0, t1, grid) \
+    auto name = [&](int t0, int t1, grid_info<6> const & grid) {
+
+#define Pochoir_obase_fn_7D(name, t0, t1, grid) \
+    auto name = [&](int t0, int t1, grid_info<7> const & grid) {
+
+#define Pochoir_obase_fn_8D(name, t0, t1, grid) \
+    auto name = [&](int t0, int t1, grid_info<8> const & grid) {
+
 /* - these function templates are for computing boundary values, currently
  *   icc doesn't support capturing the lambda function by function objects,
  *   so, we have to utilize the function pointers!
  * - because these functions will be called inside T & operator() functions,
  *   so we have to return a value of T&
  */
-#if 1
-#define Pochoir_Boundary_Declare_1D(name, arr, t, i) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 1, TOGGLE> & arr, int t, int i) 
-
-#define Pochoir_Boundary_Declare_2D(name, arr, t, i, j) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 2, TOGGLE> & arr, int t, int i, int j)
-
-#define Pochoir_Boundary_Declare_3D(name, arr, t, i, j, k) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 3, TOGGLE> & arr, int t, int i, int j, int k)
-#endif
-
 #define Pochoir_Boundary_1D(name, arr, t, i) \
     template <typename T, int TOGGLE> \
     T name (Pochoir_Array<T, 1, TOGGLE> & arr, int t, int i) { 
@@ -208,6 +224,26 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 #define Pochoir_Boundary_3D(name, arr, t, i, j, k) \
     template <typename T, int TOGGLE> \
     T name (Pochoir_Array<T, 3, TOGGLE> & arr, int t, int i, int j, int k) { 
+
+#define Pochoir_Boundary_4D(name, arr, t, i, j, k, l) \
+    template <typename T, int TOGGLE> \
+    T name (Pochoir_Array<T, 4, TOGGLE> & arr, int t, int i, int j, int k, int l) { 
+
+#define Pochoir_Boundary_5D(name, arr, t, i, j, k, l, m) \
+    template <typename T, int TOGGLE> \
+    T name (Pochoir_Array<T, 5, TOGGLE> & arr, int t, int i, int j, int k, int l, int m) { 
+
+#define Pochoir_Boundary_6D(name, arr, t, i, j, k, l, m, n) \
+    template <typename T, int TOGGLE> \
+    T name (Pochoir_Array<T, 6, TOGGLE> & arr, int t, int i, int j, int k, int l, int m, int n) { 
+
+#define Pochoir_Boundary_7D(name, arr, t, i, j, k, l, m, n, o) \
+    template <typename T, int TOGGLE> \
+    T name (Pochoir_Array<T, 7, TOGGLE> & arr, int t, int i, int j, int k, int l, int m, int n, int o) { 
+
+#define Pochoir_Boundary_8D(name, arr, t, i, j, k, l, m, n, o, p) \
+    template <typename T, int TOGGLE> \
+    T name (Pochoir_Array<T, 8, TOGGLE> & arr, int t, int i, int j, int k, int l, int m, int n, int o, int p) { 
 
 #define Pochoir_Boundary_end }
 

@@ -29716,6 +29716,8 @@ struct Algorithm {
 	public:
     /* sim_count_cut will be accessed outside Algorithm object */
     cilk::reducer_opadd<int> sim_count_cut[4];
+    cilk::reducer_opadd<int> interior_region_count, boundary_region_count;
+    cilk::reducer_opadd<long long> interior_points_count, boundary_points_count;
 
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
@@ -29729,17 +29731,13 @@ ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
 }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 150;
-        dx_recursive_[0] = 150;
+            dx_recursive_[i] = 3;
+        dx_recursive_[0] = 1000;
         Z = 10000;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
-        for (int i = 0; i < 4; ++i) {
-            sim_count_cut[i] = 0;
-        }
-        N_CORES = 2;
-//        cout << " N_CORES = " << N_CORES << endl;
+//        for (int i = 0; i < SUPPORT_RANK; ++i) {
 }
 
     /* README!!!: set_phys_grid()/set_stride() must be called before call to 
@@ -29876,105 +29874,6 @@ inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_in
 			l_grid.x0[i] += l_grid.dx0[i]; l_grid.x1[i] += l_grid.dx1[i];
 		}
 	}
-}
-
-template <int N_RANK>
-void Algorithm<N_RANK>::print_grid(FILE *fp, int t0, int t1, grid_info<N_RANK> const & grid)
-{
-    int i;
-    fprintf(fp, "{ BASE, ");
-    fprintf(fp, "t = {%d, %d}, {", t0, t1);
-
-    fprintf(fp, "x0 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print x0[3] */
-        fprintf(fp, "%lu, ", grid.x0[i]);
-    }
-    fprintf(fp, "%lu}, ", grid.x0[i]);
-
-    fprintf(fp, "x1 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print x1[3] */
-        fprintf(fp, "%lu, ", grid.x1[i]);
-    }
-    fprintf(fp, "%lu}, ", grid.x1[i]);
-
-    fprintf(fp, "dx0 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print dx0[3] */
-        fprintf(fp, "%d, ", grid.dx0[i]);
-    }
-    fprintf(fp, "%d}, ", grid.dx0[i]);
-
-    fprintf(fp, "dx1 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print dx1[3] */
-        fprintf(fp, "%d, ", grid.dx1[i]);
-    }
-    fprintf(fp, "%d}}}, \n", grid.dx1[i]);
-    fflush(fp);
-    return;
-}
-
-template <int N_RANK>
-void Algorithm<N_RANK>::print_sync(FILE * fp)
-{
-    int i;
-    fprintf(fp, "{ SYNC, ");
-    fprintf(fp, "t = {0, 0}, {");
-
-    fprintf(fp, "x0 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print x0[3] */
-        fprintf(fp, "0, ");
-    }
-    fprintf(fp, "0}, ");
-
-    fprintf(fp, "x1 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print x1[3] */
-        fprintf(fp, "0, ");
-    }
-    fprintf(fp, "0}, ");
-
-    fprintf(fp, "dx0 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print dx0[3] */
-        fprintf(fp, "0, ");
-    }
-    fprintf(fp, "0}, ");
-
-    fprintf(fp, "dx1 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print dx1[3] */
-        fprintf(fp, "0, ");
-    }
-    fprintf(fp, "0}}}, \n");
-    fflush(fp);
-    return;
-}
-
-template <int N_RANK>
-void Algorithm<N_RANK>::print_index(int t, int const idx[])
-{
-    printf("U(t=%lu, {", t);
-    for (int i = 0; i < N_RANK; ++i) {
-        printf("%lu ", idx[i]);
-    }
-    printf("}) ");
-    fflush(stdout);
-}
-
-template <int N_RANK>
-void Algorithm<N_RANK>::print_region(int t, int const head[], int const tail[])
-{
-    printf("%s:%lu t=%lu, {", __FUNCTION__, 440, t);
-    for (int i = 0; i < N_RANK; ++i) {
-        printf("{%lu, %lu} ", head[i], tail[i]);
-    }
-    printf("}\n");
-    fflush(stdout);
-
 }
 
 /*
@@ -30477,6 +30376,8 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
     grid_info<N_RANK> l_son_grid;
     int l_total_area = 1;
     int l_count_cut = 0;
+    int l_bottom_total_area = 1;
+    int l_top_total_area = 1;
 
     for (int i = N_RANK-1; i >= 0; --i) {
         int lb, thres, tb;
@@ -30492,13 +30393,19 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
          */
         sim_can_cut |= l_can_cut; 
         l_count_cut = (l_can_cut ? l_count_cut+1 : l_count_cut);
+        l_bottom_total_area *= (cut_lb ? lb : tb);
+        l_top_total_area *= (cut_lb ? tb : lb);
         base_cube_s = base_cube_s && (cut_lb ? (lb <= dx_recursive_[i]) : (tb <= dx_recursive_[i]));
     }
 
-    sim_count_cut[l_count_cut] = (l_count_cut > 0 ? sim_count_cut[l_count_cut] + 1 : sim_count_cut[l_count_cut]);
+    // sim_count_cut[l_count_cut] = (l_count_cut > 0 ? sim_count_cut[l_count_cut] + 1 : sim_count_cut[l_count_cut]);
+if (l_count_cut > 0)
+        ++sim_count_cut[l_count_cut];
     if (base_cube_s || base_cube_t) {
     // if (l_total_area <= Z || base_cube_s || base_cube_t) {
-f(t0, t1, grid);
+++interior_region_count;
+        interior_points_count += (((l_bottom_total_area - l_top_total_area) * lt) / 3);
+        f(t0, t1, grid);
 //        base_case_kernel_interior(t0, t1, grid, f);
 return;
     } else if (sim_can_cut) {
@@ -30541,8 +30448,9 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
     const int lt = t1 - t0;
     bool sim_can_cut = false, base_cube_t = (lt <= dt_recursive_boundary_), base_cube_s = true;
     grid_info<N_RANK> l_son_grid;
-    int l_total_area = 1;
     int l_count_cut = 0;
+    int l_bottom_total_area = 1;
+    int l_top_total_area = 1;
 
     for (int i = N_RANK-1; i >= 0; --i) {
         int lb, thres, tb;
@@ -30550,7 +30458,6 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
         tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
         /* cut_lb = '/ \' */
         bool cut_lb = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
-        l_total_area *= (cut_lb ? lb : tb);
         thres = (2 * slope_[i] * lt);
         /* l_father_grid may be mapped to a new region in touch_boundary() */
         /* for the initial cut, we exclude the begining and end point to minimize
@@ -30558,14 +30465,20 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
         */
         bool l_can_cut = (cut_lb ? ((lb == phys_length_[i]) ? (lb - 2 * slope_[i] >= 2 * thres && lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres && lb > dx_recursive_boundary_[i])) : (lb >= thres && tb > dx_recursive_boundary_[i]));
         l_count_cut = (l_can_cut ? l_count_cut + 1 : l_count_cut);
+        l_bottom_total_area *= (cut_lb ? lb : tb);
+        l_top_total_area *= (cut_lb ? tb : lb);
         sim_can_cut |= l_can_cut;
         base_cube_s = base_cube_s && (cut_lb ? (lb <= dx_recursive_boundary_[i]) : (tb <= dx_recursive_boundary_[i]));
     }
 
-    sim_count_cut[l_count_cut] = (l_count_cut > 0 ? sim_count_cut[l_count_cut] + 1 : sim_count_cut[l_count_cut]);
+    // sim_count_cut[l_count_cut] = (l_count_cut > 0 ? sim_count_cut[l_count_cut] + 1 : sim_count_cut[l_count_cut]);
+if (l_count_cut > 0)
+        ++sim_count_cut[l_count_cut];
     if (base_cube_s || base_cube_t) {
     // if (l_total_area <= Z || base_cube_t) {
-base_case_kernel_boundary(t0, t1, grid, bf);
+++boundary_region_count;
+        boundary_points_count += (((l_bottom_total_area - l_top_total_area) * lt) / 3);
+        base_case_kernel_boundary(t0, t1, grid, bf);
         return;
     } else if (sim_can_cut) {
         /* cut into space */
@@ -33066,16 +32979,14 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     timestep_ = timestep;
     checkFlags();
 //  It seems that whether it's bicut or adaptive cut only matters in small scale!
-fprintf(stderr, "Call sim_obase_bicut\n");
-    algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
-    for (int i = 1; i < 4; ++i) {
-        fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, algor.sim_count_cut[i].get_value());
-    }
+fprintf(stderr, "Call obase_bicut\n");
+    algor.obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 }
 
 /* obase for interior and ExecSpec for boundary */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const & bf) {
+    int l_total_points = 1;
     Algorithm<N_RANK> algor(slope_);
     getPhysDomainFromArray();
     algor.set_phys_grid(phys_grid_);
@@ -33090,39 +33001,51 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     for (int i = 1; i < 4; ++i) {
         fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, algor.sim_count_cut[i].get_value());
     }
+    for (int i = 0; i < N_RANK; ++i) {
+        l_total_points *= (phys_grid_.x1[i] - phys_grid_.x0[i]);
+    }
+    l_total_points *= timestep;
+    fprintf(stderr, "interior_region_count = %d, boundary_region_count = %d\n", algor.interior_region_count.get_value(), algor.boundary_region_count.get_value());
+    int l_interior_points = algor.interior_points_count.get_value();
+    int l_boundary_points = algor.boundary_points_count.get_value();
+    fprintf(stderr, "interior_points_count = %ld, boundary_points_count = %ld, initial_total_points = %d, ratio = %.5f\n", l_interior_points, l_boundary_points, l_total_points, (float)l_boundary_points/(l_boundary_points + l_interior_points));
 }
 
 
 using namespace std;
 /* N_RANK includes both time and space dimensions */
 // #define N_SIZE 555
-void check_result(int t, int j, int i, double a, double b)
+void check_result(int t, int i, int j, int k, double a, double b)
 {
 	if (abs(a - b) < (1e-6)) {
-//		printf("a(%d, %d, %d) == b(%d, %d, %d) == %f : passed!\n", t, j, i, t, j, i, a);
+//		printf("a(%d, %d, %d, %d) == b(%d, %d, %d, %d) == %f : passed!\n", t, i, j, k, t, i, j, k, a);
 } else {
-		printf("a(%d, %d, %d) = %f, b(%d, %d, %d) = %f : FAILED!\n", t, j, i, a, t, j, i, b);
+		printf("a(%d, %d, %d, %d) = %f, b(%d, %d, %d, %d) = %f : FAILED!\n", t, i, j, k, a, t, i, j, k, b);
 	}
 
 }
 
-    template <typename T, int TOGGLE> T heat_bv_2D (Pochoir_Array<T, 2, TOGGLE> & arr, int t, int i, int j) {
+    template <typename T, int TOGGLE> T heat_bv_2D (Pochoir_Array<T, 3, TOGGLE> & arr, int t, int i, int j, int k) {
         /* this is non-periodic boundary value */
         /* we already shrinked by using range I, J, K,
          * so the following code to set boundary index and
          * boundary rvalue is not necessary!!! 
          */
-        if (i <= 0 || i >= arr.size(1)-1 || j <= 0 || j >= arr.size(0)-1)
+        if (i <= 0 || i >= arr.size(2)-1 
+                || j <= 0 || j >= arr.size(1)-1
+                || k <= 0 || k >= arr.size(0)-1)
             return 0;
         else
-            return arr.get(t, i, j);
+            return arr.get(t, i, j, k);
     }
 
     template <typename Array>
     void print_array(Array const & a) {
-        for (int i = 0; i < a.size(1); ++i) {
-            for (int j = 0; j < a.size(0); ++j) {
-                printf("%g(%g) ", a.interior(1, i, j), a.interior(0, i, j));
+        for (int i = 0; i < a.size(2); ++i) {
+            for (int j = 0; j < a.size(1); ++j) {
+        for (int k = 0; k < a.size(0); ++k) {
+            printf("%g(%g) ", a.interior(1, i, j, k), a.interior(0, i, j, k));
+        }
             }
             printf("\n");
         }
@@ -33145,92 +33068,77 @@ int main(int argc, char * argv[])
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
 	
-	/* Known*/ Pochoir_Array <double, 2, 2> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE) ;
+	/* Known*/ Pochoir_Array <double, 3, 2> a(N_SIZE, N_SIZE, N_SIZE), b(N_SIZE, N_SIZE, N_SIZE) ;
 
-	/* Known */ Pochoir <double, 2, 2> heat_2D ;
+	/* Known */ Pochoir <double, 3, 2> heat_3D ;
 
-	Pochoir_Domain I(1, N_SIZE - 1), J(1, N_SIZE - 1) ;
-Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, -1, -1}, {0, 0, -1}, {0, 0, 1}};
+	Pochoir_Domain I(1, N_SIZE - 1), J(1, N_SIZE - 1), K(1, N_SIZE - 1) ;
+Pochoir_Shape<3> heat_shape_3D[] = {{0, 0, 0, 0}, {-1, 1, 0, 0}, {-1, -1, 0, 0}, {-1, 0, 0, 0}, {-1, 0, 0, -1}, {-1, 0, 0, 1}, {-1, 0, 1, 0}, {-1, 0, -1, 0}};
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
+    for (int k = 0; k < N_SIZE; ++k) {
         if (i == 0 || i == N_SIZE-1
-            || j == 0 || j == N_SIZE-1) {
-            a(0, i, j) = a(1, i, j) = 0;
+            || j == 0 || j == N_SIZE-1
+            || k == 0 || k == N_SIZE-1) {
+            a(0, i, j, k) = a(1, i, j, k) = 0;
         } else {
-            a(0, i, j) = 1.0 * (rand() % BASE); 
-            a(1, i, j) = 0; 
+            a(0, i, j, k) = 1.0 * (rand() % BASE); 
+            a(1, i, j, k) = 0; 
         }
-        b(0, i, j) = a(0, i, j);
-        b(1, i, j) = 0;
-	} }
+        b(0, i, j, k) = a(0, i, j, k);
+        b(1, i, j, k) = 0;
+	} } }
 
-	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
-    auto heat_2D_fn = [&] (int t, int i, int j) {
+    auto heat_3D_fn = [&] (int t, int i, int j, int k) {
 	
-	a(t + 1, i, j) = 0.125 * (a(t, i + 1, j) - 2.0 * a(t, i, j) + a(t, i - 1, j)) + 0.125 * (a(t, i, j + 1) - 2.0 * a(t, i, j) + a(t, i, j - 1)) + a(t, i, j);
+	a(t, i, j, k) = 0.125 * (a(t - 1, i + 1, j, k) - 2.0 * a(t - 1, i, j, k) + a(t - 1, i - 1, j, k)) + 0.125 * (a(t - 1, i, j + 1, k) - 2.0 * a(t - 1, i, j, k) + a(t - 1, i, j - 1, k)) + 0.125 * (a(t - 1, i, j, k + 1) - 2.0 * a(t - 1, i, j, k) + a(t - 1, i, j, k - 1)) + a(t - 1, i, j, k);
 	};
-	heat_2D.registerArray (a); /* register Array */
-	heat_2D.registerShape(heat_shape_2D);
-    heat_2D.registerDomain(I, J);
+	heat_3D.registerArray (a); /* register Array */
+	heat_3D.registerShape(heat_shape_3D);
+    heat_3D.registerDomain(I, J, K);
 
     for (int times = 0; times < 1; ++times) {
 	    gettimeofday(&start, 0);
         
-	auto Default_heat_2D_fn = [&] (int t0, int t1, grid_info<2> const & grid) {
-	grid_info<2> l_grid = grid;
-	double * iter5;
-	double * iter4;
-	double * iter3;
-	double * iter2;
-	double * iter1;
-	double * iter0;
+	auto Default_heat_3D_fn = [&] (int t0, int t1, grid_info<3> const & grid) {
+	grid_info<3> l_grid = grid;
+	double * pt_a_1;
+	double * pt_a_0;
 	
 	double * a_base = a.data();
 	const int l_a_total_size = a.total_size();
 	
-	int gap_a_1, gap_a_0;
-	const int l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
+	int gap_a_2, gap_a_1, gap_a_0;
+	const int l_stride_a_2 = a.stride(2), l_stride_a_1 = a.stride(1), l_stride_a_0 = a.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	double * baseIter_1;
-	double * baseIter_0;
-	baseIter_0 = a_base + ((t + 1) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
-	baseIter_1 = a_base + ((t) & 0x1) * l_a_total_size + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
-	iter0 = baseIter_0 + (0) * l_stride_a_1 + (0) * l_stride_a_0;
-	iter1 = baseIter_1 + (1) * l_stride_a_1 + (0) * l_stride_a_0;
-	iter2 = baseIter_1 + (0) * l_stride_a_1 + (0) * l_stride_a_0;
-	iter3 = baseIter_1 + (-1) * l_stride_a_1 + (0) * l_stride_a_0;
-	iter4 = baseIter_1 + (0) * l_stride_a_1 + (1) * l_stride_a_0;
-	iter5 = baseIter_1 + (0) * l_stride_a_1 + (-1) * l_stride_a_0;
+	pt_a_0 = a_base + ((t) & 0x1) * l_a_total_size + (l_grid.x0[2]) * l_stride_a_2 + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
+	pt_a_1 = a_base + ((t - 1) & 0x1) * l_a_total_size + (l_grid.x0[2]) * l_stride_a_2 + (l_grid.x0[1]) * l_stride_a_1 + (l_grid.x0[0]) * l_stride_a_0;
 	
+	gap_a_2 = l_stride_a_2 + (l_grid.x0[1] - l_grid.x1[1]) * l_stride_a_1;
+	for (int i = l_grid.x0[2]; i < l_grid.x1[2]; ++i, 
+	pt_a_0 += gap_a_2, 
+	pt_a_1 += gap_a_2) {
 	gap_a_1 = l_stride_a_1 + (l_grid.x0[0] - l_grid.x1[0]) * l_stride_a_0;
-	for (int i = l_grid.x0[1]; i < l_grid.x1[1]; ++i, 
-	iter0 += gap_a_1, 
-	iter1 += gap_a_1, 
-	iter2 += gap_a_1, 
-	iter3 += gap_a_1, 
-	iter4 += gap_a_1, 
-	iter5 += gap_a_1) {
+	for (int j = l_grid.x0[1]; j < l_grid.x1[1]; ++j, 
+	pt_a_0 += gap_a_1, 
+	pt_a_1 += gap_a_1) {
 	#pragma ivdep
-	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j, 
-	++iter0, 
-	++iter1, 
-	++iter2, 
-	++iter3, 
-	++iter4, 
-	++iter5) {
+	for (int k = l_grid.x0[0]; k < l_grid.x1[0]; ++k, 
+	++pt_a_0, 
+	++pt_a_1) {
 	
-	(*iter0) = 0.125 * ((*iter1) - 2.0 * (*iter2) + (*iter3)) + 0.125 * ((*iter4) - 2.0 * (*iter2) + (*iter5)) + (*iter2);
-	} } /* end for (sub-trapezoid) */ 
+	pt_a_0[0] = 0.125 * (pt_a_1[l_stride_a_2 * (1)] - 2.0 * pt_a_1[0] + pt_a_1[l_stride_a_2 * (-1)]) + 0.125 * (pt_a_1[l_stride_a_1 * (1)] - 2.0 * pt_a_1[0] + pt_a_1[l_stride_a_1 * (-1)]) + 0.125 * (pt_a_1[l_stride_a_0 * (1)] - 2.0 * pt_a_1[0] + pt_a_1[l_stride_a_0 * (-1)]) + pt_a_1[0];
+	} } } /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
-	for (int i = 0; i < 2; ++i) {
+	for (int i = 0; i < 3; ++i) {
 		l_grid.x0[i] += l_grid.dx0[i]; l_grid.x1[i] += l_grid.dx1[i];
 	}
 	} /* end for t */
 	};
 
-	heat_2D.run_obase(T_SIZE, Default_heat_2D_fn);
+	heat_3D.run_obase(T_SIZE, Default_heat_3D_fn);
 	gettimeofday(&end, 0);
         min_tdiff = ((min_tdiff) < ((1.0e3 * tdiff(&end, &start))) ? (min_tdiff) : ((1.0e3 * tdiff(&end, &start))));
     }
@@ -33241,12 +33149,16 @@ min_tdiff = 100000000;
     /* cilk_for + zero-padding */
     for (int times = 0; times < 1; ++times) {
 	gettimeofday(&start, 0);
-	for (int t = 0; t < T_SIZE; ++t) {
+	for (int t = 1; t < T_SIZE+1; ++t) {
     _Cilk_for (int i = 1; i < N_SIZE-1; ++i) {
 	for (int j = 1; j < N_SIZE-1; ++j) {
-//       b.interior(t+1, i, j) = b.interior(t, i-1, j-1) + b.interior(t, i, j-1) + 0.01; 
-b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, j) + b.interior(t, i-1, j)) + 0.125 * (b.interior(t, i, j+1) - 2.0 * b.interior(t, i, j) + b.interior(t, i, j-1)) + b.interior(t, i, j); 
-    } } }
+    for (int k = 1; k < N_SIZE-1; ++k) {
+	   b.interior(t, i, j, k) = 
+           0.125 * (b.interior(t-1, i+1, j, k) - 2.0 * b.interior(t-1, i, j, k) + b.interior(t-1, i-1, j, k)) 
+         + 0.125 * (b.interior(t-1, i, j+1, k) - 2.0 * b.interior(t-1, i, j, k) + b.interior(t-1, i, j-1, k)) 
+         + 0.125 * (b.interior(t-1, i, j, k+1) - 2.0 * b.interior(t-1, i, j, k) + b.interior(t-1, i, j, k-1))
+         + b.interior(t-1, i, j, k);
+    } } } }
 	gettimeofday(&end, 0);
     min_tdiff = ((min_tdiff) < ((1.0e3 * tdiff(&end, &start))) ? (min_tdiff) : ((1.0e3 * tdiff(&end, &start))));
     }
@@ -33255,8 +33167,9 @@ b.interior(t+1, i, j) = 0.125 * (b.interior(t, i+1, j) - 2.0 * b.interior(t, i, 
 	t = T_SIZE;
 	for (int i = 1; i < N_SIZE-1; ++i) {
 	for (int j = 1; j < N_SIZE-1; ++j) {
-		check_result(t, i, j, a.interior(t, i, j), b.interior(t, i, j));
-	} } 
+    for (int k = 1; k < N_SIZE-1; ++k) {
+		check_result(t, i, j, k, a.interior(t, i, j, k), b.interior(t, i, j, k));
+	} } }
 
 	return 0;
 }

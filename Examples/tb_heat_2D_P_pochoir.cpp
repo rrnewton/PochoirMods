@@ -29717,7 +29717,7 @@ struct Algorithm {
     /* sim_count_cut will be accessed outside Algorithm object */
     cilk::reducer_opadd<int> sim_count_cut[4];
     cilk::reducer_opadd<int> interior_region_count, boundary_region_count;
-    cilk::reducer_opadd<int> interior_points_count, boundary_points_count;
+    cilk::reducer_opadd<long long> interior_points_count, boundary_points_count;
 
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
@@ -33011,7 +33011,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     fprintf(stderr, "interior_region_count = %d, boundary_region_count = %d\n", algor.interior_region_count.get_value(), algor.boundary_region_count.get_value());
     int l_interior_points = algor.interior_points_count.get_value();
     int l_boundary_points = algor.boundary_points_count.get_value();
-    fprintf(stderr, "interior_points_count = %d, boundary_points_count = %d, initial_total_points = %d, ratio = %.5f\n", l_interior_points, l_boundary_points, l_total_points, (float)l_boundary_points/(l_boundary_points + l_interior_points));
+    fprintf(stderr, "interior_points_count = %ld, boundary_points_count = %ld, initial_total_points = %d, ratio = %.5f\n", l_interior_points, l_boundary_points, l_total_points, (float)l_boundary_points/(l_boundary_points + l_interior_points));
 }
 
 

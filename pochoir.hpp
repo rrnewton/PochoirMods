@@ -44,6 +44,11 @@ class Pochoir {
         typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
+        typedef T (*BValue_4D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int);
+        typedef T (*BValue_5D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int, int);
+        typedef T (*BValue_6D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int, int, int);
+        typedef T (*BValue_7D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int, int, int, int);
+        typedef T (*BValue_8D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int, int, int, int, int);
         int arr_len_;
         int arr_idx_;
         bool regArrayFlag, regLogicDomainFlag, regPhysDomainFlag, regShapeFlag;
@@ -77,6 +82,16 @@ class Pochoir {
     void registerDomain(Domain const & i, Domain const & j);
     template <typename Domain>
     void registerDomain(Domain const & i, Domain const & j, Domain const & k);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n, Domain const & o);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n, Domain const & o, Domain const & p);
 
     /* register boundary value function with corresponding Pochoir_Array object directly */
     void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
@@ -89,6 +104,26 @@ class Pochoir {
     } 
     void registerBoundaryFn(Pochoir_Array<T, 3, TOGGLE> & arr, BValue_3D _bv3) {
         arr.registerBV(_bv3);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 4, TOGGLE> & arr, BValue_4D _bv4) {
+        arr.registerBV(_bv4);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 5, TOGGLE> & arr, BValue_5D _bv5) {
+        arr.registerBV(_bv5);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 6, TOGGLE> & arr, BValue_6D _bv6) {
+        arr.registerBV(_bv6);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 7, TOGGLE> & arr, BValue_7D _bv7) {
+        arr.registerBV(_bv7);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 8, TOGGLE> & arr, BValue_8D _bv8) {
+        arr.registerBV(_bv8);
         registerArray(arr);
     } 
     /* Executable Spec */
@@ -178,6 +213,121 @@ void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N
         slope_[i] = (int)ceil((float)slope_[i]/time_slope);
     }
     regShapeFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n, Domain const & r_o, Domain const & r_p) {
+    logic_grid_.x0[7] = r_i.first();
+    logic_grid_.x1[7] = r_i.first() + r_i.size();
+    logic_grid_.x0[6] = r_j.first();
+    logic_grid_.x1[6] = r_j.first() + r_j.size();
+    logic_grid_.x0[5] = r_k.first();
+    logic_grid_.x1[5] = r_k.first() + r_k.size();
+    logic_grid_.x0[4] = r_l.first();
+    logic_grid_.x1[4] = r_l.first() + r_l.size();
+    logic_grid_.x0[3] = r_m.first();
+    logic_grid_.x1[3] = r_m.first() + r_m.size();
+    logic_grid_.x0[2] = r_n.first();
+    logic_grid_.x1[2] = r_n.first() + r_n.size();
+    logic_grid_.x0[1] = r_o.first();
+    logic_grid_.x1[1] = r_o.first() + r_o.size();
+    logic_grid_.x0[0] = r_p.first();
+    logic_grid_.x1[0] = r_p.first() + r_p.size();
+    stride_[7] = r_i.stride();
+    stride_[6] = r_j.stride();
+    stride_[5] = r_k.stride();
+    stride_[4] = r_l.stride();
+    stride_[3] = r_m.stride();
+    stride_[2] = r_n.stride();
+    stride_[1] = r_o.stride();
+    stride_[0] = r_p.stride();
+    regLogicDomainFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n, Domain const & r_o) {
+    logic_grid_.x0[6] = r_i.first();
+    logic_grid_.x1[6] = r_i.first() + r_i.size();
+    logic_grid_.x0[5] = r_j.first();
+    logic_grid_.x1[5] = r_j.first() + r_j.size();
+    logic_grid_.x0[4] = r_k.first();
+    logic_grid_.x1[4] = r_k.first() + r_k.size();
+    logic_grid_.x0[3] = r_l.first();
+    logic_grid_.x1[3] = r_l.first() + r_l.size();
+    logic_grid_.x0[2] = r_m.first();
+    logic_grid_.x1[2] = r_m.first() + r_m.size();
+    logic_grid_.x0[1] = r_n.first();
+    logic_grid_.x1[1] = r_n.first() + r_n.size();
+    logic_grid_.x0[0] = r_o.first();
+    logic_grid_.x1[0] = r_o.first() + r_o.size();
+    stride_[6] = r_i.stride();
+    stride_[5] = r_j.stride();
+    stride_[4] = r_k.stride();
+    stride_[3] = r_l.stride();
+    stride_[2] = r_m.stride();
+    stride_[1] = r_n.stride();
+    stride_[0] = r_o.stride();
+    regLogicDomainFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n) {
+    logic_grid_.x0[5] = r_i.first();
+    logic_grid_.x1[5] = r_i.first() + r_i.size();
+    logic_grid_.x0[4] = r_j.first();
+    logic_grid_.x1[4] = r_j.first() + r_j.size();
+    logic_grid_.x0[3] = r_k.first();
+    logic_grid_.x1[3] = r_k.first() + r_k.size();
+    logic_grid_.x0[2] = r_l.first();
+    logic_grid_.x1[2] = r_l.first() + r_l.size();
+    logic_grid_.x0[1] = r_m.first();
+    logic_grid_.x1[1] = r_m.first() + r_m.size();
+    logic_grid_.x0[0] = r_n.first();
+    logic_grid_.x1[0] = r_n.first() + r_n.size();
+    stride_[5] = r_i.stride();
+    stride_[4] = r_j.stride();
+    stride_[3] = r_k.stride();
+    stride_[2] = r_l.stride();
+    stride_[1] = r_m.stride();
+    stride_[0] = r_n.stride();
+    regLogicDomainFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m) {
+    logic_grid_.x0[4] = r_i.first();
+    logic_grid_.x1[4] = r_i.first() + r_i.size();
+    logic_grid_.x0[3] = r_j.first();
+    logic_grid_.x1[3] = r_j.first() + r_j.size();
+    logic_grid_.x0[2] = r_k.first();
+    logic_grid_.x1[2] = r_k.first() + r_k.size();
+    logic_grid_.x0[1] = r_l.first();
+    logic_grid_.x1[1] = r_l.first() + r_l.size();
+    logic_grid_.x0[0] = r_m.first();
+    logic_grid_.x1[0] = r_m.first() + r_m.size();
+    stride_[4] = r_i.stride();
+    stride_[3] = r_j.stride();
+    stride_[2] = r_k.stride();
+    stride_[1] = r_l.stride();
+    stride_[0] = r_m.stride();
+    regLogicDomainFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l) {
+    logic_grid_.x0[3] = r_i.first();
+    logic_grid_.x1[3] = r_i.first() + r_i.size();
+    logic_grid_.x0[2] = r_j.first();
+    logic_grid_.x1[2] = r_j.first() + r_j.size();
+    logic_grid_.x0[1] = r_k.first();
+    logic_grid_.x1[1] = r_k.first() + r_k.size();
+    logic_grid_.x0[0] = r_l.first();
+    logic_grid_.x1[0] = r_l.first() + r_l.size();
+    stride_[3] = r_i.stride();
+    stride_[2] = r_j.stride();
+    stride_[1] = r_k.stride();
+    stride_[0] = r_l.stride();
+    regLogicDomainFlag = true;
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
@@ -317,7 +467,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     fprintf(stderr, "interior_region_count = %d, boundary_region_count = %d\n", algor.interior_region_count.get_value(), algor.boundary_region_count.get_value());
     int l_interior_points = algor.interior_points_count.get_value();
     int l_boundary_points = algor.boundary_points_count.get_value();
-    fprintf(stderr, "interior_points_count = %d, boundary_points_count = %d, initial_total_points = %d, ratio = %.5f\n", l_interior_points, l_boundary_points, l_total_points, (float)l_boundary_points/(l_boundary_points + l_interior_points));
+    fprintf(stderr, "interior_points_count = %ld, boundary_points_count = %ld, initial_total_points = %d, ratio = %.5f\n", l_interior_points, l_boundary_points, l_total_points, (float)l_boundary_points/(l_boundary_points + l_interior_points));
 #endif
 #endif
 #else

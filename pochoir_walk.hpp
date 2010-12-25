@@ -42,6 +42,111 @@ struct meta_grid_boundary {
 };
 
 template <typename BF>
+struct meta_grid_boundary <8, BF>{
+	static inline void single_step(int t, grid_info<8> const & grid, grid_info<8> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[7]; i < grid.x1[7]; ++i) {
+            int new_i = pmod_lu(i, initial_grid.x0[7], initial_grid.x1[7]);
+			for (int j = grid.x0[6]; j < grid.x1[6]; ++j) {
+                int new_j = pmod_lu(j, initial_grid.x0[6], initial_grid.x1[6]);
+        for (int k = grid.x0[5]; k < grid.x1[5]; ++k) {
+            int new_k = pmod_lu(k, initial_grid.x0[5], initial_grid.x1[5]);
+            for (int l = grid.x0[4]; l < grid.x1[4]; ++l) {
+                int new_l = pmod_lu(l, initial_gird.x0[4], initial_grid.x1[4]);
+        for (int m = grid.x0[3]; m < grid.x1[3]; ++m) {
+            int new_m = pmod_lu(m, initial_grid.x0[3], initial_grid.x1[3]);
+            for (int n = grid.x0[2]; n < grid.x1[2]; ++n) {
+                int new_n = pmod_lu(n, initial_grid.x0[2], initial_grid.x1[2]);
+        for (int o = grid.x0[1]; o < grid.x1[1]; ++o) {
+            int new_o = pmod_lu(o, initial_grid.x0[1], initial_grid.x1[1]);
+            for (int p = grid.x0[0]; p < grid.x1[0]; ++p) {
+                int new_p = pmod_lu(p, initial_grid.x0[0], initial_grid.x1[0]);
+                bf(t, new_i, new_j, new_k, new_l, new_m, new_n, new_o, new_p);
+            } } } } } } } }
+    }
+};
+
+template <typename BF>
+struct meta_grid_boundary <7, BF>{
+	static inline void single_step(int t, grid_info<7> const & grid, grid_info<7> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[6]; i < grid.x1[6]; ++i) {
+            int new_i = pmod_lu(i, initial_grid.x0[6], initial_grid.x1[6]);
+			for (int j = grid.x0[5]; j < grid.x1[5]; ++j) {
+                int new_j = pmod_lu(j, initial_grid.x0[5], initial_grid.x1[5]);
+        for (int k = grid.x0[4]; k < grid.x1[4]; ++k) {
+            int new_k = pmod_lu(k, initial_grid.x0[4], initial_grid.x1[4]);
+            for (int l = grid.x0[3]; l < grid.x1[3]; ++l) {
+                int new_l = pmod_lu(l, initial_gird.x0[3], initial_grid.x1[3]);
+        for (int m = grid.x0[2]; m < grid.x1[2]; ++m) {
+            int new_m = pmod_lu(m, initial_grid.x0[2], initial_grid.x1[2]);
+            for (int n = grid.x0[1]; n < grid.x1[1]; ++n) {
+                int new_n = pmod_lu(n, initial_grid.x0[1], initial_grid.x1[1]);
+        for (int o = grid.x0[0]; o < grid.x1[0]; ++o) {
+            int new_o = pmod_lu(o, initial_grid.x0[0], initial_grid.x1[0]);
+                bf(t, new_i, new_j, new_k, new_l, new_m, new_n, new_o);
+            } } } } } } }
+    }
+};
+
+template <typename BF>
+struct meta_grid_boundary <6, BF>{
+	static inline void single_step(int t, grid_info<6> const & grid, grid_info<6> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[5]; i < grid.x1[5]; ++i) {
+            int new_i = pmod_lu(i, initial_grid.x0[5], initial_grid.x1[5]);
+			for (int j = grid.x0[4]; j < grid.x1[4]; ++j) {
+                int new_j = pmod_lu(j, initial_grid.x0[4], initial_grid.x1[4]);
+        for (int k = grid.x0[3]; k < grid.x1[3]; ++k) {
+            int new_k = pmod_lu(k, initial_grid.x0[3], initial_grid.x1[3]);
+            for (int l = grid.x0[2]; l < grid.x1[2]; ++l) {
+                int new_l = pmod_lu(l, initial_gird.x0[2], initial_grid.x1[2]);
+        for (int m = grid.x0[1]; m < grid.x1[1]; ++m) {
+            int new_m = pmod_lu(m, initial_grid.x0[1], initial_grid.x1[1]);
+            for (int n = grid.x0[0]; n < grid.x1[0]; ++n) {
+                int new_n = pmod_lu(n, initial_grid.x0[0], initial_grid.x1[0]);
+                bf(t, new_i, new_j, new_k, new_l, new_m, new_n);
+            } } } } } } 
+    }
+};
+
+template <typename BF>
+struct meta_grid_boundary <5, BF>{
+	static inline void single_step(int t, grid_info<5> const & grid, grid_info<5> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[4]; i < grid.x1[4]; ++i) {
+            int new_i = pmod_lu(i, initial_grid.x0[4], initial_grid.x1[4]);
+			for (int j = grid.x0[3]; j < grid.x1[3]; ++j) {
+                int new_j = pmod_lu(j, initial_grid.x0[3], initial_grid.x1[3]);
+        for (int k = grid.x0[2]; k < grid.x1[2]; ++k) {
+            int new_k = pmod_lu(k, initial_grid.x0[2], initial_grid.x1[2]);
+            for (int l = grid.x0[1]; l < grid.x1[1]; ++l) {
+                int new_l = pmod_lu(l, initial_gird.x0[1], initial_grid.x1[1]);
+        for (int m = grid.x0[0]; m < grid.x1[0]; ++m) {
+            int new_m = pmod_lu(m, initial_grid.x0[0], initial_grid.x1[0]);
+                bf(t, new_i, new_j, new_k, new_l, new_m);
+            } } } } } 
+    }
+};
+
+template <typename BF>
+struct meta_grid_boundary <4, BF>{
+	static inline void single_step(int t, grid_info<4> const & grid, grid_info<4> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[3]; i < grid.x1[3]; ++i) {
+            int new_i = pmod_lu(i, initial_grid.x0[3], initial_grid.x1[3]);
+			for (int j = grid.x0[2]; j < grid.x1[2]; ++j) {
+                int new_j = pmod_lu(j, initial_grid.x0[2], initial_grid.x1[2]);
+        for (int k = grid.x0[1]; k < grid.x1[1]; ++k) {
+            int new_k = pmod_lu(k, initial_grid.x0[1], initial_grid.x1[1]);
+            for (int l = grid.x0[0]; l < grid.x1[0]; ++l) {
+                int new_l = pmod_lu(l, initial_gird.x0[0], initial_grid.x1[0]);
+                bf(t, new_i, new_j, new_k, new_l);
+            } } } } 
+    } 
+};
+
+template <typename BF>
 struct meta_grid_boundary <3, BF>{
 	static inline void single_step(int t, grid_info<3> const & grid, grid_info<3> const & initial_grid, BF const & bf) {
         /* add cilk_for here will only lower the performance */
@@ -52,9 +157,7 @@ struct meta_grid_boundary <3, BF>{
         for (int k = grid.x0[0]; k < grid.x1[0]; ++k) {
             int new_k = pmod_lu(k, initial_grid.x0[0], initial_grid.x1[0]);
                 bf(t, new_i, new_j, new_k);
-        }
-			}
-		}
+        } } }
 	} 
 };
 
@@ -73,8 +176,7 @@ struct meta_grid_boundary <2, BF>{
                 klein(new_i, new_j, initial_grid);
 #endif
                 bf(t, new_i, new_j);
-			}
-		}
+			} }
 	} 
 };
 
@@ -94,6 +196,82 @@ struct meta_grid_interior {
 };
 
 template <typename F>
+struct meta_grid_interior <8, F>{
+	static inline void single_step(int t, grid_info<8> const & grid, grid_info<8> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[7]; i < grid.x1[7]; ++i) {
+			for (int j = grid.x0[6]; j < grid.x1[6]; ++j) {
+        for (int k = grid.x0[5]; k < grid.x1[5]; ++k) {
+            for (int l = grid.x0[4]; l < grid.x1[4]; ++l) {
+        for (int m = grid.x0[3]; m < grid.x1[3]; ++m) {
+            for (int n = grid.x0[2]; n < grid.x1[2]; ++n) {
+        for (int o = grid.x0[1]; o < grid.x1[1]; ++o) {
+            for (int p = grid.x0[0]; p < grid.x1[0]; ++p) {
+                f(t, i, j, k, l, m, n, o, p);
+            } } } } } } } }
+    }
+};
+
+template <typename F>
+struct meta_grid_interior <7, F>{
+	static inline void single_step(int t, grid_info<7> const & grid, grid_info<7> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[6]; i < grid.x1[6]; ++i) {
+			for (int j = grid.x0[5]; j < grid.x1[5]; ++j) {
+        for (int k = grid.x0[4]; k < grid.x1[4]; ++k) {
+            for (int l = grid.x0[3]; l < grid.x1[3]; ++l) {
+        for (int m = grid.x0[2]; m < grid.x1[2]; ++m) {
+            for (int n = grid.x0[1]; n < grid.x1[1]; ++n) {
+        for (int o = grid.x0[0]; o < grid.x1[0]; ++o) {
+                f(t, i, j, k, l, m, n, o);
+            } } } } } } }
+    }
+};
+
+template <typename F>
+struct meta_grid_interior <6, F>{
+	static inline void single_step(int t, grid_info<6> const & grid, grid_info<6> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[5]; i < grid.x1[5]; ++i) {
+			for (int j = grid.x0[4]; j < grid.x1[4]; ++j) {
+        for (int k = grid.x0[3]; k < grid.x1[3]; ++k) {
+            for (int l = grid.x0[2]; l < grid.x1[2]; ++l) {
+        for (int m = grid.x0[1]; m < grid.x1[1]; ++m) {
+            for (int n = grid.x0[0]; n < grid.x1[0]; ++n) {
+                f(t, i, j, k, l, m, n);
+            } } } } } }
+    } 
+};
+
+template <typename F>
+struct meta_grid_interior <5, F>{
+	static inline void single_step(int t, grid_info<5> const & grid, grid_info<5> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[4]; i < grid.x1[4]; ++i) {
+			for (int j = grid.x0[3]; j < grid.x1[3]; ++j) {
+        for (int k = grid.x0[2]; k < grid.x1[2]; ++k) {
+            for (int l = grid.x0[1]; l < grid.x1[1]; ++l) {
+        for (int m = grid.x0[0]; m < grid.x1[0]; ++m) {
+                f(t, i, j, k, l, m);
+            } } } } } 
+    }
+};
+
+template <typename F>
+struct meta_grid_interior <4, F>{
+	static inline void single_step(int t, grid_info<4> const & grid, grid_info<4> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[3]; i < grid.x1[3]; ++i) {
+			for (int j = grid.x0[2]; j < grid.x1[2]; ++j) {
+        for (int k = grid.x0[1]; k < grid.x1[1]; ++k) {
+            for (int l = grid.x0[0]; l < grid.x1[0]; ++l) {
+                f(t, i, j, k, l);
+            } } } }
+	} 
+};
+
+
+template <typename F>
 struct meta_grid_interior <3, F>{
 	static inline void single_step(int t, grid_info<3> const & grid, grid_info<3> const & initial_grid, F const & f) {
         /* add cilk_for here will only lower the performance */
@@ -101,9 +279,7 @@ struct meta_grid_interior <3, F>{
 			for (int j = grid.x0[1]; j < grid.x1[1]; ++j) {
         for (int k = grid.x0[0]; k < grid.x1[0]; ++k) {
                 f(t, i, j, k);
-        }
-			}
-		}
+        } } }
 	} 
 };
 
@@ -113,8 +289,7 @@ struct meta_grid_interior <2, F>{
 		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
 			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
                 f(t, i, j);
-			}
-		}
+			} }
 	} 
 };
 
@@ -160,7 +335,7 @@ struct Algorithm {
             grid_info<N_RANK> grid;
         } queue_info;
 
-#define ALGOR_QUEUE_SIZE 200
+#define ALGOR_QUEUE_SIZE 1200
         /* we can use toggled circular queue! */
         grid_info<N_RANK> phys_grid_;
         int phys_length_[N_RANK];
@@ -173,13 +348,13 @@ struct Algorithm {
     /* sim_count_cut will be accessed outside Algorithm object */
     cilk::reducer_opadd<int> sim_count_cut[SUPPORT_RANK];
     cilk::reducer_opadd<int> interior_region_count, boundary_region_count;
-    cilk::reducer_opadd<int> interior_points_count, boundary_points_count;
+    cilk::reducer_opadd<long long> interior_points_count, boundary_points_count;
 #endif
 
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(2) {
+    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1), r_t(2) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
