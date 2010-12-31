@@ -40,11 +40,15 @@ inline bool Algorithm<N_RANK>::touch_boundary(int i, int lt, grid_info<N_RANK> &
     if (grid.x0[i] >= uub_boundary[i] 
      && grid.x0[i] + grid.dx0[i] * lt >= uub_boundary[i]) {
 #if (KLEIN == 0)
+#if 1
         /* this is for NON klein bottle */
         interior = true;
         /* by this branch, we are assuming the shape is NOT a Klein bottle */
         grid.x0[i] -= phys_length_[i];
         grid.x1[i] -= phys_length_[i];
+#else
+        interior = false;
+#endif
 #else
         /* this is for klein bottle! */
 #if 1
@@ -247,38 +251,26 @@ inline void Algorithm<N_RANK>::walk_bicut(int t0, int t1, grid_info<N_RANK> cons
 
 #define push_queue(_dep, _level, _t0, _t1, _grid) \
 do { \
-    if (queue_len_[_dep] < ALGOR_QUEUE_SIZE) { \
-        circular_queue_[_dep][queue_tail_[_dep]].level = _level; \
-        circular_queue_[_dep][queue_tail_[_dep]].t0 = _t0; \
-        circular_queue_[_dep][queue_tail_[_dep]].t1 = _t1; \
-        circular_queue_[_dep][queue_tail_[_dep]].grid = _grid; \
-        ++queue_len_[_dep]; \
-        queue_tail_[_dep] = pmod((queue_tail_[_dep] + 1), ALGOR_QUEUE_SIZE); \
-    } else { \
-        fprintf(stderr, "circular queue overflowed!\n"); \
-        exit(1); \
-    } \
+    assert(queue_len_[_dep] < ALGOR_QUEUE_SIZE); \
+    circular_queue_[_dep][queue_tail_[_dep]].level = _level; \
+    circular_queue_[_dep][queue_tail_[_dep]].t0 = _t0; \
+    circular_queue_[_dep][queue_tail_[_dep]].t1 = _t1; \
+    circular_queue_[_dep][queue_tail_[_dep]].grid = _grid; \
+    ++queue_len_[_dep]; \
+    queue_tail_[_dep] = pmod((queue_tail_[_dep] + 1), ALGOR_QUEUE_SIZE); \
 } while(0)
 
 #define top_queue(_dep, _queue_elem) \
 do { \
-    if (queue_len_[_dep] > 0) { \
-        _queue_elem = &(circular_queue_[_dep][queue_head_[_dep]]); \
-    } else { \
-        fprintf(stderr, "circular queue underflowed!\n"); \
-        exit(1); \
-    } \
+    assert(queue_len_[_dep] > 0); \
+    _queue_elem = &(circular_queue_[_dep][queue_head_[_dep]]); \
 } while(0)
 
 #define pop_queue(_dep) \
 do { \
-    if (queue_len_[_dep] > 0) { \
-        queue_head_[_dep] = pmod((queue_head_[_dep] + 1), ALGOR_QUEUE_SIZE); \
-        --queue_len_[_dep]; \
-    } else { \
-        fprintf(stderr, "circular queue underflowed!\n"); \
-        exit(1); \
-    } \
+    assert(queue_len_[_dep] > 0); \
+    queue_head_[_dep] = pmod((queue_head_[_dep] + 1), ALGOR_QUEUE_SIZE); \
+    --queue_len_[_dep]; \
 } while(0)
 
 /* ************************************************************************************** */
@@ -286,7 +278,7 @@ do { \
 template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
-    queue_info *l_father, *l_son;
+    queue_info *l_father;
     queue_info circular_queue_[2][ALGOR_QUEUE_SIZE];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
 
@@ -304,9 +296,10 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                 /* spawn all the grids in circular_queue_[curr_dep][] */
 #if USE_CILK_FOR 
                 /* use cilk_for to spawn all the sub-grid */
+// #pragma cilk_grainsize = 1
                 cilk_for (int j = 0; j < queue_len_[curr_dep_pointer]; ++j) {
                     int i = pmod((queue_head_[curr_dep_pointer]+j), ALGOR_QUEUE_SIZE);
-                    l_son = &(circular_queue_[curr_dep_pointer][i]);
+                    queue_info * l_son = &(circular_queue_[curr_dep_pointer][i]);
                     /* assert all the sub-grid has done N_RANK spatial cuts */
                     assert(l_son->level == N_RANK);
                     sim_obase_bicut(l_son->t0, l_son->t1, l_son->grid, f);
@@ -442,7 +435,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
 template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
-    queue_info *l_father, *l_son;
+    queue_info *l_father;
     queue_info circular_queue_[2][ALGOR_QUEUE_SIZE];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
 
@@ -460,9 +453,10 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                 /* spawn all the grids in circular_queue_[curr_dep][] */
 #if USE_CILK_FOR 
                 /* use cilk_for to spawn all the sub-grid */
+// #pragma cilk_grainsize = 1
                 cilk_for (int j = 0; j < queue_len_[curr_dep_pointer]; ++j) {
                     int i = pmod((queue_head_[curr_dep_pointer]+j), ALGOR_QUEUE_SIZE);
-                    l_son = &(circular_queue_[curr_dep_pointer][i]);
+                    queue_info * l_son = &(circular_queue_[curr_dep_pointer][i]);
                     /* assert all the sub-grid has done N_RANK spatial cuts */
                     assert(l_son->level == N_RANK);
                     if (within_boundary(l_son->t0, l_son->t1, l_son->grid)) {
@@ -649,7 +643,7 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
     }
 
 #if STAT
-    l_total_points = l_bottom_total_area * t1 / 3 - l_top_total_area * t0 / 3;
+//    l_total_points = l_bottom_total_area * t1 / 3 - l_top_total_area * t0 / 3;
 #endif
     if (sim_can_cut) {
         /* cut into space */
@@ -728,7 +722,7 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
     }
 
 #if STAT
-    l_total_points = l_bottom_total_area * t1 / 3 - l_top_total_area * t0 / 3;
+//    l_total_points = l_bottom_total_area * t1 / 3 - l_top_total_area * t0 / 3;
 #endif
 
     if (sim_can_cut) {
