@@ -315,12 +315,12 @@ static inline void set_worker_count(const char * nstr)
 
 template <int N_RANK>
 struct power {
-    enum { value = 3 * power<N_RANK-1>::value };
+    enum { value = 5 * power<N_RANK-1>::value };
 };
 
 template <>
 struct power<1> {
-    enum {value = 3};
+    enum {value = 5};
 }; 
 
 template <int N_RANK>
@@ -374,8 +374,8 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 3;
-        dx_recursive_[0] = 1000;
+            dx_recursive_[i] = 100;
+        dx_recursive_[0] = 100;
         Z = 10000;
         boundarySet = false;
         physGridSet = false;
