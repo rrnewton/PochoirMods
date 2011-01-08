@@ -290,9 +290,83 @@ pShowOptPointerKernel l_name l_kernel =
         breakline ++ pShowOptPointerStmt l_kernel ++ breakline ++ pShowObaseForTail l_rank ++
         pShowObaseTail l_rank ++ breakline ++ "};\n"
 
+pShowCPointerKernel :: String -> PKernel -> String
+pShowCPointerKernel l_name l_kernel = 
+    let l_rank = length (kParams l_kernel) - 1
+        l_iter = kIter l_kernel
+        l_array = unionArrayIter l_iter
+        l_t = head $ kParams l_kernel
+    in  breakline ++ "auto " ++ l_name ++ " = [&] (" ++
+        "int t0, int t1, grid_info<" ++ show l_rank ++ "> const & grid) {" ++ 
+        breakline ++ "grid_info<" ++ show l_rank ++ "> l_grid = grid;" ++
+        pShowArrayInfo l_array ++ 
+        breakline ++ pShowStrides l_rank l_array ++ breakline ++
+        pShowRefMacro (kParams l_kernel) l_array ++
+        "for (int " ++ l_t ++ " = t0; " ++ l_t ++ " < t1; ++" ++ l_t ++ ") { " ++ 
+        breakline ++ pShowRawForHeader (tail $ kParams l_kernel) ++
+        breakline ++ pShowCPointerStmt l_kernel ++ breakline ++ pShowObaseForTail l_rank ++
+        pShowObaseTail l_rank ++ breakline ++ pShowRefUnMacro l_array ++ 
+        "};\n"
+
+pShowCPointerStmt :: PKernel -> String
+pShowCPointerStmt l_kernel = 
+    let oldStmts = kStmt l_kernel
+        l_iter = kIter l_kernel
+        obaseStmts = transStmts oldStmts $ transCPointer l_iter
+    in show obaseStmts
+
+transCPointer :: [Iter] -> Expr -> Expr
+transCPointer l_iters (PVAR q v dL) =
+    case pIterLookup (v, dL) l_iters of
+        Nothing -> PVAR q v dL
+        Just iterName -> VAR q $ pRef v dL
+transCPointer l_iters e = e
+
+pRef :: PName -> [DimExpr] -> String
+pRef a dL = "ref_" ++ a ++ "(" ++ (intercalate ", " $ map show dL) ++ ")"
+
+pShowRawForHeader :: [PName] -> String
+pShowRawForHeader [] = ""
+pShowRawForHeader pL@(p:ps) = 
+    let len_pL = length pL
+        idx = p
+        l_rank = len_pL-1
+        l_pragma = if l_rank == 0 then pShowPragma else ""
+    in  l_pragma ++ 
+        breakline ++ "for (int " ++ idx ++ " = l_grid.x0[" ++ show l_rank ++
+        "]; " ++ idx ++ " < l_grid.x1[" ++ show l_rank ++ "]; ++" ++ idx ++ ") {" ++
+        pShowRawForHeader ps 
+ 
 pShowPragma :: String
-pShowPragma = "#pragma ivdep"
+pShowPragma = breakline ++ "#pragma ivdep"
 -- pShowPragma = "#pragma ivdep" ++ breakline ++ "#pragma simd"
+
+pShowRefUnMacro :: [PArray] -> String
+pShowRefUnMacro [] = ""
+pShowRefUnMacro (a:as) = 
+    let l_name = aName a
+    in  "#undef ref_" ++ l_name ++ breakline ++ breakline
+
+pShowRefMacro :: [PName] -> [PArray] -> String
+pShowRefMacro _ [] = ""
+pShowRefMacro l_kernelParams aL@(a:as) =
+    let l_name = aName a
+        l_t = head l_kernelParams
+        l_dims = tail l_kernelParams
+        l_toggle = aToggle a
+        l_rank = aRank a
+    in  "#define ref_" ++ l_name ++ "(" ++ pShowKernelParams l_kernelParams ++
+        ") " ++ l_name ++ "_base[" ++ pGetTimeOffset l_toggle (DimVAR l_t) ++
+        " * l_" ++ l_name ++ "_total_size + " ++ 
+        (intercalate " + " $ zipWith pMul l_dims $ pStrideList l_name l_rank) ++ "]" ++
+        breakline ++ breakline ++ pShowRefMacro l_kernelParams as
+
+pStrideList :: PName -> Int -> [String]
+pStrideList a 1 = ["l_stride_" ++ a ++ "_" ++ show 0]
+pStrideList a r = ["l_stride_" ++ a ++ "_" ++ show (r-1)] ++ (pStrideList a $ r-1)
+
+pMul :: String -> String -> String
+pMul a b = a ++ " * " ++ b
 
 pShowArrayInfo :: [PArray] -> String
 pShowArrayInfo [] = ""
@@ -304,6 +378,18 @@ pShowArrayInfo arrayInUse = foldr pShowArrayInfoItem "" arrayInUse
                 " = " ++ l_name ++ ".data();" ++ breakline ++
                 "const int " ++ "l_" ++ l_name ++ "_total_size = " ++ l_name ++
                 ".total_size();" ++ breakline
+
+pShowStrides :: Int -> [PArray] -> String
+pShowStrides n [] = ""
+pShowStrides n aL@(a:as) = "const int " ++ getStrides n aL ++ ";\n"
+    where getStrides n aL@(a:as) = intercalate ", " $ concat $ map (getStride n) aL
+          getStride 1 a = let r = 0 
+                          in  ["l_stride_" ++ (aName a) ++ "_" ++ show r ++
+                              " = " ++ (aName a) ++ ".stride(" ++ show r ++ ")"]
+          getStride n a = let r = n-1
+                          in  ["l_stride_" ++ (aName a) ++ "_" ++ show r ++
+                              " = " ++ (aName a) ++ ".stride(" ++ show r ++ ")"] ++
+                              getStride (n-1) a
 
 pShowPointers :: [Iter] -> String
 pShowPointers [] = ""
@@ -331,6 +417,13 @@ pShowOptPointerStmt l_kernel =
         l_iter = kIter l_kernel
         obaseStmts = transStmts oldStmts $ transOptPointer l_iter
     in show obaseStmts
+
+transOptPointer :: [Iter] -> Expr -> Expr
+transOptPointer l_iters (PVAR q v dL) =
+    case pIterLookup (v, dL) l_iters of
+        Nothing -> PVAR q v dL
+        Just iterName -> VAR q $ "(*" ++ iterName ++ ")"
+transOptPointer l_iters e = e
 
 transPointer :: [Iter] -> Expr -> Expr
 transPointer l_iters (PVAR q v dL) =
@@ -371,13 +464,6 @@ pPointerLookup (v, dL) [] = Nothing
 pPointerLookup (v, dL) ((iterName, arrayInUse, dL'):is)
     | v == aName arrayInUse && head dL == head dL' = Just (iterName, arrayInUse, dL')
     | otherwise = pPointerLookup (v, dL) is
-
-transOptPointer :: [Iter] -> Expr -> Expr
-transOptPointer l_iters (PVAR q v dL) =
-    case pIterLookup (v, dL) l_iters of
-        Nothing -> PVAR q v dL
-        Just iterName -> VAR q $ "(*" ++ iterName ++ ")"
-transOptPointer l_iters e = e
 
 transIter :: [Iter] -> Expr -> Expr
 transIter l_iters (PVAR q v dL) =
@@ -485,18 +571,6 @@ pTransDim n r dL@(d:ds) pL@(p:ps) = pTransDimTerm n r d p : pTransDim (n+1) r ds
           pTransDimTerm n r (DimDuo bop e1 e2) p = 
               DimDuo bop (pTransDimTerm n r e1 p) (pTransDimTerm n r e2 p)
         
-pShowStrides :: Int -> [PArray] -> String
-pShowStrides n [] = ""
-pShowStrides n aL@(a:as) = "const int " ++ getStrides n aL ++ ";\n"
-    where getStrides n aL@(a:as) = intercalate ", " $ concat $ map (getStride n) aL
-          getStride 1 a = let r = 0 
-                          in  ["l_stride_" ++ (aName a) ++ "_" ++ show r ++
-                              " = " ++ (aName a) ++ ".stride(" ++ show r ++ ")"]
-          getStride n a = let r = n-1
-                          in  ["l_stride_" ++ (aName a) ++ "_" ++ show r ++
-                              " = " ++ (aName a) ++ ".stride(" ++ show r ++ ")"] ++
-                              getStride (n-1) a
-
 pShowIters :: [Iter] -> String
 pShowIters [] = ""
 pShowIters ((l_name, l_array, l_dim):is) = 

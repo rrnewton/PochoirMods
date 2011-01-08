@@ -1,17 +1,20 @@
 CC = ./pochoir
 ICC = icpc
 #ICC_FLAGS = -ipo -unroll-aggressive -xHOST -simd
-ICC_FLAGS = -unroll-aggressive -xHOST -simd
+ICC_FLAGS = -unroll-aggressive -ipo -xHOST 
 all : clean klein 3dfd life heat_P heat_NP psa rna rna_struct
-loop : pochoir_loop.cpp
-	${CC} -o pochoir_loop -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-opt-pointer pochoir_loop.cpp
+loop_iter : tb_loop_iter.cpp
+	${ICC} -o loop_iter -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_loop_iter.cpp
+loop : tb_loop.cpp
+	${ICC} -o loop -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_loop.cpp
+#	${ICC} -o loop -O0 -DDEBUG -std=c++0x -Wall -Werror -g3 tb_loop.cpp
 #	${CC} -o tb_loop_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_loop.cpp
 heat_NP_zero : tb_heat_2D_NP_zero.cpp
-#	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP.cpp
+#	${CC} -o tb_heat_2D_NP_zero_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP_zero.cpp
 	${CC} -o tb_heat_2D_NP_zero_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero.cpp
 heat_NP : tb_heat_2D_NP.cpp
-#	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP.cpp
 	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
+#	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP.cpp
 heat_P : tb_heat_2D_P.cpp
 	${CC} -o tb_heat_2D_P_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_P.cpp
 #	${CC} -o tb_heat_2D_P_pochoir -O0 -g3 -DDEBUG -std=c++0x -Wall -Werror -ipo -debug tb_heat_2D_P.cpp

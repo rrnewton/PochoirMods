@@ -168,6 +168,10 @@ ppStencil l_id l_stencil l_state =
                                 pSplitObase 
                                     ("Opt_Pointer_", l_id, l_tstep, l_revKernel, l_stencil) 
                                     pShowOptPointerKernel
+                            PCPointer -> 
+                                pSplitObase 
+                                    ("C_Pointer_", l_id, l_tstep, l_revKernel, l_stencil) 
+                                    pShowCPointerKernel
     <|> do return (l_id)
 
 -- get all iterators from Kernel
@@ -189,12 +193,13 @@ transKernel l_kernel l_stencil l_mode =
                        PIter -> getFromStmts getIter 
                                     (transArrayMap $ sArrayInUse l_stencil) 
                                     l_exprStmts
-                       PPointer -> getFromStmts 
-                                    (getPointer $ l_kernelParams) 
+                       PCPointer -> getFromStmts getIter 
                                     (transArrayMap $ sArrayInUse l_stencil) 
                                     l_exprStmts
-                       POptPointer -> getFromStmts 
-                                    getIter 
+                       PPointer -> getFromStmts (getPointer $ l_kernelParams) 
+                                    (transArrayMap $ sArrayInUse l_stencil) 
+                                    l_exprStmts
+                       POptPointer -> getFromStmts getIter 
                                     (transArrayMap $ sArrayInUse l_stencil) 
                                     l_exprStmts 
                        PDefault -> let l_get = 
@@ -231,7 +236,9 @@ pSplitObase (l_tag, l_id, l_tstep, l_kernel, l_stencil) l_showKernel =
                         else obaseKernelName
     in  return (obaseKernel ++ breakline ++ l_id ++ ".run_obase(" ++ l_tstep ++ 
                 ", " ++ runKernel ++ ");" ++ breakline)
-
+-------------------------------------------------------------------------------------------
+--                             Following are C++ Grammar Parser                         ---
+-------------------------------------------------------------------------------------------
 pStencilRun :: GenParser Char ParserState (String, String)
 pStencilRun = 
         do l_tstep <- try exprStmtDim

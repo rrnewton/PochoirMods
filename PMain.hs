@@ -28,7 +28,6 @@ module Main where
 import System
 import IO hiding (try) -- "try" is also defined in Parsec
 import Data.List
---import System.FilePath
 import System.Directory 
 import System.Cmd (rawSystem)
 import Data.Char (isSpace)
@@ -136,7 +135,7 @@ getObjFile dir fname = ["-o"] ++ [dir++name]
     where (name, suffix) = break ('.' ==) fname 
 -}
 
-pInitState = ParserState { pMode = POptPointer, pState = Unrelated, pMacro = Map.empty, pArray = Map.empty, pStencil = Map.empty, pShape = Map.empty, pRange = Map.empty, pKernel = Map.empty}
+pInitState = ParserState { pMode = PCPointer, pState = Unrelated, pMacro = Map.empty, pArray = Map.empty, pStencil = Map.empty, pShape = Map.empty, pRange = Map.empty, pKernel = Map.empty}
 
 icc = "icpc"
 
@@ -157,6 +156,10 @@ parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL
     | elem "-split-type-shadow" aL = 
         let l_mode = PTypeShadow
             aL' = delete "-split-type-shadow" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-split-c-pointer" aL =
+        let l_mode = PCPointer
+            aL' = delete "-split-c-pointer" aL
         in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-split-opt-pointer" aL =
         let l_mode = POptPointer

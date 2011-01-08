@@ -470,14 +470,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     for (int i = 1; i < SUPPORT_RANK; ++i) {
         fprintf(stderr, "sim_count_cut[%d] = %ld\n", i, algor.sim_count_cut[i].get_value());
     }
-    for (int i = 0; i < N_RANK; ++i) {
-        l_total_points *= (phys_grid_.x1[i] - phys_grid_.x0[i]);
-    }
-    l_total_points *= timestep;
-    fprintf(stderr, "interior_region_count = %d, boundary_region_count = %d\n", algor.interior_region_count.get_value(), algor.boundary_region_count.get_value());
-    int l_interior_points = algor.interior_points_count.get_value();
-    int l_boundary_points = algor.boundary_points_count.get_value();
-    fprintf(stderr, "interior_points_count = %ld, boundary_points_count = %ld, initial_total_points = %d, ratio = %.5f\n", l_interior_points, l_boundary_points, l_total_points, (float)l_boundary_points/(l_boundary_points + l_interior_points));
 #endif
 #endif
 #else

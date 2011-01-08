@@ -373,15 +373,17 @@ struct Algorithm {
             ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
         }
-        for (int i = N_RANK-1; i > 0; --i)
+        for (int i = N_RANK-1; i > 1; --i)
             dx_recursive_[i] = 100;
+        dx_recursive_[1] = 100;
         dx_recursive_[0] = 100;
         Z = 10000;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
         /* ALGOR_QUEUE_SIZE = 3^N_RANK */
-        ALGOR_QUEUE_SIZE = power<N_RANK>::value;
+        // ALGOR_QUEUE_SIZE = power<N_RANK>::value;
+#define ALGOR_QUEUE_SIZE (power<N_RANK>::value)
 #if STAT
 //        for (int i = 0; i < SUPPORT_RANK; ++i) {
 //            sim_count_cut[i] = 0;
