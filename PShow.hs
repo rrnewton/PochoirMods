@@ -366,7 +366,7 @@ pStrideList a 1 = ["l_stride_" ++ a ++ "_" ++ show 0]
 pStrideList a r = ["l_stride_" ++ a ++ "_" ++ show (r-1)] ++ (pStrideList a $ r-1)
 
 pMul :: String -> String -> String
-pMul a b = a ++ " * " ++ b
+pMul a b = "(" ++ a ++ ") * " ++ b
 
 pShowArrayInfo :: [PArray] -> String
 pShowArrayInfo [] = ""

@@ -51,7 +51,7 @@ data PType = PType {
     typeName :: String
 } deriving Eq
 data PState = PochoirBegin | PochoirEnd | PochoirMacro | PochoirDeclArray | PochoirDeclRange | PochoirError | Unrelated deriving (Show, Eq)
-data PMode = PHelp | PDefault | PIter | PCPointer | POptPointer | PPointer | PTypeShadow | PInterior | PMacroShadow | PNoPP deriving (Show, Eq)
+data PMode = PHelp | PDefault | PIter | PCaching | PCPointer | POptPointer | PPointer | PTypeShadow | PInterior | PMacroShadow | PNoPP deriving (Show, Eq)
 data PMacro = PMacro {
     mName :: PName,
     mValue :: PValue
