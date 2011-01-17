@@ -435,7 +435,6 @@ void dotest()
   stop = cilk_ticks_to_seconds(cilk_getticks()); 
   //copy_A_to_B();
   print_summary("base", stop - start);
-#endif
   ///////////////////////////////////////////////
   
   init_variables();
@@ -452,6 +451,7 @@ void dotest()
   // verify_A_and_B();
   //print_y();
 
+#endif
 }
 
     Pochoir_Boundary_3D(fd_bv_3D, arr, t, i, j, k)

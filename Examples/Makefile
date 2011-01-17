@@ -30,7 +30,10 @@ rna_struct : rna_struct.cpp
 	${CC} -o rna_struct_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} rna_struct.cpp
 3dfd : tb_3dfd.cpp
 #	${CC} -o tb_3dfd_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_3dfd.cpp
-	${CC} -o tb_3dfd_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-opt-pointer tb_3dfd.cpp
+	${CC} -o tb_3dfd_pochoir -O3 -DNDEBUG -std=c++0x -g3 -Wall -Werror ${ICC_FLAGS} tb_3dfd.cpp
+	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3dfd_pochoir.cpp
+#	perl repair.pl tb_3dfd_pochoir.s >& 3dfd.s
+#	${ICC} -o 3dfd 3dfd.s
 klein : tb_life_klein.cpp
 	${CC} -o klein_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_life_klein.cpp
 #	${CC} -o klein_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -g3 -debug -split-macro-shadow tb_life_klein.cpp

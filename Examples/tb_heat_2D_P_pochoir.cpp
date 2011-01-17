@@ -29878,7 +29878,7 @@ struct power {
 
 template <>
 struct power<1> {
-    enum {value = 25};
+    enum {value = 5};
 }; 
 
 template <int N_RANK>
@@ -29925,9 +29925,10 @@ struct Algorithm {
 ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
 }
-        for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 100;
-        dx_recursive_[0] = 100;
+        for (int i = N_RANK-1; i > 1; --i)
+            dx_recursive_[i] = 3;
+        dx_recursive_[1] = 3;
+        dx_recursive_[0] = 1000;
         Z = 10000;
         boundarySet = false;
         physGridSet = false;
@@ -30271,58 +30272,140 @@ template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     queue_info *l_father;
-    queue_info circular_queue_[(power<N_RANK> ::value)];
-    int queue_head_=0, queue_tail_=0, queue_len_=0;
+    queue_info circular_queue_[2][(power<N_RANK> ::value)];
+    int queue_head_[2], queue_tail_[2], queue_len_[2];
+
+    for (int i = 0; i < 2; ++i) {
+        queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
+    }
 
     /* set up the initial grid */
-    do { (static_cast<void> (0)); circular_queue_[queue_tail_]. level = 0; circular_queue_[queue_tail_]. t0 = t0; circular_queue_[queue_tail_]. t1 = t1; circular_queue_[queue_tail_]. grid = grid; ++queue_len_; queue_tail_ = (((queue_tail_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_ + 1))>=((power<N_RANK> ::value))))); } while(0);
-        while (queue_len_ > 0) {
-            do { (static_cast<void> (0)); l_father = &(circular_queue_[queue_head_]); } while(0);
+    do { (static_cast<void> (0)); circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[0] + 1))>=((power<N_RANK> ::value))))); } while(0);
+    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
+        const int curr_dep_pointer = (curr_dep & 0x1);
+        while (queue_len_[curr_dep_pointer] > 0) {
+            do { (static_cast<void> (0)); l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } while(0);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
-                do { (static_cast<void> (0)); queue_head_ = (((queue_head_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_ + 1))>=((power<N_RANK> ::value))))); --queue_len_; } while(0);
+                do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
                 _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
             } else {
                 /* performing a space cut on dimension 'level' */
-                do { (static_cast<void> (0)); queue_head_ = (((queue_head_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_ + 1))>=((power<N_RANK> ::value))))); --queue_len_; } while(0);
+                do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
                 const grid_info<N_RANK> l_father_grid = l_father->grid;
                 const int t0 = l_father->t0, t1 = l_father->t1;
                 const int lt = (t1 - t0);
                 const int level = l_father->level;
-                const int thres = slope_[level] * lt;
+                const bool cut_lb = (l_father_grid.dx0[level] >= 0 && l_father_grid.dx1[level] <= 0);
+                const int thres = 2 * slope_[level] * lt;
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
                 const int tb = (l_father_grid.x1[level] + l_father_grid.dx1[level] * lt - l_father_grid.x0[level] - l_father_grid.dx0[level] * lt);
-                const bool can_cut = (tb > 0 && lb > dx_recursive_[level] && lb >= 2 * thres);
-                if (!can_cut) {
-                    /* if we can't cut into this dimension, just directly push 
-                     * it into the circular queue 
-                     */
-                    do { (static_cast<void> (0)); circular_queue_[queue_tail_]. level = level+1; circular_queue_[queue_tail_]. t0 = t0; circular_queue_[queue_tail_]. t1 = t1; circular_queue_[queue_tail_]. grid = l_father_grid; ++queue_len_; queue_tail_ = (((queue_tail_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_ + 1))>=((power<N_RANK> ::value))))); } while(0);
-                } else {
-                    /* can_cut! */
-                    const int sep = (int)lb/2;
-                    grid_info<N_RANK> l_son_grid = l_father_grid;
-                    const int l_start = (l_father_grid.x0[level]);
-                    const int l_end = (l_father_grid.x1[level]);
+                if (cut_lb) {
+                    /* cut_lb */
+                    const bool can_cut = (lb >= 2 * thres && lb > dx_recursive_[level]);
+                    if (!can_cut) {
+                        /* if we can't cut into this dimension, just directly push 
+                         * it into the circular queue 
+                         */
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    } else {
+                        /* can_cut! */
+                        const int sep = (int)lb/2;
+                        const int r = 2;
+                        grid_info<N_RANK> l_son_grid = l_father_grid;
+                        const int l_start = (l_father_grid.x0[level]);
+                        const int l_end = (l_father_grid.x1[level]);
 
-                    l_son_grid.x0[level] = l_start;
-                    l_son_grid.dx0[level] = l_father_grid.dx0[level];
-                    l_son_grid.x1[level] = l_start + sep + thres;
-                    l_son_grid.dx1[level] = -slope_[level];
-                    (static_cast<void> (0));
-                    do { (static_cast<void> (0)); circular_queue_[queue_tail_]. level = level+1; circular_queue_[queue_tail_]. t0 = t0; circular_queue_[queue_tail_]. t1 = t1; circular_queue_[queue_tail_]. grid = l_son_grid; ++queue_len_; queue_tail_ = (((queue_tail_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_ + 1))>=((power<N_RANK> ::value))))); } while(0);
-                    
-                    l_son_grid.x0[level] = l_end - sep - thres;
-                    l_son_grid.dx0[level] = slope_[level];
-                    l_son_grid.x1[level] = l_end;
-                    l_son_grid.dx1[level] = l_father_grid.dx1[level];
-                    (static_cast<void> (0));
-                    do { (static_cast<void> (0)); circular_queue_[queue_tail_]. level = level+1; circular_queue_[queue_tail_]. t0 = t0; circular_queue_[queue_tail_]. t1 = t1; circular_queue_[queue_tail_]. grid = l_son_grid; ++queue_len_; queue_tail_ = (((queue_tail_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_ + 1))>=((power<N_RANK> ::value))))); } while(0); 
-                } /* end if (can_cut) */
+                        /* push one sub-grid into circular queue of (curr_dep) */
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = slope_[level];
+                        l_son_grid.x1[level] = l_start + sep;
+                        l_son_grid.dx1[level] = -slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                        /* push one sub-grid into circular queue of (curr_dep) */
+                        l_son_grid.x0[level] = l_start + sep;
+                        l_son_grid.dx0[level] = slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = -slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                        /* cilk_sync */
+                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                        l_son_grid.x0[level] = l_start + sep;
+                        l_son_grid.dx0[level] = -slope_[level];
+                        l_son_grid.x1[level] = l_start + sep;
+                        l_son_grid.dx1[level] = slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                        if (l_father_grid.dx0[level] != slope_[level]) {
+                            l_son_grid.x0[level] = l_start;
+                            l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                            l_son_grid.x1[level] = l_start;
+                            l_son_grid.dx1[level] = slope_[level];
+                            (static_cast<void> (0));
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        }
+                        if (l_father_grid.dx1[level] != -slope_[level]) {
+                            l_son_grid.x0[level] = l_end;
+                            l_son_grid.dx0[level] = -slope_[level];
+                            l_son_grid.x1[level] = l_end;
+                            l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                            (static_cast<void> (0));
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        }
+                    } /* end if (can_cut) */
+                } /* end if (cut_lb) */ else {
+                    /* cut_tb */
+                    const bool can_cut = (lb >= thres && tb > dx_recursive_[level]);
+                    if (!can_cut) {
+                        /* if we can't cut into this dimension, just directly push 
+                         * it into the circular queue 
+                         */
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    } else {
+                        grid_info<N_RANK> l_son_grid = l_father_grid;
+                        const int l_start = (l_father_grid.x0[level]);
+                        const int l_end = (l_father_grid.x1[level]);
+
+                        (static_cast<void> (0));
+                        (static_cast<void> (0));
+                        /* push one sub-grid into circular queue of (curr_dep) */
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = -slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                        /* cilk_sync */
+                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                        l_son_grid.x1[level] = l_start;
+                        l_son_grid.dx1[level] = slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                        l_son_grid.x0[level] = l_end;
+                        l_son_grid.dx0[level] = -slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    } /* end if (can_cut) */
+                } /* end if (cut_tb) */
             } /* end if (performing a space cut) */
         } /* end while (queue_len_[curr_dep] > 0) */
+        _Cilk_sync;
         (static_cast<void> (0));
+    } /* end for (curr_dep < N_RANK+1) */
 }
 
 /* This is for boundary region space cut! */
@@ -30330,17 +30413,23 @@ template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
     queue_info *l_father;
-    queue_info circular_queue_[(power<N_RANK> ::value)];
-    int queue_head_=0, queue_tail_=0, queue_len_=0;
+    queue_info circular_queue_[2][(power<N_RANK> ::value)];
+    int queue_head_[2], queue_tail_[2], queue_len_[2];
+
+    for (int i = 0; i < 2; ++i) {
+        queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
+    }
 
     /* set up the initial grid */
-    do { (static_cast<void> (0)); circular_queue_[queue_tail_]. level = 0; circular_queue_[queue_tail_]. t0 = t0; circular_queue_[queue_tail_]. t1 = t1; circular_queue_[queue_tail_]. grid = grid; ++queue_len_; queue_tail_ = (((queue_tail_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_ + 1))>=((power<N_RANK> ::value))))); } while(0);
-        while (queue_len_ > 0) {
-            do { (static_cast<void> (0)); l_father = &(circular_queue_[queue_head_]); } while(0);
+    do { (static_cast<void> (0)); circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[0] + 1))>=((power<N_RANK> ::value))))); } while(0);
+    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
+        const int curr_dep_pointer = (curr_dep & 0x1);
+        while (queue_len_[curr_dep_pointer] > 0) {
+            do { (static_cast<void> (0)); l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } while(0);
             if (l_father->level == N_RANK) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
-                do { (static_cast<void> (0)); queue_head_ = (((queue_head_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_ + 1))>=((power<N_RANK> ::value))))); --queue_len_; } while(0);
+                do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
                 if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
                     _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
                 } else {
@@ -30348,48 +30437,133 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                 }
             } else {
                 /* performing a space cut on dimension 'level' */
-                do { (static_cast<void> (0)); queue_head_ = (((queue_head_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_ + 1))>=((power<N_RANK> ::value))))); --queue_len_; } while(0);
+                do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
                 const grid_info<N_RANK> l_father_grid = l_father->grid;
                 const int t0 = l_father->t0, t1 = l_father->t1;
                 const int lt = (t1 - t0);
                 const int level = l_father->level;
+                const bool cut_lb = (l_father_grid.dx0[level] >= 0 && l_father_grid.dx1[level] <= 0);
                 const int thres = 2 * slope_[level] * lt;
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
                 const int tb = (l_father_grid.x1[level] + l_father_grid.dx1[level] * lt - l_father_grid.x0[level] - l_father_grid.dx0[level] * lt);
-                bool initial_cut = (lb == phys_length_[level]);
-                const bool can_cut = ((initial_cut) ? (lb - 2 * slope_[level] >= 2 * thres && lb > dx_recursive_boundary_[level]) : (lb >= 2 * thres && lb > dx_recursive_boundary_[level]));
-                if (!can_cut) {
-                    /* if we can't cut into this dimension, just directly push
-                     * it into the circular queue
-                    */
-                    do { (static_cast<void> (0)); circular_queue_[queue_tail_]. level = level+1; circular_queue_[queue_tail_]. t0 = t0; circular_queue_[queue_tail_]. t1 = t1; circular_queue_[queue_tail_]. grid = l_father_grid; ++queue_len_; queue_tail_ = (((queue_tail_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_ + 1))>=((power<N_RANK> ::value))))); } while(0);
-                } else {
-                    /* can_cut */
-                    const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
-                    const int r = 2;
-                    grid_info<N_RANK> l_son_grid = l_father_grid;
-                    const int l_start = (initial_cut) ? (l_father_grid.x0[level]+slope_[level]) : (l_father_grid.x0[level]);
-                    const int l_end = (initial_cut) ? (l_father_grid.x1[level]-slope_[level]) : (l_father_grid.x1[level]);
+                if (cut_lb) {
+                    /* '/ \' */
+                    bool initial_cut = (lb == phys_length_[level]);
+                    const bool can_cut = ((initial_cut) ? (lb - 2 * slope_[level] >= 2 * thres && lb > dx_recursive_boundary_[level]) : (lb >= 2 * thres && lb > dx_recursive_boundary_[level]));
+                    if (!can_cut) {
+                        /* if we can't cut into this dimension, just directly push
+                         * it into the circular queue
+                        */
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    } else {
+                        /* can_cut */
+                        const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
+                        const int r = 2;
+                        grid_info<N_RANK> l_son_grid = l_father_grid;
+                        const int l_start = (initial_cut) ? (l_father_grid.x0[level]+slope_[level]) : (l_father_grid.x0[level]);
+                        const int l_end = (initial_cut) ? (l_father_grid.x1[level]-slope_[level]) : (l_father_grid.x1[level]);
 
-                    /* push one sub-grid into circular queue of (curr_dep) */
-                    l_son_grid.x0[level] = l_start;
-                    l_son_grid.dx0[level] = slope_[level];
-                    l_son_grid.x1[level] = l_start + sep;
-                    l_son_grid.dx1[level] = -slope_[level];
-                    (static_cast<void> (0));
-                    do { (static_cast<void> (0)); circular_queue_[queue_tail_]. level = level+1; circular_queue_[queue_tail_]. t0 = t0; circular_queue_[queue_tail_]. t1 = t1; circular_queue_[queue_tail_]. grid = l_son_grid; ++queue_len_; queue_tail_ = (((queue_tail_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_ + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        /* push one sub-grid into circular queue of (curr_dep) */
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = slope_[level];
+                        l_son_grid.x1[level] = l_start + sep;
+                        l_son_grid.dx1[level] = -slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
-                    /* push one sub-grid into circular queue of (curr_dep) */
-                    l_son_grid.x0[level] = l_start + sep;
-                    l_son_grid.dx0[level] = slope_[level];
-                    l_son_grid.x1[level] = l_end;
-                    l_son_grid.dx1[level] = -slope_[level];
-                    (static_cast<void> (0));
-                    do { (static_cast<void> (0)); circular_queue_[queue_tail_]. level = level+1; circular_queue_[queue_tail_]. t0 = t0; circular_queue_[queue_tail_]. t1 = t1; circular_queue_[queue_tail_]. grid = l_son_grid; ++queue_len_; queue_tail_ = (((queue_tail_ + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_ + 1))>=((power<N_RANK> ::value))))); } while(0);
-                } /* end if (can_cut) */
+                        /* push one sub-grid into circular queue of (curr_dep) */
+                        l_son_grid.x0[level] = l_start + sep;
+                        l_son_grid.dx0[level] = slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = -slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                        /* cilk_sync */
+                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                        l_son_grid.x0[level] = l_start + sep;
+                        l_son_grid.dx0[level] = -slope_[level];
+                        l_son_grid.x1[level] = l_start + sep;
+                        l_son_grid.dx1[level] = slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                        if (initial_cut) {
+                            /* merge triangles! */
+                            l_son_grid.x0[level] = l_end;
+                            l_son_grid.dx0[level] = -slope_[level];
+                            l_son_grid.x1[level] = l_end+2*slope_[level];
+                            l_son_grid.dx1[level] = slope_[level];
+                            (static_cast<void> (0));
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        } else {
+                            if (l_father_grid.dx0[level] != slope_[level]) {
+                                l_son_grid.x0[level] = l_start;
+                                l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                                l_son_grid.x1[level] = l_start;
+                                l_son_grid.dx1[level] = slope_[level];
+                                (static_cast<void> (0));
+                                do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                            }
+                            if (l_father_grid.dx1[level] != -slope_[level]) {
+                                l_son_grid.x0[level] = l_end;
+                                l_son_grid.dx0[level] = -slope_[level];
+                                l_son_grid.x1[level] = l_end;
+                                l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                                (static_cast<void> (0));
+                                do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                            }
+                        }
+                    } /* end if (can_cut) */
+                } /* end if (cut_lb) */else {
+                    /* '\ /' */
+                    /* cut_tb */
+                    const bool can_cut = (lb >= thres && tb > dx_recursive_boundary_[level]);
+                    if (!can_cut) {
+                        /* if we can't cut into this dimension, just directly push 
+                         * it into the circular queue
+                        */
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    } else {
+                        /* can_cut! */
+                        grid_info<N_RANK> l_son_grid = l_father_grid;
+                        const int l_start = (l_father_grid.x0[level]);
+                        const int l_end = (l_father_grid.x1[level]);
+
+                        (static_cast<void> (0));
+                        (static_cast<void> (0));
+                        /* push one sub-grid into circular queue of (curr_dep) */
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = -slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                        /* cilk_sync */
+                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                        l_son_grid.x0[level] = l_start;
+                        l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                        l_son_grid.x1[level] = l_start;
+                        l_son_grid.dx1[level] = slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                        l_son_grid.x0[level] = l_end;
+                        l_son_grid.dx0[level] = -slope_[level];
+                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    } /* end if (can_cut) */
+                } /* end if (cut_tb) */
             } /* end if (performing a space cut) */
         } /* end while (queue_len_[curr_dep] > 0) */
+        _Cilk_sync;
         (static_cast<void> (0));
+    } /* end for (curr_dep < N_RANK+1) */
 }
 
 /* This is the version for interior region cut! */
@@ -30404,8 +30578,10 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         int lb, thres, tb;
         lb = (grid.x1[i] - grid.x0[i]);
         tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
-        thres = (slope_[i] * lt);
-        bool l_can_cut = (tb > 0 && lb > dx_recursive_[i] && lb >= 2* thres);
+        /* cut_lb = '/ \' */
+        bool cut_lb = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
+        thres = (2 * slope_[i] * lt);
+        bool l_can_cut = (cut_lb ? (lb >= 2 * thres && lb > dx_recursive_[i]) : (lb >= thres && tb > dx_recursive_[i]));
         /* as long as there's one dimension can conduct a cut, we conduct a 
          * multi-dimensional cut!
          */
@@ -32642,7 +32818,7 @@ int total_size_;
             bool touch_boundary = false;
             for (int i = 0; i < N_RANK; ++i) {
                 touch_boundary |= (_idx[i] < logic_start_[i]
-                                || _idx[i] >= logic_end_[i]);
+                                | _idx[i] >= logic_end_[i]);
             }
             return touch_boundary;
         }
@@ -32697,7 +32873,7 @@ int total_size_;
          * - this is the uninterior version
          */
 		inline T operator() (int _idx1, int _idx0) const {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0]);
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
@@ -32708,7 +32884,7 @@ int total_size_;
 		}
 
 		inline T operator() (int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1]);
             bool set_boundary = (l_boundary && bv2_ != (__null));
             T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
@@ -32716,7 +32892,7 @@ int total_size_;
 		}
 
 		inline T operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2]);
             bool set_boundary = (l_boundary && bv3_ != (__null));
             T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
@@ -32724,7 +32900,7 @@ int total_size_;
 		}
 
 		inline T operator() (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3]);
             bool set_boundary = (l_boundary && bv4_ != (__null));
             T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
@@ -32732,7 +32908,7 @@ int total_size_;
 		}
 
 		inline T operator() (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3] || _idx4 < logic_start_[4] || _idx4 >= logic_end_[4]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4]);
             bool set_boundary = (l_boundary && bv5_ != (__null));
             T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
@@ -32740,7 +32916,7 @@ int total_size_;
 		}
 
 		inline T operator() (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3] || _idx4 < logic_start_[4] || _idx4 >= logic_end_[4] || _idx5 < logic_start_[5] || _idx5 >= logic_end_[5]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5]);
             bool set_boundary = (l_boundary && bv6_ != (__null));
             T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
@@ -32748,7 +32924,7 @@ int total_size_;
 		}
 
 		inline T operator() (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3] || _idx4 < logic_start_[4] || _idx4 >= logic_end_[4] || _idx5 < logic_start_[5] || _idx5 >= logic_end_[5] || _idx6 < logic_start_[6] || _idx5 >= logic_end_[6]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5] | _idx6 < logic_start_[6] | _idx5 >= logic_end_[6]);
             bool set_boundary = (l_boundary && bv7_ != (__null));
             T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
@@ -32756,7 +32932,7 @@ int total_size_;
 		}
 
 		inline T operator() (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3] || _idx4 < logic_start_[4] || _idx4 >= logic_end_[4] || _idx5 < logic_start_[5] || _idx5 >= logic_end_[5] || _idx6 < logic_start_[6] || _idx5 >= logic_end_[6] || _idx7 < logic_start_[7] || _idx5 >= logic_end_[7]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5] | _idx6 < logic_start_[6] | _idx5 >= logic_end_[6] | _idx7 < logic_start_[7] | _idx5 >= logic_end_[7]);
             bool set_boundary = (l_boundary && bv8_ != (__null));
             T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
@@ -32764,7 +32940,7 @@ int total_size_;
 		}
 
 		inline T & operator() (int _idx1, int _idx0) {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0]);
             bool set_boundary = (l_boundary && bv1_ != (__null));
             T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
@@ -32772,7 +32948,7 @@ int total_size_;
 		}
 
 		inline T & operator() (int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1]);
             bool set_boundary = (l_boundary && bv2_ != (__null));
             T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
@@ -32780,7 +32956,7 @@ int total_size_;
 		}
 
 		inline T & operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2]);
             bool set_boundary = (l_boundary && bv3_ != (__null));
             T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
@@ -32788,7 +32964,7 @@ int total_size_;
 		}
 
 		inline T & operator() (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3]);
             bool set_boundary = (l_boundary && bv4_ != (__null));
             T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
@@ -32796,7 +32972,7 @@ int total_size_;
 		}
 
 		inline T & operator() (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3] || _idx4 < logic_start_[4] || _idx4 >= logic_end_[4]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4]);
             bool set_boundary = (l_boundary && bv5_ != (__null));
             T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
@@ -32804,7 +32980,7 @@ int total_size_;
 		}
 
 		inline T & operator() (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3] || _idx4 < logic_start_[4] || _idx4 >= logic_end_[4] || _idx5 < logic_start_[5] || _idx5 >= logic_end_[5]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5]);
             bool set_boundary = (l_boundary && bv6_ != (__null));
             T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
@@ -32812,7 +32988,7 @@ int total_size_;
 		}
 
 		inline T & operator() (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3] || _idx4 < logic_start_[4] || _idx4 >= logic_end_[4] || _idx5 < logic_start_[5] || _idx5 >= logic_end_[5] || _idx6 < logic_start_[6] || _idx5 >= logic_end_[6]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5] | _idx6 < logic_start_[6] | _idx5 >= logic_end_[6]);
             bool set_boundary = (l_boundary && bv7_ != (__null));
             T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
@@ -32820,7 +32996,7 @@ int total_size_;
 		}
 
 		inline T & operator() (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0] || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1] || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2] || _idx3 < logic_start_[3] || _idx3 >= logic_end_[3] || _idx4 < logic_start_[4] || _idx4 >= logic_end_[4] || _idx5 < logic_start_[5] || _idx5 >= logic_end_[5] || _idx6 < logic_start_[6] || _idx5 >= logic_end_[6] || _idx7 < logic_start_[7] || _idx5 >= logic_end_[7]);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5] | _idx6 < logic_start_[6] | _idx5 >= logic_end_[6] | _idx7 < logic_start_[7] | _idx5 >= logic_end_[7]);
             bool set_boundary = (l_boundary && bv8_ != (__null));
             T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
@@ -33158,7 +33334,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register %s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_crazy/pochoir.hpp", __FUNCTION__, 146, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register %s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir.hpp", __FUNCTION__, 146, str);
         exit(1);
     }
 }
