@@ -25336,7 +25336,7 @@ extern int futimesat (int __fd, __const char *__file,
 /* file: math.h */
 
 /*
-** Copyright  (C) 1985-2007 Intel Corporation. All rights reserved.
+** Copyright  (C) 1985-2010 Intel Corporation. All rights reserved.
 **
 ** The information and source code contained herein is the exclusive property
 ** of Intel Corporation and may not be disclosed, examined, or reproduced in
@@ -26668,7 +26668,9 @@ extern int matherr (struct __exception *__exc) throw ();
 
 
 
+
 extern "C" {
+
 
 
 
@@ -26681,75 +26683,75 @@ extern "C" {
 
 
 
-extern int fpclassifyf    ( float              __x );
-extern int fpclassify     ( double               __x );
-extern int fpclassifyd    ( double             __x );
-extern int fpclassifyl    ( long double            __x );
+extern int fpclassifyf    ( float              __x ) throw();
+extern int fpclassify     ( double           __x ) throw();
+extern int fpclassifyd    ( double             __x ) throw();
+extern int fpclassifyl    ( long double            __x ) throw();
 
-extern int __fpclassifyf  ( float              __x );
-extern int __fpclassify   ( double               __x );
-extern int __fpclassifyd  ( double             __x );
-extern int __fpclassifyl  ( long double            __x );
+extern int __fpclassifyf  ( float              __x ) throw();
+extern int __fpclassify   ( double           __x ) throw();
+extern int __fpclassifyd  ( double             __x ) throw();
+extern int __fpclassifyl  ( long double            __x ) throw();
 
-extern int isinff         ( float              __x );
-extern int isinf          ( double               __x );
-extern int isinfd         ( double             __x );
-extern int isinfl         ( long double            __x );
+extern int isinff         ( float              __x ) throw();
+extern int isinf          ( double           __x ) throw();
+extern int isinfd         ( double             __x ) throw();
+extern int isinfl         ( long double            __x ) throw();
 
-extern int __isinff       ( float              __x );
-extern int __isinf        ( double               __x );
-extern int __isinfd       ( double             __x );
-extern int __isinfl       ( long double            __x );
+extern int __isinff       ( float              __x ) throw();
+extern int __isinf        ( double           __x ) throw();
+extern int __isinfd       ( double             __x ) throw();
+extern int __isinfl       ( long double            __x ) throw();
 
-extern int isnanf         ( float              __x );
-extern int isnan          ( double               __x );
-extern int isnand         ( double             __x );
-extern int isnanl         ( long double            __x );
+extern int isnanf         ( float              __x ) throw();
+extern int isnan          ( double           __x ) throw();
+extern int isnand         ( double             __x ) throw();
+extern int isnanl         ( long double            __x ) throw();
 
-extern int __isnanf       ( float              __x );
-extern int __isnan        ( double               __x );
-extern int __isnand       ( double             __x );
-extern int __isnanl       ( long double            __x );
+extern int __isnanf       ( float              __x ) throw();
+extern int __isnan        ( double           __x ) throw();
+extern int __isnand       ( double             __x ) throw();
+extern int __isnanl       ( long double            __x ) throw();
 
-extern int isnormalf      ( float              __x );
-extern int isnormal       ( double               __x );
-extern int isnormald      ( double             __x );
-extern int isnormall      ( long double            __x );
+extern int isnormalf      ( float              __x ) throw();
+extern int isnormal       ( double           __x ) throw();
+extern int isnormald      ( double             __x ) throw();
+extern int isnormall      ( long double            __x ) throw();
 
-extern int __isnormalf    ( float              __x );
-extern int __isnormal     ( double               __x );
-extern int __isnormald    ( double             __x );
-extern int __isnormall    ( long double            __x );
+extern int __isnormalf    ( float              __x ) throw();
+extern int __isnormal     ( double           __x ) throw();
+extern int __isnormald    ( double             __x ) throw();
+extern int __isnormall    ( long double            __x ) throw();
 
-extern int isfinitef      ( float              __x );
-extern int isfinite       ( double               __x );
-extern int isfinited      ( double             __x );
-extern int isfinitel      ( long double            __x );
+extern int isfinitef      ( float              __x ) throw();
+extern int isfinite       ( double           __x ) throw();
+extern int isfinited      ( double             __x ) throw();
+extern int isfinitel      ( long double            __x ) throw();
 
-extern int __isfinitef    ( float              __x );
-extern int __isfinite     ( double               __x );
-extern int __isfinited    ( double             __x );
-extern int __isfinitel    ( long double            __x );
+extern int __isfinitef    ( float              __x ) throw();
+extern int __isfinite     ( double           __x ) throw();
+extern int __isfinited    ( double             __x ) throw();
+extern int __isfinitel    ( long double            __x ) throw();
 
-extern int finitef        ( float              __x );
-extern int finite         ( double             __x );
-extern int finited        ( double             __x );
-extern int finitel        ( long double            __x );
+extern int finitef        ( float              __x ) throw();
+extern int finite         ( double             __x ) throw();
+extern int finited        ( double             __x ) throw();
+extern int finitel        ( long double            __x ) throw();
 
-extern int __finitef      ( float              __x );
-extern int __finite       ( double             __x );
-extern int __finited      ( double             __x );
-extern int __finitel      ( long double            __x );
+extern int __finitef      ( float              __x ) throw();
+extern int __finite       ( double             __x ) throw();
+extern int __finited      ( double             __x ) throw();
+extern int __finitel      ( long double            __x ) throw();
 
-extern int signbitf       ( float              __x );
-extern int signbit        ( double             __x );
-extern int signbitd       ( double             __x );
-extern int signbitl       ( long double            __x );
+extern int signbitf       ( float              __x ) throw();
+extern int signbit        ( double             __x ) throw();
+extern int signbitd       ( double             __x ) throw();
+extern int signbitl       ( long double            __x ) throw();
 
-extern int __signbitf     ( float              __x );
-extern int __signbit      ( double             __x );
-extern int __signbitd     ( double             __x );
-extern int __signbitl     ( long double            __x );
+extern int __signbitf     ( float              __x ) throw();
+extern int __signbit      ( double             __x ) throw();
+extern int __signbitd     ( double             __x ) throw();
+extern int __signbitl     ( long double            __x ) throw();
 
 
 
@@ -26760,47 +26762,47 @@ extern int __signbitl     ( long double            __x );
 
 /* Comparison macros */
 
-extern int isgreaterf( float xf, float yf );
-extern int isgreater( double xd, double yd );
-extern int isgreaterl( long double xl, long double yl );
-extern int __isgreaterf( float xf, float yf );
-extern int __isgreater( double xd, double yd );
-extern int __isgreaterl( long double xl, long double yl );
+extern int isgreaterf( float __xf, float __yf );
+extern int isgreater( double __xd, double __yd );
+extern int isgreaterl( long double __xl, long double __yl );
+extern int __isgreaterf( float __xf, float __yf );
+extern int __isgreater( double __xd, double __yd );
+extern int __isgreaterl( long double __xl, long double __yl );
 
-extern int isgreaterequalf( float xf, float yf );
-extern int isgreaterequal( double xd, double yd );
-extern int isgreaterequall( long double xl, long double yl );
-extern int __isgreaterequalf( float xf, float yf );
-extern int __isgreaterequal( double xd, double yd );
-extern int __isgreaterequall( long double xl, long double yl );
+extern int isgreaterequalf( float __xf, float __yf );
+extern int isgreaterequal( double __xd, double __yd );
+extern int isgreaterequall( long double __xl, long double __yl );
+extern int __isgreaterequalf( float __xf, float __yf );
+extern int __isgreaterequal( double __xd, double __yd );
+extern int __isgreaterequall( long double __xl, long double __yl );
 
-extern int islessf( float xf, float yf );
-extern int isless( double xd, double yd );
-extern int islessl( long double xl, long double yl );
-extern int __islessf( float xf, float yf );
-extern int __isless( double xd, double yd );
-extern int __islessl( long double xl, long double yl );
+extern int islessf( float __xf, float __yf );
+extern int isless( double __xd, double __yd );
+extern int islessl( long double __xl, long double __yl );
+extern int __islessf( float __xf, float __yf );
+extern int __isless( double __xd, double __yd );
+extern int __islessl( long double __xl, long double __yl );
 
-extern int islessequalf( float xf, float yf );
-extern int islessequal( double xd, double yd );
-extern int islessequall( long double xl, long double yl );
-extern int __islessequalf( float xf, float yf );
-extern int __islessequal( double xd, double yd );
-extern int __islessequall( long double xl, long double yl );
+extern int islessequalf( float __xf, float __yf );
+extern int islessequal( double __xd, double __yd );
+extern int islessequall( long double __xl, long double __yl );
+extern int __islessequalf( float __xf, float __yf );
+extern int __islessequal( double __xd, double __yd );
+extern int __islessequall( long double __xl, long double __yl );
 
-extern int islessgreaterf( float xf, float yf );
-extern int islessgreater( double xd, double yd );
-extern int islessgreaterl( long double xl, long double yl );
-extern int __islessgreaterf( float xf, float yf );
-extern int __islessgreater( double xd, double yd );
-extern int __islessgreaterl( long double xl, long double yl );
+extern int islessgreaterf( float __xf, float __yf );
+extern int islessgreater( double __xd, double __yd );
+extern int islessgreaterl( long double __xl, long double __yl );
+extern int __islessgreaterf( float __xf, float __yf );
+extern int __islessgreater( double __xd, double __yd );
+extern int __islessgreaterl( long double __xl, long double __yl );
 
-extern int isunorderedf( float xf, float yf );
-extern int isunordered( double xd, double yd );
-extern int isunorderedl( long double xl, long double yl );
-extern int __isunorderedf( float xf, float yf );
-extern int __isunordered( double xd, double yd );
-extern int __isunorderedl( long double xl, long double yl );
+extern int isunorderedf( float __xf, float __yf );
+extern int isunordered( double __xd, double __yd );
+extern int isunorderedl( long double __xl, long double __yl );
+extern int __isunorderedf( float __xf, float __yf );
+extern int __isunordered( double __xd, double __yd );
+extern int __isunorderedl( long double __xl, long double __yl );
 
 
 
@@ -27018,8 +27020,6 @@ extern _LIB_VERSION_TYPE  _LIB_VERSIONIMF;
 
 
 }
-
-
 
 
 
@@ -27650,7 +27650,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 /* file: math.h */
 
 /*
-** Copyright  (C) 1985-2007 Intel Corporation. All rights reserved.
+** Copyright  (C) 1985-2010 Intel Corporation. All rights reserved.
 **
 ** The information and source code contained herein is the exclusive property
 ** of Intel Corporation and may not be disclosed, examined, or reproduced in
@@ -27660,8 +27660,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 
 /* Include_next should be before guard macros in order to at last reach system header */
-
-
 
 
 
@@ -28646,10 +28644,14 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
  *
  */
 
+/* Cilk API -- Functions callable by the user to modify the operation of the
+ * Cilk scheduler.
+ */
+
 
 
 /*
- *  Copyright 2009-2010 Intel Corporation.  All Rights Reserved.
+ *  Copyright 2010 Intel Corporation.  All Rights Reserved.
  *
  *  The source code contained or described herein and all documents related
  *  to the source code ("Material") are owned by Intel Corporation or its
@@ -28670,56 +28672,7 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
  */
 
 
-/* Cilk API -- functions called by the user.  All of these are optional. */
-
-extern "C" {
-
-/* Runtime control.  First argument is parameter name, second value.
- *
- * Allowable names:
- *
- * "nworkers" -- number of processors that should run Cilk code.
- * The value is a number to be parsed by strtol.
- *
- * "force reduce" -- test reducer callbacks by allocating new views
- * for every spawn within which a reducer is accessed.  This can
- * significantly reduce performance.  The value is "1" or "true"
- * to enable, "0" or "false" to disable.
- *
- * Return value is zero on success, nonzero on failure (unrecognized
- * parameter, invalid value, called at the wrong time, or other failure). */
-extern __attribute__((visibility("default"),nothrow,nonnull(1)))
-int __cilkrts_set_param(const char *, const char *);
-
-/* Shut down and deallocate all Cilk state.  The runtime will abort
- * if Cilk is still in use by this thread.  Otherwise the runtime
- * will wait for all other threads using Cilk to exit. */
-extern __attribute__((visibility("default"),nothrow))
-void __cilkrts_end_cilk(void);
-
-/* Allocate Cilk data structures. */
-extern __attribute__((visibility("default"),nothrow))
-void __cilkrts_init(void);
-
-/* get_workers returns the number of worker threads that this instance
- * of Cilk will attempt to use simultaneously.  get_total_workers returns
- * the number of worker descriptors allocated; this number is usually
- * greater than the return value of get_workers.  Both values are constant
- * within a program. */
-extern __attribute__((visibility("default"),nothrow))
-int __cilkrts_get_nworkers(void), __cilkrts_get_total_workers(void);
-
-/* get_worker_number return a small integer indicating which Cilk
- * worker the function is currently running on.  The number is in
- * the range 0..get_total_workers()-1.  */
-extern __attribute__((visibility("default"),nothrow))
-int __cilkrts_get_worker_number(void);
-
-/* Return non-zero if force reduce mode is on */
-extern __attribute__((visibility("default"),nothrow))
-int __cilkrts_get_force_reduce(void);
-
-} // extern "C"
+// -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
 /* Copyright (C) 1991,1992,1994-2001,2003,2004,2007
@@ -28765,6 +28718,163 @@ int __cilkrts_get_force_reduce(void);
    (This is a GNU extension.) */
 
 
+
+/* Prefix standard library function and type names with __STDNS in order to
+ * get correct lookup in both C and C++.
+ */
+
+/* CILK_EXPORT - Define export of runtime functions from shared library.
+ * Should be exported only from cilkrts*.dll/cilkrts*.so
+ */
+
+
+
+/* CILK_API: Called explicitly by the programmer.
+ * CILK_ABI: Called by compiler-generated code.
+ * CILK_ABI_THROWS: An ABI function that may throw an exception
+ *
+ * Even when these are the same definitions, they should be separate macros so
+ * that they can be easily found in the code.
+ */
+
+
+/* __CILKRTS_ASSERT should be defined for debugging only, otherwise it
+ * interferes with vectorization.  Since NDEBUG is not reliable (it must be
+ * set by the user), we must use a platform-specific detection of debug mode.
+ */
+  /* C++ non-debug */
+
+
+
+extern "C" {
+
+/* Runtime control.  First argument is parameter name, second is its value.
+ *
+ * Return value is zero on success, nonzero on failure (unrecognized
+ * parameter, invalid value, called at the wrong time, or other failure).
+ *
+ * The wide character version is only available on Windows.
+ *
+ * Allowable parameter names:
+ *
+ * - "nworkers" -- number of processors that should run Cilk code.
+ *   The value is a string of digits to be parsed by strtol.
+ *
+ * - "force reduce" -- test reducer callbacks by allocating new views
+ *   for every spawn within which a reducer is accessed.  This can
+ *   significantly reduce performance.  The value is "1" or "true"
+ *   to enable, "0" or "false" to disable.
+ */
+ int __attribute__((nothrow)) __cilkrts_set_param(const char *param, const char *value);
+
+/* Shut down and deallocate all Cilk state.  The runtime will abort
+ * if Cilk is still in use by this thread.  Otherwise the runtime
+ * will wait for all other threads using Cilk to exit. */
+ void __attribute__((nothrow)) __cilkrts_end_cilk(void);
+
+/* Allocate Cilk data structures. */
+ void __attribute__((nothrow)) __cilkrts_init(void);
+
+/* Return the number of worker threads that this instance of Cilk
+ * will attempt to use. */
+ int __attribute__((nothrow)) __cilkrts_get_nworkers(void);
+
+/* Return the number of worker threads allocated. */
+ int __attribute__((nothrow)) __cilkrts_get_total_workers(void);
+
+/* Return a small integer indicating which Cilk worker the function is
+ * currently running on.  The return value of this function is always less
+ * than the return value of __cilkrts_get_total_workers(); */
+ int __attribute__((nothrow)) __cilkrts_get_worker_number(void);
+
+/* Return non-zero if force reduce mode is on */
+ int __attribute__((nothrow)) __cilkrts_get_force_reduce(void);
+
+/* Interact with tools */
+ void __attribute__((nothrow))
+    __cilkrts_metacall(unsigned int tool, unsigned int code, void *data);
+
+}
+
+
+/*
+ *  Copyright 2009-2010 Intel Corporation.  All Rights Reserved.
+ *
+ *  The source code contained or described herein and all documents related
+ *  to the source code ("Material") are owned by Intel Corporation or its
+ *  suppliers or licensors.  Title to the Material remains with Intel
+ *  Corporation or its suppliers and licensors.  The Material is protected
+ *  by worldwide copyright laws and treaty provisions.  No part of the
+ *  Material may be used, copied, reproduced, modified, published, uploaded,
+ *  posted, transmitted, distributed, or disclosed in any way without
+ *  Intel's prior express written permission.
+ *
+ *  No license under any patent, copyright, trade secret or other
+ *  intellectual property right is granted to or conferred upon you by
+ *  disclosure or delivery of the Materials, either expressly, by
+ *  implication, inducement, estoppel or otherwise.  Any license under such
+ *  intellectual property rights must be express and approved by Intel in
+ *  writing.
+ *
+ */
+
+/*
+ * reducer_opadd.h
+ *
+ * Purpose: Reducer hyperobject to sum values
+ */
+
+
+/* reducer.h                  -*-C++-*-
+ *
+ *************************************************************************
+ *                         INTEL CONFIDENTIAL
+ *
+ * Copyright 2009-2010 Intel Corporation All Rights Reserved.
+ *
+ * The source code contained or described herein and all documents related
+ * to the source code ("Material") are owned by Intel Corporation or its
+ * suppliers or licensors.  Title to the Material remains with Intel
+ * Corporation or its suppliers and licensors.  The Material contains
+ * trade secrets and proprietary and confidential information of Intel
+ * or its suppliers and licensors.  The Material is protected by worldwide
+ * copyright and trade secret laws and treaty provisions.  No part of the
+ * Material may be used, copied, reproduced, modified, published, uploaded,
+ * posted, transmitted, distributed, or disclosed in any way without
+ * Intel's prior express written permission.
+ *
+ * No license under any patent, copyright, trade secret or other
+ * intellectual property right is granted to or conferred upon you by
+ * disclosure or delivery of the Materials, either expressly, by
+ * implication, inducement, estoppel or otherwise.  Any license under such
+ * intellectual property rights must be express and approved by Intel in
+ * writing.
+ *
+ **************************************************************************/
+
+
+/*
+ *  Copyright 2009-2010 Intel Corporation.  All Rights Reserved.
+ *
+ *  The source code contained or described herein and all documents related
+ *  to the source code ("Material") are owned by Intel Corporation or its
+ *  suppliers or licensors.  Title to the Material remains with Intel
+ *  Corporation or its suppliers and licensors.  The Material is protected
+ *  by worldwide copyright laws and treaty provisions.  No part of the
+ *  Material may be used, copied, reproduced, modified, published, uploaded,
+ *  posted, transmitted, distributed, or disclosed in any way without
+ *  Intel's prior express written permission.
+ *
+ *  No license under any patent, copyright, trade secret or other
+ *  intellectual property right is granted to or conferred upon you by
+ *  disclosure or delivery of the Materials, either expressly, by
+ *  implication, inducement, estoppel or otherwise.  Any license under such
+ *  intellectual property rights must be express and approved by Intel in
+ *  writing.
+ *
+ */
+
+
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
@@ -28831,9 +28941,6 @@ int __cilkrts_get_force_reduce(void);
 
 
 
-
-/* CILK_EXPORT - Define export of hyperobject functions for Windows
- * Should be exported only from cilkrts20.dll */
 
 /* Macro to cache-align a declaration.  Argument(s) comprise either a
  * variable or a struct declaration. */
@@ -28844,7 +28951,6 @@ int __cilkrts_get_force_reduce(void);
  * function with the __CILKRTS_STRAND_STALE attribute using the same function
  * argument.
  */
-
 
 /*****************************************************************************
  * C runtime interface to the hyperobject subsystem
@@ -28878,18 +28984,18 @@ typedef struct __cilkrts_hyperobject_base
 } __cilkrts_hyperobject_base;
 
 /* Library functions. */
-extern 
-void __cilkrts_hyper_create(__cilkrts_hyperobject_base *key);
-extern  void __cilkrts_hyper_destroy(__cilkrts_hyperobject_base *key);
-extern  void* __cilkrts_hyper_lookup(__cilkrts_hyperobject_base *key);
 
-extern 
+    void __cilkrts_hyper_create(__cilkrts_hyperobject_base *key);
+ void __cilkrts_hyper_destroy(__cilkrts_hyperobject_base *key);
+ void* __cilkrts_hyper_lookup(__cilkrts_hyperobject_base *key);
+
+
     void* __cilkrts_hyperobject_alloc(void* ignore, std:: size_t bytes);
-extern 
+
     void __cilkrts_hyperobject_dealloc(void* ignore, void* view);
 
 /* No-op destroy function */
-extern 
+
     void __cilkrts_hyperobject_noop_destroy(void* ignore, void* ignore2);
 
 }
@@ -29128,7 +29234,7 @@ template <typename Monoid>
 reducer<Monoid> ::~reducer()
 {
     // Make sure we haven't been memcopy'd or corrupted
-(static_cast<void> (0));
+static_cast<void>(0);
     __cilkrts_hyper_destroy(&base_);
 }
 
@@ -29281,53 +29387,6 @@ extern "C" {
  * round-off error than a + (b + c).  However, for numbers of similar
  * magnitude, a floating-point 'reducer_opadd' may still be useful.
  */
-
-// -*- C++ -*- forwarding header.
-#pragma GCC system_header
-
-/* Copyright (C) 1991,1992,1994-2001,2003,2004,2007
-   Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-/*
- *	ISO C99 Standard: 7.2 Diagnostics	<assert.h>
- */
-
-
-
-
-
-
-
-/* void assert (int expression);
-
-   If NDEBUG is defined, do nothing.
-   If not, and EXPRESSION is zero, print an error message and abort.  */
-
-
-
-/* void assert_perror (int errnum);
-
-   If NDEBUG is defined, do nothing.  If not, and ERRNUM is not zero, print an
-   error message with the error text for ERRNUM and abort.
-   (This is a GNU extension.) */
-
-
 
 namespace cilk {
 
@@ -29520,7 +29579,7 @@ reducer_opadd<Type>::operator=(
     const typename reducer_opadd<Type>::temp_sum& temp)
 {
     // No-op.  Just test that temp was constructed from this.
-(static_cast<void> (0));
+static_cast<void>(0);
     return *this;
 }
 
@@ -29917,7 +29976,7 @@ struct Algorithm {
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1), r_t(2) {
+    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(2) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -30280,12 +30339,12 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
     }
 
     /* set up the initial grid */
-    do { (static_cast<void> (0)); circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[0] + 1))>=((power<N_RANK> ::value))))); } while(0);
+    do { (static_cast<void> (0)); circular_queue_[0][queue_tail_[0]]. level = N_RANK-1; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[0] + 1))>=((power<N_RANK> ::value))))); } while(0);
     for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         const int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
             do { (static_cast<void> (0)); l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } while(0);
-            if (l_father->level == N_RANK) {
+            if (l_father->level < 0) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
                 do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
@@ -30308,7 +30367,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         /* if we can't cut into this dimension, just directly push 
                          * it into the circular queue 
                          */
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                     } else {
                         /* can_cut! */
                         const int sep = (int)lb/2;
@@ -30323,7 +30382,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         /* push one sub-grid into circular queue of (curr_dep) */
                         l_son_grid.x0[level] = l_start + sep;
@@ -30331,7 +30390,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -30341,7 +30400,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         if (l_father_grid.dx0[level] != slope_[level]) {
                             l_son_grid.x0[level] = l_start;
@@ -30349,7 +30408,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                             l_son_grid.x1[level] = l_start;
                             l_son_grid.dx1[level] = slope_[level];
                             (static_cast<void> (0));
-                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                         }
                         if (l_father_grid.dx1[level] != -slope_[level]) {
                             l_son_grid.x0[level] = l_end;
@@ -30357,7 +30416,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                             l_son_grid.x1[level] = l_end;
                             l_son_grid.dx1[level] = l_father_grid.dx1[level];
                             (static_cast<void> (0));
-                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                         }
                     } /* end if (can_cut) */
                 } /* end if (cut_lb) */ else {
@@ -30367,7 +30426,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         /* if we can't cut into this dimension, just directly push 
                          * it into the circular queue 
                          */
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                     } else {
                         grid_info<N_RANK> l_son_grid = l_father_grid;
                         const int l_start = (l_father_grid.x0[level]);
@@ -30381,7 +30440,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -30391,14 +30450,14 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                     } /* end if (can_cut) */
                 } /* end if (cut_tb) */
             } /* end if (performing a space cut) */
@@ -30421,12 +30480,12 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
     }
 
     /* set up the initial grid */
-    do { (static_cast<void> (0)); circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[0] + 1))>=((power<N_RANK> ::value))))); } while(0);
+    do { (static_cast<void> (0)); circular_queue_[0][queue_tail_[0]]. level = N_RANK-1; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[0] + 1))>=((power<N_RANK> ::value))))); } while(0);
     for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         const int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
             do { (static_cast<void> (0)); l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } while(0);
-            if (l_father->level == N_RANK) {
+            if (l_father->level < 0) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
                 do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
@@ -30454,7 +30513,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         /* if we can't cut into this dimension, just directly push
                          * it into the circular queue
                         */
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                     } else {
                         /* can_cut */
                         const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
@@ -30469,7 +30528,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         /* push one sub-grid into circular queue of (curr_dep) */
                         l_son_grid.x0[level] = l_start + sep;
@@ -30477,7 +30536,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -30487,7 +30546,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         if (initial_cut) {
                             /* merge triangles! */
@@ -30496,7 +30555,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                             l_son_grid.x1[level] = l_end+2*slope_[level];
                             l_son_grid.dx1[level] = slope_[level];
                             (static_cast<void> (0));
-                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                         } else {
                             if (l_father_grid.dx0[level] != slope_[level]) {
                                 l_son_grid.x0[level] = l_start;
@@ -30504,7 +30563,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                                 l_son_grid.x1[level] = l_start;
                                 l_son_grid.dx1[level] = slope_[level];
                                 (static_cast<void> (0));
-                                do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                                do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                             }
                             if (l_father_grid.dx1[level] != -slope_[level]) {
                                 l_son_grid.x0[level] = l_end;
@@ -30512,7 +30571,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                                 l_son_grid.x1[level] = l_end;
                                 l_son_grid.dx1[level] = l_father_grid.dx1[level];
                                 (static_cast<void> (0));
-                                do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                                do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                             }
                         }
                     } /* end if (can_cut) */
@@ -30524,7 +30583,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         /* if we can't cut into this dimension, just directly push 
                          * it into the circular queue
                         */
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                     } else {
                         /* can_cut! */
                         grid_info<N_RANK> l_son_grid = l_father_grid;
@@ -30539,7 +30598,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -30549,14 +30608,14 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
                         (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                     } /* end if (can_cut) */
                 } /* end if (cut_tb) */
             } /* end if (performing a space cut) */
@@ -33598,10 +33657,9 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.set_stride(stride_);
     timestep_ = timestep;
     checkFlags();
-//  It seems that whether it's bicut or adaptive cut only matters in small scale!
-fprintf(stderr, "Call sim_obase_bicut\n");
+    fprintf(stderr, "Call obase_bicut\n");
 #pragma isat marker M2_begin
-    algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+    algor.obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 #pragma isat marker M2_end
 }
 

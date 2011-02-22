@@ -419,7 +419,6 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.set_stride(stride_);
     timestep_ = timestep;
     checkFlags();
-//  It seems that whether it's bicut or adaptive cut only matters in small scale!
 #if BICUT
 #if 0
     fprintf(stderr, "Call obase_bicut\n");

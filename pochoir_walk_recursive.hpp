@@ -287,12 +287,12 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
     }
 
     /* set up the initial grid */
-    push_queue(0, 0, t0, t1, grid);
+    push_queue(0, N_RANK-1, t0, t1, grid);
     for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         const int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
             top_queue(curr_dep_pointer, l_father);
-            if (l_father->level == N_RANK) {
+            if (l_father->level < 0) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
 #if USE_CILK_FOR 
                 /* use cilk_for to spawn all the sub-grid */
@@ -301,7 +301,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                     int i = pmod((queue_head_[curr_dep_pointer]+j), ALGOR_QUEUE_SIZE);
                     queue_info * l_son = &(circular_queue_[curr_dep_pointer][i]);
                     /* assert all the sub-grid has done N_RANK spatial cuts */
-                    assert(l_son->level == N_RANK);
+                    assert(l_son->level == -1);
                     sim_obase_bicut(l_son->t0, l_son->t1, l_son->grid, f);
                 } /* end cilk_for */
                 queue_head_[curr_dep_pointer] = queue_tail_[curr_dep_pointer] = 0;
@@ -329,7 +329,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         /* if we can't cut into this dimension, just directly push 
                          * it into the circular queue 
                          */
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_father_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_father_grid);
                     } else {
                         /* can_cut! */
                         const int sep = (int)lb/2;
@@ -344,7 +344,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = -slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         /* push one sub-grid into circular queue of (curr_dep) */
                         l_son_grid.x0[level] = l_start + sep;
@@ -352,7 +352,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -362,7 +362,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         if (l_father_grid.dx0[level] != slope_[level]) {
                             l_son_grid.x0[level] = l_start;
@@ -370,7 +370,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                             l_son_grid.x1[level] = l_start;
                             l_son_grid.dx1[level] = slope_[level];
                             assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                            push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                            push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
                         }
                         if (l_father_grid.dx1[level] != -slope_[level]) {
                             l_son_grid.x0[level] = l_end;
@@ -378,7 +378,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                             l_son_grid.x1[level] = l_end;
                             l_son_grid.dx1[level] = l_father_grid.dx1[level];
                             assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                            push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                            push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
                         }
                     } /* end if (can_cut) */
                 } /* end if (cut_lb) */ else {
@@ -388,7 +388,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         /* if we can't cut into this dimension, just directly push 
                          * it into the circular queue 
                          */
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_father_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_father_grid);
                     } else {
                         grid_info<N_RANK> l_son_grid = l_father_grid;
                         const int l_start = (l_father_grid.x0[level]);
@@ -402,7 +402,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -412,14 +412,14 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
                     } /* end if (can_cut) */
                 } /* end if (cut_tb) */
             } /* end if (performing a space cut) */
@@ -444,12 +444,12 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
     }
 
     /* set up the initial grid */
-    push_queue(0, 0, t0, t1, grid);
+    push_queue(0, N_RANK-1, t0, t1, grid);
     for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         const int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
             top_queue(curr_dep_pointer, l_father);
-            if (l_father->level == N_RANK) {
+            if (l_father->level < 0) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
 #if USE_CILK_FOR 
                 /* use cilk_for to spawn all the sub-grid */
@@ -458,7 +458,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                     int i = pmod((queue_head_[curr_dep_pointer]+j), ALGOR_QUEUE_SIZE);
                     queue_info * l_son = &(circular_queue_[curr_dep_pointer][i]);
                     /* assert all the sub-grid has done N_RANK spatial cuts */
-                    assert(l_son->level == N_RANK);
+                    assert(l_son->level == -1);
                     if (within_boundary(l_son->t0, l_son->t1, l_son->grid)) {
                         sim_obase_bicut(l_son->t0, l_son->t1, l_son->grid, f);
                     } else {
@@ -495,7 +495,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         /* if we can't cut into this dimension, just directly push
                          * it into the circular queue
                         */
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_father_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_father_grid);
                     } else {
                         /* can_cut */
                         const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
@@ -510,7 +510,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = -slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         /* push one sub-grid into circular queue of (curr_dep) */
                         l_son_grid.x0[level] = l_start + sep;
@@ -518,7 +518,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -528,7 +528,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_start + sep;
                         l_son_grid.dx1[level] = slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         if (initial_cut) {
                             /* merge triangles! */
@@ -537,7 +537,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                             l_son_grid.x1[level] = l_end+2*slope_[level];
                             l_son_grid.dx1[level] = slope_[level];
                             assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                            push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                            push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
                         } else {
                             if (l_father_grid.dx0[level] != slope_[level]) {
                                 l_son_grid.x0[level] = l_start;
@@ -545,7 +545,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                                 l_son_grid.x1[level] = l_start;
                                 l_son_grid.dx1[level] = slope_[level];
                                 assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                                push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                                push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
                             }
                             if (l_father_grid.dx1[level] != -slope_[level]) {
                                 l_son_grid.x0[level] = l_end;
@@ -553,7 +553,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                                 l_son_grid.x1[level] = l_end;
                                 l_son_grid.dx1[level] = l_father_grid.dx1[level];
                                 assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                                push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                                push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
                             }
                         }
                     } /* end if (can_cut) */
@@ -565,7 +565,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         /* if we can't cut into this dimension, just directly push 
                          * it into the circular queue
                         */
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_father_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_father_grid);
                     } else {
                         /* can_cut! */
                         grid_info<N_RANK> l_son_grid = l_father_grid;
@@ -580,7 +580,7 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = -slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(curr_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(curr_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         /* cilk_sync */
                         const int next_dep_pointer = (curr_dep + 1) & 0x1;
@@ -590,14 +590,14 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
 
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
-                        push_queue(next_dep_pointer, level+1, t0, t1, l_son_grid);
+                        push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
                     } /* end if (can_cut) */
                 } /* end if (cut_tb) */
             } /* end if (performing a space cut) */
