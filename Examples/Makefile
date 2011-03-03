@@ -10,9 +10,10 @@ loop : tb_loop.cpp
 	${ICC} -o loop -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_loop.cpp
 #	${ICC} -o loop -O0 -DDEBUG -std=c++0x -Wall -Werror -g3 tb_loop.cpp
 #	${CC} -o tb_loop_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_loop.cpp
-heat_NP_zero : tb_heat_2D_NP_zero.cpp
+heat_NP_zero : tb_heat_2D_NP_zero_pochoir.cpp tb_heat_2D_NP_zero_ploop.cpp
 #	${CC} -o tb_heat_2D_NP_zero_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP_zero.cpp
-	${CC} -o tb_heat_2D_NP_zero_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero.cpp
+	${CC} -o tb_heat_2D_NP_zero_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_pochoir.cpp
+	${CC} -o tb_heat_2D_NP_zero_ploop -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_ploop.cpp
 heat_NP : tb_heat_2D_NP.cpp
 	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP.cpp

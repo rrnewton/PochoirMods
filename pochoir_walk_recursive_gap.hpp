@@ -440,7 +440,8 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                 const int thres = 2 * slope_[level] * lt;
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
                 const bool l_touch_boundary = touch_boundary(level, lt, l_father_grid);
-                const bool can_cut = l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[level]) : (lb >= 2 * thres & lb > dx_recursive_[level]);
+                const bool initial_cut = (lb == phys_length_[level]);
+                const bool can_cut = l_touch_boundary ? (initial_cut ? (lb - 2 * slope_[level] >= 2 * thres & lb > dx_recursive_boundary_[level]) : (lb >= 2 * thres & lb > dx_recursive_boundary_[level])) : (lb >= 2 * thres & lb > dx_recursive_[level]);
                 if (!can_cut) {
                     /* if we can't cut into this dimension, just directly push
                      * it into the circular queue
@@ -451,8 +452,8 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                     const int sep = (int)lb/2;
                     const int r = 2;
                     grid_info<N_RANK> l_son_grid = l_father_grid;
-                    const int l_start = (l_father_grid.x0[level]);
-                    const int l_end = (l_father_grid.x1[level]);
+                    const int l_start = initial_cut ? (l_father_grid.x0[level] + slope_[level]) : (l_father_grid.x0[level]);
+                    const int l_end = initial_cut ? (l_father_grid.x1[level] - slope_[level]) : (l_father_grid.x1[level]);
 
                     /* push one sub-grid into circular queue of (curr_dep) */
                     l_son_grid.x0[level] = l_start;
@@ -480,11 +481,11 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                     assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
                     push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
 
-                    if (lb == phys_length_[level]) {
+                    if (initial_cut) {
                         /* initial cut - merge triangles! */
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
-                        l_son_grid.x1[level] = l_end;
+                        l_son_grid.x1[level] = l_end + 2 * slope_[level];
                         l_son_grid.dx1[level] = slope_[level];
                         assert(l_son_grid.x0[level] <= l_son_grid.x1[level]);
                         push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
@@ -617,7 +618,7 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
          * the overhead on boundary
         */
         /* lb == phys_length_[i] indicates an initial cut! */
-        bool l_can_cut = l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres & lb > dx_recursive_[i]);
+        bool l_can_cut = l_touch_boundary ? ((lb == phys_length_[i]) ? (lb - 2 * slope_[i] >= 2 * thres & lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres & lb > dx_recursive_boundary_[i])) : (lb >= 2 * thres & lb > dx_recursive_[i]);
         call_boundary |= l_touch_boundary;
 #if STAT
         l_count_cut = (l_can_cut ? l_count_cut + 1 : l_count_cut);
