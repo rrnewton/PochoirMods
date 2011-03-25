@@ -14,8 +14,11 @@ heat_NP_zero : tb_heat_2D_NP_zero_pochoir.cpp tb_heat_2D_NP_zero_ploop.cpp
 #	${CC} -o tb_heat_2D_NP_zero_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP_zero.cpp
 	${CC} -o tb_heat_2D_NP_zero_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_pochoir.cpp
 	${CC} -o tb_heat_2D_NP_zero_ploop -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_ploop.cpp
+berkeley3d27pt : tb_3d27pt.cpp
+	${CC} -o tb_3d27pt -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d27pt.cpp
 heat_NP : tb_heat_2D_NP.cpp
-	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
+	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-c-pointer tb_heat_2D_NP.cpp
+	${ICC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -opt-report 3 ${ICC_FLAGS} tb_heat_2D_NP_pochoir.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP.cpp
 heat_P : tb_heat_2D_P.cpp
 	${CC} -o tb_heat_2D_P_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_P.cpp
