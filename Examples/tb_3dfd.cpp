@@ -49,8 +49,8 @@ static const int dx_threshold = 1000;
 static const int dyz_threshold = 3;
 #else
 static const int dt_threshold = 5;
-static const int dx_threshold = 150;
-static const int dyz_threshold = 150;
+static const int dx_threshold = 100;
+static const int dyz_threshold = 100;
 #endif
 float **A;
 
@@ -372,13 +372,13 @@ void print_summary(char *header, double interval) {
 //  int n_worker = cilk::current_worker_count();
   int n_worker = nthreads;
   printf("++++++++++++++++++++ %s ++++++++++++++++++++++\n", header);
-  printf("first non-zero numbers\n");
-  for(int i = 0; i < total; i++) {
-    if(A[T%2][i] != 0) {
-      printf("%d: %f\n", i, A[T%2][i]);
-      break;
-    }
-  }
+//  printf("first non-zero numbers\n");
+//  for(int i = 0; i < total; i++) {
+//    if(A[T%2][i] != 0) {
+//      printf("%d: %f\n", i, A[T%2][i]);
+//      break;
+//    }
+//  }
 	
   long mul = (long)(Nx - 8) * (Ny  - 8) * (Nz - 8) * T;
   double perf = mul / (interval * 1e6);
@@ -408,17 +408,17 @@ void print_y() {
 void dotest()
 {
   //initialization
+#if 1
   A = new float*[2];
   A[0] = new float[Nx * Ny * Nz];
   A[1] = new float[Nx * Ny * Nz];
-  vsq = new float[Nx * Ny * Nz];
+#endif
 
+#if 1
   double start;
   double stop;
 	
   ///////////////////////////////////////////////                                                                      
-#if 0
-  
   init_variables();
   start = cilk_ticks_to_seconds(cilk_getticks());
   
@@ -436,7 +436,9 @@ void dotest()
   //copy_A_to_B();
   print_summary("base", stop - start);
   ///////////////////////////////////////////////
-  
+#endif
+
+#if 0
   init_variables();
   // verify_A_and_B();
   start = cilk_ticks_to_seconds(cilk_getticks());
@@ -478,7 +480,9 @@ int main(int argc, char *argv[])
 
   printf("Order-%d 3D-Stencil (%d points) with space %dx%dx%d and time %d\n", 
 	 ds, ds*2*3+1, Nx, Ny, Nz, T);
+  vsq = new float[Nx * Ny * Nz];
 
+#if 0
   Pochoir_Array<float, 3> pa(Nz, Ny, Nx);
 
   Pochoir<float, 3> fd_3D;
@@ -489,6 +493,7 @@ int main(int argc, char *argv[])
   fd_3D.registerArray(pa);
   fd_3D.registerShape(fd_shape_3D);
   fd_3D.registerDomain(I, J, K);
+
 
   Pochoir_kernel_3D(fd_3D_fn, t, i, j, k)
     float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
@@ -508,17 +513,19 @@ int main(int argc, char *argv[])
      pa(t+1, i, j, k) = 2 * pa(t, i, j, k) - pa(t+1, i, j, k) + vsq[i * Nxy + j * Nx + k] * div;
   Pochoir_kernel_end
 
-  dotest();
-
   init_pochoir_array(pa);
   start = cilk_ticks_to_seconds(cilk_getticks());
-#pragma isat marker M2_begin
   fd_3D.run(T, fd_3D_fn);
-#pragma isat marker M2_end
   stop = cilk_ticks_to_seconds(cilk_getticks());
   print_summary("Pochoir", stop - start);
 
+#endif
+	  
+  dotest();
+
+#if 1
   delete[] A;
+#endif
   delete[] vsq;
   return 0;
 }

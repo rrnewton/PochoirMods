@@ -47,7 +47,7 @@
  */
 
 
-/* Copyright (C) 1991-1993,1995-2006,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1995-2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,10 +76,9 @@
 			if >=199309L, add IEEE Std 1003.1b-1993;
 			if >=199506L, add IEEE Std 1003.1c-1995;
 			if >=200112L, all of IEEE 1003.1-2004
-			if >=200809L, all of IEEE 1003.1-2008
    _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
 			Single Unix conformance is wanted, to 600 for the
-			sixth revision, to 700 for the seventh revision.
+			upcoming sixth revision.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
    _LARGEFILE_SOURCE	Some more functions for correct standard I/O.
    _LARGEFILE64_SOURCE	Additional functionality from LFS for large files.
@@ -113,7 +112,6 @@
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
    __USE_UNIX98		Define Single Unix V2 things.
    __USE_XOPEN2K        Define XPG6 things.
-   __USE_XOPEN2K8       Define XPG7 things.
    __USE_LARGEFILE	Define correct standard I/O things.
    __USE_LARGEFILE64	Define LFS things with separate names.
    __USE_FILE_OFFSET64	Define 64bit interface as default.
@@ -187,30 +185,7 @@
 
 
 
-
-/* Define __STDC_IEC_559__ and other similar macros.  */
-/* Copyright (C) 2005 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-
 /* We do support the IEC 559 math functionality, real and complex.  */
-
 
 /* wchar_t uses ISO 10646-1 (2nd ed., published 2000-09-15) / Unicode 3.1.  */
 
@@ -228,7 +203,7 @@
 /* Decide whether a compiler supports the long long datatypes.  */
 
 /* This is here only because every header file already includes this one.  */
-/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006, 2007, 2009
+/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -381,9 +356,6 @@
 
 /* Decide whether we can define 'extern inline' functions in headers.  */
 
-/* There are some functions that must be declared 'extern inline' even with
-   -Os when building LIBC, or they'll end up undefined.  */
-
 
 /* This is here only because every header file already includes this one.
    Get the definitions of all the appropriate `__stub_FUNCTION' symbols.
@@ -404,7 +376,8 @@
 
 
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -783,7 +756,7 @@ extern void co_basecase(LBM_GridPtr* toggle, MAIN_SimType simType,
 
 extern void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int numTimeSteps);
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994-2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -859,7 +832,7 @@ typedef struct _IO_FILE __FILE;
 
 
 
-/* Copyright (C) 1991-1995,1997-2006,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995,1997-2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -920,7 +893,7 @@ typedef struct _IO_FILE __FILE;
 
 
 /*#endif*/ /* _STDDEF */
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -961,9 +934,9 @@ typedef struct
 /* The rest of the file is only used if used if __need_mbstate_t is not
    defined.  */
 
-
 /* Undefined all __need_* constants in case we are included to get those
    constants but the whole file was already read.  */
+
 typedef struct
 {
   __off_t __pos;
@@ -997,13 +970,13 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 /* ALL of these should be defined in _G_config.h */
 
 /* This define avoids name pollution if we're using GNU stdarg.h */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
 GCC is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
+the Free Software Foundation; either version 2, or (at your option)
 any later version.
 
 GCC is distributed in the hope that it will be useful,
@@ -1011,14 +984,17 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING.  If not, write to
+the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.  */
 
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/* As a special exception, if you include this header file into source
+   files compiled by GCC, this header file does not by itself cause
+   the resulting executable to be covered by the GNU General Public
+   License.  This exception does not however invalidate any other
+   reasons why the executable file might be covered by the GNU General
+   Public License.  */
 
 /*
  * ISO C Standard:  7.15  Variable arguments  <stdarg.h>
@@ -1255,7 +1231,7 @@ typedef _G_fpos64_t fpos64_t;
    L_cuserid	How long an array to pass to `cuserid'.
    FOPEN_MAX	Minimum number of files that can be open at once.
    FILENAME_MAX	Maximum length of a filename.  */
-/* Copyright (C) 1994, 1997, 1998, 1999, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1691,7 +1667,7 @@ extern size_t fread (void *__restrict __ptr, size_t __size,
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 extern size_t fwrite (__const void *__restrict __ptr, size_t __size,
-		      size_t __n, FILE *__restrict __s);
+		      size_t __n, FILE *__restrict __s) ;
 
 
 /* This function does the same as `fputs' but does not lock the stream.
@@ -1712,7 +1688,7 @@ extern int fputs_unlocked (__const char *__restrict __s,
 extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
 			      size_t __n, FILE *__restrict __stream) ;
 extern size_t fwrite_unlocked (__const void *__restrict __ptr, size_t __size,
-			       size_t __n, FILE *__restrict __stream);
+			       size_t __n, FILE *__restrict __stream) ;
 
 
 
@@ -1881,7 +1857,7 @@ extern void funlockfile (FILE *__stream) throw ();
 }
 
 
-/* Copyright (C) 1991-2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2007,7 +1983,7 @@ extern "C" {
 
 
 
-/* Copyright (C) 1992, 1996, 1997, 2000, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2047,50 +2023,6 @@ extern "C" {
 
 
 
-/* Conversion interfaces.  */
-/* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997, 1998, 2000, 2002, 2003, 2007, 2008
-   Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-
-/* Determine the wordsize from the preprocessor defines.  */
-
-
-/* Swap bytes in 16 bit value.  */
-
-
-
-/* Swap bytes in 32 bit value.  */
-
-/* To swap the bytes in a word the i486 processors and up provide the
-   `bswap' opcode.  On i386 we have to use three instructions.  */
-
-
-/* Swap bytes in 64 bit value.  */
-
-
-
-
-
-
-
 union wait
   {
     int w_status;
@@ -2117,7 +2049,7 @@ union wait
 
 
 /* This is the type of the argument to `wait'.  The funky union
-   causes redeclarations with either `int *' or `union wait *' to be
+   causes redeclarations with ether `int *' or `union wait *' to be
    allowed without complaint.  __WAIT_STATUS_DEFN is the type used in
    the actual function definitions.  */
 
@@ -2235,19 +2167,19 @@ extern unsigned long long int strtoull (__const char *__restrict __nptr,
 
 /* The concept of one static locale per category is not very well
    thought out.  Many applications will need to process its data using
-   information from several different locales.  Another problem is
+   information from several different locales.  Another application is
    the implementation of the internationalization handling in the
-   ISO C++ standard library.  To support this another set of
-   the functions using locale data exist which take an additional
+   upcoming ISO C++ standard library.  To support this another set of
+   the functions using locale data exist which have an additional
    argument.
 
-   Attention: even though several *_l interfaces are part of POSIX:2008,
-   these are not.  */
+   Attention: all these functions are *not* standardized in any form.
+   This is a proof-of-concept implementation.  */
 
 /* Structure for reentrant locale using functions.  This is an
    (almost) opaque type for the user level programs.  */
 /* Definition of locale datatype.
-   Copyright (C) 1997,2000,2002,2009 Free Software Foundation, Inc.
+   Copyright (C) 1997,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -2284,9 +2216,6 @@ typedef struct __locale_struct
   /* Note: LC_ALL is not a valid index into this array.  */
   const char *__names[13];
 } *__locale_t;
-
-/* POSIX 2008 makes locale_t official.  */
-typedef __locale_t locale_t;
 
 
 /* Special versions of the functions above which take the locale to
@@ -2403,7 +2332,8 @@ typedef __caddr_t caddr_t;
 
 typedef __key_t key_t;
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2516,7 +2446,7 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 
 /* It also defines `fd_set' and the FD_* macros for `select'.  */
 /* `fd_set' type and related macros, and `select'/`pselect' declarations.
-   Copyright (C) 1996-2003, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,99,2000,01,02,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2541,7 +2471,7 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 /* Get definition of needed basic types.  */
 
 /* Get __FD_* definitions.  */
-/* Copyright (C) 1997,1998,1999,2001,2008,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2560,14 +2490,9 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
    02111-1307 USA.  */
 
 
-/* Determine the wordsize from the preprocessor defines.  */
 
-
-
-
-
-
-
+/* We don't use `memset' because this would require a prototype and
+   the array isn't too big.  */
 
 /* Get __sigset_t.  */
 /* __sig_atomic_t, __sigset_t, and related definitions.  Linux version.
@@ -2612,7 +2537,8 @@ typedef struct
 typedef __sigset_t sigset_t;
 
 /* Get definition of timer specification structures.  */
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2701,7 +2627,7 @@ typedef struct
   {
     /* XPG4.2 requires this member name.  Otherwise avoid the name
        from the global namespace.  */
-    __fd_mask fds_bits[1024 / (8 * (int) sizeof (__fd_mask))];
+    __fd_mask fds_bits[1024 / (8 * sizeof (__fd_mask))];
   } fd_set;
 
 /* Maximum number of file descriptors in `fd_set'.  */
@@ -3192,12 +3118,6 @@ extern void abort (void) throw () __attribute__ ((__noreturn__));
 /* Register a function to be called when `exit' is called.  */
 extern int atexit (void (*__func) (void)) throw () __attribute__ ((__nonnull__ (1)));
 
-// XXX There should be a macro to signal with C++ revision is used.
-// XXX This function is in the C++1x revision.
-/* Register a function to be called when `quick_exit' is called.  */
-extern "C++" int at_quick_exit (void (*__func) (void))
-     throw () __asm ("at_quick_exit") __attribute__ ((__nonnull__ (1)));
-
 
 /* Register a function to be called with the status
    given to `exit' and the given argument.  */
@@ -3206,16 +3126,9 @@ extern int on_exit (void (*__func) (int __status, void *__arg), void *__arg)
 
 
 /* Call all functions registered with `atexit' and `on_exit',
-   in the reverse of the order in which they were registered,
+   in the reverse of the order in which they were registered
    perform stdio cleanup, and terminate program execution with STATUS.  */
 extern void exit (int __status) throw () __attribute__ ((__noreturn__));
-
-// XXX There should be a macro to signal with C++ revision is used.
-// XXX This function is in the C++1x revision.
-/* Call all functions registered with `at_quick_exit' in the reverse
-   of the order in which they were registered and terminate program
-   execution with STATUS.  */
-extern void quick_exit (int __status) throw () __attribute__ ((__noreturn__));
 
 
 
@@ -3266,20 +3179,10 @@ extern char *mktemp (char *__template) throw () __attribute__ ((__nonnull__ (1))
    Returns a file descriptor open on the file for reading and writing,
    or -1 if it cannot create a uniquely-named file.
 
-   This function is a possible cancellation point and therefore not
+   This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 extern int mkstemp (char *__template) __attribute__ ((__nonnull__ (1))) ;
 extern int mkstemp64 (char *__template) __attribute__ ((__nonnull__ (1))) ;
-
-/* Similar to mkstemp, but the template can have a suffix after the
-   XXXXXX.  The length of the suffix is specified in the second
-   parameter.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int mkstemps (char *__template, int __suffixlen) __attribute__ ((__nonnull__ (1))) ;
-extern int mkstemps64 (char *__template, int __suffixlen)
-     __attribute__ ((__nonnull__ (1))) ;
 
 /* Create a unique temporary directory from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
@@ -3296,17 +3199,6 @@ extern char *mkdtemp (char *__template) throw () __attribute__ ((__nonnull__ (1)
    marked with __THROW.  */
 extern int mkostemp (char *__template, int __flags) __attribute__ ((__nonnull__ (1))) ;
 extern int mkostemp64 (char *__template, int __flags) __attribute__ ((__nonnull__ (1))) ;
-
-/* Similar to mkostemp, but the template can have a suffix after the
-   XXXXXX.  The length of the suffix is specified in the second
-   parameter.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int mkostemps (char *__template, int __suffixlen, int __flags)
-     __attribute__ ((__nonnull__ (1))) ;
-extern int mkostemps64 (char *__template, int __suffixlen, int __flags)
-     __attribute__ ((__nonnull__ (1))) ;
 
 
 
@@ -3336,7 +3228,6 @@ extern char *realpath (__const char *__restrict __name,
 typedef int (*__compar_fn_t) (__const void *, __const void *);
 
 typedef __compar_fn_t comparison_fn_t;
-typedef int (*__compar_d_fn_t) (__const void *, __const void *, void *);
 
 
 /* Do a binary search for KEY in BASE, which consists of NMEMB elements
@@ -3349,9 +3240,6 @@ extern void *bsearch (__const void *__key, __const void *__base,
    using COMPAR to perform the comparisons.  */
 extern void qsort (void *__base, size_t __nmemb, size_t __size,
 		   __compar_fn_t __compar) __attribute__ ((__nonnull__ (1, 4)));
-extern void qsort_r (void *__base, size_t __nmemb, size_t __size,
-		     __compar_d_fn_t __compar, void *__arg)
-  __attribute__ ((__nonnull__ (1, 4)));
 
 
 /* Return the absolute value of X.  */
@@ -3590,7 +3478,7 @@ extern int getloadavg (double __loadavg[], int __nelem)
 /* Define convenient aliases for Cilk keywords */
 
 
-/* Copyright (C) 1991-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -3619,12 +3507,10 @@ extern "C" {
 /* These may be used to determine what facilities are present at compile time.
    Their values can be obtained at run time from `sysconf'.  */
 
-/* POSIX Standard approved as ISO/IEC 9945-1 as of September 2008.  */
+/* POSIX Standard approved as ISO/IEC 9945-1 as of December 2001.  */
 
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
-
-/* The utilities on GNU systems also correspond to this version.  */
 
 /* The utilities on GNU systems also correspond to this version.  */
 
@@ -3741,7 +3627,7 @@ extern "C" {
    */
 
 /* Define POSIX options for Linux.
-   Copyright (C) 1996-2004, 2006, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -3778,7 +3664,7 @@ extern "C" {
 
 /* Setting of memory protections is supported.  */
 
-/* Some filesystems allow all users to change file ownership.  */
+/* Only root can change owner of file.  */
 
 /* `c_cc' member of 'struct termios' structure can be disabled by
    using the value _POSIX_VDISABLE.  */
@@ -3805,10 +3691,6 @@ extern "C" {
 
 /* We support priority protection, though only for non-robust
    mutexes.  */
-
-/* We support priority inheritence for robust mutexes.  */
-
-/* We do not support priority protection for robust mutexes.  */
 
 /* We support POSIX.1b semaphores.  */
 
@@ -3868,7 +3750,7 @@ extern "C" {
 
 
 /* Get the environment definitions from Unix98.  */
-/* Copyright (C) 1999, 2001, 2004, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -3895,24 +3777,20 @@ extern "C" {
    `-1' means it is never supported.  Undefined means it cannot be
    statically decided.
 
-   _POSIX_V7_ILP32_OFF32   32bit int, long, pointers, and off_t type
-   _POSIX_V7_ILP32_OFFBIG  32bit int, long, and pointers and larger off_t type
+   _POSIX_V6_ILP32_OFF32   32bit int, long, pointers, and off_t type
+   _POSIX_V6_ILP32_OFFBIG  32bit int, long, and pointers and larger off_t type
 
-   _POSIX_V7_LP64_OFF32	   64bit long and pointers and 32bit off_t type
-   _POSIX_V7_LPBIG_OFFBIG  64bit long and pointers and large off_t type
+   _POSIX_V6_LP64_OFF32	   64bit long and pointers and 32bit off_t type
+   _POSIX_V6_LPBIG_OFFBIG  64bit long and pointers and large off_t type
 
-   The macros _POSIX_V6_ILP32_OFF32, _POSIX_V6_ILP32_OFFBIG,
-   _POSIX_V6_LP64_OFF32, _POSIX_V6_LPBIG_OFFBIG, _XBS5_ILP32_OFF32,
-   _XBS5_ILP32_OFFBIG, _XBS5_LP64_OFF32, and _XBS5_LPBIG_OFFBIG were
-   used in previous versions of the Unix standard and are available
-   only for compatibility.
+   The macros _XBS5_ILP32_OFF32, _XBS5_ILP32_OFFBIG, _XBS5_LP64_OFF32, and
+   _XBS5_LPBIG_OFFBIG were used in previous versions of the Unix standard
+   and are available only for compatibility.
 */
 
 
 /* Environments with 32-bit wide pointers are optionally provided.
    Therefore following macros aren't defined:
-   # undef _POSIX_V7_ILP32_OFF32
-   # undef _POSIX_V7_ILP32_OFFBIG
    # undef _POSIX_V6_ILP32_OFF32
    # undef _POSIX_V6_ILP32_OFFBIG
    # undef _XBS5_ILP32_OFF32
@@ -4059,10 +3937,6 @@ extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
    Returns 0 if successful, -1 if not.  */
 extern int pipe (int __pipedes[2]) throw () ;
 
-/* Same as pipe but apply flags passed in FLAGS to the new file
-   descriptors.  */
-extern int pipe2 (int __pipedes[2], int __flags) throw () ;
-
 /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
    If SECONDS is zero, any currently scheduled alarm will be cancelled.
    The function returns the number of seconds remaining until the last
@@ -4160,10 +4034,6 @@ extern int dup (int __fd) throw () ;
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
 extern int dup2 (int __fd, int __fd2) throw ();
 
-/* Duplicate FD to FD2, closing FD2 and making it open on the same
-   file while setting flags according to FLAGS.  */
-extern int dup3 (int __fd, int __fd2, int __flags) throw ();
-
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;
 extern char **environ;
@@ -4205,12 +4075,6 @@ extern int execvp (__const char *__file, char *__const __argv[])
 extern int execlp (__const char *__file, __const char *__arg, ...)
      throw () __attribute__ ((__nonnull__ (1)));
 
-/* Execute FILE, searching in the `PATH' environment variable if it contains
-   no slashes, with arguments ARGV and environment from `environ'.  */
-extern int execvpe (__const char *__file, char *__const __argv[],
-		    char *__const __envp[])
-     throw () __attribute__ ((__nonnull__ (1)));
-
 
 /* Add INC to priority of the current process.  */
 extern int nice (int __inc) throw () ;
@@ -4224,7 +4088,7 @@ extern void _exit (int __status) __attribute__ ((__noreturn__));
    the `_SC_*' symbols for the NAME argument to `sysconf';
    and the `_CS_*' symbols for the NAME argument to `confstr'.  */
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993,1995-1998,2000,2001,2003,2004,2007,2009
+   Copyright (C) 1993,1995-1998,2000,2001,2003,2004,2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -4496,24 +4360,7 @@ enum
     /* Leave room here, maybe we need a few more cache levels some day.  */
 
     _SC_IPV6 = _SC_LEVEL1_ICACHE_SIZE + 50,
-    _SC_RAW_SOCKETS,
-
-    _SC_V7_ILP32_OFF32,
-    _SC_V7_ILP32_OFFBIG,
-    _SC_V7_LP64_OFF64,
-    _SC_V7_LPBIG_OFFBIG,
-
-    _SC_SS_REPL_MAX,
-
-    _SC_TRACE_EVENT_NAME_MAX,
-    _SC_TRACE_NAME_MAX,
-    _SC_TRACE_SYS_MAX,
-    _SC_TRACE_USER_EVENT_MAX,
-
-    _SC_XOPEN_STREAMS,
-
-    _SC_THREAD_ROBUST_PRIO_INHERIT,
-    _SC_THREAD_ROBUST_PRIO_PROTECT
+    _SC_RAW_SOCKETS
   };
 
 /* Values for the NAME argument to `confstr'.  */
@@ -4525,10 +4372,6 @@ enum
 
     _CS_GNU_LIBC_VERSION,
     _CS_GNU_LIBPTHREAD_VERSION,
-
-    _CS_V5_WIDTH_RESTRICTED_ENVS,
-
-    _CS_V7_WIDTH_RESTRICTED_ENVS,
 
     _CS_LFS_CFLAGS = 1000,
     _CS_LFS_LDFLAGS,
@@ -4571,24 +4414,7 @@ enum
     _CS_POSIX_V6_LPBIG_OFFBIG_CFLAGS,
     _CS_POSIX_V6_LPBIG_OFFBIG_LDFLAGS,
     _CS_POSIX_V6_LPBIG_OFFBIG_LIBS,
-    _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAGS,
-
-    _CS_POSIX_V7_ILP32_OFF32_CFLAGS,
-    _CS_POSIX_V7_ILP32_OFF32_LDFLAGS,
-    _CS_POSIX_V7_ILP32_OFF32_LIBS,
-    _CS_POSIX_V7_ILP32_OFF32_LINTFLAGS,
-    _CS_POSIX_V7_ILP32_OFFBIG_CFLAGS,
-    _CS_POSIX_V7_ILP32_OFFBIG_LDFLAGS,
-    _CS_POSIX_V7_ILP32_OFFBIG_LIBS,
-    _CS_POSIX_V7_ILP32_OFFBIG_LINTFLAGS,
-    _CS_POSIX_V7_LP64_OFF64_CFLAGS,
-    _CS_POSIX_V7_LP64_OFF64_LDFLAGS,
-    _CS_POSIX_V7_LP64_OFF64_LIBS,
-    _CS_POSIX_V7_LP64_OFF64_LINTFLAGS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_CFLAGS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_LDFLAGS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_LIBS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_LINTFLAGS
+    _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAGS
   };
 
 /* Get file-specific configuration information about PATH.  */
@@ -4815,7 +4641,7 @@ extern int setlogin (__const char *__name) throw () __attribute__ ((__nonnull__ 
    arguments in ARGV (ARGC of them, minus the program name) for
    options given in OPTS.  */
 /* Declarations for getopt.
-   Copyright (C) 1989-1994,1996-1999,2001,2003,2004,2009
+   Copyright (C) 1989-1994,1996-1999,2001,2003,2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -4909,7 +4735,6 @@ extern int optopt;
    errors, only prototype getopt for the GNU C library.  */
 extern int getopt (int ___argc, char *const *___argv, const char *__shortopts)
        throw ();
-
 
 
 }
@@ -5110,7 +4935,7 @@ extern char *ctermid (char *__s) throw ();
 }
 
 
-/* Copyright (C) 1991, 1992, 1995-2004, 2005, 2006, 2007, 2009
+/* Copyright (C) 1991, 1992, 1995-2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -5136,7 +4961,8 @@ extern char *ctermid (char *__s) throw ();
 
 
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -5183,7 +5009,7 @@ extern char *ctermid (char *__s) throw ();
 
 extern "C" {
 
-/* Copyright (C) 1999,2000,2001,2002,2003,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -5216,7 +5042,7 @@ struct stat
     __mode_t st_mode;		/* File mode.  */
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
-    int __pad0;
+    int pad0;
     __dev_t st_rdev;		/* Device number, if device.  */
     __off_t st_size;			/* Size of file, in bytes.  */
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
@@ -5242,7 +5068,7 @@ struct stat64
     __mode_t st_mode;		/* File mode.  */
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
-    int __pad0;
+    int pad0;
     __dev_t st_rdev;		/* Device number, if device.  */
     __off_t st_size;		/* Size of file, in bytes.  */
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
@@ -5273,6 +5099,7 @@ struct stat64
 /* Protection bits.  */
 
 
+/* XXX This will change to the macro for the next 2008 POSIX revision.  */
 
 
 /* Test macros for file types.	*/
@@ -5350,8 +5177,7 @@ extern int fchmod (int __fd, __mode_t __mode) throw ();
 
 /* Set file access permissions of FILE relative to
    the directory FD is open on.  */
-extern int fchmodat (int __fd, __const char *__file, __mode_t __mode,
-		     int __flag)
+extern int fchmodat (int __fd, __const char *__file, __mode_t mode, int __flag)
      throw () __attribute__ ((__nonnull__ (2))) ;
 
 
@@ -5404,6 +5230,7 @@ extern int utimensat (int __fd, __const char *__path,
 		      int __flags)
      throw () __attribute__ ((__nonnull__ (2)));
 
+/* XXX This will change to the macro for the next 2008 POSIX revision.  */
 /* Set file access and modification times of the file associated with FD.  */
 extern int futimens (int __fd, __const struct timespec __times[2]) throw ();
 

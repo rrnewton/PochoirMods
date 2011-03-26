@@ -1686,7 +1686,7 @@ void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int nu
     } 
         if (z == (SIZE_Z - 1 + MARGIN_Z)) { 
             /* outflow */ 
-            int z1 = z - 1; 
+//            int z1 = z - 1; 
             MY_TYPE rho1 = + PoCellEntry( pa( t, z1, y, x) )._C + PoCellEntry( pa( t, z1, y, x) )._N + PoCellEntry( pa( t, z1, y, x) )._S + PoCellEntry( pa( t, z1, y, x) )._E + PoCellEntry( pa( t, z1, y, x) )._W + PoCellEntry( pa( t, z1, y, x) )._T + PoCellEntry( pa( t, z1, y, x) )._B + PoCellEntry( pa( t, z1, y, x) )._NE + PoCellEntry( pa( t, z1, y, x) )._NW + PoCellEntry( pa( t, z1, y, x) )._SE + PoCellEntry( pa( t, z1, y, x) )._SW + PoCellEntry( pa( t, z1, y, x) )._NT + PoCellEntry( pa( t, z1, y, x) )._NB + PoCellEntry( pa( t, z1, y, x) )._ST + PoCellEntry( pa( t, z1, y, x) )._SB + PoCellEntry( pa( t, z1, y, x) )._ET + PoCellEntry( pa( t, z1, y, x) )._EB + PoCellEntry( pa( t, z1, y, x) )._WT + PoCellEntry( pa( t, z1, y, x) )._WB; 
             MY_TYPE ux1 = + PoCellEntry( pa(t, z1, y, x) )._E  - PoCellEntry( pa(t, z1, y, x) )._W + PoCellEntry( pa(t, z1, y, x) )._NE - PoCellEntry( pa(t, z1, y, x) )._NW + PoCellEntry( pa(t, z1, y, x) )._SE - PoCellEntry( pa(t, z1, y, x) )._SW + PoCellEntry( pa(t, z1, y, x) )._ET + PoCellEntry( pa(t, z1, y, x) )._EB - PoCellEntry( pa(t, z1, y, x) )._WT - PoCellEntry( pa(t, z1, y, x) )._WB; 
             MY_TYPE uy1 = + PoCellEntry( pa(t, z1, y, x) )._N  - PoCellEntry( pa(t, z1, y, x) )._S + PoCellEntry( pa(t, z1, y, x) )._NE + PoCellEntry( pa(t, z1, y, x) )._NW - PoCellEntry( pa(t, z1, y, x) )._SE - PoCellEntry( pa(t, z1, y, x) )._SW + PoCellEntry( pa(t, z1, y, x) )._NT + PoCellEntry( pa(t, z1, y, x) )._NB - PoCellEntry( pa(t, z1, y, x) )._ST - PoCellEntry( pa(t, z1, y, x) )._SB; 
@@ -1694,7 +1694,7 @@ void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int nu
             ux1 /= rho1; 
             uy1 /= rho1; 
             uz1 /= rho1; 
-            int z2 = z - 2;		
+//            int z2 = z - 2;		
             MY_TYPE rho2 = + PoCellEntry( pa(t, z2, y, x) )._C  + PoCellEntry( pa(t, z2, y, x) )._N + PoCellEntry( pa(t, z2, y, x) )._S  + PoCellEntry( pa(t, z2, y, x) )._E + PoCellEntry( pa(t, z2, y, x) )._W  + PoCellEntry( pa(t, z2, y, x) )._T + PoCellEntry( pa(t, z2, y, x) )._B  + PoCellEntry( pa(t, z2, y, x) )._NE + PoCellEntry( pa(t, z2, y, x) )._NW + PoCellEntry( pa(t, z2, y, x) )._SE + PoCellEntry( pa(t, z2, y, x) )._SW + PoCellEntry( pa(t, z2, y, x) )._NT + PoCellEntry( pa(t, z2, y, x) )._NB + PoCellEntry( pa(t, z2, y, x) )._ST + PoCellEntry( pa(t, z2, y, x) )._SB + PoCellEntry( pa(t, z2, y, x) )._ET + PoCellEntry( pa(t, z2, y, x) )._EB + PoCellEntry( pa(t, z2, y, x) )._WT + PoCellEntry( pa(t, z2, y, x) )._WB; 
             MY_TYPE ux2 = + PoCellEntry( pa(t, z2, y, x) )._E  - PoCellEntry( pa(t, z2, y, x) )._W + PoCellEntry( pa(t, z2, y, x) )._NE - PoCellEntry( pa(t, z2, y, x) )._NW + PoCellEntry( pa(t, z2, y, x) )._SE - PoCellEntry( pa(t, z2, y, x) )._SW + PoCellEntry( pa(t, z2, y, x) )._ET + PoCellEntry( pa(t, z2, y, x) )._EB - PoCellEntry( pa(t, z2, y, x) )._WT - PoCellEntry( pa(t, z2, y, x) )._WB; 
             MY_TYPE uy2 = + PoCellEntry( pa(t, z2, y, x) )._N  - PoCellEntry( pa(t, z2, y, x) )._S  + PoCellEntry( pa(t, z2, y, x) )._NE + PoCellEntry( pa(t, z2, y, x) )._NW - PoCellEntry( pa(t, z2, y, x) )._SE - PoCellEntry( pa(t, z2, y, x) )._SW + PoCellEntry( pa(t, z2, y, x) )._NT + PoCellEntry( pa(t, z2, y, x) )._NB - PoCellEntry( pa(t, z2, y, x) )._ST - PoCellEntry( pa(t, z2, y, x) )._SB; 

@@ -30,6 +30,11 @@
 #pragma GCC system_header
 
 // Predefined symbols and macros -*- C++ -*-
+namespace std __attribute__ ((__visibility__ ("default"))) {
+}
+
+
+// Allow use of "export template." This is currently not a feature
 #pragma GCC system_header
 
 /**
@@ -70,7 +75,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 }
 
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994-2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -314,7 +319,7 @@ typedef struct _IO_FILE __FILE;
 
 
 
-/* Copyright (C) 1991-1995,1997-2006,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995,1997-2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -375,7 +380,7 @@ typedef struct _IO_FILE __FILE;
 
 
 /*#endif*/ /* _STDDEF */
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -416,9 +421,9 @@ typedef struct
 /* The rest of the file is only used if used if __need_mbstate_t is not
    defined.  */
 
-
 /* Undefined all __need_* constants in case we are included to get those
    constants but the whole file was already read.  */
+
 typedef struct
 {
   __off_t __pos;
@@ -452,13 +457,13 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 /* ALL of these should be defined in _G_config.h */
 
 /* This define avoids name pollution if we're using GNU stdarg.h */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
 GCC is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
+the Free Software Foundation; either version 2, or (at your option)
 any later version.
 
 GCC is distributed in the hope that it will be useful,
@@ -466,14 +471,17 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING.  If not, write to
+the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.  */
 
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/* As a special exception, if you include this header file into source
+   files compiled by GCC, this header file does not by itself cause
+   the resulting executable to be covered by the GNU General Public
+   License.  This exception does not however invalidate any other
+   reasons why the executable file might be covered by the GNU General
+   Public License.  */
 
 /*
  * ISO C Standard:  7.15  Variable arguments  <stdarg.h>
@@ -710,7 +718,7 @@ typedef _G_fpos64_t fpos64_t;
    L_cuserid	How long an array to pass to `cuserid'.
    FOPEN_MAX	Minimum number of files that can be open at once.
    FILENAME_MAX	Maximum length of a filename.  */
-/* Copyright (C) 1994, 1997, 1998, 1999, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1146,7 +1154,7 @@ extern size_t fread (void *__restrict __ptr, size_t __size,
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 extern size_t fwrite (__const void *__restrict __ptr, size_t __size,
-		      size_t __n, FILE *__restrict __s);
+		      size_t __n, FILE *__restrict __s) ;
 
 
 /* This function does the same as `fputs' but does not lock the stream.
@@ -1167,7 +1175,7 @@ extern int fputs_unlocked (__const char *__restrict __s,
 extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
 			      size_t __n, FILE *__restrict __stream) ;
 extern size_t fwrite_unlocked (__const void *__restrict __ptr, size_t __size,
-			       size_t __n, FILE *__restrict __stream);
+			       size_t __n, FILE *__restrict __stream) ;
 
 
 
@@ -1479,7 +1487,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   typedef basic_string<wchar_t> wstring;
 
-
 }
 
 // Position types -*- C++ -*-
@@ -1519,7 +1526,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 /*#endif*/ /* _STDDEF */
 
 
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1546,13 +1553,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 /* Get FILE definition.  */
 /* Get va_list definition.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
 GCC is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
+the Free Software Foundation; either version 2, or (at your option)
 any later version.
 
 GCC is distributed in the hope that it will be useful,
@@ -1560,14 +1567,17 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING.  If not, write to
+the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.  */
 
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/* As a special exception, if you include this header file into source
+   files compiled by GCC, this header file does not by itself cause
+   the resulting executable to be covered by the GNU General Public
+   License.  This exception does not however invalidate any other
+   reasons why the executable file might be covered by the GNU General
+   Public License.  */
 
 /*
  * ISO C Standard:  7.15  Variable arguments  <stdarg.h>
@@ -1601,10 +1611,6 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    02111-1307 USA.  */
 
 
-/* Use GCC's __WCHAR_MAX__ when available.  */
-
-/* GCC may also define __WCHAR_UNSIGNED__.
-   Use L'\0' to give the expression the correct (unsigned) type.  */
 
 
 /* Get size_t, wchar_t, wint_t and NULL from <stddef.h>.  */
@@ -1636,8 +1642,6 @@ typedef unsigned int wint_t;
 
 
 /*#endif*/ /* _STDDEF */
-
-/* Tell the caller that we provide correct C++ prototypes.  */
 
 /* We try to get wint_t from <stddef.h>, but not all GCC versions define it
    there.  So define it ourselves if it remains undefined.  */
@@ -1710,7 +1714,7 @@ extern int wcsncasecmp (__const wchar_t *__s1, __const wchar_t *__s2,
 /* Similar to the two functions above but take the information from
    the provided locale and not the global locale.  */
 /* Definition of locale datatype.
-   Copyright (C) 1997,2000,2002,2009 Free Software Foundation, Inc.
+   Copyright (C) 1997,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -1747,9 +1751,6 @@ typedef struct __locale_struct
   /* Note: LC_ALL is not a valid index into this array.  */
   const char *__names[13];
 } *__locale_t;
-
-/* POSIX 2008 makes locale_t official.  */
-typedef __locale_t locale_t;
 
 
 extern int wcscasecmp_l (__const wchar_t *__s1, __const wchar_t *__s2,
@@ -1788,15 +1789,11 @@ extern wchar_t *wcsdup (__const wchar_t *__s) throw () __attribute__ ((__malloc_
 
 
 /* Find the first occurrence of WC in WCS.  */
-extern "C++" wchar_t *wcschr (wchar_t *__wcs, wchar_t __wc)
-     throw () __asm ("wcschr") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
-     throw () __asm ("wcschr")  __attribute__ ((__pure__));
+extern wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
+     throw () __attribute__ ((__pure__));
 /* Find the last occurrence of WC in WCS.  */
-extern "C++" wchar_t *wcsrchr (wchar_t *__wcs, wchar_t __wc)
-     throw () __asm ("wcsrchr") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc)
-     throw () __asm ("wcsrchr") __attribute__ ((__pure__));
+extern wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc)
+     throw () __attribute__ ((__pure__));
 
 
 /* This function is similar to `wcschr'.  But it returns a pointer to
@@ -1814,17 +1811,11 @@ extern size_t wcscspn (__const wchar_t *__wcs, __const wchar_t *__reject)
 extern size_t wcsspn (__const wchar_t *__wcs, __const wchar_t *__accept)
      throw () __attribute__ ((__pure__));
 /* Find the first occurrence in WCS of any character in ACCEPT.  */
-extern "C++" wchar_t *wcspbrk (wchar_t *__wcs, __const wchar_t *__accept)
-     throw () __asm ("wcspbrk") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcspbrk (__const wchar_t *__wcs,
-				       __const wchar_t *__accept)
-     throw () __asm ("wcspbrk") __attribute__ ((__pure__));
+extern wchar_t *wcspbrk (__const wchar_t *__wcs, __const wchar_t *__accept)
+     throw () __attribute__ ((__pure__));
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
-extern "C++" wchar_t *wcsstr (wchar_t *__haystack, __const wchar_t *__needle)
-     throw () __asm ("wcsstr") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcsstr (__const wchar_t *__haystack,
-				      __const wchar_t *__needle)
-     throw () __asm ("wcsstr") __attribute__ ((__pure__));
+extern wchar_t *wcsstr (__const wchar_t *__haystack, __const wchar_t *__needle)
+     throw () __attribute__ ((__pure__));
 
 /* Divide WCS into tokens separated by characters in DELIM.  */
 extern wchar_t *wcstok (wchar_t *__restrict __s,
@@ -1836,11 +1827,8 @@ extern size_t wcslen (__const wchar_t *__s) throw () __attribute__ ((__pure__));
 
 
 /* Another name for `wcsstr' from XPG4.  */
-extern "C++" wchar_t *wcswcs (wchar_t *__haystack, __const wchar_t *__needle)
-     throw () __asm ("wcswcs") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcswcs (__const wchar_t *__haystack,
-				      __const wchar_t *__needle)
-     throw () __asm ("wcswcs") __attribute__ ((__pure__));
+extern wchar_t *wcswcs (__const wchar_t *__haystack, __const wchar_t *__needle)
+     throw () __attribute__ ((__pure__));
 
 /* Return the number of wide characters in S, but at most MAXLEN.  */
 extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen)
@@ -1849,11 +1837,8 @@ extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen)
 
 
 /* Search N wide characters of S for C.  */
-extern "C++" wchar_t *wmemchr (wchar_t *__s, wchar_t __c, size_t __n)
-     throw () __asm ("wmemchr") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c,
-				       size_t __n)
-     throw () __asm ("wmemchr") __attribute__ ((__pure__));
+extern wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c, size_t __n)
+     throw () __attribute__ ((__pure__));
 
 /* Compare N wide characters of S1 and S2.  */
 extern int wmemcmp (__const wchar_t *__restrict __s1,
@@ -2305,9 +2290,9 @@ extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
 }
 
 
-
 /* Undefined all __need_* constants in case we are included to get those
    constants but the whole file was already read.  */
+
 
 
 // Need to do a bit of trickery here with mbstate_t as char_traits
@@ -2373,12 +2358,36 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   using ::wmemset;
   using ::wprintf;
   using ::wscanf;
+
   using ::wcschr;
+
+  inline wchar_t*
+  wcschr(wchar_t* __p, wchar_t __c)
+  { return wcschr(const_cast<const wchar_t*>(__p), __c); }
+
   using ::wcspbrk;
+
+  inline wchar_t*
+  wcspbrk(wchar_t* __s1, const wchar_t* __s2)
+  { return wcspbrk(const_cast<const wchar_t*>(__s1), __s2); }
+
   using ::wcsrchr;
+
+  inline wchar_t*
+  wcsrchr(wchar_t* __p, wchar_t __c)
+  { return wcsrchr(const_cast<const wchar_t*>(__p), __c); }
+
   using ::wcsstr;
+
+  inline wchar_t*
+  wcsstr(wchar_t* __s1, const wchar_t* __s2)
+  { return wcsstr(const_cast<const wchar_t*>(__s1), __s2); }
+
   using ::wmemchr;
 
+  inline wchar_t*
+  wmemchr(wchar_t* __p, wchar_t __c, size_t __n)
+  { return wmemchr(const_cast<const wchar_t*>(__p), __c, __n); }
 
 }
 
@@ -2404,11 +2413,101 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 
 
-// XXX If <stdint.h> is really needed, make sure to define the macros
+/* Copyright (C) 1997,1998,1999,2000,2001,2006 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	ISO C99: 7.18 Integer types <stdint.h>
+ */
+
+
+/* Determine the wordsize from the preprocessor defines.  */
+
+
+/* Exact integral types.  */
+
+/* Signed.  */
+
+/* There is some amount of overlap with <sys/types.h> as known by inet code */
+typedef signed char		int8_t;
+typedef short int		int16_t;
+typedef int			int32_t;
+typedef long int		int64_t;
+
+/* Unsigned.  */
+typedef unsigned char		uint8_t;
+typedef unsigned short int	uint16_t;
+typedef unsigned int		uint32_t;
+typedef unsigned long int	uint64_t;
+
+
+/* Small types.  */
+
+/* Signed.  */
+typedef signed char		int_least8_t;
+typedef short int		int_least16_t;
+typedef int			int_least32_t;
+typedef long int		int_least64_t;
+
+/* Unsigned.  */
+typedef unsigned char		uint_least8_t;
+typedef unsigned short int	uint_least16_t;
+typedef unsigned int		uint_least32_t;
+typedef unsigned long int	uint_least64_t;
+
+
+/* Fast types.  */
+
+/* Signed.  */
+typedef signed char		int_fast8_t;
+typedef long int		int_fast16_t;
+typedef long int		int_fast32_t;
+typedef long int		int_fast64_t;
+
+/* Unsigned.  */
+typedef unsigned char		uint_fast8_t;
+typedef unsigned long int	uint_fast16_t;
+typedef unsigned long int	uint_fast32_t;
+typedef unsigned long int	uint_fast64_t;
+
+
+/* Types for `void *' pointers.  */
+typedef long int		intptr_t;
+typedef unsigned long int	uintptr_t;
+
+
+/* Largest integral types.  */
+typedef long int		intmax_t;
+typedef unsigned long int	uintmax_t;
+
+
+/* The ISO C99 standard specifies that in C++ implementations these
+   macros should only be defined if explicitly requested.  */
+
+
+/* The ISO C99 standard specifies that in C++ implementations these
+   should only be defined if explicitly requested.  */
+
+
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
   // The types streamoff, streampos and wstreampos and the class
-typedef long          streamoff;
+typedef int64_t       streamoff;
 
   /// Integral type for I/O operation counts and buffer sizes.
 typedef ptrdiff_t	streamsize; // Signed integral type
@@ -2497,7 +2596,6 @@ typedef fpos<mbstate_t> streampos;
   /// File position for wchar_t streams.
 typedef fpos<mbstate_t> wstreampos;
 
-
 }
 
 
@@ -2556,7 +2654,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 class ios_base; 
 
   /** 
-   *  @defgroup io I/O
+   *  @defgroup s27_2_iosfwd I/O Forward Declarations
    *
    *  Nearly all of the I/O classes are parameterized on the type of
    *  characters they read and write.  (The major exception is ios_base at
@@ -2619,14 +2717,6 @@ extern "C++" {
 
 namespace std 
 {
-  /**
-   * @defgroup exceptions Exceptions
-   * @ingroup diagnostics
-   *
-   * Classes and functions for reporting errors via exception classes.
-   * @{
-   */
-
   /**
    *  @brief Base class for all library exceptions.
    *
@@ -2691,34 +2781,25 @@ unexpected_handler set_unexpected(unexpected_handler) throw();
    *  result in a call of @c terminate() (15.5.1)."
    */
   bool uncaught_exception() throw();
-
-  // @} group exceptions
 } // namespace std
 namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
-  /** 
-   *  @brief A replacement for the standard terminate_handler which
-   *  prints more information about the terminating exception (if any)
-   *  on stderr.  
-   *
-   *  @ingroup exceptions
-   *
-   *  Call
-   *   @code
-   *     std::set_terminate(__gnu_cxx::__verbose_terminate_handler)
-   *   @endcode
-   *  to use.  For more info, see
-   *  http://gcc.gnu.org/onlinedocs/libstdc++/manual/bk01pt02ch06s02.html
-   *
-   *  In 3.4 and later, this is on by default.
-   */
-  void __verbose_terminate_handler();
+  /** A replacement for the standard terminate_handler which prints more
+      information about the terminating exception (if any) on stderr.  Call
+      @code
+        std::set_terminate (__gnu_cxx::__verbose_terminate_handler)
+      @endcode
+      to use.  For more info, see
+      http://gcc.gnu.org/onlinedocs/libstdc++/19_diagnostics/howto.html#4
+
+      In 3.4 and later, this is on by default.
+  */
+  void __verbose_terminate_handler ();
 
 }
   
 } // extern "C++"
 #pragma GCC visibility pop
-
 
 // Character Traits for use by standard string and iostream -*- C++ -*-
 #pragma GCC system_header
@@ -2799,12 +2880,9 @@ void
   void
   __throw_underflow_error(const char*) __attribute__((__noreturn__));
 
-  // Helpers for exception objects in <ios>
+  // Helpers for exception objects in basic_ios
 void
   __throw_ios_failure(const char*) __attribute__((__noreturn__));
-
-  void
-  __throw_system_error(int) __attribute__((__noreturn__));
 
 }
 
@@ -2838,6 +2916,14 @@ template<class _Sp, class _Tp>
     struct __traitor
     {
       enum { __value = bool(_Sp::__value) || bool(_Tp::__value) };
+      typedef typename __truth_type<__value>::__type __type;
+    };
+
+  // N.B. The conversions to bool are needed due to the issue
+template<class _Sp, class _Tp>
+    struct __traitand
+    {
+      enum { __value = bool(_Sp::__value) && bool(_Tp::__value) };
       typedef typename __truth_type<__value>::__type __type;
     };
 
@@ -2914,7 +3000,6 @@ template<>
       enum { __value = 1 };
       typedef __true_type __type;
     };
-
 
   template<>
     struct __is_integer<short>
@@ -3356,36 +3441,6 @@ static const bool __is_signed = true;
 // Pair implementation -*- C++ -*-
 #pragma GCC system_header
 
-/**
-***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
-***
-*** The information and source code contained herein is the exclusive
-*** property of Intel Corporation and may not be disclosed, examined
-*** or reproduced in whole or in part without explicit written authorization
-*** from the company.
-**/
-
-/*
- * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
- * Consult your license regarding permissions and restrictions.
- */
-
-
-/* stddef.h standard header */
-
-		/* macros */
-		/* type definitions */
-
-
-
-
-
-
-/*#endif*/ /* _STDDEF */
-
-// Concept-checking control -*- C++ -*-
-#pragma GCC system_header
-
 
 // All places in libstdc++-v3 where these are used, or /might/ be used, or
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -3406,18 +3461,9 @@ _Tp __tmp = (__a);
       __b = (__tmp);
     }
 
-  // _GLIBCXX_RESOLVE_LIB_DEFECTS
-template<typename _Tp, size_t _Nm>
-    inline void
-    swap(_Tp (&__a)[_Nm], _Tp (&__b)[_Nm])
-    {
-      for (size_t __n = 0; __n < _Nm; ++__n)
-	swap(__a[__n], __b[__n]);
-    }
-
 }
 
-                       // std::swap
+                           // std::swap
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /// pair holds two objects of arbitrary type.
@@ -3536,36 +3582,18 @@ template<class _T1, class _T2>
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
-  /**
-   *  @defgroup iterators Iterators
-   *  These are empty types, used to distinguish different iterators.  The
-   *  distinction is not made by what they contain, but simply by what they
-   *  are.  Different underlying algorithms can then be used based on the
-   *  different operations supported by different iterator types.
-  */
-  //@{ 
-struct input_iterator_tag { };
+  //@{
+struct input_iterator_tag {};
   ///  Marking output iterators.
-struct output_iterator_tag { };
+struct output_iterator_tag {};
   /// Forward iterators support a superset of input iterator operations.
-struct forward_iterator_tag : public input_iterator_tag { };
+struct forward_iterator_tag : public input_iterator_tag {};
   /// Bidirectional iterators support a superset of forward iterator
-struct bidirectional_iterator_tag : public forward_iterator_tag { };
+struct bidirectional_iterator_tag : public forward_iterator_tag {};
   /// Random-access iterators support a superset of bidirectional iterator
-struct random_access_iterator_tag : public bidirectional_iterator_tag { };
-
-
-  /**
-   *  @brief  Common %iterator class.
-   *
-   *  This class does nothing but define nested typedefs.  %Iterator classes
-   *  can inherit from this class to save some work.  The typedefs are then
-   *  used in specializations and overloading.
-   *
-   *  In particular, there are no default implementations of requirements
-   *  such as @c operator++ and the like.  (How could there be?)
-  */
-  template<typename _Category, typename _Tp, typename _Distance = ptrdiff_t,
+struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+  //@}
+template<typename _Category, typename _Tp, typename _Distance = ptrdiff_t,
            typename _Pointer = _Tp*, typename _Reference = _Tp&>
     struct iterator
     {
@@ -3626,7 +3654,6 @@ typedef _Reference reference;
     __iterator_category(const _Iter&)
     { return typename iterator_traits<_Iter>::iterator_category(); }
 
-  //@}
 }
 
 
@@ -3732,7 +3759,6 @@ __i += __n;
 typename iterator_traits<_InputIterator>::difference_type __d = __n;
       std::__advance(__i, __d, std::__iterator_category(__i));
     }
-
 
 }
 
@@ -4488,7 +4514,6 @@ template<bool _BoolType>
 
   /**
    *  @brief Swaps the contents of two iterators.
-   *  @ingroup mutating_algorithms
    *  @param  a  An iterator.
    *  @param  b  Another iterator.
    *  @return   Nothing.
@@ -4518,7 +4543,6 @@ typedef typename iterator_traits<_ForwardIterator1>::reference
 
   /**
    *  @brief Swap the elements of two sequences.
-   *  @ingroup mutating_algorithms
    *  @param  first1  A forward iterator.
    *  @param  last1   A forward iterator.
    *  @param  first2  A forward iterator.
@@ -4543,7 +4567,6 @@ typedef typename iterator_traits<_ForwardIterator1>::reference
 
   /**
    *  @brief This does what you think it does.
-   *  @ingroup sorting_algorithms
    *  @param  a  A thing of arbitrary type.
    *  @param  b  Another thing of arbitrary type.
    *  @return   The lesser of the parameters.
@@ -4564,7 +4587,6 @@ if (__b < __a)
 
   /**
    *  @brief This does what you think it does.
-   *  @ingroup sorting_algorithms
    *  @param  a  A thing of arbitrary type.
    *  @param  b  Another thing of arbitrary type.
    *  @return   The greater of the parameters.
@@ -4585,10 +4607,9 @@ if (__a < __b)
 
   /**
    *  @brief This does what you think it does.
-   *  @ingroup sorting_algorithms
    *  @param  a  A thing of arbitrary type.
    *  @param  b  Another thing of arbitrary type.
-   *  @param  comp  A @link comparison_functors comparison functor@endlink.
+   *  @param  comp  A @link s20_3_3_comparisons comparison functor@endlink.
    *  @return   The lesser of the parameters.
    *
    *  This will work on temporary expressions, since they are only evaluated
@@ -4606,10 +4627,9 @@ if (__comp(__b, __a))
 
   /**
    *  @brief This does what you think it does.
-   *  @ingroup sorting_algorithms
    *  @param  a  A thing of arbitrary type.
    *  @param  b  Another thing of arbitrary type.
-   *  @param  comp  A @link comparison_functors comparison functor@endlink.
+   *  @param  comp  A @link s20_3_3_comparisons comparison functor@endlink.
    *  @return   The greater of the parameters.
    *
    *  This will work on temporary expressions, since they are only evaluated
@@ -4765,7 +4785,6 @@ template<typename _CharT>
 
   /**
    *  @brief Copies the range [first,last) into result.
-   *  @ingroup mutating_algorithms
    *  @param  first  An input iterator.
    *  @param  last   An input iterator.
    *  @param  result An output iterator.
@@ -4865,7 +4884,6 @@ template<typename _CharT>
 
   /**
    *  @brief Copies the range [first,last) into result.
-   *  @ingroup mutating_algorithms
    *  @param  first  A bidirectional iterator.
    *  @param  last   A bidirectional iterator.
    *  @param  result A bidirectional iterator.
@@ -4928,7 +4946,6 @@ template<typename _Tp>
 
   /**
    *  @brief Fills the range [first,last) with copies of value.
-   *  @ingroup mutating_algorithms
    *  @param  first  A forward iterator.
    *  @param  last   A forward iterator.
    *  @param  value  A reference-to-const of arbitrary type.
@@ -4981,7 +4998,6 @@ template<typename _Tp>
 
   /**
    *  @brief Fills the range [first,first+n) with copies of value.
-   *  @ingroup mutating_algorithms
    *  @param  first  An output iterator.
    *  @param  n      The count of copies to perform.
    *  @param  value  A reference-to-const of arbitrary type.
@@ -5146,7 +5162,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Tests a range for element-wise equality.
-   *  @ingroup non_mutating_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
@@ -5170,11 +5185,10 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Tests a range for element-wise equality.
-   *  @ingroup non_mutating_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
-   *  @param binary_pred A binary predicate @link functors
+   *  @param binary_pred A binary predicate @link s20_3_1_base
    *                  functor@endlink.
    *  @return         A boolean true or false.
    *
@@ -5199,7 +5213,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Performs "dictionary" comparison on ranges.
-   *  @ingroup sorting_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
@@ -5236,12 +5249,11 @@ typedef typename iterator_traits<_II1>::value_type _ValueType1;
 
   /**
    *  @brief Performs "dictionary" comparison on ranges.
-   *  @ingroup sorting_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
    *  @param  last2   An input iterator.
-   *  @param  comp  A @link comparison_functors comparison functor@endlink.
+   *  @param  comp  A @link s20_3_3_comparisons comparison functor@endlink.
    *  @return   A boolean true or false.
    *
    *  The same as the four-parameter @c lexicographical_compare, but uses the
@@ -5274,7 +5286,6 @@ typedef typename iterator_traits<_II1>::value_type _ValueType1;
 
   /**
    *  @brief Finds the places in ranges which don't match.
-   *  @ingroup non_mutating_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
@@ -5303,11 +5314,10 @@ typedef typename iterator_traits<_II1>::value_type _ValueType1;
 
   /**
    *  @brief Finds the places in ranges which don't match.
-   *  @ingroup non_mutating_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
-   *  @param binary_pred A binary predicate @link functors
+   *  @param binary_pred A binary predicate @link s20_3_1_base
    *         functor@endlink.
    *  @return   A pair of iterators pointing to the first mismatch.
    *
@@ -5370,32 +5380,39 @@ typedef typename iterator_traits<_II1>::value_type _ValueType1;
 /*#endif*/ /* _STDDEF */
 
 
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+// -*- C++ -*- forwarding header.
+#pragma GCC system_header
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+// -*- C++ -*- forwarding header.
+#pragma GCC system_header
 
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- *      ISO C99 Standard: 7.24
- *	Extended multibyte and wide character utilities	<wchar.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
 
-/* Undefined all __need_* constants in case we are included to get those
-   constants but the whole file was already read.  */
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
+
 
 
 
@@ -5630,8 +5647,7 @@ static int_type
       { return __c1 == __c2; }
 
       static int_type
-      eof()
-      { return static_cast<int_type>((-1)); }
+      eof() { return static_cast<int_type>((-1)); }
 
       static int_type
       not_eof(const int_type& __c)
@@ -5686,20 +5702,17 @@ template<>
       { return wmemset(__s, __a, __n); }
 
       static char_type
-      to_char_type(const int_type& __c)
-      { return char_type(__c); }
+      to_char_type(const int_type& __c) { return char_type(__c); }
 
       static int_type
-      to_int_type(const char_type& __c)
-      { return int_type(__c); }
+      to_int_type(const char_type& __c) { return int_type(__c); }
 
       static bool
       eq_int_type(const int_type& __c1, const int_type& __c2)
       { return __c1 == __c2; }
 
       static int_type
-      eof()
-      { return static_cast<int_type>((0xffffffffu)); }
+      eof() { return static_cast<int_type>((0xffffffffu)); }
 
       static int_type
       not_eof(const int_type& __c)
@@ -5707,8 +5720,6 @@ template<>
   };
 
 }
-
-
 
 // Locale support -*- C++ -*-
 #pragma GCC system_header
@@ -5719,7 +5730,7 @@ template<>
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1991,1992,1995-2002,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -5900,6 +5911,8 @@ extern struct lconv *localeconv (void) throw ();
 
 /* Get locale datatype definition.  */
 
+typedef __locale_t locale_t;
+
 /* Return a reference to a data structure representing a set of locale
    datasets.  Unlike for the CATEGORY parameter for `setlocale' the
    CATEGORY_MASK parameter here uses a single bit for each category,
@@ -6012,7 +6025,7 @@ inline int
 // -*- C++ -*- forwarding header.
 #pragma GCC system_header
 
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007,2008,2009
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -6047,7 +6060,7 @@ extern "C" {
    endian).  We define the bit value interpretations here dependent on the
    machine's byte order.  */
 
-/* Copyright (C) 1992, 1996, 1997, 2000, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -6087,50 +6100,6 @@ extern "C" {
 
 
 
-/* Conversion interfaces.  */
-/* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997, 1998, 2000, 2002, 2003, 2007, 2008
-   Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-
-/* Determine the wordsize from the preprocessor defines.  */
-
-
-/* Swap bytes in 16 bit value.  */
-
-
-
-/* Swap bytes in 32 bit value.  */
-
-/* To swap the bytes in a word the i486 processors and up provide the
-   `bswap' opcode.  On i386 we have to use three instructions.  */
-
-
-/* Swap bytes in 64 bit value.  */
-
-
-
-
-
-
-
 enum
 {
   _ISupper = ((0) < 8 ? ((1 << (0)) << 8) : ((1 << (0)) >> 8)),	/* UPPERCASE.  */
@@ -6164,11 +6133,11 @@ enum
    doesn't fit into an `unsigned char'.  But today more important is that
    the arrays are also used for multi-byte character sets.  */
 extern __const unsigned short int **__ctype_b_loc (void)
-     throw () __attribute__ ((__const));
+     __attribute__ ((__const));
 extern __const __int32_t **__ctype_tolower_loc (void)
-     throw () __attribute__ ((__const));
+     __attribute__ ((__const));
 extern __const __int32_t **__ctype_toupper_loc (void)
-     throw () __attribute__ ((__const));
+     __attribute__ ((__const));
 
 
 
@@ -6480,8 +6449,6 @@ class messages_base;
      void *__gthread_getspecific (__gthread_key_t key)
      int __gthread_setspecific (__gthread_key_t key, const void *ptr)
 
-     int __gthread_mutex_destroy (__gthread_mutex_t *mutex);
-
      int __gthread_mutex_lock (__gthread_mutex_t *mutex);
      int __gthread_mutex_trylock (__gthread_mutex_t *mutex);
      int __gthread_mutex_unlock (__gthread_mutex_t *mutex);
@@ -6511,56 +6478,25 @@ class messages_base;
    All functions returning int should return zero on success or the error
    number.  If the operation is not supported, -1 is returned.
 
-   If the following are also defined, you should 
-     #define __GTHREADS_CXX0X 1
-   to enable the c++0x thread library. 
- 
-   Types:
-     __gthread_t
-     __gthread_time_t
-
-   Interface:
-     int __gthread_create (__gthread_t *thread, void *(*func) (void*), 
-                           void *args);
-     int __gthread_join (__gthread_t thread, void **value_ptr);
-     int __gthread_detach (__gthread_t thread);
-     int __gthread_equal (__gthread_t t1, __gthread_t t2);
-     __gthread_t __gthread_self (void);
-     int __gthread_yield (void);
-
-     int __gthread_mutex_timedlock (__gthread_mutex_t *m,
-                                    const __gthread_time_t *abs_timeout);
-     int __gthread_recursive_mutex_timedlock (__gthread_recursive_mutex_t *m,
-                                          const __gthread_time_t *abs_time);
-     
-     int __gthread_cond_signal (__gthread_cond_t *cond);
-     int __gthread_cond_timedwait (__gthread_cond_t *cond, 
-                                   __gthread_mutex_t *mutex,
-                                   const __gthread_time_t *abs_timeout);
-     int __gthread_cond_timedwait_recursive (__gthread_cond_t *cond,
-                                             __gthread_recursive_mutex_t *mutex,
-                                             const __gthread_time_t *abs_time)
-
    Currently supported threads packages are
      TPF threads with -D__tpf__
      POSIX/Unix98 threads with -D_PTHREADS
      POSIX/Unix95 threads with -D_PTHREADS95
      DCE threads with -D_DCE_THREADS
      Solaris/UI threads with -D_SOLARIS_THREADS
-   
 */
 
 /* Check first for thread specific defines.  */
 /* Threads compatibility routines for libgcc2 and libobjc.  */
 /* Compile this one with gcc.  */
-/* Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
-   2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
 
 This file is part of GCC.
 
 GCC is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
+Software Foundation; either version 2, or (at your option) any later
 version.
 
 GCC is distributed in the hope that it will be useful, but WITHOUT ANY
@@ -6568,14 +6504,17 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 for more details.
 
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING.  If not, write to the Free
+Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301, USA.  */
 
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/* As a special exception, if you link this library with other files,
+   some of which are compiled with GCC, to produce an executable,
+   this library does not by itself cause the resulting executable
+   to be covered by the GNU General Public License.
+   This exception does not however invalidate any other reasons why
+   the executable file might be covered by the GNU General Public License.  */
 
 
 /* POSIX threads specific definitions.
@@ -6584,7 +6523,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 /* Some implementations of <pthread.h> require this to be defined.  */
 
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -6654,7 +6593,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 /*#endif*/ /* _STDDEF */
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -6701,7 +6641,7 @@ struct timespec
 /* Get system specific constant and data structure definitions.  */
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996-1999,2001-2003,2005,2006,2007,2008,2009
+   Copyright (C) 1996-1999,2001-2003,2005,2006,2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -6832,7 +6772,8 @@ extern int sched_getaffinity (__pid_t __pid, size_t __cpusetsize,
 
 }
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -7213,7 +7154,7 @@ extern int getdate_r (__const char *__restrict __string,
 
 
 
-/* Copyright (C) 1991-2003, 2004, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -7503,10 +7444,8 @@ enum
 /* Robust mutex or not flags.  */
 enum
 {
-  PTHREAD_MUTEX_STALLED,
-  PTHREAD_MUTEX_STALLED_NP = PTHREAD_MUTEX_STALLED,
-  PTHREAD_MUTEX_ROBUST,
-  PTHREAD_MUTEX_ROBUST_NP = PTHREAD_MUTEX_ROBUST
+  PTHREAD_MUTEX_STALLED_NP,
+  PTHREAD_MUTEX_ROBUST_NP
 };
 
 
@@ -7769,7 +7708,7 @@ extern int pthread_attr_getaffinity_np (__const pthread_attr_t *__attr,
 
 
 /* Initialize thread attribute *ATTR with attributes corresponding to the
-   already running thread TH.  It shall be called on uninitialized ATTR
+   already running thread TH.  It shall be called on unitialized ATTR
    and destroyed with pthread_attr_destroy when no longer needed.  */
 extern int pthread_getattr_np (pthread_t __th, pthread_attr_t *__attr)
      throw () __attribute__ ((__nonnull__ (2)));
@@ -7967,8 +7906,6 @@ extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
 /* Declare the state protected by MUTEX as consistent.  */
 extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
      throw () __attribute__ ((__nonnull__ (1)));
-extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
-     throw () __attribute__ ((__nonnull__ (1)));
 
 
 /* Functions for handling mutex attributes.  */
@@ -8028,17 +7965,11 @@ extern int pthread_mutexattr_setprioceiling (pthread_mutexattr_t *__attr,
      throw () __attribute__ ((__nonnull__ (1)));
 
 /* Get the robustness flag of the mutex attribute ATTR.  */
-extern int pthread_mutexattr_getrobust (__const pthread_mutexattr_t *__attr,
-					int *__robustness)
-     throw () __attribute__ ((__nonnull__ (1, 2)));
 extern int pthread_mutexattr_getrobust_np (__const pthread_mutexattr_t *__attr,
 					   int *__robustness)
      throw () __attribute__ ((__nonnull__ (1, 2)));
 
 /* Set the robustness flag of the mutex attribute ATTR.  */
-extern int pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
-					int __robustness)
-     throw () __attribute__ ((__nonnull__ (1)));
 extern int pthread_mutexattr_setrobust_np (pthread_mutexattr_t *__attr,
 					   int __robustness)
      throw () __attribute__ ((__nonnull__ (1)));
@@ -8302,7 +8233,7 @@ extern int pthread_atfork (void (*__prepare) (void),
 
 }
 
-/* Copyright (C) 1991-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -8331,12 +8262,10 @@ extern "C" {
 /* These may be used to determine what facilities are present at compile time.
    Their values can be obtained at run time from `sysconf'.  */
 
-/* POSIX Standard approved as ISO/IEC 9945-1 as of September 2008.  */
+/* POSIX Standard approved as ISO/IEC 9945-1 as of December 2001.  */
 
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
-
-/* The utilities on GNU systems also correspond to this version.  */
 
 /* The utilities on GNU systems also correspond to this version.  */
 
@@ -8453,7 +8382,7 @@ extern "C" {
    */
 
 /* Define POSIX options for Linux.
-   Copyright (C) 1996-2004, 2006, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -8490,7 +8419,7 @@ extern "C" {
 
 /* Setting of memory protections is supported.  */
 
-/* Some filesystems allow all users to change file ownership.  */
+/* Only root can change owner of file.  */
 
 /* `c_cc' member of 'struct termios' structure can be disabled by
    using the value _POSIX_VDISABLE.  */
@@ -8517,10 +8446,6 @@ extern "C" {
 
 /* We support priority protection, though only for non-robust
    mutexes.  */
-
-/* We support priority inheritence for robust mutexes.  */
-
-/* We do not support priority protection for robust mutexes.  */
 
 /* We support POSIX.1b semaphores.  */
 
@@ -8580,7 +8505,7 @@ extern "C" {
 
 
 /* Get the environment definitions from Unix98.  */
-/* Copyright (C) 1999, 2001, 2004, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -8607,24 +8532,20 @@ extern "C" {
    `-1' means it is never supported.  Undefined means it cannot be
    statically decided.
 
-   _POSIX_V7_ILP32_OFF32   32bit int, long, pointers, and off_t type
-   _POSIX_V7_ILP32_OFFBIG  32bit int, long, and pointers and larger off_t type
+   _POSIX_V6_ILP32_OFF32   32bit int, long, pointers, and off_t type
+   _POSIX_V6_ILP32_OFFBIG  32bit int, long, and pointers and larger off_t type
 
-   _POSIX_V7_LP64_OFF32	   64bit long and pointers and 32bit off_t type
-   _POSIX_V7_LPBIG_OFFBIG  64bit long and pointers and large off_t type
+   _POSIX_V6_LP64_OFF32	   64bit long and pointers and 32bit off_t type
+   _POSIX_V6_LPBIG_OFFBIG  64bit long and pointers and large off_t type
 
-   The macros _POSIX_V6_ILP32_OFF32, _POSIX_V6_ILP32_OFFBIG,
-   _POSIX_V6_LP64_OFF32, _POSIX_V6_LPBIG_OFFBIG, _XBS5_ILP32_OFF32,
-   _XBS5_ILP32_OFFBIG, _XBS5_LP64_OFF32, and _XBS5_LPBIG_OFFBIG were
-   used in previous versions of the Unix standard and are available
-   only for compatibility.
+   The macros _XBS5_ILP32_OFF32, _XBS5_ILP32_OFFBIG, _XBS5_LP64_OFF32, and
+   _XBS5_LPBIG_OFFBIG were used in previous versions of the Unix standard
+   and are available only for compatibility.
 */
 
 
 /* Environments with 32-bit wide pointers are optionally provided.
    Therefore following macros aren't defined:
-   # undef _POSIX_V7_ILP32_OFF32
-   # undef _POSIX_V7_ILP32_OFFBIG
    # undef _POSIX_V6_ILP32_OFF32
    # undef _POSIX_V6_ILP32_OFFBIG
    # undef _XBS5_ILP32_OFF32
@@ -8685,7 +8606,6 @@ typedef __off64_t off64_t;
 typedef __useconds_t useconds_t;
 
 
-typedef __intptr_t intptr_t;
 
 typedef __socklen_t socklen_t;
 
@@ -8776,10 +8696,6 @@ extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
 extern int pipe (int __pipedes[2]) throw () ;
-
-/* Same as pipe but apply flags passed in FLAGS to the new file
-   descriptors.  */
-extern int pipe2 (int __pipedes[2], int __flags) throw () ;
 
 /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
    If SECONDS is zero, any currently scheduled alarm will be cancelled.
@@ -8878,10 +8794,6 @@ extern int dup (int __fd) throw () ;
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
 extern int dup2 (int __fd, int __fd2) throw ();
 
-/* Duplicate FD to FD2, closing FD2 and making it open on the same
-   file while setting flags according to FLAGS.  */
-extern int dup3 (int __fd, int __fd2, int __flags) throw ();
-
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;
 extern char **environ;
@@ -8923,12 +8835,6 @@ extern int execvp (__const char *__file, char *__const __argv[])
 extern int execlp (__const char *__file, __const char *__arg, ...)
      throw () __attribute__ ((__nonnull__ (1)));
 
-/* Execute FILE, searching in the `PATH' environment variable if it contains
-   no slashes, with arguments ARGV and environment from `environ'.  */
-extern int execvpe (__const char *__file, char *__const __argv[],
-		    char *__const __envp[])
-     throw () __attribute__ ((__nonnull__ (1)));
-
 
 /* Add INC to priority of the current process.  */
 extern int nice (int __inc) throw () ;
@@ -8942,7 +8848,7 @@ extern void _exit (int __status) __attribute__ ((__noreturn__));
    the `_SC_*' symbols for the NAME argument to `sysconf';
    and the `_CS_*' symbols for the NAME argument to `confstr'.  */
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993,1995-1998,2000,2001,2003,2004,2007,2009
+   Copyright (C) 1993,1995-1998,2000,2001,2003,2004,2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -9214,24 +9120,7 @@ enum
     /* Leave room here, maybe we need a few more cache levels some day.  */
 
     _SC_IPV6 = _SC_LEVEL1_ICACHE_SIZE + 50,
-    _SC_RAW_SOCKETS,
-
-    _SC_V7_ILP32_OFF32,
-    _SC_V7_ILP32_OFFBIG,
-    _SC_V7_LP64_OFF64,
-    _SC_V7_LPBIG_OFFBIG,
-
-    _SC_SS_REPL_MAX,
-
-    _SC_TRACE_EVENT_NAME_MAX,
-    _SC_TRACE_NAME_MAX,
-    _SC_TRACE_SYS_MAX,
-    _SC_TRACE_USER_EVENT_MAX,
-
-    _SC_XOPEN_STREAMS,
-
-    _SC_THREAD_ROBUST_PRIO_INHERIT,
-    _SC_THREAD_ROBUST_PRIO_PROTECT
+    _SC_RAW_SOCKETS
   };
 
 /* Values for the NAME argument to `confstr'.  */
@@ -9243,10 +9132,6 @@ enum
 
     _CS_GNU_LIBC_VERSION,
     _CS_GNU_LIBPTHREAD_VERSION,
-
-    _CS_V5_WIDTH_RESTRICTED_ENVS,
-
-    _CS_V7_WIDTH_RESTRICTED_ENVS,
 
     _CS_LFS_CFLAGS = 1000,
     _CS_LFS_LDFLAGS,
@@ -9289,24 +9174,7 @@ enum
     _CS_POSIX_V6_LPBIG_OFFBIG_CFLAGS,
     _CS_POSIX_V6_LPBIG_OFFBIG_LDFLAGS,
     _CS_POSIX_V6_LPBIG_OFFBIG_LIBS,
-    _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAGS,
-
-    _CS_POSIX_V7_ILP32_OFF32_CFLAGS,
-    _CS_POSIX_V7_ILP32_OFF32_LDFLAGS,
-    _CS_POSIX_V7_ILP32_OFF32_LIBS,
-    _CS_POSIX_V7_ILP32_OFF32_LINTFLAGS,
-    _CS_POSIX_V7_ILP32_OFFBIG_CFLAGS,
-    _CS_POSIX_V7_ILP32_OFFBIG_LDFLAGS,
-    _CS_POSIX_V7_ILP32_OFFBIG_LIBS,
-    _CS_POSIX_V7_ILP32_OFFBIG_LINTFLAGS,
-    _CS_POSIX_V7_LP64_OFF64_CFLAGS,
-    _CS_POSIX_V7_LP64_OFF64_LDFLAGS,
-    _CS_POSIX_V7_LP64_OFF64_LIBS,
-    _CS_POSIX_V7_LP64_OFF64_LINTFLAGS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_CFLAGS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_LDFLAGS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_LIBS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_LINTFLAGS
+    _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAGS
   };
 
 /* Get file-specific configuration information about PATH.  */
@@ -9533,7 +9401,7 @@ extern int setlogin (__const char *__name) throw () __attribute__ ((__nonnull__ 
    arguments in ARGV (ARGC of them, minus the program name) for
    options given in OPTS.  */
 /* Declarations for getopt.
-   Copyright (C) 1989-1994,1996-1999,2001,2003,2004,2009
+   Copyright (C) 1989-1994,1996-1999,2001,2003,2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -9627,7 +9495,6 @@ extern int optopt;
    errors, only prototype getopt for the GNU C library.  */
 extern int getopt (int ___argc, char *const *___argv, const char *__shortopts)
        throw ();
-
 
 
 }
@@ -9828,13 +9695,11 @@ extern char *ctermid (char *__s) throw ();
 }
 
 
-typedef pthread_t __gthread_t;
 typedef pthread_key_t __gthread_key_t;
 typedef pthread_once_t __gthread_once_t;
 typedef pthread_mutex_t __gthread_mutex_t;
 typedef pthread_mutex_t __gthread_recursive_mutex_t;
 typedef pthread_cond_t __gthread_cond_t;
-typedef struct timespec __gthread_time_t;
 
 /* POSIX like conditional variables are supported.  Please look at comments
    in gthr.h for details. */
@@ -9849,27 +9714,14 @@ typedef struct timespec __gthread_time_t;
 static __typeof(pthread_once) __gthrw_pthread_once __attribute__ ((__weakref__("pthread_once"))); 
 static __typeof(pthread_getspecific) __gthrw_pthread_getspecific __attribute__ ((__weakref__("pthread_getspecific"))); 
 static __typeof(pthread_setspecific) __gthrw_pthread_setspecific __attribute__ ((__weakref__("pthread_setspecific"))); 
-
 static __typeof(pthread_create) __gthrw_pthread_create __attribute__ ((__weakref__("pthread_create"))); 
-static __typeof(pthread_join) __gthrw_pthread_join __attribute__ ((__weakref__("pthread_join"))); 
-static __typeof(pthread_equal) __gthrw_pthread_equal __attribute__ ((__weakref__("pthread_equal"))); 
-static __typeof(pthread_self) __gthrw_pthread_self __attribute__ ((__weakref__("pthread_self"))); 
-static __typeof(pthread_detach) __gthrw_pthread_detach __attribute__ ((__weakref__("pthread_detach"))); 
 static __typeof(pthread_cancel) __gthrw_pthread_cancel __attribute__ ((__weakref__("pthread_cancel"))); 
-static __typeof(sched_yield) __gthrw_sched_yield __attribute__ ((__weakref__("sched_yield"))); 
-
 static __typeof(pthread_mutex_lock) __gthrw_pthread_mutex_lock __attribute__ ((__weakref__("pthread_mutex_lock"))); 
 static __typeof(pthread_mutex_trylock) __gthrw_pthread_mutex_trylock __attribute__ ((__weakref__("pthread_mutex_trylock"))); 
-static __typeof(pthread_mutex_timedlock) __gthrw_pthread_mutex_timedlock __attribute__ ((__weakref__("pthread_mutex_timedlock"))); 
 static __typeof(pthread_mutex_unlock) __gthrw_pthread_mutex_unlock __attribute__ ((__weakref__("pthread_mutex_unlock"))); 
 static __typeof(pthread_mutex_init) __gthrw_pthread_mutex_init __attribute__ ((__weakref__("pthread_mutex_init"))); 
-static __typeof(pthread_mutex_destroy) __gthrw_pthread_mutex_destroy __attribute__ ((__weakref__("pthread_mutex_destroy"))); 
-
 static __typeof(pthread_cond_broadcast) __gthrw_pthread_cond_broadcast __attribute__ ((__weakref__("pthread_cond_broadcast"))); 
-static __typeof(pthread_cond_signal) __gthrw_pthread_cond_signal __attribute__ ((__weakref__("pthread_cond_signal"))); 
 static __typeof(pthread_cond_wait) __gthrw_pthread_cond_wait __attribute__ ((__weakref__("pthread_cond_wait"))); 
-static __typeof(pthread_cond_timedwait) __gthrw_pthread_cond_timedwait __attribute__ ((__weakref__("pthread_cond_timedwait"))); 
-static __typeof(pthread_cond_destroy) __gthrw_pthread_cond_destroy __attribute__ ((__weakref__("pthread_cond_destroy"))); 
 
 static __typeof(pthread_key_create) __gthrw_pthread_key_create __attribute__ ((__weakref__("pthread_key_create"))); 
 static __typeof(pthread_key_delete) __gthrw_pthread_key_delete __attribute__ ((__weakref__("pthread_key_delete"))); 
@@ -9904,191 +9756,101 @@ __gthread_active_p (void)
 
 
 static inline int
-__gthread_create (__gthread_t *__threadid, void *(*__func) (void*),
-		  void *__args)
-{
-  return __gthrw_pthread_create (__threadid, (__null), __func, __args);
-}
-
-static inline int
-__gthread_join (__gthread_t __threadid, void **__value_ptr)
-{
-  return __gthrw_pthread_join (__threadid, __value_ptr);
-}
-
-static inline int
-__gthread_detach (__gthread_t __threadid)
-{
-  return __gthrw_pthread_detach (__threadid);
-}
-
-static inline int
-__gthread_equal (__gthread_t __t1, __gthread_t __t2)
-{
-  return __gthrw_pthread_equal (__t1, __t2);
-}
-
-static inline __gthread_t
-__gthread_self (void)
-{
-  return __gthrw_pthread_self ();
-}
-
-static inline int
-__gthread_yield (void)
-{
-  return __gthrw_sched_yield ();
-}
-
-static inline int
-__gthread_once (__gthread_once_t *__once, void (*__func) (void))
+__gthread_once (__gthread_once_t *once, void (*func) (void))
 {
   if (__gthread_active_p ())
-    return __gthrw_pthread_once (__once, __func);
+    return __gthrw_pthread_once (once, func);
   else
     return -1;
 }
 
 static inline int
-__gthread_key_create (__gthread_key_t *__key, void (*__dtor) (void *))
+__gthread_key_create (__gthread_key_t *key, void (*dtor) (void *))
 {
-  return __gthrw_pthread_key_create (__key, __dtor);
+  return __gthrw_pthread_key_create (key, dtor);
 }
 
 static inline int
-__gthread_key_delete (__gthread_key_t __key)
+__gthread_key_delete (__gthread_key_t key)
 {
-  return __gthrw_pthread_key_delete (__key);
+  return __gthrw_pthread_key_delete (key);
 }
 
 static inline void *
-__gthread_getspecific (__gthread_key_t __key)
+__gthread_getspecific (__gthread_key_t key)
 {
-  return __gthrw_pthread_getspecific (__key);
+  return __gthrw_pthread_getspecific (key);
 }
 
 static inline int
-__gthread_setspecific (__gthread_key_t __key, const void *__ptr)
+__gthread_setspecific (__gthread_key_t key, const void *ptr)
 {
-  return __gthrw_pthread_setspecific (__key, __ptr);
+  return __gthrw_pthread_setspecific (key, ptr);
 }
 
 static inline int
-__gthread_mutex_destroy (__gthread_mutex_t *__mutex)
+__gthread_mutex_lock (__gthread_mutex_t *mutex)
 {
   if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_destroy (__mutex);
+    return __gthrw_pthread_mutex_lock (mutex);
   else
     return 0;
 }
 
 static inline int
-__gthread_mutex_lock (__gthread_mutex_t *__mutex)
+__gthread_mutex_trylock (__gthread_mutex_t *mutex)
 {
   if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_lock (__mutex);
+    return __gthrw_pthread_mutex_trylock (mutex);
   else
     return 0;
 }
 
 static inline int
-__gthread_mutex_trylock (__gthread_mutex_t *__mutex)
+__gthread_mutex_unlock (__gthread_mutex_t *mutex)
 {
   if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_trylock (__mutex);
-  else
-    return 0;
-}
-
-static inline int
-__gthread_mutex_timedlock (__gthread_mutex_t *__mutex,
-			   const __gthread_time_t *__abs_timeout)
-{
-  if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_timedlock (__mutex, __abs_timeout);
-  else
-    return 0;
-}
-
-static inline int
-__gthread_mutex_unlock (__gthread_mutex_t *__mutex)
-{
-  if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_unlock (__mutex);
+    return __gthrw_pthread_mutex_unlock (mutex);
   else
     return 0;
 }
 
 
 static inline int
-__gthread_recursive_mutex_lock (__gthread_recursive_mutex_t *__mutex)
+__gthread_recursive_mutex_lock (__gthread_recursive_mutex_t *mutex)
 {
-  return __gthread_mutex_lock (__mutex);
+  return __gthread_mutex_lock (mutex);
 }
 
 static inline int
-__gthread_recursive_mutex_trylock (__gthread_recursive_mutex_t *__mutex)
+__gthread_recursive_mutex_trylock (__gthread_recursive_mutex_t *mutex)
 {
-  return __gthread_mutex_trylock (__mutex);
+  return __gthread_mutex_trylock (mutex);
 }
 
 static inline int
-__gthread_recursive_mutex_timedlock (__gthread_recursive_mutex_t *__mutex,
-				     const __gthread_time_t *__abs_timeout)
+__gthread_recursive_mutex_unlock (__gthread_recursive_mutex_t *mutex)
 {
-  return __gthread_mutex_timedlock (__mutex, __abs_timeout);
+  return __gthread_mutex_unlock (mutex);
 }
 
 static inline int
-__gthread_recursive_mutex_unlock (__gthread_recursive_mutex_t *__mutex)
+__gthread_cond_broadcast (__gthread_cond_t *cond)
 {
-  return __gthread_mutex_unlock (__mutex);
+  return __gthrw_pthread_cond_broadcast (cond);
 }
 
 static inline int
-__gthread_cond_broadcast (__gthread_cond_t *__cond)
+__gthread_cond_wait (__gthread_cond_t *cond, __gthread_mutex_t *mutex)
 {
-  return __gthrw_pthread_cond_broadcast (__cond);
+  return __gthrw_pthread_cond_wait (cond, mutex);
 }
 
 static inline int
-__gthread_cond_signal (__gthread_cond_t *__cond)
+__gthread_cond_wait_recursive (__gthread_cond_t *cond,
+			       __gthread_recursive_mutex_t *mutex)
 {
-  return __gthrw_pthread_cond_signal (__cond);
-}
-
-static inline int
-__gthread_cond_wait (__gthread_cond_t *__cond, __gthread_mutex_t *__mutex)
-{
-  return __gthrw_pthread_cond_wait (__cond, __mutex);
-}
-
-static inline int
-__gthread_cond_timedwait (__gthread_cond_t *__cond, __gthread_mutex_t *__mutex,
-			  const __gthread_time_t *__abs_timeout)
-{
-  return __gthrw_pthread_cond_timedwait (__cond, __mutex, __abs_timeout);
-}
-
-static inline int
-__gthread_cond_wait_recursive (__gthread_cond_t *__cond,
-			       __gthread_recursive_mutex_t *__mutex)
-{
-  return __gthread_cond_wait (__cond, __mutex);
-}
-
-static inline int
-__gthread_cond_timedwait_recursive (__gthread_cond_t *__cond,
-				    __gthread_recursive_mutex_t *__mutex,
-				    const __gthread_time_t *__abs_timeout)
-{
-  return __gthread_cond_timedwait (__cond, __mutex, __abs_timeout);
-}
-
-static inline int
-__gthread_cond_destroy (__gthread_cond_t* __cond)
-{
-  return __gthrw_pthread_cond_destroy (__cond);
+  return __gthread_cond_wait (cond, mutex);
 }
 
 
@@ -10191,7 +9953,6 @@ namespace std
 {
   /**
    *  @brief  Exception possibly thrown by @c new.
-   *  @ingroup exceptions
    *
    *  @c bad_alloc (or classes derived from it) is used to report allocation
    *  errors from the throwing forms of @c new.  */
@@ -10246,7 +10007,6 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief  An allocator that uses global new, as per [20.4].
-   *  @ingroup allocators
    *
    *  This is precisely the allocator defined in the C++ Standard. 
    *    - all allocation calls operator new
@@ -10328,13 +10088,6 @@ void
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
-  /**
-   * @defgroup allocators Allocators
-   * @ingroup memory
-   *
-   * Classes encapsulating memory operations.
-   */
-
   template<typename _Tp>
     class allocator;
 
@@ -10356,7 +10109,6 @@ template<>
 
   /**
    * @brief  The "standard" allocator, as per [20.4].
-   * @ingroup allocators
    *
    *  Further details:
    *  http://gcc.gnu.org/onlinedocs/libstdc++/manual/bk01pt04ch11.html
@@ -10458,14 +10210,8 @@ template<typename _Alloc, bool = __is_empty(_Alloc)>
 
 namespace __cxxabiv1
 {  
-  /** 
-   *  @brief Thrown as part of forced unwinding.
-   *  @ingroup exceptions
-   *
-   *  A magic placeholder class that can be caught by reference to
-   *  recognize forced unwinding.
-   */
-  class __forced_unwind
+  // A magic placeholder class that can be caught by reference
+class __forced_unwind
   {
     virtual ~__forced_unwind() throw();
     virtual void __pure_dummy() = 0; // prevent catch by value
@@ -10570,7 +10316,7 @@ typedef _Result result_type;  ///< @c result_type is the return type
 };
 
   /**
-   *  This is one of the @link functors functor base classes@endlink.
+   *  This is one of the @link s20_3_1_base functor base classes@endlink.
    */
   template<typename _Arg1, typename _Arg2, typename _Result>
     struct binary_function
@@ -10590,7 +10336,7 @@ template<typename _Tp>
       { return __x + __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
 template<typename _Tp>
     struct minus : public binary_function<_Tp, _Tp, _Tp>
     {
@@ -10599,7 +10345,7 @@ template<typename _Tp>
       { return __x - __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
 template<typename _Tp>
     struct multiplies : public binary_function<_Tp, _Tp, _Tp>
     {
@@ -10608,7 +10354,7 @@ template<typename _Tp>
       { return __x * __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
 template<typename _Tp>
     struct divides : public binary_function<_Tp, _Tp, _Tp>
     {
@@ -10617,7 +10363,7 @@ template<typename _Tp>
       { return __x / __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
 template<typename _Tp>
     struct modulus : public binary_function<_Tp, _Tp, _Tp>
     {
@@ -10626,7 +10372,7 @@ template<typename _Tp>
       { return __x % __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
 template<typename _Tp>
     struct negate : public unary_function<_Tp, _Tp>
     {
@@ -10645,7 +10391,7 @@ template<typename _Tp>
       { return __x == __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
 template<typename _Tp>
     struct not_equal_to : public binary_function<_Tp, _Tp, bool>
     {
@@ -10654,7 +10400,7 @@ template<typename _Tp>
       { return __x != __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
 template<typename _Tp>
     struct greater : public binary_function<_Tp, _Tp, bool>
     {
@@ -10663,7 +10409,7 @@ template<typename _Tp>
       { return __x > __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
 template<typename _Tp>
     struct less : public binary_function<_Tp, _Tp, bool>
     {
@@ -10672,7 +10418,7 @@ template<typename _Tp>
       { return __x < __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
 template<typename _Tp>
     struct greater_equal : public binary_function<_Tp, _Tp, bool>
     {
@@ -10681,7 +10427,7 @@ template<typename _Tp>
       { return __x >= __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
 template<typename _Tp>
     struct less_equal : public binary_function<_Tp, _Tp, bool>
     {
@@ -10700,7 +10446,7 @@ template<typename _Tp>
       { return __x && __y; }
     };
 
-  /// One of the @link logical_functors Boolean operations functors@endlink.
+  /// One of the @link s20_3_4_logical Boolean operations functors@endlink.
 template<typename _Tp>
     struct logical_or : public binary_function<_Tp, _Tp, bool>
     {
@@ -10709,7 +10455,7 @@ template<typename _Tp>
       { return __x || __y; }
     };
 
-  /// One of the @link logical_functors Boolean operations functors@endlink.
+  /// One of the @link s20_3_4_logical Boolean operations functors@endlink.
 template<typename _Tp>
     struct logical_not : public unary_function<_Tp, bool>
     {
@@ -10761,13 +10507,13 @@ template<typename _Predicate>
       { return !_M_pred(__x); }
     };
 
-  /// One of the @link negators negation functors@endlink.
+  /// One of the @link s20_3_5_negators negation functors@endlink.
 template<typename _Predicate>
     inline unary_negate<_Predicate>
     not1(const _Predicate& __pred)
     { return unary_negate<_Predicate>(__pred); }
 
-  /// One of the @link negators negation functors@endlink.
+  /// One of the @link s20_3_5_negators negation functors@endlink.
 template<typename _Predicate>
     class binary_negate
     : public binary_function<typename _Predicate::first_argument_type,
@@ -10786,7 +10532,7 @@ template<typename _Predicate>
       { return !_M_pred(__x, __y); }
     };
 
-  /// One of the @link negators negation functors@endlink.
+  /// One of the @link s20_3_5_negators negation functors@endlink.
 template<typename _Predicate>
     inline binary_negate<_Predicate>
     not2(const _Predicate& __pred)
@@ -10812,13 +10558,13 @@ template<typename _Arg, typename _Result>
       { return _M_ptr(__x); }
     };
 
-  /// One of the @link pointer_adaptors adaptors for function pointers@endlink.
+  /// One of the @link s20_3_7_adaptors adaptors for function pointers@endlink.
 template<typename _Arg, typename _Result>
     inline pointer_to_unary_function<_Arg, _Result>
     ptr_fun(_Result (*__x)(_Arg))
     { return pointer_to_unary_function<_Arg, _Result>(__x); }
 
-  /// One of the @link pointer_adaptors adaptors for function pointers@endlink.
+  /// One of the @link s20_3_7_adaptors adaptors for function pointers@endlink.
 template<typename _Arg1, typename _Arg2, typename _Result>
     class pointer_to_binary_function
     : public binary_function<_Arg1, _Arg2, _Result>
@@ -10838,7 +10584,7 @@ template<typename _Arg1, typename _Arg2, typename _Result>
       { return _M_ptr(__x, __y); }
     };
 
-  /// One of the @link pointer_adaptors adaptors for function pointers@endlink.
+  /// One of the @link s20_3_7_adaptors adaptors for function pointers@endlink.
 template<typename _Arg1, typename _Arg2, typename _Result>
     inline pointer_to_binary_function<_Arg1, _Arg2, _Result>
     ptr_fun(_Result (*__x)(_Arg1, _Arg2))
@@ -10900,7 +10646,7 @@ template<typename _Ret, typename _Tp>
       _Ret (_Tp::*_M_f)();
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
 template<typename _Ret, typename _Tp>
     class const_mem_fun_t : public unary_function<const _Tp*, _Ret>
     {
@@ -10917,7 +10663,7 @@ template<typename _Ret, typename _Tp>
       _Ret (_Tp::*_M_f)() const;
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
 template<typename _Ret, typename _Tp>
     class mem_fun_ref_t : public unary_function<_Tp, _Ret>
     {
@@ -10934,7 +10680,7 @@ template<typename _Ret, typename _Tp>
       _Ret (_Tp::*_M_f)();
   };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
 template<typename _Ret, typename _Tp>
     class const_mem_fun_ref_t : public unary_function<_Tp, _Ret>
     {
@@ -10951,7 +10697,7 @@ template<typename _Ret, typename _Tp>
       _Ret (_Tp::*_M_f)() const;
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
 template<typename _Ret, typename _Tp, typename _Arg>
     class mem_fun1_t : public binary_function<_Tp*, _Arg, _Ret>
     {
@@ -10968,7 +10714,7 @@ template<typename _Ret, typename _Tp, typename _Arg>
       _Ret (_Tp::*_M_f)(_Arg);
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
 template<typename _Ret, typename _Tp, typename _Arg>
     class const_mem_fun1_t : public binary_function<const _Tp*, _Arg, _Ret>
     {
@@ -10985,7 +10731,7 @@ template<typename _Ret, typename _Tp, typename _Arg>
       _Ret (_Tp::*_M_f)(_Arg) const;
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
 template<typename _Ret, typename _Tp, typename _Arg>
     class mem_fun1_ref_t : public binary_function<_Tp, _Arg, _Ret>
     {
@@ -11002,7 +10748,7 @@ template<typename _Ret, typename _Tp, typename _Arg>
       _Ret (_Tp::*_M_f)(_Arg);
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
 template<typename _Ret, typename _Tp, typename _Arg>
     class const_mem_fun1_ref_t : public binary_function<_Tp, _Arg, _Ret>
     {
@@ -11092,7 +10838,7 @@ typename _Operation::result_type
       { return op(value, __x); }
     } ;
 
-  /// One of the @link binders binder functors@endlink.
+  /// One of the @link s20_3_6_binder binder functors@endlink.
 template<typename _Operation, typename _Tp>
     inline binder1st<_Operation>
     bind1st(const _Operation& __fn, const _Tp& __x)
@@ -11101,7 +10847,7 @@ template<typename _Operation, typename _Tp>
       return binder1st<_Operation>(__fn, _Arg1_type(__x));
     }
 
-  /// One of the @link binders binder functors@endlink.
+  /// One of the @link s20_3_6_binder binder functors@endlink.
 template<typename _Operation>
     class binder2nd
     : public unary_function<typename _Operation::first_argument_type,
@@ -11126,7 +10872,7 @@ typename _Operation::result_type
       { return op(__x, value); }
     } ;
 
-  /// One of the @link binders binder functors@endlink.
+  /// One of the @link s20_3_6_binder binder functors@endlink.
 template<typename _Operation, typename _Tp>
     inline binder2nd<_Operation>
     bind2nd(const _Operation& __fn, const _Tp& __x)
@@ -11142,14 +10888,15 @@ template<typename _Operation, typename _Tp>
 // Components for manipulating sequences of characters -*- C++ -*-
 #pragma GCC system_header
 
-// std::initializer_list support -*- C++ -*-
+
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @class basic_string basic_string.h <string>
    *  @brief  Managing sequences of characters and character-like objects.
    *
-   *  @ingroup sequences
+   *  @ingroup Containers
+   *  @ingroup Sequences
    *
    *  Meets the requirements of a <a href="tables.html#65">container</a>, a
    *  <a href="tables.html#66">reversible container</a>, and a
@@ -11503,7 +11250,7 @@ basic_string(const basic_string& __str);
        *  @param  n  Number of characters to copy.
        *  @param  a  Allocator to use (default is default allocator).
        *
-       *  NB: @a s must have at least @a n characters, '\\0' has no special
+       *  NB: @a s must have at least @a n characters, '\0' has no special
        *  meaning.
        */
       basic_string(const _CharT* __s, size_type __n,
@@ -11521,7 +11268,6 @@ basic_string(const basic_string& __str);
        *  @param  a  Allocator to use (default is default allocator).
        */
       basic_string(size_type __n, _CharT __c, const _Alloc& __a = _Alloc());
-
 
       /**
        *  @brief  Construct string as copy of a range.
@@ -11568,7 +11314,6 @@ basic_string(const basic_string& __str);
 	this->assign(1, __c); 
 	return *this;
       }
-
 
       // Iterators:
 iterator
@@ -11819,7 +11564,6 @@ basic_string&
 	return *this;
       }
 
-
       /**
        *  @brief  Append a string to this string.
        *  @param str  The string to append.
@@ -11874,7 +11618,6 @@ basic_string&
        */
       basic_string&
       append(size_type __n, _CharT __c);
-
 
       /**
        *  @brief  Append a range of characters.
@@ -11984,7 +11727,6 @@ basic_string&
         assign(_InputIterator __first, _InputIterator __last)
         { return this->replace(_M_ibegin(), _M_iend(), __first, __last); }
 
-
       /**
        *  @brief  Insert multiple characters.
        *  @param p  Iterator referencing location in string to insert at.
@@ -12016,7 +11758,6 @@ basic_string&
         void
         insert(iterator __p, _InputIterator __beg, _InputIterator __end)
         { this->replace(__p, __p, __beg, __end); }
-
 
       /**
        *  @brief  Insert value of a string.
@@ -12453,7 +12194,6 @@ basic_string&
 			     __k1.base(), __k2 - __k1);
       }
       
-
     private:
       template<class _Integer>
 	basic_string&
@@ -13046,7 +12786,7 @@ int
        *  result of the comparison is nonzero returns it, otherwise the shorter
        *  one is ordered first.
        *
-       *  NB: s must have at least n2 characters, '\\0' has no special
+       *  NB: s must have at least n2 characters, '\0' has no special
        *  meaning.
       */
       int
@@ -13419,7 +13159,6 @@ return __ostream_insert(__os, __str.data(), __str.size());
 }
 
 
-
 // Components for manipulating sequences of characters -*- C++ -*-
 #pragma GCC system_header
 
@@ -13600,7 +13339,6 @@ template<typename _CharT, typename _Traits, typename _Alloc>
     basic_string(_InputIterator __beg, _InputIterator __end, const _Alloc& __a)
     : _M_dataplus(_S_construct(__beg, __end, __a), __a)
     { }
-
 
   template<typename _CharT, typename _Traits, typename _Alloc>
     basic_string<_CharT, _Traits, _Alloc>&
@@ -15339,6 +15077,39 @@ extern template class collate<char>;
 }
 
 
+// -*- C++ -*- forwarding header.
+#pragma GCC system_header
+
+// -*- C++ -*- forwarding header.
+#pragma GCC system_header
+
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
+
+/*
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
+
 
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -15486,13 +15257,8 @@ class ios_base
   {
   public:
 
-    /** 
-     *  @brief These are thrown to indicate problems with io.
-     *  @ingroup exceptions
-     *
-     *  27.4.2.1.1  Class ios_base::failure
-     */
-    class failure : public exception
+    // 27.4.2.1.1  Class ios_base::failure
+class failure : public exception
     {
     public:
       // _GLIBCXX_RESOLVE_LIB_DEFECTS
@@ -16114,7 +15880,6 @@ inline ios_base&
   }
 
 }
-
 
 
 // Stream buffer classes -*- C++ -*-
@@ -16842,7 +16607,7 @@ extern template class basic_streambuf<char>;
 #pragma GCC system_header
 
 
-/* Copyright (C) 1996-2002,2005,2007,2008,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16868,33 +16633,7 @@ extern template class basic_streambuf<char>;
 
 
 
-/* Get wint_t from <stddef.h>.  */
-/**
-***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
-***
-*** The information and source code contained herein is the exclusive
-*** property of Intel Corporation and may not be disclosed, examined
-*** or reproduced in whole or in part without explicit written authorization
-*** from the company.
-**/
-
-/*
- * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
- * Consult your license regarding permissions and restrictions.
- */
-
-
-/* stddef.h standard header */
-
-		/* macros */
-		/* type definitions */
-
-
-
-
-
-
-/*#endif*/ /* _STDDEF */
+/* Get wint_t from <wchar.h>.  */
 
 /* Constant expression of type `wint_t' whose value does not correspond
    to any member of the extended character set.  */
@@ -17569,7 +17308,8 @@ template<typename _CharT, typename _Traits>
     {
       static void
       _S_pad(ios_base& __io, _CharT __fill, _CharT* __news,
-	     const _CharT* __olds, streamsize __newlen, streamsize __oldlen);
+	     const _CharT* __olds, const streamsize __newlen,
+	     const streamsize __oldlen);
     };
 
   // Used by both numeric and monetary facets.
@@ -18585,9 +18325,45 @@ static const mask*
       }
 
     private:
-      void _M_narrow_init() const;
-      void _M_widen_init() const;
+
+      void _M_widen_init() const
+      {
+	char __tmp[sizeof(_M_widen)];
+	for (size_t __i = 0; __i < sizeof(_M_widen); ++__i)
+	  __tmp[__i] = __i;
+	do_widen(__tmp, __tmp + sizeof(__tmp), _M_widen);
+
+	_M_widen_ok = 1;
+	// Set _M_widen_ok to 2 if memcpy can't be used.
+if (__builtin_memcmp(__tmp, _M_widen, sizeof(_M_widen)))
+	  _M_widen_ok = 2;
+      }
+
+      // Fill in the narrowing cache and flag whether all values are
+void _M_narrow_init() const
+      {
+	char __tmp[sizeof(_M_narrow)];
+	for (size_t __i = 0; __i < sizeof(_M_narrow); ++__i)
+	  __tmp[__i] = __i;
+	do_narrow(__tmp, __tmp + sizeof(__tmp), 0, _M_narrow);
+
+	_M_narrow_ok = 1;
+	if (__builtin_memcmp(__tmp, _M_narrow, sizeof(_M_narrow)))
+	  _M_narrow_ok = 2;
+	else
+	  {
+	    // Deal with the special case of zero: renarrow with a
+char __c;
+	    do_narrow(__tmp, __tmp + 1, 1, &__c);
+	    if (__c == 1)
+	      _M_narrow_ok = 2;
+	  }
+      }
     };
+
+  template<>
+    const ctype<char>&
+    use_facet<ctype<char> >(const locale& __loc);
 
   // 22.2.1.3  ctype<wchar_t> specialization
 template<>
@@ -18877,6 +18653,10 @@ virtual
 void
       _M_initialize_ctype();
     };
+
+  template<>
+    const ctype<wchar_t>&
+    use_facet<ctype<wchar_t> >(const locale& __loc);
 
   /// class ctype_byname [22.2.1.2].
 template<typename _CharT>
@@ -19442,12 +19222,12 @@ virtual ~num_get() { }
 
       iter_type
       _M_extract_float(iter_type, iter_type, ios_base&, ios_base::iostate&,
-		       string&) const;
+		       string& __xtrc) const;
 
       template<typename _ValueT>
         iter_type
         _M_extract_int(iter_type, iter_type, ios_base&, ios_base::iostate&,
-		       _ValueT&) const;
+		       _ValueT& __v) const;
 
       template<typename _CharT2>
       typename __gnu_cxx::__enable_if<__is_char<_CharT2>::__value, int>::__type
@@ -19491,35 +19271,29 @@ virtual ~num_get() { }
 virtual iter_type
       do_get(iter_type, iter_type, ios_base&, ios_base::iostate&, bool&) const;
 
-      virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, long& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, unsigned short& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate&, long&) const;
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, unsigned int& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	      unsigned short&) const;
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, unsigned long& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	     unsigned int&) const;
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, long long& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }	
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	     unsigned long&) const;
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, unsigned long long& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	     long long&) const;
+
+      virtual iter_type
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	     unsigned long long&) const;
 
       virtual iter_type
       do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
@@ -19662,23 +19436,16 @@ virtual iter_type
       do_put(iter_type, ios_base&, char_type __fill, bool __v) const;
 
       virtual iter_type
-      do_put(iter_type __s, ios_base& __io, char_type __fill, long __v) const
-      { return _M_insert_int(__s, __io, __fill, __v); }	
+      do_put(iter_type, ios_base&, char_type __fill, long __v) const;
 
       virtual iter_type
-      do_put(iter_type __s, ios_base& __io, char_type __fill,
-	     unsigned long __v) const
-      { return _M_insert_int(__s, __io, __fill, __v); }
+      do_put(iter_type, ios_base&, char_type __fill, unsigned long) const;
 
       virtual iter_type
-      do_put(iter_type __s, ios_base& __io, char_type __fill,
-	     long long __v) const
-      { return _M_insert_int(__s, __io, __fill, __v); }
+      do_put(iter_type, ios_base&, char_type __fill, long long __v) const;
 
       virtual iter_type
-      do_put(iter_type __s, ios_base& __io, char_type __fill,
-	     unsigned long long __v) const
-      { return _M_insert_int(__s, __io, __fill, __v); }
+      do_put(iter_type, ios_base&, char_type __fill, unsigned long long) const;
 
       virtual iter_type
       do_put(iter_type, ios_base&, char_type __fill, double __v) const;
@@ -19832,9 +19599,7 @@ template<typename _CharT>
       __np.grouping().copy(__grouping, _M_grouping_size);
       _M_grouping = __grouping;
       _M_use_grouping = (_M_grouping_size
-			 && static_cast<signed char>(_M_grouping[0]) > 0
-			 && (_M_grouping[0]
-			     != __gnu_cxx::__numeric_traits<char>::__max));
+			 && static_cast<signed char>(__np.grouping()[0]) > 0);
 
       _M_truename_size = __np.truename().size();
       _CharT* __truename = new _CharT[_M_truename_size];
@@ -20075,9 +19840,12 @@ if (!__found_dec && !__found_sci)
           if (!std::__verify_grouping(__lc->_M_grouping, 
 				      __lc->_M_grouping_size,
 				      __found_grouping))
-	    __err = ios_base::failbit;
+	    __err |= ios_base::failbit;
         }
 
+      // Finish up.
+if (__testeof)
+        __err |= ios_base::eofbit;
       return __beg;
     }
 
@@ -20112,7 +19880,8 @@ bool __negative = false;
 	if (!__testeof)
 	  {
 	    __c = *__beg;
-	    __negative = __c == __lit[__num_base::_S_iminus];
+	    if (__gnu_cxx::__numeric_traits<_ValueT>::__is_signed)
+	      __negative = __c == __lit[__num_base::_S_iminus];
 	    if ((__negative || __c == __lit[__num_base::_S_iplus])
 		&& !(__lc->_M_use_grouping && __c == __lc->_M_thousands_sep)
 		&& !(__c == __lc->_M_decimal_point))
@@ -20178,9 +19947,7 @@ string __found_grouping;
 	if (__lc->_M_use_grouping)
 	  __found_grouping.reserve(32);
 	bool __testfail = false;
-	bool __testoverflow = false;
-	const __unsigned_type __max =
-	  (__negative && __gnu_cxx::__numeric_traits<_ValueT>::__is_signed)
+	const __unsigned_type __max = __negative
 	  ? -__gnu_cxx::__numeric_traits<_ValueT>::__min
 	  : __gnu_cxx::__numeric_traits<_ValueT>::__max;
 	const __unsigned_type __smax = __max / __base;
@@ -20197,11 +19964,11 @@ while (!__testeof)
 		break;
 	      
 	      if (__result > __smax)
-		__testoverflow = true;
+		__testfail = true;
 	      else
 		{
 		  __result *= __base;
-		  __testoverflow |= __result > __max - __digit;
+		  __testfail |= __result > __max - __digit;
 		  __result += __digit;
 		  ++__sep_pos;
 		}
@@ -20242,11 +20009,11 @@ if (__sep_pos)
 		  if (__digit > 15)
 		    __digit -= 6;
 		  if (__result > __smax)
-		    __testoverflow = true;
+		    __testfail = true;
 		  else
 		    {
 		      __result *= __base;
-		      __testoverflow |= __result > __max - __digit;
+		      __testfail |= __result > __max - __digit;
 		      __result += __digit;
 		      ++__sep_pos;
 		    }
@@ -20267,27 +20034,14 @@ __found_grouping += static_cast<char>(__sep_pos);
 	    if (!std::__verify_grouping(__lc->_M_grouping,
 					__lc->_M_grouping_size,
 					__found_grouping))
-	      __err = ios_base::failbit;
+	      __err |= ios_base::failbit;
 	  }
 
-	// _GLIBCXX_RESOLVE_LIB_DEFECTS
-if ((!__sep_pos && !__found_zero && !__found_grouping.size())
-	    || __testfail)
-	  {
-	    __v = 0;
-	    __err = ios_base::failbit;
-	  }
-	else if (__testoverflow)
-	  {
-	    if (__negative
-		&& __gnu_cxx::__numeric_traits<_ValueT>::__is_signed)
-	      __v = __gnu_cxx::__numeric_traits<_ValueT>::__min;
-	    else
-	      __v = __gnu_cxx::__numeric_traits<_ValueT>::__max;
-	    __err = ios_base::failbit;
-	  }
-	else
+	if (!__testfail && (__sep_pos || __found_zero 
+			    || __found_grouping.size()))
 	  __v = __negative ? -__result : __result;
+	else
+	  __err |= ios_base::failbit;
 
 	if (__testeof)
 	  __err |= ios_base::eofbit;
@@ -20309,83 +20063,100 @@ long __l = -1;
 	  if (__l == 0 || __l == 1)
 	    __v = bool(__l);
 	  else
-	    {
-	      // _GLIBCXX_RESOLVE_LIB_DEFECTS
-__v = true;
-	      __err = ios_base::failbit;
-	      if (__beg == __end)
-		__err |= ios_base::eofbit;
-	    }
+            __err |= ios_base::failbit;
         }
       else
         {
 	  // Parse bool values as alphanumeric.
-typedef __numpunct_cache<_CharT>  __cache_type;
+typedef __numpunct_cache<_CharT>              __cache_type;
 	  __use_cache<__cache_type> __uc;
 	  const locale& __loc = __io._M_getloc();
 	  const __cache_type* __lc = __uc(__loc);
 
 	  bool __testf = true;
 	  bool __testt = true;
-	  bool __donef = __lc->_M_falsename_size == 0;
-	  bool __donet = __lc->_M_truename_size == 0;
-	  bool __testeof = false;
-	  size_t __n = 0;
-	  while (!__donef || !__donet)
-	    {
-	      if (__beg == __end)
-		{
-		  __testeof = true;
-		  break;
-		}
-
+	  size_t __n;
+	  bool __testeof = __beg == __end;
+          for (__n = 0; !__testeof; ++__n)
+            {
 	      const char_type __c = *__beg;
 
-	      if (!__donef)
-		__testf = __c == __lc->_M_falsename[__n];
+	      if (__testf)
+	        {
+		  if (__n < __lc->_M_falsename_size)
+		    __testf = __c == __lc->_M_falsename[__n];
+		  else
+		    break;
+		}
 
-	      if (!__testf && __donet)
+	      if (__testt)
+	        {
+		  if (__n < __lc->_M_truename_size)
+		    __testt = __c == __lc->_M_truename[__n];
+		  else
+		    break;
+		}
+
+	      if (!__testf && !__testt)
 		break;
-
-	      if (!__donet)
-		__testt = __c == __lc->_M_truename[__n];
-
-	      if (!__testt && __donef)
-		break;
-
-	      if (!__testt && !__testf)
-		break;
-
-	      ++__n;
-	      ++__beg;
-
-	      __donef = !__testf || __n >= __lc->_M_falsename_size;
-	      __donet = !__testt || __n >= __lc->_M_truename_size;
-	    }
-	  if (__testf && __n == __lc->_M_falsename_size && __n)
-	    {
-	      __v = false;
-	      if (__testt && __n == __lc->_M_truename_size)
-		__err = ios_base::failbit;
-	      else
-		__err = __testeof ? ios_base::eofbit : ios_base::goodbit;
-	    }
-	  else if (__testt && __n == __lc->_M_truename_size && __n)
-	    {
-	      __v = true;
-	      __err = __testeof ? ios_base::eofbit : ios_base::goodbit;
-	    }
+	      
+	      if (++__beg == __end)
+		__testeof = true;
+            }
+	  if (__testf && __n == __lc->_M_falsename_size)
+	    __v = false;
+	  else if (__testt && __n == __lc->_M_truename_size)
+	    __v = true;
 	  else
-	    {
-	      // _GLIBCXX_RESOLVE_LIB_DEFECTS
-__v = false;
-	      __err = ios_base::failbit;
-	      if (__testeof)
-		__err |= ios_base::eofbit;
-	    }
-	}
+	    __err |= ios_base::failbit;
+
+          if (__testeof)
+            __err |= ios_base::eofbit;
+        }
       return __beg;
     }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, long& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, unsigned short& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, unsigned int& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, unsigned long& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, long long& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, unsigned long long& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
 
   template<typename _CharT, typename _InIter>
     _InIter
@@ -20397,8 +20168,6 @@ __v = false;
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
       std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
-      if (__beg == __end)
-	__err |= ios_base::eofbit;
       return __beg;
     }
 
@@ -20412,8 +20181,6 @@ __v = false;
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
       std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
-      if (__beg == __end)
-	__err |= ios_base::eofbit;
       return __beg;
     }
 
@@ -20428,8 +20195,6 @@ __v = false;
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
       std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
-      if (__beg == __end)
-	__err |= ios_base::eofbit;
       return __beg;
     }
 
@@ -20454,7 +20219,8 @@ typedef ios_base::fmtflags        fmtflags;
       // Reset from hex formatted input.
 __io.flags(__fmt);
 
-      __v = reinterpret_cast<void*>(__ul);
+      if (!(__err & ios_base::failbit))
+	__v = reinterpret_cast<void*>(__ul);
       return __beg;
     }
 
@@ -20759,31 +20525,43 @@ return std::__write(__s, __ws, __len);
 	  const streamsize __w = __io.width();
 	  if (__w > static_cast<streamsize>(__len))
 	    {
-	      const streamsize __plen = __w - __len;
-	      _CharT* __ps
+	      _CharT* __cs
 		= static_cast<_CharT*>(__builtin_alloca(sizeof(_CharT)
-							* __plen));
-
-	      char_traits<_CharT>::assign(__ps, __plen, __fill);
-	      __io.width(0);
-
-	      if ((__flags & ios_base::adjustfield) == ios_base::left)
-		{
-		  __s = std::__write(__s, __name, __len);
-		  __s = std::__write(__s, __ps, __plen);
-		}
-	      else
-		{
-		  __s = std::__write(__s, __ps, __plen);
-		  __s = std::__write(__s, __name, __len);
-		}
-	      return __s;
+							* __w));
+	      _M_pad(__fill, __w, __io, __cs, __name, __len);
+	      __name = __cs;
 	    }
 	  __io.width(0);
 	  __s = std::__write(__s, __name, __len);
 	}
       return __s;
     }
+
+  template<typename _CharT, typename _OutIter>
+    _OutIter
+    num_put<_CharT, _OutIter>::
+    do_put(iter_type __s, ios_base& __io, char_type __fill, long __v) const
+    { return _M_insert_int(__s, __io, __fill, __v); }
+
+  template<typename _CharT, typename _OutIter>
+    _OutIter
+    num_put<_CharT, _OutIter>::
+    do_put(iter_type __s, ios_base& __io, char_type __fill,
+           unsigned long __v) const
+    { return _M_insert_int(__s, __io, __fill, __v); }
+
+  template<typename _CharT, typename _OutIter>
+    _OutIter
+    num_put<_CharT, _OutIter>::
+    do_put(iter_type __s, ios_base& __io, char_type __fill, long long __v) const
+    { return _M_insert_int(__s, __io, __fill, __v); }
+
+  template<typename _CharT, typename _OutIter>
+    _OutIter
+    num_put<_CharT, _OutIter>::
+    do_put(iter_type __s, ios_base& __io, char_type __fill,
+           unsigned long long __v) const
+    { return _M_insert_int(__s, __io, __fill, __v); }
 
   template<typename _CharT, typename _OutIter>
     _OutIter
@@ -20807,7 +20585,8 @@ return std::__write(__s, __ws, __len);
     {
       const ios_base::fmtflags __flags = __io.flags();
       const ios_base::fmtflags __fmt = ~(ios_base::basefield
-					 | ios_base::uppercase);
+					 | ios_base::uppercase
+					 | ios_base::internal);
       __io.flags((__flags & __fmt) | (ios_base::hex | ios_base::showbase));
 
       typedef __gnu_cxx::__conditional_type<(sizeof(const void*)
@@ -20827,7 +20606,8 @@ template<typename _CharT, typename _Traits>
     void
     __pad<_CharT, _Traits>::_S_pad(ios_base& __io, _CharT __fill,
 				   _CharT* __news, const _CharT* __olds,
-				   streamsize __newlen, streamsize __oldlen)
+				   const streamsize __newlen,
+				   const streamsize __oldlen)
     {
       const size_t __plen = static_cast<size_t>(__newlen - __oldlen);
       const ios_base::fmtflags __adjust = __io.flags() & ios_base::adjustfield;
@@ -20880,8 +20660,7 @@ const locale& __loc = __io._M_getloc();
       size_t __ctr = 0;
 
       while (__last - __first > __gbeg[__idx]
-	     && static_cast<signed char>(__gbeg[__idx]) > 0
-	     && __gbeg[__idx] != __gnu_cxx::__numeric_traits<char>::__max)
+	     && static_cast<signed char>(__gbeg[__idx]) > 0)
 	{
 	  __last -= __gbeg[__idx];
 	  __idx < __gsize - 1 ? ++__idx : ++__ctr;
@@ -20913,10 +20692,6 @@ extern template class numpunct<char>;
   extern template class  num_get<char>;
   extern template class  num_put<char>;
   extern template class ctype_byname<char>;
-
-  extern template
-    const ctype<char>&
-    use_facet<ctype<char> >(const locale&);
 
   extern template
     const numpunct<char>&
@@ -20951,10 +20726,6 @@ extern template class numpunct<char>;
   extern template class  num_get<wchar_t>;
   extern template class  num_put<wchar_t>;
   extern template class ctype_byname<wchar_t>;
-
-  extern template
-    const ctype<wchar_t>&
-    use_facet<ctype<wchar_t> >(const locale&);
 
   extern template
     const numpunct<wchar_t>&
@@ -23802,7 +23573,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
    *  The &lt;iostream&gt; header declares the eight <em>standard stream
    *  objects</em>.  For other declarations, see
    *  http://gcc.gnu.org/onlinedocs/libstdc++/manual/bk01pt11ch24.html
-   *  and the @link iosfwd I/O forward declarations @endlink
+   *  and the @link s27_2_iosfwd I/O forward declarations @endlink
    *
    *  They are required by default to cooperate with the global C library's
    *  @c FILE streams, and to be available during program startup and
@@ -23857,7 +23628,7 @@ static ios_base::Init __ioinit;
 
 
 
-/* Copyright (C) 1991-2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24010,7 +23781,7 @@ union wait
 
 
 /* This is the type of the argument to `wait'.  The funky union
-   causes redeclarations with either `int *' or `union wait *' to be
+   causes redeclarations with ether `int *' or `union wait *' to be
    allowed without complaint.  __WAIT_STATUS_DEFN is the type used in
    the actual function definitions.  */
 
@@ -24128,14 +23899,14 @@ extern unsigned long long int strtoull (__const char *__restrict __nptr,
 
 /* The concept of one static locale per category is not very well
    thought out.  Many applications will need to process its data using
-   information from several different locales.  Another problem is
+   information from several different locales.  Another application is
    the implementation of the internationalization handling in the
-   ISO C++ standard library.  To support this another set of
-   the functions using locale data exist which take an additional
+   upcoming ISO C++ standard library.  To support this another set of
+   the functions using locale data exist which have an additional
    argument.
 
-   Attention: even though several *_l interfaces are part of POSIX:2008,
-   these are not.  */
+   Attention: all these functions are *not* standardized in any form.
+   This is a proof-of-concept implementation.  */
 
 /* Structure for reentrant locale using functions.  This is an
    (almost) opaque type for the user level programs.  */
@@ -24288,10 +24059,6 @@ typedef unsigned int uint;
 
 /* For GCC 2.7 and later, we can use specific type-size attributes.  */
 
-typedef int int8_t __attribute__ ((__mode__ (__QI__)));
-typedef int int16_t __attribute__ ((__mode__ (__HI__)));
-typedef int int32_t __attribute__ ((__mode__ (__SI__)));
-typedef int int64_t __attribute__ ((__mode__ (__DI__)));
 
 typedef unsigned int u_int8_t __attribute__ ((__mode__ (__QI__)));
 typedef unsigned int u_int16_t __attribute__ ((__mode__ (__HI__)));
@@ -24309,7 +24076,7 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 
 /* It also defines `fd_set' and the FD_* macros for `select'.  */
 /* `fd_set' type and related macros, and `select'/`pselect' declarations.
-   Copyright (C) 1996-2003, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,99,2000,01,02,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24334,7 +24101,7 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 /* Get definition of needed basic types.  */
 
 /* Get __FD_* definitions.  */
-/* Copyright (C) 1997,1998,1999,2001,2008,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24353,14 +24120,9 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
    02111-1307 USA.  */
 
 
-/* Determine the wordsize from the preprocessor defines.  */
 
-
-
-
-
-
-
+/* We don't use `memset' because this would require a prototype and
+   the array isn't too big.  */
 
 /* Get __sigset_t.  */
 /* __sig_atomic_t, __sigset_t, and related definitions.  Linux version.
@@ -24440,7 +24202,7 @@ typedef struct
   {
     /* XPG4.2 requires this member name.  Otherwise avoid the name
        from the global namespace.  */
-    __fd_mask fds_bits[1024 / (8 * (int) sizeof (__fd_mask))];
+    __fd_mask fds_bits[1024 / (8 * sizeof (__fd_mask))];
   } fd_set;
 
 /* Maximum number of file descriptors in `fd_set'.  */
@@ -24775,10 +24537,6 @@ extern void abort (void) throw () __attribute__ ((__noreturn__));
 /* Register a function to be called when `exit' is called.  */
 extern int atexit (void (*__func) (void)) throw () __attribute__ ((__nonnull__ (1)));
 
-// XXX There should be a macro to signal with C++ revision is used.
-extern "C++" int at_quick_exit (void (*__func) (void))
-     throw () __asm ("at_quick_exit") __attribute__ ((__nonnull__ (1)));
-
 
 /* Register a function to be called with the status
    given to `exit' and the given argument.  */
@@ -24787,12 +24545,9 @@ extern int on_exit (void (*__func) (int __status, void *__arg), void *__arg)
 
 
 /* Call all functions registered with `atexit' and `on_exit',
-   in the reverse of the order in which they were registered,
+   in the reverse of the order in which they were registered
    perform stdio cleanup, and terminate program execution with STATUS.  */
 extern void exit (int __status) throw () __attribute__ ((__noreturn__));
-
-// XXX There should be a macro to signal with C++ revision is used.
-extern void quick_exit (int __status) throw () __attribute__ ((__noreturn__));
 
 
 
@@ -24843,20 +24598,10 @@ extern char *mktemp (char *__template) throw () __attribute__ ((__nonnull__ (1))
    Returns a file descriptor open on the file for reading and writing,
    or -1 if it cannot create a uniquely-named file.
 
-   This function is a possible cancellation point and therefore not
+   This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 extern int mkstemp (char *__template) __attribute__ ((__nonnull__ (1))) ;
 extern int mkstemp64 (char *__template) __attribute__ ((__nonnull__ (1))) ;
-
-/* Similar to mkstemp, but the template can have a suffix after the
-   XXXXXX.  The length of the suffix is specified in the second
-   parameter.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int mkstemps (char *__template, int __suffixlen) __attribute__ ((__nonnull__ (1))) ;
-extern int mkstemps64 (char *__template, int __suffixlen)
-     __attribute__ ((__nonnull__ (1))) ;
 
 /* Create a unique temporary directory from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
@@ -24873,17 +24618,6 @@ extern char *mkdtemp (char *__template) throw () __attribute__ ((__nonnull__ (1)
    marked with __THROW.  */
 extern int mkostemp (char *__template, int __flags) __attribute__ ((__nonnull__ (1))) ;
 extern int mkostemp64 (char *__template, int __flags) __attribute__ ((__nonnull__ (1))) ;
-
-/* Similar to mkostemp, but the template can have a suffix after the
-   XXXXXX.  The length of the suffix is specified in the second
-   parameter.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int mkostemps (char *__template, int __suffixlen, int __flags)
-     __attribute__ ((__nonnull__ (1))) ;
-extern int mkostemps64 (char *__template, int __suffixlen, int __flags)
-     __attribute__ ((__nonnull__ (1))) ;
 
 
 
@@ -24913,7 +24647,6 @@ extern char *realpath (__const char *__restrict __name,
 typedef int (*__compar_fn_t) (__const void *, __const void *);
 
 typedef __compar_fn_t comparison_fn_t;
-typedef int (*__compar_d_fn_t) (__const void *, __const void *, void *);
 
 
 /* Do a binary search for KEY in BASE, which consists of NMEMB elements
@@ -24926,9 +24659,6 @@ extern void *bsearch (__const void *__key, __const void *__base,
    using COMPAR to perform the comparisons.  */
 extern void qsort (void *__base, size_t __nmemb, size_t __size,
 		   __compar_fn_t __compar) __attribute__ ((__nonnull__ (1, 4)));
-extern void qsort_r (void *__base, size_t __nmemb, size_t __size,
-		     __compar_d_fn_t __compar, void *__arg)
-  __attribute__ ((__nonnull__ (1, 4)));
 
 
 /* Return the absolute value of X.  */
@@ -25218,7 +24948,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 /*#endif*/ /* _STDDEF */
 
-/* Copyright (C) 1991-1993,1995-2004,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993, 1995-2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25272,8 +25002,6 @@ extern "C" {
 
 /*#endif*/ /* _STDDEF */
 
-/* Tell the caller that we provide correct C++ prototypes.  */
-
 
 
 /* Copy N bytes of SRC to DEST.  */
@@ -25303,39 +25031,18 @@ extern int memcmp (__const void *__s1, __const void *__s2, size_t __n)
      throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
 
 /* Search N bytes of S for C.  */
-extern "C++"
-{
-extern void *memchr (void *__s, int __c, size_t __n)
-      throw () __asm ("memchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-extern __const void *memchr (__const void *__s, int __c, size_t __n)
-      throw () __asm ("memchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) void *
-memchr (void *__s, int __c, size_t __n) throw ()
-{
-  return __builtin_memchr (__s, __c, __n);
-}
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) __const void *
-memchr (__const void *__s, int __c, size_t __n) throw ()
-{
-  return __builtin_memchr (__s, __c, __n);
-}
-}
+extern void *memchr (__const void *__s, int __c, size_t __n)
+      throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
 
 
 /* Search in S for C.  This is similar to `memchr' but there is no
    length limit.  */
-extern "C++" void *rawmemchr (void *__s, int __c)
-     throw () __asm ("rawmemchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-extern "C++" __const void *rawmemchr (__const void *__s, int __c)
-     throw () __asm ("rawmemchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+extern void *rawmemchr (__const void *__s, int __c)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
 
 /* Search N bytes of S for the final occurrence of C.  */
-extern "C++" void *memrchr (void *__s, int __c, size_t __n)
-      throw () __asm ("memrchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-extern "C++" __const void *memrchr (__const void *__s, int __c, size_t __n)
-      throw () __asm ("memrchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+extern void *memrchr (__const void *__s, int __c, size_t __n)
+      throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
 
 
 
@@ -25397,53 +25104,17 @@ extern char *strndup (__const char *__string, size_t __n)
 
 
 /* Find the first occurrence of C in S.  */
-extern "C++"
-{
-extern char *strchr (char *__s, int __c)
-     throw () __asm ("strchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-extern __const char *strchr (__const char *__s, int __c)
-     throw () __asm ("strchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) char *
-strchr (char *__s, int __c) throw ()
-{
-  return __builtin_strchr (__s, __c);
-}
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) __const char *
-strchr (__const char *__s, int __c) throw ()
-{
-  return __builtin_strchr (__s, __c);
-}
-}
+extern char *strchr (__const char *__s, int __c)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
 /* Find the last occurrence of C in S.  */
-extern "C++"
-{
-extern char *strrchr (char *__s, int __c)
-     throw () __asm ("strrchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-extern __const char *strrchr (__const char *__s, int __c)
-     throw () __asm ("strrchr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) char *
-strrchr (char *__s, int __c) throw ()
-{
-  return __builtin_strrchr (__s, __c);
-}
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) __const char *
-strrchr (__const char *__s, int __c) throw ()
-{
-  return __builtin_strrchr (__s, __c);
-}
-}
+extern char *strrchr (__const char *__s, int __c)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
 
 
 /* This function is similar to `strchr'.  But it returns a pointer to
    the closing NUL byte in case C is not found in S.  */
-extern "C++" char *strchrnul (char *__s, int __c)
-     throw () __asm ("strchrnul") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-extern "C++" __const char *strchrnul (__const char *__s, int __c)
-     throw () __asm ("strchrnul") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+extern char *strchrnul (__const char *__s, int __c)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
 
 
 /* Return the length of the initial segment of S which
@@ -25455,46 +25126,11 @@ extern size_t strcspn (__const char *__s, __const char *__reject)
 extern size_t strspn (__const char *__s, __const char *__accept)
      throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
 /* Find the first occurrence in S of any character in ACCEPT.  */
-extern "C++"
-{
-extern char *strpbrk (char *__s, __const char *__accept)
-     throw () __asm ("strpbrk") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
-extern __const char *strpbrk (__const char *__s, __const char *__accept)
-     throw () __asm ("strpbrk") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) char *
-strpbrk (char *__s, __const char *__accept) throw ()
-{
-  return __builtin_strpbrk (__s, __accept);
-}
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) __const char *
-strpbrk (__const char *__s, __const char *__accept) throw ()
-{
-  return __builtin_strpbrk (__s, __accept);
-}
-}
+extern char *strpbrk (__const char *__s, __const char *__accept)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
-extern "C++"
-{
-extern char *strstr (char *__haystack, __const char *__needle)
-     throw () __asm ("strstr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
-extern __const char *strstr (__const char *__haystack,
-			     __const char *__needle)
-     throw () __asm ("strstr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) char *
-strstr (char *__haystack, __const char *__needle) throw ()
-{
-  return __builtin_strstr (__haystack, __needle);
-}
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) __const char *
-strstr (__const char *__haystack, __const char *__needle) throw ()
-{
-  return __builtin_strstr (__haystack, __needle);
-}
-}
+extern char *strstr (__const char *__haystack, __const char *__needle)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
 
 
 /* Divide S into tokens separated by characters in DELIM.  */
@@ -25513,11 +25149,8 @@ extern char *strtok_r (char *__restrict __s, __const char *__restrict __delim,
      throw () __attribute__ ((__nonnull__ (2, 3)));
 
 /* Similar to `strstr' but this function ignores the case of both strings.  */
-extern "C++" char *strcasestr (char *__haystack, __const char *__needle)
-     throw () __asm ("strcasestr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
-extern "C++" __const char *strcasestr (__const char *__haystack,
-				       __const char *__needle)
-     throw () __asm ("strcasestr") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+extern char *strcasestr (__const char *__haystack, __const char *__needle)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
 
 /* Find the first occurrence of NEEDLE in HAYSTACK.
    NEEDLE is NEEDLELEN bytes long;
@@ -25584,46 +25217,12 @@ extern int bcmp (__const void *__s1, __const void *__s2, size_t __n)
      throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
 
 /* Find the first occurrence of C in S (same as strchr).  */
-extern "C++"
-{
-extern char *index (char *__s, int __c)
-     throw () __asm ("index") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-extern __const char *index (__const char *__s, int __c)
-     throw () __asm ("index") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) char *
-index (char *__s, int __c) throw ()
-{
-  return __builtin_index (__s, __c);
-}
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) __const char *
-index (__const char *__s, int __c) throw ()
-{
-  return __builtin_index (__s, __c);
-}
-}
+extern char *index (__const char *__s, int __c)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
 
 /* Find the last occurrence of C in S (same as strrchr).  */
-extern "C++"
-{
-extern char *rindex (char *__s, int __c)
-     throw () __asm ("rindex") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-extern __const char *rindex (__const char *__s, int __c)
-     throw () __asm ("rindex") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) char *
-rindex (char *__s, int __c) throw ()
-{
-  return __builtin_rindex (__s, __c);
-}
-
-extern __inline __attribute__ ((__always_inline__)) __attribute__ ((__gnu_inline__, __artificial__)) __const char *
-rindex (__const char *__s, int __c) throw ()
-{
-  return __builtin_rindex (__s, __c);
-}
-}
+extern char *rindex (__const char *__s, int __c)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
@@ -25659,6 +25258,10 @@ extern char *strsep (char **__restrict __stringp,
 		     __const char *__restrict __delim)
      throw () __attribute__ ((__nonnull__ (1, 2)));
 
+/* Compare S1 and S2 as strings holding name & indices/version numbers.  */
+extern int strverscmp (__const char *__s1, __const char *__s2)
+     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
 /* Return a string describing the meaning of the signal number in SIG.  */
 extern char *strsignal (int __sig) throw ();
 
@@ -25677,10 +25280,6 @@ extern char *stpncpy (char *__restrict __dest,
 		      __const char *__restrict __src, size_t __n)
      throw () __attribute__ ((__nonnull__ (1, 2)));
 
-/* Compare S1 and S2 as strings holding name & indices/version numbers.  */
-extern int strverscmp (__const char *__s1, __const char *__s2)
-     throw () __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
-
 /* Sautee STRING briskly.  */
 extern char *strfry (char *__string) throw () __attribute__ ((__nonnull__ (1)));
 
@@ -25691,10 +25290,7 @@ extern void *memfrob (void *__s, size_t __n) throw () __attribute__ ((__nonnull_
    declare the function if the `basename' macro is available (defined
    in <libgen.h>) which makes the XPG version of this function
    available.  */
-extern "C++" char *basename (char *__filename)
-     throw () __asm ("basename") __attribute__ ((__nonnull__ (1)));
-extern "C++" __const char *basename (__const char *__filename)
-     throw () __asm ("basename") __attribute__ ((__nonnull__ (1)));
+extern char *basename (__const char *__filename) throw () __attribute__ ((__nonnull__ (1)));
 
 
 
@@ -25724,15 +25320,38 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   using ::strspn;
   using ::strtok;
   using ::strxfrm;
+
+  inline void*
+  memchr(void* __p, int __c, size_t __n)
+  { return memchr(const_cast<const void*>(__p), __c, __n); }
+
   using ::strchr;
+
+  inline char*
+  strchr(char* __s1, int __n)
+  { return __builtin_strchr(const_cast<const char*>(__s1), __n); }
+
   using ::strpbrk;
+
+  inline char*
+  strpbrk(char* __s1, const char* __s2)
+  { return __builtin_strpbrk(const_cast<const char*>(__s1), __s2); }
+
   using ::strrchr;
+
+  inline char*
+  strrchr(char* __s1, int __n)
+  { return __builtin_strrchr(const_cast<const char*>(__s1), __n); }
+
   using ::strstr;
 
+  inline char*
+  strstr(char* __s1, const char* __s2)
+  { return __builtin_strstr(const_cast<const char*>(__s1), __s2); }
 
 }
 
-/* Copyright (C) 1991-1994,1996-2003,2005,2006,2009
+/* Copyright (C) 1991-1994,1996-2002,2003,2005,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -25897,7 +25516,7 @@ extern int futimesat (int __fd, __const char *__file,
 /* Include_next should be before guard macros in order to at last reach system header */
 
 /* Declarations for math functions.
-   Copyright (C) 1991-1993, 1995-1999, 2001, 2002, 2004, 2006, 2009
+   Copyright (C) 1991-1993, 1995-1999, 2001, 2002, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26732,9 +26351,6 @@ extern float fmaf (float __x, float __y, float __z) throw (); extern float __fma
 extern float scalbf (float __x, float __n) throw (); extern float __scalbf (float __x, float __n) throw ();
 
 
-
-/* Include the file of declarations again, this time using `long double'
-   instead of `double' and appending l to each function name.  */
 /* Prototype declarations for math functions; helper file for <math.h>.
    Copyright (C) 1996-2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -27121,10 +26737,6 @@ enum
 /* Return nonzero value is X is positive or negative infinity.  */
 
 /* Bitmasks for the math_errhandling macro.  */
-
-/* By default all functions support both errno and exception handling.
-   In gcc's fast math mode and if inline functions are defined this
-   might not be true.  */
 
 
 /* Support for various different standard error handling behaviors.  */
@@ -27661,8 +27273,8 @@ template<typename _Tp>
   template<typename _Tp, typename _Up>
     inline
     typename __gnu_cxx::__promote_2<
-    typename __gnu_cxx::__enable_if<__is_arithmetic<_Tp>::__value
-				    && __is_arithmetic<_Up>::__value,
+    typename __gnu_cxx::__enable_if<__traitand<__is_arithmetic<_Tp>,
+					       __is_arithmetic<_Up> >::__value,
 				    _Tp>::__type, _Up>::__type
     atan2(_Tp __y, _Up __x)
     {
@@ -27860,7 +27472,7 @@ template<typename _Tp>
   pow(long double __x, long double __y)
   { return __builtin_powl(__x, __y); }
 
-  // _GLIBCXX_RESOLVE_LIB_DEFECTS
+  // DR 550.
 inline double
   pow(double __x, int __i)
   { return __builtin_powi(__x, __i); }
@@ -27876,8 +27488,8 @@ inline double
   template<typename _Tp, typename _Up>
     inline
     typename __gnu_cxx::__promote_2<
-    typename __gnu_cxx::__enable_if<__is_arithmetic<_Tp>::__value
-				    && __is_arithmetic<_Up>::__value,
+    typename __gnu_cxx::__enable_if<__traitand<__is_arithmetic<_Tp>,
+					       __is_arithmetic<_Up> >::__value,
 				    _Tp>::__type, _Up>::__type
     pow(_Tp __x, _Up __y)
     {
@@ -27967,8 +27579,16 @@ inline double
 
 }
 
+// These are possible macros imported from C99-land. For strict
+namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
-// These are possible macros imported from C99-land.
+  template<typename _Tp>
+    inline int
+    __capture_fpclassify(_Tp __f) { return (( sizeof( __f ) > sizeof( double )) ? __fpclassifyl( (long double)(__f) ) : (( sizeof( __f ) == sizeof( float )) ? __fpclassifyf( (float)(__f) ) : __fpclassify( (double)(__f) ) ) ); }
+
+}
+
+// Only undefine the C99 FP macros, if actually captured for namespace movement
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
   template<typename _Tp>
@@ -27977,8 +27597,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     fpclassify(_Tp __f)
     {
       typedef typename __gnu_cxx::__promote<_Tp>::__type __type;
-      return __builtin_fpclassify(FP_NAN, FP_INFINITE, FP_NORMAL,
-				  FP_SUBNORMAL, FP_ZERO, __type(__f));
+      return ::__gnu_cxx::__capture_fpclassify(__type(__f));
     }
 
   template<typename _Tp>
@@ -30525,7 +30144,7 @@ struct Algorithm {
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(2) {
+    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -30897,7 +30516,10 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
                 do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
-                _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                if (queue_len_[curr_dep_pointer] == 0)
+                    sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                else
+                    _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
             } else {
                 /* performing a space cut on dimension 'level' */
                 do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
@@ -30905,110 +30527,65 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
                 const int t0 = l_father->t0, t1 = l_father->t1;
                 const int lt = (t1 - t0);
                 const int level = l_father->level;
-                const bool cut_lb = (l_father_grid.dx0[level] >= 0 && l_father_grid.dx1[level] <= 0);
                 const int thres = 2 * slope_[level] * lt;
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
-                const int tb = (l_father_grid.x1[level] + l_father_grid.dx1[level] * lt - l_father_grid.x0[level] - l_father_grid.dx0[level] * lt);
-                if (cut_lb) {
-                    /* cut_lb */
-                    const bool can_cut = (lb >= 2 * thres && lb > dx_recursive_[level]);
-                    if (!can_cut) {
-                        /* if we can't cut into this dimension, just directly push 
-                         * it into the circular queue 
-                         */
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                    } else {
-                        /* can_cut! */
-                        const int sep = (int)lb/2;
-                        const int r = 2;
-                        grid_info<N_RANK> l_son_grid = l_father_grid;
-                        const int l_start = (l_father_grid.x0[level]);
-                        const int l_end = (l_father_grid.x1[level]);
+                const bool can_cut = (lb >= 2 * thres && lb > dx_recursive_[level]);
+                if (!can_cut) {
+                    /* if we can't cut into this dimension, just directly push 
+                     * it into the circular queue 
+                     */
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                } else {
+                    /* can_cut! */
+                    const int sep = (int)lb/2;
+                    const int r = 2;
+                    grid_info<N_RANK> l_son_grid = l_father_grid;
+                    const int l_start = (l_father_grid.x0[level]);
+                    const int l_end = (l_father_grid.x1[level]);
 
-                        /* push one sub-grid into circular queue of (curr_dep) */
-                        l_son_grid.x0[level] = l_start;
-                        l_son_grid.dx0[level] = slope_[level];
-                        l_son_grid.x1[level] = l_start + sep;
-                        l_son_grid.dx1[level] = -slope_[level];
-                        (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start;
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
-                        /* push one sub-grid into circular queue of (curr_dep) */
-                        l_son_grid.x0[level] = l_start + sep;
-                        l_son_grid.dx0[level] = slope_[level];
-                        l_son_grid.x1[level] = l_end;
-                        l_son_grid.dx1[level] = -slope_[level];
-                        (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start + sep;
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_end;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
-                        /* cilk_sync */
-                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                        l_son_grid.x0[level] = l_start + sep;
-                        l_son_grid.dx0[level] = -slope_[level];
-                        l_son_grid.x1[level] = l_start + sep;
-                        l_son_grid.dx1[level] = slope_[level];
-                        (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    /* cilk_sync */
+                    const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                    /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                    l_son_grid.x0[level] = l_start + sep;
+                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
+                    l_son_grid.dx1[level] = slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
-                        if (l_father_grid.dx0[level] != slope_[level]) {
-                            l_son_grid.x0[level] = l_start;
-                            l_son_grid.dx0[level] = l_father_grid.dx0[level];
-                            l_son_grid.x1[level] = l_start;
-                            l_son_grid.dx1[level] = slope_[level];
-                            (static_cast<void> (0));
-                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                        }
-                        if (l_father_grid.dx1[level] != -slope_[level]) {
-                            l_son_grid.x0[level] = l_end;
-                            l_son_grid.dx0[level] = -slope_[level];
-                            l_son_grid.x1[level] = l_end;
-                            l_son_grid.dx1[level] = l_father_grid.dx1[level];
-                            (static_cast<void> (0));
-                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                        }
-                    } /* end if (can_cut) */
-                } /* end if (cut_lb) */ else {
-                    /* cut_tb */
-                    const bool can_cut = (lb >= thres && tb > dx_recursive_[level]);
-                    if (!can_cut) {
-                        /* if we can't cut into this dimension, just directly push 
-                         * it into the circular queue 
-                         */
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                    } else {
-                        grid_info<N_RANK> l_son_grid = l_father_grid;
-                        const int l_start = (l_father_grid.x0[level]);
-                        const int l_end = (l_father_grid.x1[level]);
-
-                        (static_cast<void> (0));
-                        (static_cast<void> (0));
-                        /* push one sub-grid into circular queue of (curr_dep) */
-                        l_son_grid.x0[level] = l_start;
-                        l_son_grid.dx0[level] = slope_[level];
-                        l_son_grid.x1[level] = l_end;
-                        l_son_grid.dx1[level] = -slope_[level];
-                        (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-
-                        /* cilk_sync */
-                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                    if (l_father_grid.dx0[level] != slope_[level]) {
                         l_son_grid.x0[level] = l_start;
                         l_son_grid.dx0[level] = l_father_grid.dx0[level];
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
                         do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-
+                    }
+                    if (l_father_grid.dx1[level] != -slope_[level]) {
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
                         (static_cast<void> (0));
                         do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                    } /* end if (can_cut) */
-                } /* end if (cut_tb) */
+                    }
+                } /* end if (can_cut) */
             } /* end if (performing a space cut) */
         } /* end while (queue_len_[curr_dep] > 0) */
         _Cilk_sync;
@@ -31038,135 +30615,88 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
                 do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
-                if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
-                    _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                if (queue_len_[curr_dep_pointer] == 0) {
+                    sim_obase_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
                 } else {
                     _Cilk_spawn sim_obase_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
                 }
             } else {
                 /* performing a space cut on dimension 'level' */
                 do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
-                const grid_info<N_RANK> l_father_grid = l_father->grid;
+                grid_info<N_RANK> l_father_grid = l_father->grid;
                 const int t0 = l_father->t0, t1 = l_father->t1;
                 const int lt = (t1 - t0);
                 const int level = l_father->level;
-                const bool cut_lb = (l_father_grid.dx0[level] >= 0 && l_father_grid.dx1[level] <= 0);
                 const int thres = 2 * slope_[level] * lt;
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
-                const int tb = (l_father_grid.x1[level] + l_father_grid.dx1[level] * lt - l_father_grid.x0[level] - l_father_grid.dx0[level] * lt);
-                if (cut_lb) {
-                    /* '/ \' */
-                    bool initial_cut = (lb == phys_length_[level]);
-                    const bool can_cut = ((initial_cut) ? (lb - 2 * slope_[level] >= 2 * thres && lb > dx_recursive_boundary_[level]) : (lb >= 2 * thres && lb > dx_recursive_boundary_[level]));
-                    if (!can_cut) {
-                        /* if we can't cut into this dimension, just directly push
-                         * it into the circular queue
-                        */
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                    } else {
-                        /* can_cut */
-                        const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
-                        const int r = 2;
-                        grid_info<N_RANK> l_son_grid = l_father_grid;
-                        const int l_start = (initial_cut) ? (l_father_grid.x0[level]+slope_[level]) : (l_father_grid.x0[level]);
-                        const int l_end = (initial_cut) ? (l_father_grid.x1[level]-slope_[level]) : (l_father_grid.x1[level]);
+                const bool l_touch_boundary = touch_boundary(level, lt, l_father_grid);
+                const bool can_cut = l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[level]) : (lb >= 2 * thres & lb > dx_recursive_[level]);
+                if (!can_cut) {
+                    /* if we can't cut into this dimension, just directly push
+                     * it into the circular queue
+                    */
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                } else {
+                    /* can_cut */
+                    const int sep = (int)lb/2;
+                    const int r = 2;
+                    grid_info<N_RANK> l_son_grid = l_father_grid;
+                    const int l_start = (l_father_grid.x0[level]);
+                    const int l_end = (l_father_grid.x1[level]);
 
-                        /* push one sub-grid into circular queue of (curr_dep) */
-                        l_son_grid.x0[level] = l_start;
-                        l_son_grid.dx0[level] = slope_[level];
-                        l_son_grid.x1[level] = l_start + sep;
-                        l_son_grid.dx1[level] = -slope_[level];
-                        (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start;
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
-                        /* push one sub-grid into circular queue of (curr_dep) */
-                        l_son_grid.x0[level] = l_start + sep;
-                        l_son_grid.dx0[level] = slope_[level];
-                        l_son_grid.x1[level] = l_end;
-                        l_son_grid.dx1[level] = -slope_[level];
-                        (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start + sep;
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_end;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
-                        /* cilk_sync */
-                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                        l_son_grid.x0[level] = l_start + sep;
-                        l_son_grid.dx0[level] = -slope_[level];
-                        l_son_grid.x1[level] = l_start + sep;
-                        l_son_grid.dx1[level] = slope_[level];
-                        (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    /* cilk_sync */
+                    const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                    /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                    l_son_grid.x0[level] = l_start + sep;
+                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
+                    l_son_grid.dx1[level] = slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
-                        if (initial_cut) {
-                            /* merge triangles! */
-                            l_son_grid.x0[level] = l_end;
-                            l_son_grid.dx0[level] = -slope_[level];
-                            l_son_grid.x1[level] = l_end+2*slope_[level];
-                            l_son_grid.dx1[level] = slope_[level];
-                            (static_cast<void> (0));
-                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                        } else {
-                            if (l_father_grid.dx0[level] != slope_[level]) {
-                                l_son_grid.x0[level] = l_start;
-                                l_son_grid.dx0[level] = l_father_grid.dx0[level];
-                                l_son_grid.x1[level] = l_start;
-                                l_son_grid.dx1[level] = slope_[level];
-                                (static_cast<void> (0));
-                                do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                            }
-                            if (l_father_grid.dx1[level] != -slope_[level]) {
-                                l_son_grid.x0[level] = l_end;
-                                l_son_grid.dx0[level] = -slope_[level];
-                                l_son_grid.x1[level] = l_end;
-                                l_son_grid.dx1[level] = l_father_grid.dx1[level];
-                                (static_cast<void> (0));
-                                do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                            }
-                        }
-                    } /* end if (can_cut) */
-                } /* end if (cut_lb) */else {
-                    /* '\ /' */
-                    /* cut_tb */
-                    const bool can_cut = (lb >= thres && tb > dx_recursive_boundary_[level]);
-                    if (!can_cut) {
-                        /* if we can't cut into this dimension, just directly push 
-                         * it into the circular queue
-                        */
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                    } else {
-                        /* can_cut! */
-                        grid_info<N_RANK> l_son_grid = l_father_grid;
-                        const int l_start = (l_father_grid.x0[level]);
-                        const int l_end = (l_father_grid.x1[level]);
-
-                        (static_cast<void> (0));
-                        (static_cast<void> (0));
-                        /* push one sub-grid into circular queue of (curr_dep) */
-                        l_son_grid.x0[level] = l_start;
-                        l_son_grid.dx0[level] = slope_[level];
-                        l_son_grid.x1[level] = l_end;
-                        l_son_grid.dx1[level] = -slope_[level];
-                        (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-
-                        /* cilk_sync */
-                        const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                        /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                        l_son_grid.x0[level] = l_start;
-                        l_son_grid.dx0[level] = l_father_grid.dx0[level];
-                        l_son_grid.x1[level] = l_start;
-                        l_son_grid.dx1[level] = slope_[level];
-                        (static_cast<void> (0));
-                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-
+                    if (lb == phys_length_[level]) {
+                        /* initial cut - merge triangles! */
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
-                        l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                        l_son_grid.dx1[level] = slope_[level];
                         (static_cast<void> (0));
                         do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
-                    } /* end if (can_cut) */
-                } /* end if (cut_tb) */
+                    } else {
+                        if (l_father_grid.dx0[level] != slope_[level]) {
+                            l_son_grid.x0[level] = l_start;
+                            l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                            l_son_grid.x1[level] = l_start;
+                            l_son_grid.dx1[level] = slope_[level];
+                            (static_cast<void> (0));
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        }
+                        if (l_father_grid.dx1[level] != -slope_[level]) {
+                            l_son_grid.x0[level] = l_end;
+                            l_son_grid.dx0[level] = -slope_[level];
+                            l_son_grid.x1[level] = l_end;
+                            l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                            (static_cast<void> (0));
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        }
+                    }
+                } /* end if (can_cut) */
             } /* end if (performing a space cut) */
         } /* end while (queue_len_[curr_dep] > 0) */
         _Cilk_sync;
@@ -31185,11 +30715,8 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
     for (int i = N_RANK-1; i >= 0; --i) {
         int lb, thres, tb;
         lb = (grid.x1[i] - grid.x0[i]);
-        tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
-        /* cut_lb = '/ \' */
-        bool cut_lb = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
         thres = (2 * slope_[i] * lt);
-        bool l_can_cut = (cut_lb ? (lb >= 2 * thres && lb > dx_recursive_[i]) : (lb >= thres && tb > dx_recursive_[i]));
+        bool l_can_cut = (lb >= 2 * thres && lb > dx_recursive_[i]);
         /* as long as there's one dimension can conduct a cut, we conduct a 
          * multi-dimensional cut!
          */
@@ -31230,21 +30757,23 @@ template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
     const int lt = t1 - t0;
-    bool sim_can_cut = false;
-    grid_info<N_RANK> l_son_grid;
+    bool sim_can_cut = false, call_boundary = false;
+    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
+    int l_dt_stop;
+
 
     for (int i = N_RANK-1; i >= 0; --i) {
-        int lb, thres, tb;
+        int lb, thres;
+        bool l_touch_boundary = touch_boundary(i, lt, l_father_grid);
         lb = (grid.x1[i] - grid.x0[i]);
-        tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
-        /* cut_lb = '/ \' */
-        bool cut_lb = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
         thres = (2 * slope_[i] * lt);
         /* l_father_grid may be mapped to a new region in touch_boundary() */
         /* for the initial cut, we exclude the begining and end point to minimize
          * the overhead on boundary
         */
-        bool l_can_cut = (cut_lb ? ((lb == phys_length_[i]) ? (lb - 2 * slope_[i] >= 2 * thres && lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres && lb > dx_recursive_boundary_[i])) : (lb >= thres && tb > dx_recursive_boundary_[i]));
+        /* lb == phys_length_[i] indicates an initial cut! */
+        bool l_can_cut = l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres & lb > dx_recursive_[i]);
+        call_boundary |= l_touch_boundary;
         sim_can_cut |= l_can_cut;
     }
 
@@ -31253,35 +30782,49 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
         /* cut into space */
         /* push the first l_father_grid that can be cut into the circular queue */
         /* boundary cuts! */
-        sim_obase_space_cut_p(t0, t1, grid, f, bf);
+        if (call_boundary) 
+            sim_obase_space_cut_p(t0, t1, l_father_grid, f, bf);
+        else
+            sim_obase_space_cut(t0, t1, l_father_grid, f);
         return;
-    } else if (lt > dt_recursive_boundary_) {
+    } 
+
+    if (call_boundary)
+        l_dt_stop = dt_recursive_boundary_;
+    else
+        l_dt_stop = dt_recursive_;
+
+    if (lt > l_dt_stop) {
         /* cut into time */
         int halflt = lt / 2;
-        l_son_grid = grid;
-        if (within_boundary(t0, t0+halflt, l_son_grid)) {
-            sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
-        } else {
+        l_son_grid = l_father_grid;
+        if (call_boundary) {
             sim_obase_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
+        } else {
+            sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
         }
 
         for (int i = 0; i < N_RANK; ++i) {
-            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
-            l_son_grid.dx0[i] = grid.dx0[i];
-            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
-            l_son_grid.dx1[i] = grid.dx1[i];
+            l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
+            l_son_grid.dx0[i] = l_father_grid.dx0[i];
+            l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
+            l_son_grid.dx1[i] = l_father_grid.dx1[i];
         }
-        if (within_boundary(t0+halflt, t1, l_son_grid)) {
-            sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
-        } else {
+        if (call_boundary) {
             sim_obase_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
+        } else {
+            sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
         }
-        return;
-    } else {
-    // if (l_total_area <= Z || base_cube_t) {
-base_case_kernel_boundary(t0, t1, grid, bf);
         return;
     } 
+
+    // if (l_total_area <= Z || base_cube_t) {
+if (call_boundary) {
+            base_case_kernel_boundary(t0, t1, l_father_grid, bf);
+        } else {
+            f(t0, t1, l_father_grid);
+        }
+        return;
 }
 
 /* ************************************************************************************** */
@@ -31955,7 +31498,7 @@ l_son_grid.x0[i] = l_end;
             return;
 		}/* end if */
 	} /* end for */
-	if (lt > dt_recursive_) {
+	if (lt > dt_recursive_boundary_) {
 		int halflt = lt / 2;
 		l_son_grid = l_father_grid;
         obase_bicut_boundary_p(t0, t0+halflt, l_son_grid, bf);
@@ -33942,7 +33485,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register %s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir.hpp", __FUNCTION__, 146, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register %s!\n", "/scratch/Pochoir_clean/Pochoir/ExecSpec_refine/pochoir.hpp", __FUNCTION__, 146, str);
         exit(1);
     }
 }
@@ -34572,16 +34115,17 @@ Pochoir_Shape< 1 > pSeq_shape_G[ ] = { { 1, 0 }, { 0, 0 }, { 0, -1 } };
     int t = nX + nY;
 
     
-	auto Pointer_pSeq_fn = [&] (int t0, int t1, grid_info<1> const & grid) {
+	auto Default_pSeq_fn = [&] (int t0, int t1, grid_info<1> const & grid) {
 	grid_info<1> l_grid = grid;
-	int * pt_vG2_7;
-	int * pt_vG2_6;
-	int * pt_vG_5;
-	int * pt_vI_4;
-	int * pt_vI_3;
-	int * pt_vG_2;
-	int * pt_vD_1;
-	int * pt_vD_0;
+	int * iter8;
+	int * iter7;
+	int * iter6;
+	int * iter5;
+	int * iter4;
+	int * iter3;
+	int * iter2;
+	int * iter1;
+	int * iter0;
 	
 	int * vG2_base = vG2.data();
 	const int l_vG2_total_size = vG2.total_size();
@@ -34599,45 +34143,64 @@ Pochoir_Shape< 1 > pSeq_shape_G[ ] = { { 1, 0 }, { 0, 0 }, { 0, -1 } };
 	const int l_stride_vD_0 = vD.stride(0), l_stride_vG_0 = vG.stride(0), l_stride_vI_0 = vI.stride(0), l_stride_vG2_0 = vG2.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_vD_0 = vD_base + ((t + 1) & 0x1) * l_vD_total_size + (l_grid.x0[0]) * l_stride_vD_0;
-	pt_vD_1 = vD_base + ((t) & 0x1) * l_vD_total_size + (l_grid.x0[0]) * l_stride_vD_0;
-	pt_vG_2 = vG_base + ((t) & 0x1) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
-	pt_vI_3 = vI_base + ((t + 1) & 0x1) * l_vI_total_size + (l_grid.x0[0]) * l_stride_vI_0;
-	pt_vI_4 = vI_base + ((t) & 0x1) * l_vI_total_size + (l_grid.x0[0]) * l_stride_vI_0;
-	pt_vG_5 = vG_base + ((t + 1) & 0x1) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
-	pt_vG2_6 = vG2_base + ((t) & 0x1) * l_vG2_total_size + (l_grid.x0[0]) * l_stride_vG2_0;
-	pt_vG2_7 = vG2_base + ((t + 1) & 0x1) * l_vG2_total_size + (l_grid.x0[0]) * l_stride_vG2_0;
+	int * baseIter_7;
+	int * baseIter_6;
+	int * baseIter_5;
+	int * baseIter_4;
+	int * baseIter_3;
+	int * baseIter_2;
+	int * baseIter_1;
+	int * baseIter_0;
+	baseIter_0 = vD_base + ((t + 1) & 0x1) * l_vD_total_size + (l_grid.x0[0]) * l_stride_vD_0;
+	baseIter_1 = vD_base + ((t) & 0x1) * l_vD_total_size + (l_grid.x0[0]) * l_stride_vD_0;
+	baseIter_2 = vG_base + ((t) & 0x1) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
+	baseIter_3 = vI_base + ((t + 1) & 0x1) * l_vI_total_size + (l_grid.x0[0]) * l_stride_vI_0;
+	baseIter_4 = vI_base + ((t) & 0x1) * l_vI_total_size + (l_grid.x0[0]) * l_stride_vI_0;
+	baseIter_5 = vG_base + ((t + 1) & 0x1) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
+	baseIter_6 = vG2_base + ((t) & 0x1) * l_vG2_total_size + (l_grid.x0[0]) * l_stride_vG2_0;
+	baseIter_7 = vG2_base + ((t + 1) & 0x1) * l_vG2_total_size + (l_grid.x0[0]) * l_stride_vG2_0;
+	iter0 = baseIter_0 + (0) * l_stride_vD_0;
+	iter1 = baseIter_1 + (0) * l_stride_vD_0;
+	iter2 = baseIter_2 + (0) * l_stride_vG_0;
+	iter3 = baseIter_3 + (0) * l_stride_vI_0;
+	iter4 = baseIter_4 + (-1) * l_stride_vI_0;
+	iter5 = baseIter_2 + (-1) * l_stride_vG_0;
+	iter6 = baseIter_5 + (0) * l_stride_vG_0;
+	iter7 = baseIter_6 + (-1) * l_stride_vG2_0;
+	iter8 = baseIter_7 + (0) * l_stride_vG2_0;
+	
 	
 	#pragma ivdep
 	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j, 
-	++pt_vD_0, 
-	++pt_vD_1, 
-	++pt_vG_2, 
-	++pt_vI_3, 
-	++pt_vI_4, 
-	++pt_vG_5, 
-	++pt_vG2_6, 
-	++pt_vG2_7) {
+	++iter0, 
+	++iter1, 
+	++iter2, 
+	++iter3, 
+	++iter4, 
+	++iter5, 
+	++iter6, 
+	++iter7, 
+	++iter8) {
 	
 	register int i = t + 1 - j, v;
 	if ((i >= 0) && (i <= nX))
 	{
 	if ((i > 0) && (j > 0))
 	{
-	pt_vD_0[0] = ((pt_vD_1[0]) < (pt_vG_2[0] + goCost) ? (pt_vD_1[0]) : (pt_vG_2[0] + goCost)) + geCost;
-	pt_vI_3[0] = ((pt_vI_4[l_stride_vI_0 * (-1)]) < (pt_vG_2[l_stride_vG_0 * (-1)] + goCost) ? (pt_vI_4[l_stride_vI_0 * (-1)]) : (pt_vG_2[l_stride_vG_0 * (-1)] + goCost)) + geCost;
-	v = ((pt_vD_0[0]) < (pt_vI_3[0]) ? (pt_vD_0[0]) : (pt_vI_3[0]));
-	pt_vG_5[0] = ((v) < (pt_vG2_6[l_stride_vG2_0 * (-1)] + mmCost[X[i] == Y[j]]) ? (v) : (pt_vG2_6[l_stride_vG2_0 * (-1)] + mmCost[X[i] == Y[j]]));
+	(*iter0) = (((*iter1)) < ((*iter2) + goCost) ? ((*iter1)) : ((*iter2) + goCost)) + geCost;
+	(*iter3) = (((*iter4)) < ((*iter5) + goCost) ? ((*iter4)) : ((*iter5) + goCost)) + geCost;
+	v = (((*iter0)) < ((*iter3)) ? ((*iter0)) : ((*iter3)));
+	(*iter6) = ((v) < ((*iter7) + mmCost[X[i] == Y[j]]) ? (v) : ((*iter7) + mmCost[X[i] == Y[j]]));
 	}
 	else {
 	v = goCost + (i + j) * geCost;
-	pt_vG_5[0] = v++;
+	(*iter6) = v++;
 	if (!i)
-	pt_vD_0[0] = v;
+	(*iter0) = v;
 	if (!j)
-	pt_vI_3[0] = v;
+	(*iter3) = v;
 	}
-	pt_vG2_7[0] = pt_vG_2[0];
+	(*iter8) = (*iter2);
 	}
 	} /* end for (sub-trapezoid) */ 
 	/* Adjust sub-trapezoid! */
@@ -34647,7 +34210,7 @@ Pochoir_Shape< 1 > pSeq_shape_G[ ] = { { 1, 0 }, { 0, 0 }, { 0, -1 } };
 	} /* end for t */
 	};
 
-	pSeq.run_obase(t, Pointer_pSeq_fn);
+	pSeq.run_obase(t, Default_pSeq_fn);
 	int ug = vG.interior( t, nY ), ud = vD.interior( t, nY ), ui = vI.interior( t, nY );
     int optCost = ((ug) < (((ud) < (ui) ? (ud) : (ui))) ? (ug) : (((ud) < (ui) ? (ud) : (ui))));
 
@@ -34696,15 +34259,16 @@ Pochoir_Shape< 1 > pSeq_shape_G[] = { { 2, 0 }, { 1, 0 }, { 0, -1 }, { 1, -1 } }
 	int t = nX + nY;
 
     
-	auto Pointer_pSeq_fn = [&] (int t0, int t1, grid_info<1> const & grid) {
+	auto Default_pSeq_fn = [&] (int t0, int t1, grid_info<1> const & grid) {
 	grid_info<1> l_grid = grid;
-	int * pt_vG_6;
-	int * pt_vG_5;
-	int * pt_vI_4;
-	int * pt_vI_3;
-	int * pt_vG_2;
-	int * pt_vD_1;
-	int * pt_vD_0;
+	int * iter7;
+	int * iter6;
+	int * iter5;
+	int * iter4;
+	int * iter3;
+	int * iter2;
+	int * iter1;
+	int * iter0;
 	
 	int * vI_base = vI.data();
 	const int l_vI_total_size = vI.total_size();
@@ -34719,41 +34283,58 @@ Pochoir_Shape< 1 > pSeq_shape_G[] = { { 2, 0 }, { 1, 0 }, { 0, -1 }, { 1, -1 } }
 	const int l_stride_vD_0 = vD.stride(0), l_stride_vG_0 = vG.stride(0), l_stride_vI_0 = vI.stride(0);
 
 	for (int t = t0; t < t1; ++t) { 
-	pt_vD_0 = vD_base + ((t + 2) % 3) * l_vD_total_size + (l_grid.x0[0]) * l_stride_vD_0;
-	pt_vD_1 = vD_base + ((t + 1) % 3) * l_vD_total_size + (l_grid.x0[0]) * l_stride_vD_0;
-	pt_vG_2 = vG_base + ((t + 1) % 3) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
-	pt_vI_3 = vI_base + ((t + 2) % 3) * l_vI_total_size + (l_grid.x0[0]) * l_stride_vI_0;
-	pt_vI_4 = vI_base + ((t + 1) % 3) * l_vI_total_size + (l_grid.x0[0]) * l_stride_vI_0;
-	pt_vG_5 = vG_base + ((t + 2) % 3) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
-	pt_vG_6 = vG_base + ((t) % 3) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
+	int * baseIter_6;
+	int * baseIter_5;
+	int * baseIter_4;
+	int * baseIter_3;
+	int * baseIter_2;
+	int * baseIter_1;
+	int * baseIter_0;
+	baseIter_0 = vD_base + ((t + 2) % 3) * l_vD_total_size + (l_grid.x0[0]) * l_stride_vD_0;
+	baseIter_1 = vD_base + ((t + 1) % 3) * l_vD_total_size + (l_grid.x0[0]) * l_stride_vD_0;
+	baseIter_2 = vG_base + ((t + 1) % 3) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
+	baseIter_3 = vI_base + ((t + 2) % 3) * l_vI_total_size + (l_grid.x0[0]) * l_stride_vI_0;
+	baseIter_4 = vI_base + ((t + 1) % 3) * l_vI_total_size + (l_grid.x0[0]) * l_stride_vI_0;
+	baseIter_5 = vG_base + ((t + 2) % 3) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
+	baseIter_6 = vG_base + ((t) % 3) * l_vG_total_size + (l_grid.x0[0]) * l_stride_vG_0;
+	iter0 = baseIter_0 + (0) * l_stride_vD_0;
+	iter1 = baseIter_1 + (0) * l_stride_vD_0;
+	iter2 = baseIter_2 + (0) * l_stride_vG_0;
+	iter3 = baseIter_3 + (0) * l_stride_vI_0;
+	iter4 = baseIter_4 + (-1) * l_stride_vI_0;
+	iter5 = baseIter_2 + (-1) * l_stride_vG_0;
+	iter6 = baseIter_5 + (0) * l_stride_vG_0;
+	iter7 = baseIter_6 + (-1) * l_stride_vG_0;
+	
 	
 	#pragma ivdep
 	for (int j = l_grid.x0[0]; j < l_grid.x1[0]; ++j, 
-	++pt_vD_0, 
-	++pt_vD_1, 
-	++pt_vG_2, 
-	++pt_vI_3, 
-	++pt_vI_4, 
-	++pt_vG_5, 
-	++pt_vG_6) {
+	++iter0, 
+	++iter1, 
+	++iter2, 
+	++iter3, 
+	++iter4, 
+	++iter5, 
+	++iter6, 
+	++iter7) {
 	
 	int i = t + 1 - j, v, k;
 	if ((i >= 0) && (i <= nX))
 	{
 	if ((i > 0) && (j > 0))
 	{
-	pt_vD_0[0] = ((pt_vD_1[0]) < (pt_vG_2[0] + goCost) ? (pt_vD_1[0]) : (pt_vG_2[0] + goCost)) + geCost;
-	pt_vI_3[0] = ((pt_vI_4[l_stride_vI_0 * (-1)]) < (pt_vG_2[l_stride_vG_0 * (-1)] + goCost) ? (pt_vI_4[l_stride_vI_0 * (-1)]) : (pt_vG_2[l_stride_vG_0 * (-1)] + goCost)) + geCost;
-	v = ((pt_vD_0[0]) < (pt_vI_3[0]) ? (pt_vD_0[0]) : (pt_vI_3[0]));
-	pt_vG_5[0] = ((v) < (pt_vG_6[l_stride_vG_0 * (-1)] + mmCost[X[i] == Y[j]]) ? (v) : (pt_vG_6[l_stride_vG_0 * (-1)] + mmCost[X[i] == Y[j]]));
+	(*iter0) = (((*iter1)) < ((*iter2) + goCost) ? ((*iter1)) : ((*iter2) + goCost)) + geCost;
+	(*iter3) = (((*iter4)) < ((*iter5) + goCost) ? ((*iter4)) : ((*iter5) + goCost)) + geCost;
+	v = (((*iter0)) < ((*iter3)) ? ((*iter0)) : ((*iter3)));
+	(*iter6) = ((v) < ((*iter7) + mmCost[X[i] == Y[j]]) ? (v) : ((*iter7) + mmCost[X[i] == Y[j]]));
 	}
 	else {
 	v = goCost + (i + j) * geCost;
-	pt_vG_5[0] = v++;
+	(*iter6) = v++;
 	if (!i)
-	pt_vD_0[0] = v;
+	(*iter0) = v;
 	if (!j)
-	pt_vI_3[0] = v;
+	(*iter3) = v;
 	}
 	}
 	} /* end for (sub-trapezoid) */ 
@@ -34764,7 +34345,7 @@ Pochoir_Shape< 1 > pSeq_shape_G[] = { { 2, 0 }, { 1, 0 }, { 0, -1 }, { 1, -1 } }
 	} /* end for t */
 	};
 
-	pSeq.run_obase(t, Pointer_pSeq_fn);
+	pSeq.run_obase(t, Default_pSeq_fn);
 	int optCost = ((vG . interior( t + 1, nY )) < (((vD . interior( t + 1, nY )) < (vI . interior( t + 1, nY )) ? (vD . interior( t + 1, nY )) : (vI . interior( t + 1, nY )))) ? (vG . interior( t + 1, nY )) : (((vD . interior( t + 1, nY )) < (vI . interior( t + 1, nY )) ? (vD . interior( t + 1, nY )) : (vI . interior( t + 1, nY )))));
 
     return optCost;    

@@ -45,7 +45,7 @@
  */
 
 
-/* Copyright (C) 1991-1993,1995-2006,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1995-2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,10 +74,9 @@
 			if >=199309L, add IEEE Std 1003.1b-1993;
 			if >=199506L, add IEEE Std 1003.1c-1995;
 			if >=200112L, all of IEEE 1003.1-2004
-			if >=200809L, all of IEEE 1003.1-2008
    _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
 			Single Unix conformance is wanted, to 600 for the
-			sixth revision, to 700 for the seventh revision.
+			upcoming sixth revision.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
    _LARGEFILE_SOURCE	Some more functions for correct standard I/O.
    _LARGEFILE64_SOURCE	Additional functionality from LFS for large files.
@@ -111,7 +110,6 @@
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
    __USE_UNIX98		Define Single Unix V2 things.
    __USE_XOPEN2K        Define XPG6 things.
-   __USE_XOPEN2K8       Define XPG7 things.
    __USE_LARGEFILE	Define correct standard I/O things.
    __USE_LARGEFILE64	Define LFS things with separate names.
    __USE_FILE_OFFSET64	Define 64bit interface as default.
@@ -185,30 +183,7 @@
 
 
 
-
-/* Define __STDC_IEC_559__ and other similar macros.  */
-/* Copyright (C) 2005 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-
 /* We do support the IEC 559 math functionality, real and complex.  */
-
 
 /* wchar_t uses ISO 10646-1 (2nd ed., published 2000-09-15) / Unicode 3.1.  */
 
@@ -226,7 +201,7 @@
 /* Decide whether a compiler supports the long long datatypes.  */
 
 /* This is here only because every header file already includes this one.  */
-/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006, 2007, 2009
+/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -379,9 +354,6 @@
 
 /* Decide whether we can define 'extern inline' functions in headers.  */
 
-/* There are some functions that must be declared 'extern inline' even with
-   -Os when building LIBC, or they'll end up undefined.  */
-
 
 /* This is here only because every header file already includes this one.
    Get the definitions of all the appropriate `__stub_FUNCTION' symbols.
@@ -402,7 +374,8 @@
 
 
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -780,7 +753,7 @@ extern void co_basecase(LBM_GridPtr* toggle, MAIN_SimType simType,
 
 extern void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int numTimeSteps);
 //#include <math.h>
-/* Copyright (C) 1991-2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -908,7 +881,7 @@ extern "C" {
 
 
 
-/* Copyright (C) 1992, 1996, 1997, 2000, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -948,50 +921,6 @@ extern "C" {
 
 
 
-/* Conversion interfaces.  */
-/* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997, 1998, 2000, 2002, 2003, 2007, 2008
-   Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
-
-
-
-/* Determine the wordsize from the preprocessor defines.  */
-
-
-/* Swap bytes in 16 bit value.  */
-
-
-
-/* Swap bytes in 32 bit value.  */
-
-/* To swap the bytes in a word the i486 processors and up provide the
-   `bswap' opcode.  On i386 we have to use three instructions.  */
-
-
-/* Swap bytes in 64 bit value.  */
-
-
-
-
-
-
-
 union wait
   {
     int w_status;
@@ -1018,7 +947,7 @@ union wait
 
 
 /* This is the type of the argument to `wait'.  The funky union
-   causes redeclarations with either `int *' or `union wait *' to be
+   causes redeclarations with ether `int *' or `union wait *' to be
    allowed without complaint.  __WAIT_STATUS_DEFN is the type used in
    the actual function definitions.  */
 
@@ -1136,19 +1065,19 @@ extern unsigned long long int strtoull (__const char *__restrict __nptr,
 
 /* The concept of one static locale per category is not very well
    thought out.  Many applications will need to process its data using
-   information from several different locales.  Another problem is
+   information from several different locales.  Another application is
    the implementation of the internationalization handling in the
-   ISO C++ standard library.  To support this another set of
-   the functions using locale data exist which take an additional
+   upcoming ISO C++ standard library.  To support this another set of
+   the functions using locale data exist which have an additional
    argument.
 
-   Attention: even though several *_l interfaces are part of POSIX:2008,
-   these are not.  */
+   Attention: all these functions are *not* standardized in any form.
+   This is a proof-of-concept implementation.  */
 
 /* Structure for reentrant locale using functions.  This is an
    (almost) opaque type for the user level programs.  */
 /* Definition of locale datatype.
-   Copyright (C) 1997,2000,2002,2009 Free Software Foundation, Inc.
+   Copyright (C) 1997,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -1185,9 +1114,6 @@ typedef struct __locale_struct
   /* Note: LC_ALL is not a valid index into this array.  */
   const char *__names[13];
 } *__locale_t;
-
-/* POSIX 2008 makes locale_t official.  */
-typedef __locale_t locale_t;
 
 
 /* Special versions of the functions above which take the locale to
@@ -1304,7 +1230,8 @@ typedef __caddr_t caddr_t;
 
 typedef __key_t key_t;
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1417,7 +1344,7 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 
 /* It also defines `fd_set' and the FD_* macros for `select'.  */
 /* `fd_set' type and related macros, and `select'/`pselect' declarations.
-   Copyright (C) 1996-2003, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,99,2000,01,02,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1442,7 +1369,7 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 /* Get definition of needed basic types.  */
 
 /* Get __FD_* definitions.  */
-/* Copyright (C) 1997,1998,1999,2001,2008,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1461,14 +1388,9 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
    02111-1307 USA.  */
 
 
-/* Determine the wordsize from the preprocessor defines.  */
 
-
-
-
-
-
-
+/* We don't use `memset' because this would require a prototype and
+   the array isn't too big.  */
 
 /* Get __sigset_t.  */
 /* __sig_atomic_t, __sigset_t, and related definitions.  Linux version.
@@ -1513,7 +1435,8 @@ typedef struct
 typedef __sigset_t sigset_t;
 
 /* Get definition of timer specification structures.  */
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1602,7 +1525,7 @@ typedef struct
   {
     /* XPG4.2 requires this member name.  Otherwise avoid the name
        from the global namespace.  */
-    __fd_mask fds_bits[1024 / (8 * (int) sizeof (__fd_mask))];
+    __fd_mask fds_bits[1024 / (8 * sizeof (__fd_mask))];
   } fd_set;
 
 /* Maximum number of file descriptors in `fd_set'.  */
@@ -2093,12 +2016,6 @@ extern void abort (void) throw () __attribute__ ((__noreturn__));
 /* Register a function to be called when `exit' is called.  */
 extern int atexit (void (*__func) (void)) throw () __attribute__ ((__nonnull__ (1)));
 
-// XXX There should be a macro to signal with C++ revision is used.
-// XXX This function is in the C++1x revision.
-/* Register a function to be called when `quick_exit' is called.  */
-extern "C++" int at_quick_exit (void (*__func) (void))
-     throw () __asm ("at_quick_exit") __attribute__ ((__nonnull__ (1)));
-
 
 /* Register a function to be called with the status
    given to `exit' and the given argument.  */
@@ -2107,16 +2024,9 @@ extern int on_exit (void (*__func) (int __status, void *__arg), void *__arg)
 
 
 /* Call all functions registered with `atexit' and `on_exit',
-   in the reverse of the order in which they were registered,
+   in the reverse of the order in which they were registered
    perform stdio cleanup, and terminate program execution with STATUS.  */
 extern void exit (int __status) throw () __attribute__ ((__noreturn__));
-
-// XXX There should be a macro to signal with C++ revision is used.
-// XXX This function is in the C++1x revision.
-/* Call all functions registered with `at_quick_exit' in the reverse
-   of the order in which they were registered and terminate program
-   execution with STATUS.  */
-extern void quick_exit (int __status) throw () __attribute__ ((__noreturn__));
 
 
 
@@ -2167,20 +2077,10 @@ extern char *mktemp (char *__template) throw () __attribute__ ((__nonnull__ (1))
    Returns a file descriptor open on the file for reading and writing,
    or -1 if it cannot create a uniquely-named file.
 
-   This function is a possible cancellation point and therefore not
+   This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 extern int mkstemp (char *__template) __attribute__ ((__nonnull__ (1))) ;
 extern int mkstemp64 (char *__template) __attribute__ ((__nonnull__ (1))) ;
-
-/* Similar to mkstemp, but the template can have a suffix after the
-   XXXXXX.  The length of the suffix is specified in the second
-   parameter.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int mkstemps (char *__template, int __suffixlen) __attribute__ ((__nonnull__ (1))) ;
-extern int mkstemps64 (char *__template, int __suffixlen)
-     __attribute__ ((__nonnull__ (1))) ;
 
 /* Create a unique temporary directory from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
@@ -2197,17 +2097,6 @@ extern char *mkdtemp (char *__template) throw () __attribute__ ((__nonnull__ (1)
    marked with __THROW.  */
 extern int mkostemp (char *__template, int __flags) __attribute__ ((__nonnull__ (1))) ;
 extern int mkostemp64 (char *__template, int __flags) __attribute__ ((__nonnull__ (1))) ;
-
-/* Similar to mkostemp, but the template can have a suffix after the
-   XXXXXX.  The length of the suffix is specified in the second
-   parameter.
-
-   This function is a possible cancellation point and therefore not
-   marked with __THROW.  */
-extern int mkostemps (char *__template, int __suffixlen, int __flags)
-     __attribute__ ((__nonnull__ (1))) ;
-extern int mkostemps64 (char *__template, int __suffixlen, int __flags)
-     __attribute__ ((__nonnull__ (1))) ;
 
 
 
@@ -2237,7 +2126,6 @@ extern char *realpath (__const char *__restrict __name,
 typedef int (*__compar_fn_t) (__const void *, __const void *);
 
 typedef __compar_fn_t comparison_fn_t;
-typedef int (*__compar_d_fn_t) (__const void *, __const void *, void *);
 
 
 /* Do a binary search for KEY in BASE, which consists of NMEMB elements
@@ -2250,9 +2138,6 @@ extern void *bsearch (__const void *__key, __const void *__base,
    using COMPAR to perform the comparisons.  */
 extern void qsort (void *__base, size_t __nmemb, size_t __size,
 		   __compar_fn_t __compar) __attribute__ ((__nonnull__ (1, 4)));
-extern void qsort_r (void *__base, size_t __nmemb, size_t __size,
-		     __compar_d_fn_t __compar, void *__arg)
-  __attribute__ ((__nonnull__ (1, 4)));
 
 
 /* Return the absolute value of X.  */
@@ -2421,7 +2306,7 @@ extern int getloadavg (double __loadavg[], int __nelem)
 }
 
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994-2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2495,7 +2380,7 @@ typedef struct _IO_FILE __FILE;
 
 
 
-/* Copyright (C) 1991-1995,1997-2006,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995,1997-2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -2556,7 +2441,7 @@ typedef struct _IO_FILE __FILE;
 
 
 /*#endif*/ /* _STDDEF */
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2597,9 +2482,9 @@ typedef struct
 /* The rest of the file is only used if used if __need_mbstate_t is not
    defined.  */
 
-
 /* Undefined all __need_* constants in case we are included to get those
    constants but the whole file was already read.  */
+
 typedef struct
 {
   __off_t __pos;
@@ -2633,13 +2518,13 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 /* ALL of these should be defined in _G_config.h */
 
 /* This define avoids name pollution if we're using GNU stdarg.h */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
 GCC is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
+the Free Software Foundation; either version 2, or (at your option)
 any later version.
 
 GCC is distributed in the hope that it will be useful,
@@ -2647,14 +2532,17 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING.  If not, write to
+the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.  */
 
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/* As a special exception, if you include this header file into source
+   files compiled by GCC, this header file does not by itself cause
+   the resulting executable to be covered by the GNU General Public
+   License.  This exception does not however invalidate any other
+   reasons why the executable file might be covered by the GNU General
+   Public License.  */
 
 /*
  * ISO C Standard:  7.15  Variable arguments  <stdarg.h>
@@ -2891,7 +2779,7 @@ typedef _G_fpos64_t fpos64_t;
    L_cuserid	How long an array to pass to `cuserid'.
    FOPEN_MAX	Minimum number of files that can be open at once.
    FILENAME_MAX	Maximum length of a filename.  */
-/* Copyright (C) 1994, 1997, 1998, 1999, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -3327,7 +3215,7 @@ extern size_t fread (void *__restrict __ptr, size_t __size,
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 extern size_t fwrite (__const void *__restrict __ptr, size_t __size,
-		      size_t __n, FILE *__restrict __s);
+		      size_t __n, FILE *__restrict __s) ;
 
 
 /* This function does the same as `fputs' but does not lock the stream.
@@ -3348,7 +3236,7 @@ extern int fputs_unlocked (__const char *__restrict __s,
 extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
 			      size_t __n, FILE *__restrict __stream) ;
 extern size_t fwrite_unlocked (__const void *__restrict __ptr, size_t __size,
-			       size_t __n, FILE *__restrict __stream);
+			       size_t __n, FILE *__restrict __stream) ;
 
 
 
@@ -3609,7 +3497,7 @@ extern void funlockfile (FILE *__stream) throw ();
  */
 
 
-/* Copyright (C) 1991-1994,1996-2003,2005,2006,2009
+/* Copyright (C) 1991-1994,1996-2002,2003,2005,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -3630,7 +3518,8 @@ extern void funlockfile (FILE *__stream) throw ();
 
 
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -3792,13 +3681,13 @@ extern int futimesat (int __fd, __const char *__file,
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -3806,14 +3695,19 @@ extern int futimesat (int __fd, __const char *__file,
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cstdio
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -3834,12 +3728,12 @@ extern int futimesat (int __fd, __const char *__file,
 // Predefined symbols and macros -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+// 2006, 2007 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -3847,19 +3741,106 @@ extern int futimesat (int __fd, __const char *__file,
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file c++config.h
  *  This is an internal header file, included by other library headers.
  *  You should not attempt to use it directly.
  */
+
+
+// Pick up any OS-specific definitions.
+// Specific definitions for GNU/Linux  -*- C++ -*-
+
+// Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file os_defines.h
+ *  This is an internal header file, included by other library headers.
+ *  You should not attempt to use it directly.
+ */
+
+
+// System-specific #define, typedefs, corrections, etc, go here.  This
+// file will come before all others.
+
+// This keeps isanum, et al from being propagated as macros.
+
+
+// We must not see the optimized string functions GNU libc defines.
+
+
+// Pick up any CPU-specific definitions.
+// Specific definitions for generic platforms  -*- C++ -*-
+
+// Copyright (C) 2005 Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file cpu_defines.h
+ *  This is an internal header file, included by other library headers.
+ *  You should not attempt to use it directly.
+ */
+
 
 
 // The current version of the C++ library in compressed ISO date format.
@@ -3902,12 +3883,15 @@ extern int futimesat (int __fd, __const char *__file,
 // _GLIBCXX_STD
 // _GLIBCXX_STD_D
 // _GLIBCXX_STD_P
+
 //
 // Macros for enclosing namespaces and possibly nested namespaces.
 // _GLIBCXX_BEGIN_NAMESPACE
 // _GLIBCXX_END_NAMESPACE
 // _GLIBCXX_BEGIN_NESTED_NAMESPACE
 // _GLIBCXX_END_NESTED_NAMESPACE
+// _GLIBCXX_BEGIN_POTENTIAL_NESTED_NAMESPACE
+// _GLIBCXX_END_POTENTIAL_NESTED_NAMESPACE
 
 // Namespace associations for debug mode.
 
@@ -3915,86 +3899,12 @@ extern int futimesat (int __fd, __const char *__file,
 
 // Namespace associations for versioning mode.
 
+// Define if compatibility should be provided for -mlong-double-64.
+
 // XXX GLIBCXX_ABI Deprecated
-// Define if compatibility should be provided for -mlong-double-64
-
 // Namespace associations for long double 128 mode.
-
-
-// Defines for C compatibility. In particular, define extern "C"
-// linkage only when using C++.
-
-
-// First includes.
-
-// Pick up any OS-specific definitions.
-// Specific definitions for GNU/Linux  -*- C++ -*-
-
-// Copyright (C) 2000, 2001, 2002, 2003, 2009 Free Software Foundation, Inc.
-//
-// This file is part of the GNU ISO C++ Library.  This library is free
-// software; you can redistribute it and/or modify it under the
-// terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
-// any later version.
-
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
-
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
-
-/** @file os_defines.h
- *  This is an internal header file, included by other library headers.
- *  You should not attempt to use it directly.
- */
-
-
-// System-specific #define, typedefs, corrections, etc, go here.  This
-// file will come before all others.
-
-// This keeps isanum, et al from being propagated as macros.
-
-
-
-// Pick up any CPU-specific definitions.
-// Specific definitions for generic platforms  -*- C++ -*-
-
-// Copyright (C) 2005, 2009 Free Software Foundation, Inc.
-//
-// This file is part of the GNU ISO C++ Library.  This library is free
-// software; you can redistribute it and/or modify it under the
-// terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
-// any later version.
-
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
-
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
-
-/** @file cpu_defines.h
- *  This is an internal header file, included by other library headers.
- *  You should not attempt to use it directly.
- */
-
+namespace std __attribute__ ((__visibility__ ("default"))) {
+}
 
 
 // Allow use of "export template." This is currently not a feature
@@ -4008,13 +3918,15 @@ extern int futimesat (int __fd, __const char *__file,
 // are already explicitly instantiated in the library binary. This
 // substantially reduces the binary size of resulting executables.
 
+
 // Certain function definitions that are meant to be overridable from
 // user code are decorated with this macro.  For some targets, this
 // macro causes these definitions to be weak.
 
-// Assert.
-// Avoid the use of assert, because we're trying to keep the <cassert>
-// include out of the mix.
+// Macro used to indicate that the native "C" includes, when compiled
+// as "C++", have declarations in namespace std and not the global
+// namespace. Note, this is unrelated to possible "C" compatibility
+// includes that inject C90/C99 names into the global namespace.
 
 // The remainder of the prewritten config is automatic; all the
 // user hooks are listed above.
@@ -4040,8 +3952,6 @@ extern int futimesat (int __fd, __const char *__file,
 
 /* Define to 1 if you have the `asinl' function. */
 
-/* Define to 1 if the target assembler supports .symver directive. */
-
 /* Define to 1 if you have the `atan2f' function. */
 
 /* Define to 1 if you have the `atan2l' function. */
@@ -4059,6 +3969,12 @@ extern int futimesat (int __fd, __const char *__file,
 
 /* Define to 1 if you have the <complex.h> header file. */
 
+/* Define to 1 if you have the `copysign' function. */
+
+/* Define to 1 if you have the `copysignf' function. */
+
+/* Define to 1 if you have the `copysignl' function. */
+
 /* Define to 1 if you have the `cosf' function. */
 
 /* Define to 1 if you have the `coshf' function. */
@@ -4069,35 +3985,7 @@ extern int futimesat (int __fd, __const char *__file,
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 
-/* Define if EBADMSG exists. */
-
-/* Define if ECANCELED exists. */
-
-/* Define if EIDRM exists. */
-
 /* Define to 1 if you have the <endian.h> header file. */
-
-/* Define if ENODATA exists. */
-
-/* Define if ENOLINK exists. */
-
-/* Define if ENOSR exists. */
-
-/* Define if ENOSTR exists. */
-
-/* Define if ENOTRECOVERABLE exists. */
-
-/* Define if ENOTSUP exists. */
-
-/* Define if EOVERFLOW exists. */
-
-/* Define if EOWNERDEAD exists. */
-
-/* Define if EPROTO exists. */
-
-/* Define if ETIME exists. */
-
-/* Define if ETXTBSY exists. */
 
 /* Define to 1 if you have the `expf' function. */
 
@@ -4135,7 +4023,14 @@ extern int futimesat (int __fd, __const char *__file,
 
 /* Define to 1 if you have the `frexpl' function. */
 
+/* Define to 1 if you have the <gconf.h> header file. */
+/* #undef _GLIBCXX_HAVE_GCONF_H */
+
+/* Define to 1 if you have the <gconv.h> header file. */
+
 /* Define if _Unwind_GetIPInfo is available. */
+
+/* Define to 1 if you have the `getpagesize' function. */
 
 /* Define if gthr-default.h exists (meaning that threading support is
    enabled). */
@@ -4152,11 +4047,6 @@ extern int futimesat (int __fd, __const char *__file,
 /* #undef _GLIBCXX_HAVE_IEEEFP_H */
 
 /* Define if int64_t is available in <stdint.h>. */
-
-/* Define if int64_t is a long. */
-
-/* Define if int64_t is a long long. */
-/* #undef _GLIBCXX_HAVE_INT64_T_LONG_LONG */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 
@@ -4181,6 +4071,8 @@ extern int futimesat (int __fd, __const char *__file,
 /* Define to 1 if you have the `ldexpl' function. */
 
 /* Define to 1 if you have the <libintl.h> header file. */
+
+/* Define to 1 if you have the `m' library (-lm). */
 
 /* Only used in build directory testsuite_hooks.h. */
 
@@ -4214,6 +4106,8 @@ extern int futimesat (int __fd, __const char *__file,
 
 /* Define to 1 if you have the <memory.h> header file. */
 
+/* Define to 1 if you have a working `mmap' system call. */
+
 /* Define to 1 if you have the `modf' function. */
 
 /* Define to 1 if you have the `modff' function. */
@@ -4233,6 +4127,8 @@ extern int futimesat (int __fd, __const char *__file,
 /* #undef _GLIBCXX_HAVE_QFPCLASS */
 
 /* Define to 1 if you have the `setenv' function. */
+
+/* Define if sigsetjmp is available. */
 
 /* Define to 1 if you have the `sincos' function. */
 
@@ -4286,6 +4182,7 @@ extern int futimesat (int __fd, __const char *__file,
 /* #undef _GLIBCXX_HAVE_SYS_MACHINE_H */
 
 /* Define to 1 if you have the <sys/param.h> header file. */
+/* #undef _GLIBCXX_HAVE_SYS_PARAM_H */
 
 /* Define to 1 if you have the <sys/resource.h> header file. */
 
@@ -4361,6 +4258,12 @@ extern int futimesat (int __fd, __const char *__file,
 
 /* Define to 1 if you have the `_ceill' function. */
 /* #undef _GLIBCXX_HAVE__CEILL */
+
+/* Define to 1 if you have the `_copysign' function. */
+/* #undef _GLIBCXX_HAVE__COPYSIGN */
+
+/* Define to 1 if you have the `_copysignl' function. */
+/* #undef _GLIBCXX_HAVE__COPYSIGNL */
 
 /* Define to 1 if you have the `_cosf' function. */
 /* #undef _GLIBCXX_HAVE__COSF */
@@ -4518,6 +4421,40 @@ extern int futimesat (int __fd, __const char *__file,
 /* Define to 1 if you have the `_tanl' function. */
 /* #undef _GLIBCXX_HAVE__TANL */
 
+/* Define if the compiler/host combination has __builtin_abs. */
+
+/* Define if the compiler/host combination has __builtin_cos. */
+
+/* Define if the compiler/host combination has __builtin_cosf. */
+
+/* Define if the compiler/host combination has __builtin_cosl. */
+
+/* Define if the compiler/host combination has __builtin_fabs. */
+
+/* Define if the compiler/host combination has __builtin_fabsf. */
+
+/* Define if the compiler/host combination has __builtin_fabsl. */
+
+/* Define if the compiler/host combination has __builtin_labs. */
+
+/* Define if the compiler/host combination has __builtin_sin. */
+
+/* Define if the compiler/host combination has __builtin_sinf. */
+
+/* Define if the compiler/host combination has __builtin_sinl. */
+
+/* Define if the compiler/host combination has __builtin_sqrt. */
+
+/* Define if the compiler/host combination has __builtin_sqrtf. */
+
+/* Define if the compiler/host combination has __builtin_sqrtl. */
+
+/* Define to 1 if you have the `__signbit' function. */
+
+/* Define to 1 if you have the `__signbitf' function. */
+
+/* Define to 1 if you have the `__signbitl' function. */
+
 /* Define as const if the declaration of iconv() needs const. */
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
@@ -4536,43 +4473,18 @@ extern int futimesat (int __fd, __const char *__file,
 
 /* Define to the version of this package. */
 
-/* The size of a `char', as computed by sizeof. */
-/* #undef SIZEOF_CHAR */
-
-/* The size of a `int', as computed by sizeof. */
-/* #undef SIZEOF_INT */
-
-/* The size of a `long', as computed by sizeof. */
-/* #undef SIZEOF_LONG */
-
-/* The size of a `short', as computed by sizeof. */
-/* #undef SIZEOF_SHORT */
-
-/* The size of a `void *', as computed by sizeof. */
-/* #undef SIZEOF_VOID_P */
-
 /* Define to 1 if you have the ANSI C header files. */
 
 /* Version number of package */
 /* #undef _GLIBCXX_VERSION */
 
-/* Define if builtin atomic operations for bool are supported on this host. */
-
-/* Define if builtin atomic operations for short are supported on this host.
-   */
-
-/* Define if builtin atomic operations for int are supported on this host. */
-
-/* Define if builtin atomic operations for long long are supported on this
-   host. */
+/* Define if builtin atomic operations are supported on this host. */
 
 /* Define to use concept checking code from the boost libraries. */
 /* #undef _GLIBCXX_CONCEPT_CHECKS */
 
 /* Define if a fully dynamic basic_string is wanted. */
 /* #undef _GLIBCXX_FULLY_DYNAMIC_STRING */
-
-/* Define if gthreads library is available. */
 
 /* Define to 1 if a full hosted library is built, or 0 if freestanding. */
 
@@ -4588,8 +4500,6 @@ extern int futimesat (int __fd, __const char *__file,
 
 /* Define if the compiler is configured for setjmp/longjmp exceptions. */
 /* #undef _GLIBCXX_SJLJ_EXCEPTIONS */
-
-/* Define if EOF == -1, SEEK_CUR == 1, SEEK_END == 2. */
 
 /* Define to use symbol versioning in the shared library. */
 
@@ -4621,9 +4531,6 @@ extern int futimesat (int __fd, __const char *__file,
 /* Define if C99 functions in <inttypes.h> should be imported in
    <tr1/cinttypes> in namespace std::tr1. */
 
-/* Define if wchar_t C99 functions in <inttypes.h> should be imported in
-   <tr1/cinttypes> in namespace std::tr1. */
-
 /* Define if C99 functions or macros in <math.h> should be imported in <cmath>
    in namespace std. */
 
@@ -4633,30 +4540,18 @@ extern int futimesat (int __fd, __const char *__file,
 /* Define if C99 types in <stdint.h> should be imported in <tr1/cstdint> in
    namespace std::tr1. */
 
-/* Defined if clock_gettime has monotonic clock support. */
-/* #undef _GLIBCXX_USE_CLOCK_MONOTONIC */
-
-/* Defined if clock_gettime has realtime clock support. */
-/* #undef _GLIBCXX_USE_CLOCK_REALTIME */
-
-/* Defined if gettimeofday is available. */
-
 /* Define if LFS support is available. */
 
 /* Define if code specialized for long long should be used. */
 
-/* Defined if nanosleep is available. */
-/* #undef _GLIBCXX_USE_NANOSLEEP */
-
 /* Define if NLS translations are to be used. */
 
-/* Define if /dev/random and /dev/urandom are available for the random_device
-   of TR1 (Chapter 5.1). */
-
-/* Defined if sched_yield is available. */
-/* #undef _GLIBCXX_USE_SCHED_YIELD */
+/* Define if dev/random and dev/urandom are available for the random_device of
+   TR1 (Chapter 5.1). */
 
 /* Define if code specialized for wchar_t should be used. */
+
+
 
 
 
@@ -4725,13 +4620,13 @@ extern int futimesat (int __fd, __const char *__file,
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -4739,14 +4634,19 @@ extern int futimesat (int __fd, __const char *__file,
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -4880,13 +4780,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- C forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -4894,14 +4794,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cmath
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -4921,13 +4826,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // The  -*- C++ -*- type traits classes for internal use in libstdc++
 
-// Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009
+// Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -4935,14 +4840,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cpp_type_traits.h
  *  This is an internal header file, included by other library headers.
@@ -5010,6 +4920,15 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     struct __traitor
     {
       enum { __value = bool(_Sp::__value) || bool(_Tp::__value) };
+      typedef typename __truth_type<__value>::__type __type;
+    };
+
+  // N.B. The conversions to bool are needed due to the issue
+  // explained in c++/19404.
+  template<class _Sp, class _Tp>
+    struct __traitand
+    {
+      enum { __value = bool(_Sp::__value) && bool(_Tp::__value) };
       typedef typename __truth_type<__value>::__type __type;
     };
 
@@ -5090,7 +5009,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       enum { __value = 1 };
       typedef __true_type __type;
     };
-
 
   template<>
     struct __is_integer<short>
@@ -5306,12 +5224,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // -*- C++ -*-
 
-// Copyright (C) 2005, 2006, 2007, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the terms
 // of the GNU General Public License as published by the Free Software
-// Foundation; either version 3, or (at your option) any later
+// Foundation; either version 2, or (at your option) any later
 // version.
 
 // This library is distributed in the hope that it will be useful, but
@@ -5319,14 +5237,20 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free
+// software library without restriction.  Specifically, if other files
+// instantiate templates or use macros or inline functions from this
+// file, or you compile this file and link it with other files to
+// produce an executable, this file does not by itself cause the
+// resulting executable to be covered by the GNU General Public
+// License.  This exception does not however invalidate any other
+// reasons why the executable file might be covered by the GNU General
+// Public License.
 
 /** @file ext/type_traits.h
  *  This file is a GNU extension to the Standard C++ Library.
@@ -5506,7 +5430,7 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 /* file: math.h */
 
 /*
-** Copyright  (C) 1985-2007 Intel Corporation. All rights reserved.
+** Copyright  (C) 1985-2010 Intel Corporation. All rights reserved.
 **
 ** The information and source code contained herein is the exclusive property
 ** of Intel Corporation and may not be disclosed, examined, or reproduced in
@@ -5518,7 +5442,7 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 /* Include_next should be before guard macros in order to at last reach system header */
 
 /* Declarations for math functions.
-   Copyright (C) 1991-1993, 1995-1999, 2001, 2002, 2004, 2006, 2009
+   Copyright (C) 1991-1993, 1995-1999, 2001, 2002, 2004, 2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -6353,9 +6277,6 @@ extern float fmaf (float __x, float __y, float __z) throw (); extern float __fma
 extern float scalbf (float __x, float __n) throw (); extern float __scalbf (float __x, float __n) throw ();
 
 
-
-/* Include the file of declarations again, this time using `long double'
-   instead of `double' and appending l to each function name.  */
 /* Prototype declarations for math functions; helper file for <math.h>.
    Copyright (C) 1996-2002, 2003, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -6743,10 +6664,6 @@ enum
 
 /* Bitmasks for the math_errhandling macro.  */
 
-/* By default all functions support both errno and exception handling.
-   In gcc's fast math mode and if inline functions are defined this
-   might not be true.  */
-
 
 /* Support for various different standard error handling behaviors.  */
 typedef enum
@@ -6838,7 +6755,9 @@ extern int matherr (struct __exception *__exc) throw ();
 
 
 
+
 extern "C" {
+
 
 
 
@@ -6851,75 +6770,75 @@ extern "C" {
 
 
 
-extern int fpclassifyf    ( float              __x );
-extern int fpclassify     ( double               __x );
-extern int fpclassifyd    ( double             __x );
-extern int fpclassifyl    ( long double            __x );
+extern int fpclassifyf    ( float              __x ) throw();
+extern int fpclassify     ( double           __x ) throw();
+extern int fpclassifyd    ( double             __x ) throw();
+extern int fpclassifyl    ( long double            __x ) throw();
 
-extern int __fpclassifyf  ( float              __x );
-extern int __fpclassify   ( double               __x );
-extern int __fpclassifyd  ( double             __x );
-extern int __fpclassifyl  ( long double            __x );
+extern int __fpclassifyf  ( float              __x ) throw();
+extern int __fpclassify   ( double           __x ) throw();
+extern int __fpclassifyd  ( double             __x ) throw();
+extern int __fpclassifyl  ( long double            __x ) throw();
 
-extern int isinff         ( float              __x );
-extern int isinf          ( double               __x );
-extern int isinfd         ( double             __x );
-extern int isinfl         ( long double            __x );
+extern int isinff         ( float              __x ) throw();
+extern int isinf          ( double           __x ) throw();
+extern int isinfd         ( double             __x ) throw();
+extern int isinfl         ( long double            __x ) throw();
 
-extern int __isinff       ( float              __x );
-extern int __isinf        ( double               __x );
-extern int __isinfd       ( double             __x );
-extern int __isinfl       ( long double            __x );
+extern int __isinff       ( float              __x ) throw();
+extern int __isinf        ( double           __x ) throw();
+extern int __isinfd       ( double             __x ) throw();
+extern int __isinfl       ( long double            __x ) throw();
 
-extern int isnanf         ( float              __x );
-extern int isnan          ( double               __x );
-extern int isnand         ( double             __x );
-extern int isnanl         ( long double            __x );
+extern int isnanf         ( float              __x ) throw();
+extern int isnan          ( double           __x ) throw();
+extern int isnand         ( double             __x ) throw();
+extern int isnanl         ( long double            __x ) throw();
 
-extern int __isnanf       ( float              __x );
-extern int __isnan        ( double               __x );
-extern int __isnand       ( double             __x );
-extern int __isnanl       ( long double            __x );
+extern int __isnanf       ( float              __x ) throw();
+extern int __isnan        ( double           __x ) throw();
+extern int __isnand       ( double             __x ) throw();
+extern int __isnanl       ( long double            __x ) throw();
 
-extern int isnormalf      ( float              __x );
-extern int isnormal       ( double               __x );
-extern int isnormald      ( double             __x );
-extern int isnormall      ( long double            __x );
+extern int isnormalf      ( float              __x ) throw();
+extern int isnormal       ( double           __x ) throw();
+extern int isnormald      ( double             __x ) throw();
+extern int isnormall      ( long double            __x ) throw();
 
-extern int __isnormalf    ( float              __x );
-extern int __isnormal     ( double               __x );
-extern int __isnormald    ( double             __x );
-extern int __isnormall    ( long double            __x );
+extern int __isnormalf    ( float              __x ) throw();
+extern int __isnormal     ( double           __x ) throw();
+extern int __isnormald    ( double             __x ) throw();
+extern int __isnormall    ( long double            __x ) throw();
 
-extern int isfinitef      ( float              __x );
-extern int isfinite       ( double               __x );
-extern int isfinited      ( double             __x );
-extern int isfinitel      ( long double            __x );
+extern int isfinitef      ( float              __x ) throw();
+extern int isfinite       ( double           __x ) throw();
+extern int isfinited      ( double             __x ) throw();
+extern int isfinitel      ( long double            __x ) throw();
 
-extern int __isfinitef    ( float              __x );
-extern int __isfinite     ( double               __x );
-extern int __isfinited    ( double             __x );
-extern int __isfinitel    ( long double            __x );
+extern int __isfinitef    ( float              __x ) throw();
+extern int __isfinite     ( double           __x ) throw();
+extern int __isfinited    ( double             __x ) throw();
+extern int __isfinitel    ( long double            __x ) throw();
 
-extern int finitef        ( float              __x );
-extern int finite         ( double             __x );
-extern int finited        ( double             __x );
-extern int finitel        ( long double            __x );
+extern int finitef        ( float              __x ) throw();
+extern int finite         ( double             __x ) throw();
+extern int finited        ( double             __x ) throw();
+extern int finitel        ( long double            __x ) throw();
 
-extern int __finitef      ( float              __x );
-extern int __finite       ( double             __x );
-extern int __finited      ( double             __x );
-extern int __finitel      ( long double            __x );
+extern int __finitef      ( float              __x ) throw();
+extern int __finite       ( double             __x ) throw();
+extern int __finited      ( double             __x ) throw();
+extern int __finitel      ( long double            __x ) throw();
 
-extern int signbitf       ( float              __x );
-extern int signbit        ( double             __x );
-extern int signbitd       ( double             __x );
-extern int signbitl       ( long double            __x );
+extern int signbitf       ( float              __x ) throw();
+extern int signbit        ( double             __x ) throw();
+extern int signbitd       ( double             __x ) throw();
+extern int signbitl       ( long double            __x ) throw();
 
-extern int __signbitf     ( float              __x );
-extern int __signbit      ( double             __x );
-extern int __signbitd     ( double             __x );
-extern int __signbitl     ( long double            __x );
+extern int __signbitf     ( float              __x ) throw();
+extern int __signbit      ( double             __x ) throw();
+extern int __signbitd     ( double             __x ) throw();
+extern int __signbitl     ( long double            __x ) throw();
 
 
 
@@ -6930,47 +6849,47 @@ extern int __signbitl     ( long double            __x );
 
 /* Comparison macros */
 
-extern int isgreaterf( float xf, float yf );
-extern int isgreater( double xd, double yd );
-extern int isgreaterl( long double xl, long double yl );
-extern int __isgreaterf( float xf, float yf );
-extern int __isgreater( double xd, double yd );
-extern int __isgreaterl( long double xl, long double yl );
+extern int isgreaterf( float __xf, float __yf );
+extern int isgreater( double __xd, double __yd );
+extern int isgreaterl( long double __xl, long double __yl );
+extern int __isgreaterf( float __xf, float __yf );
+extern int __isgreater( double __xd, double __yd );
+extern int __isgreaterl( long double __xl, long double __yl );
 
-extern int isgreaterequalf( float xf, float yf );
-extern int isgreaterequal( double xd, double yd );
-extern int isgreaterequall( long double xl, long double yl );
-extern int __isgreaterequalf( float xf, float yf );
-extern int __isgreaterequal( double xd, double yd );
-extern int __isgreaterequall( long double xl, long double yl );
+extern int isgreaterequalf( float __xf, float __yf );
+extern int isgreaterequal( double __xd, double __yd );
+extern int isgreaterequall( long double __xl, long double __yl );
+extern int __isgreaterequalf( float __xf, float __yf );
+extern int __isgreaterequal( double __xd, double __yd );
+extern int __isgreaterequall( long double __xl, long double __yl );
 
-extern int islessf( float xf, float yf );
-extern int isless( double xd, double yd );
-extern int islessl( long double xl, long double yl );
-extern int __islessf( float xf, float yf );
-extern int __isless( double xd, double yd );
-extern int __islessl( long double xl, long double yl );
+extern int islessf( float __xf, float __yf );
+extern int isless( double __xd, double __yd );
+extern int islessl( long double __xl, long double __yl );
+extern int __islessf( float __xf, float __yf );
+extern int __isless( double __xd, double __yd );
+extern int __islessl( long double __xl, long double __yl );
 
-extern int islessequalf( float xf, float yf );
-extern int islessequal( double xd, double yd );
-extern int islessequall( long double xl, long double yl );
-extern int __islessequalf( float xf, float yf );
-extern int __islessequal( double xd, double yd );
-extern int __islessequall( long double xl, long double yl );
+extern int islessequalf( float __xf, float __yf );
+extern int islessequal( double __xd, double __yd );
+extern int islessequall( long double __xl, long double __yl );
+extern int __islessequalf( float __xf, float __yf );
+extern int __islessequal( double __xd, double __yd );
+extern int __islessequall( long double __xl, long double __yl );
 
-extern int islessgreaterf( float xf, float yf );
-extern int islessgreater( double xd, double yd );
-extern int islessgreaterl( long double xl, long double yl );
-extern int __islessgreaterf( float xf, float yf );
-extern int __islessgreater( double xd, double yd );
-extern int __islessgreaterl( long double xl, long double yl );
+extern int islessgreaterf( float __xf, float __yf );
+extern int islessgreater( double __xd, double __yd );
+extern int islessgreaterl( long double __xl, long double __yl );
+extern int __islessgreaterf( float __xf, float __yf );
+extern int __islessgreater( double __xd, double __yd );
+extern int __islessgreaterl( long double __xl, long double __yl );
 
-extern int isunorderedf( float xf, float yf );
-extern int isunordered( double xd, double yd );
-extern int isunorderedl( long double xl, long double yl );
-extern int __isunorderedf( float xf, float yf );
-extern int __isunordered( double xd, double yd );
-extern int __isunorderedl( long double xl, long double yl );
+extern int isunorderedf( float __xf, float __yf );
+extern int isunordered( double __xd, double __yd );
+extern int isunorderedl( long double __xl, long double __yl );
+extern int __isunorderedf( float __xf, float __yf );
+extern int __isunordered( double __xd, double __yd );
+extern int __isunorderedl( long double __xl, long double __yl );
 
 
 
@@ -7191,8 +7110,6 @@ extern _LIB_VERSION_TYPE  _LIB_VERSIONIMF;
 
 
 
-
-
 // Get rid of those macros defined in <math.h> in lieu of real functions.
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -7284,8 +7201,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   template<typename _Tp, typename _Up>
     inline
     typename __gnu_cxx::__promote_2<
-    typename __gnu_cxx::__enable_if<__is_arithmetic<_Tp>::__value
-				    && __is_arithmetic<_Up>::__value,
+    typename __gnu_cxx::__enable_if<__traitand<__is_arithmetic<_Tp>,
+					       __is_arithmetic<_Up> >::__value,
 				    _Tp>::__type, _Up>::__type
     atan2(_Tp __y, _Up __x)
     {
@@ -7483,8 +7400,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   pow(long double __x, long double __y)
   { return __builtin_powl(__x, __y); }
 
-  // _GLIBCXX_RESOLVE_LIB_DEFECTS
-  // DR 550. What should the return type of pow(float,int) be?
+  // DR 550.
   inline double
   pow(double __x, int __i)
   { return __builtin_powi(__x, __i); }
@@ -7500,8 +7416,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   template<typename _Tp, typename _Up>
     inline
     typename __gnu_cxx::__promote_2<
-    typename __gnu_cxx::__enable_if<__is_arithmetic<_Tp>::__value
-				    && __is_arithmetic<_Up>::__value,
+    typename __gnu_cxx::__enable_if<__traitand<__is_arithmetic<_Tp>,
+					       __is_arithmetic<_Up> >::__value,
 				    _Tp>::__type, _Up>::__type
     pow(_Tp __x, _Up __y)
     {
@@ -7591,8 +7507,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 }
 
+// These are possible macros imported from C99-land. For strict
+// conformance, remove possible C99-injected names from the global
+// namespace, and sequester them in the __gnu_cxx extension namespace.
 
-// These are possible macros imported from C99-land.
+namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
+
+  template<typename _Tp>
+    inline int
+    __capture_fpclassify(_Tp __f) { return (( sizeof( __f ) > sizeof( double )) ? __fpclassifyl( (long double)(__f) ) : (( sizeof( __f ) == sizeof( float )) ? __fpclassifyf( (float)(__f) ) : __fpclassify( (double)(__f) ) ) ); }
+
+}
+
+// Only undefine the C99 FP macros, if actually captured for namespace movement
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
@@ -7602,8 +7529,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     fpclassify(_Tp __f)
     {
       typedef typename __gnu_cxx::__promote<_Tp>::__type __type;
-      return __builtin_fpclassify(FP_NAN, FP_INFINITE, FP_NORMAL,
-				  FP_SUBNORMAL, FP_ZERO, __type(__f));
+      return ::__gnu_cxx::__capture_fpclassify(__type(__f));
     }
 
   template<typename _Tp>
@@ -7710,13 +7636,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // -*- C++ -*- C math library.
 
-// Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009
+// Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -7724,14 +7650,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 // This file was written by Gabriel Dos Reis <gdr@codesourcery.com>
 
@@ -7765,13 +7696,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -7779,14 +7710,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cstdlib
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -7807,13 +7743,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -7821,14 +7757,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -7969,13 +7910,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Components for manipulating sequences of characters -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-// 2005, 2006, 2007, 2009
+// 2005, 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -7983,14 +7924,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/string
  *  This is a Standard C++ Library header.
@@ -8005,13 +7951,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // String support -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
-// Free Software Foundation, Inc.
+// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8019,14 +7964,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file stringfwd.h
  *  This is an internal header file, included by other library headers.
@@ -8061,19 +8011,18 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   typedef basic_string<wchar_t> wstring;
 
-
 }
 
 // Character Traits for use by standard string and iostream -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8081,14 +8030,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file char_traits.h
  *  This is an internal header file, included by other library headers.
@@ -8104,13 +8058,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Core algorithmic facilities -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8118,14 +8072,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /*
  *
@@ -8162,13 +8121,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8176,14 +8135,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -8230,12 +8194,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Function-Based Exception Support -*- C++ -*-
 
-// Copyright (C) 2001, 2004, 2005, 2008, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2001, 2004, 2005 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8243,14 +8207,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file functexcept.h
  *  This header provides support for -fno-exceptions.
@@ -8263,13 +8232,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // -fno-exceptions Support -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2006, 2007, 2008, 2009
-// Free Software Foundation, Inc.
+// Copyright (C) 2001, 2003 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8277,14 +8245,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 //
 // ISO C++ 14882: 19.1  Exception classes
@@ -8343,23 +8316,20 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   void
   __throw_underflow_error(const char*) __attribute__((__noreturn__));
 
-  // Helpers for exception objects in <ios>
+  // Helpers for exception objects in basic_ios
   void
   __throw_ios_failure(const char*) __attribute__((__noreturn__));
-
-  void
-  __throw_system_error(int) __attribute__((__noreturn__));
 
 }
 
 // -*- C++ -*-
 
-// Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2007 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the terms
 // of the GNU General Public License as published by the Free Software
-// Foundation; either version 3, or (at your option) any later
+// Foundation; either version 2, or (at your option) any later
 // version.
 
 // This library is distributed in the hope that it will be useful, but
@@ -8367,14 +8337,20 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free
+// software library without restriction.  Specifically, if other files
+// instantiate templates or use macros or inline functions from this
+// file, or you compile this file and link it with other files to
+// produce an executable, this file does not by itself cause the
+// resulting executable to be covered by the GNU General Public
+// License.  This exception does not however invalidate any other
+// reasons why the executable file might be covered by the GNU General
+// Public License.
 
 /** @file ext/numeric_traits.h
  *  This file is a GNU extension to the Standard C++ Library.
@@ -8457,13 +8433,13 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
 // Pair implementation -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8471,14 +8447,19 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /*
  *
@@ -8514,12 +8495,12 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
 // Move, forward and identity for C++0x + swap -*- C++ -*-
 
-// Copyright (C) 2007, 2008, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2007 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8527,98 +8508,34 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
-/** @file move.h
+/** @file stl_move.h
  *  This is an internal header file, included by other library headers.
  *  You should not attempt to use it directly.
  */
 
 
-// -*- C++ -*- forwarding header.
-
-// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
-// Free Software Foundation, Inc.
-//
-// This file is part of the GNU ISO C++ Library.  This library is free
-// software; you can redistribute it and/or modify it under the
-// terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
-// any later version.
-
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
-
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
-
-/** @file cstddef
- *  This is a Standard C++ Library file.  You should @c #include this file
- *  in your programs, rather than any of the "*.h" implementation files.
- *
- *  This is the C++ version of the Standard C Library header @c stddef.h,
- *  and its contents are (mostly) the same as that header, but are all
- *  contained in the namespace @c std (except for names which are defined
- *  as macros in C).
- */
-
-//
-// ISO C++ 14882: 18.1  Types
-//
-
-#pragma GCC system_header
-
-/**
-***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
-***
-*** The information and source code contained herein is the exclusive
-*** property of Intel Corporation and may not be disclosed, examined
-*** or reproduced in whole or in part without explicit written authorization
-*** from the company.
-**/
-
-/*
- * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
- * Consult your license regarding permissions and restrictions.
- */
-
-
-/* stddef.h standard header */
-
-		/* macros */
-		/* type definitions */
-
-
-
-
-
-
-/*#endif*/ /* _STDDEF */
-
 // Concept-checking control -*- C++ -*-
 
-// Copyright (C) 2001, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2001 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8626,14 +8543,19 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file concept_check.h
  *  This is an internal header file, included by other library headers.
@@ -8677,19 +8599,9 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       __b = (__tmp);
     }
 
-  // _GLIBCXX_RESOLVE_LIB_DEFECTS
-  // DR 809. std::swap should be overloaded for array types.
-  template<typename _Tp, size_t _Nm>
-    inline void
-    swap(_Tp (&__a)[_Nm], _Tp (&__b)[_Nm])
-    {
-      for (size_t __n = 0; __n < _Nm; ++__n)
-	swap(__a[__n], __b[__n]);
-    }
-
 }
 
-                       // std::swap
+                           // std::swap
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
@@ -8782,13 +8694,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Types used in iterator implementation -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8796,14 +8708,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /*
  *
@@ -8845,13 +8762,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -8859,14 +8776,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -8914,26 +8836,27 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
+  //@{
   /**
-   *  @defgroup iterators Iterators
+   *  @defgroup iterator_tags Iterator Tags
    *  These are empty types, used to distinguish different iterators.  The
    *  distinction is not made by what they contain, but simply by what they
    *  are.  Different underlying algorithms can then be used based on the
    *  different operations supported by different iterator types.
   */
-  //@{ 
   ///  Marking input iterators.
-  struct input_iterator_tag { };
+  struct input_iterator_tag {};
   ///  Marking output iterators.
-  struct output_iterator_tag { };
+  struct output_iterator_tag {};
   /// Forward iterators support a superset of input iterator operations.
-  struct forward_iterator_tag : public input_iterator_tag { };
+  struct forward_iterator_tag : public input_iterator_tag {};
   /// Bidirectional iterators support a superset of forward iterator
   /// operations.
-  struct bidirectional_iterator_tag : public forward_iterator_tag { };
+  struct bidirectional_iterator_tag : public forward_iterator_tag {};
   /// Random-access iterators support a superset of bidirectional iterator
   /// operations.
-  struct random_access_iterator_tag : public bidirectional_iterator_tag { };
+  struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+  //@}
 
 
   /**
@@ -9007,20 +8930,18 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     __iterator_category(const _Iter&)
     { return typename iterator_traits<_Iter>::iterator_category(); }
 
-  //@}
-
 }
 
 
 // Functions used by iterators -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -9028,14 +8949,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /*
  *
@@ -9180,18 +9106,17 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       std::__advance(__i, __d, std::__iterator_category(__i));
     }
 
-
 }
 
 // Iterators -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -9199,14 +9124,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /*
  *
@@ -10007,13 +9937,13 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
 // Debugging support implementation -*- C++ -*-
 
-// Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009
+// Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -10021,14 +9951,19 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file debug/debug.h
  *  This file is a GNU debug extension to the Standard C++ Library.
@@ -10099,7 +10034,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Swaps the contents of two iterators.
-   *  @ingroup mutating_algorithms
    *  @param  a  An iterator.
    *  @param  b  Another iterator.
    *  @return   Nothing.
@@ -10134,7 +10068,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Swap the elements of two sequences.
-   *  @ingroup mutating_algorithms
    *  @param  first1  A forward iterator.
    *  @param  last1   A forward iterator.
    *  @param  first2  A forward iterator.
@@ -10161,7 +10094,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief This does what you think it does.
-   *  @ingroup sorting_algorithms
    *  @param  a  A thing of arbitrary type.
    *  @param  b  Another thing of arbitrary type.
    *  @return   The lesser of the parameters.
@@ -10184,7 +10116,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief This does what you think it does.
-   *  @ingroup sorting_algorithms
    *  @param  a  A thing of arbitrary type.
    *  @param  b  Another thing of arbitrary type.
    *  @return   The greater of the parameters.
@@ -10207,10 +10138,9 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief This does what you think it does.
-   *  @ingroup sorting_algorithms
    *  @param  a  A thing of arbitrary type.
    *  @param  b  Another thing of arbitrary type.
-   *  @param  comp  A @link comparison_functors comparison functor@endlink.
+   *  @param  comp  A @link s20_3_3_comparisons comparison functor@endlink.
    *  @return   The lesser of the parameters.
    *
    *  This will work on temporary expressions, since they are only evaluated
@@ -10228,10 +10158,9 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief This does what you think it does.
-   *  @ingroup sorting_algorithms
    *  @param  a  A thing of arbitrary type.
    *  @param  b  Another thing of arbitrary type.
-   *  @param  comp  A @link comparison_functors comparison functor@endlink.
+   *  @param  comp  A @link s20_3_3_comparisons comparison functor@endlink.
    *  @return   The greater of the parameters.
    *
    *  This will work on temporary expressions, since they are only evaluated
@@ -10394,7 +10323,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Copies the range [first,last) into result.
-   *  @ingroup mutating_algorithms
    *  @param  first  An input iterator.
    *  @param  last   An input iterator.
    *  @param  result An output iterator.
@@ -10496,7 +10424,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Copies the range [first,last) into result.
-   *  @ingroup mutating_algorithms
    *  @param  first  A bidirectional iterator.
    *  @param  last   A bidirectional iterator.
    *  @param  result A bidirectional iterator.
@@ -10562,7 +10489,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Fills the range [first,last) with copies of value.
-   *  @ingroup mutating_algorithms
    *  @param  first  A forward iterator.
    *  @param  last   A forward iterator.
    *  @param  value  A reference-to-const of arbitrary type.
@@ -10616,7 +10542,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Fills the range [first,first+n) with copies of value.
-   *  @ingroup mutating_algorithms
    *  @param  first  An output iterator.
    *  @param  n      The count of copies to perform.
    *  @param  value  A reference-to-const of arbitrary type.
@@ -10783,7 +10708,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Tests a range for element-wise equality.
-   *  @ingroup non_mutating_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
@@ -10810,11 +10734,10 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Tests a range for element-wise equality.
-   *  @ingroup non_mutating_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
-   *  @param binary_pred A binary predicate @link functors
+   *  @param binary_pred A binary predicate @link s20_3_1_base
    *                  functor@endlink.
    *  @return         A boolean true or false.
    *
@@ -10841,7 +10764,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Performs "dictionary" comparison on ranges.
-   *  @ingroup sorting_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
@@ -10878,12 +10800,11 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Performs "dictionary" comparison on ranges.
-   *  @ingroup sorting_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
    *  @param  last2   An input iterator.
-   *  @param  comp  A @link comparison_functors comparison functor@endlink.
+   *  @param  comp  A @link s20_3_3_comparisons comparison functor@endlink.
    *  @return   A boolean true or false.
    *
    *  The same as the four-parameter @c lexicographical_compare, but uses the
@@ -10918,7 +10839,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Finds the places in ranges which don't match.
-   *  @ingroup non_mutating_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
@@ -10950,11 +10870,10 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief Finds the places in ranges which don't match.
-   *  @ingroup non_mutating_algorithms
    *  @param  first1  An input iterator.
    *  @param  last1   An input iterator.
    *  @param  first2  An input iterator.
-   *  @param binary_pred A binary predicate @link functors
+   *  @param binary_pred A binary predicate @link s20_3_1_base
    *         functor@endlink.
    *  @return   A pair of iterators pointing to the first mismatch.
    *
@@ -10992,13 +10911,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Position types -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -11006,14 +10925,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file postypes.h
  *  This is an internal header file, included by other library headers.
@@ -11031,13 +10955,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -11045,14 +10969,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cwchar
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -11073,13 +11002,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -11087,14 +11016,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -11140,7 +11074,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 /*#endif*/ /* _STDDEF */
 
 
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -11167,13 +11101,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 /* Get FILE definition.  */
 /* Get va_list definition.  */
-/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
 GCC is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
+the Free Software Foundation; either version 2, or (at your option)
 any later version.
 
 GCC is distributed in the hope that it will be useful,
@@ -11181,14 +11115,17 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING.  If not, write to
+the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.  */
 
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/* As a special exception, if you include this header file into source
+   files compiled by GCC, this header file does not by itself cause
+   the resulting executable to be covered by the GNU General Public
+   License.  This exception does not however invalidate any other
+   reasons why the executable file might be covered by the GNU General
+   Public License.  */
 
 /*
  * ISO C Standard:  7.15  Variable arguments  <stdarg.h>
@@ -11222,10 +11159,6 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    02111-1307 USA.  */
 
 
-/* Use GCC's __WCHAR_MAX__ when available.  */
-
-/* GCC may also define __WCHAR_UNSIGNED__.
-   Use L'\0' to give the expression the correct (unsigned) type.  */
 
 
 /* Get size_t, wchar_t, wint_t and NULL from <stddef.h>.  */
@@ -11257,8 +11190,6 @@ typedef unsigned int wint_t;
 
 
 /*#endif*/ /* _STDDEF */
-
-/* Tell the caller that we provide correct C++ prototypes.  */
 
 /* We try to get wint_t from <stddef.h>, but not all GCC versions define it
    there.  So define it ourselves if it remains undefined.  */
@@ -11367,15 +11298,11 @@ extern wchar_t *wcsdup (__const wchar_t *__s) throw () __attribute__ ((__malloc_
 
 
 /* Find the first occurrence of WC in WCS.  */
-extern "C++" wchar_t *wcschr (wchar_t *__wcs, wchar_t __wc)
-     throw () __asm ("wcschr") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
-     throw () __asm ("wcschr")  __attribute__ ((__pure__));
+extern wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
+     throw () __attribute__ ((__pure__));
 /* Find the last occurrence of WC in WCS.  */
-extern "C++" wchar_t *wcsrchr (wchar_t *__wcs, wchar_t __wc)
-     throw () __asm ("wcsrchr") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc)
-     throw () __asm ("wcsrchr") __attribute__ ((__pure__));
+extern wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc)
+     throw () __attribute__ ((__pure__));
 
 
 /* This function is similar to `wcschr'.  But it returns a pointer to
@@ -11393,17 +11320,11 @@ extern size_t wcscspn (__const wchar_t *__wcs, __const wchar_t *__reject)
 extern size_t wcsspn (__const wchar_t *__wcs, __const wchar_t *__accept)
      throw () __attribute__ ((__pure__));
 /* Find the first occurrence in WCS of any character in ACCEPT.  */
-extern "C++" wchar_t *wcspbrk (wchar_t *__wcs, __const wchar_t *__accept)
-     throw () __asm ("wcspbrk") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcspbrk (__const wchar_t *__wcs,
-				       __const wchar_t *__accept)
-     throw () __asm ("wcspbrk") __attribute__ ((__pure__));
+extern wchar_t *wcspbrk (__const wchar_t *__wcs, __const wchar_t *__accept)
+     throw () __attribute__ ((__pure__));
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
-extern "C++" wchar_t *wcsstr (wchar_t *__haystack, __const wchar_t *__needle)
-     throw () __asm ("wcsstr") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcsstr (__const wchar_t *__haystack,
-				      __const wchar_t *__needle)
-     throw () __asm ("wcsstr") __attribute__ ((__pure__));
+extern wchar_t *wcsstr (__const wchar_t *__haystack, __const wchar_t *__needle)
+     throw () __attribute__ ((__pure__));
 
 /* Divide WCS into tokens separated by characters in DELIM.  */
 extern wchar_t *wcstok (wchar_t *__restrict __s,
@@ -11415,11 +11336,8 @@ extern size_t wcslen (__const wchar_t *__s) throw () __attribute__ ((__pure__));
 
 
 /* Another name for `wcsstr' from XPG4.  */
-extern "C++" wchar_t *wcswcs (wchar_t *__haystack, __const wchar_t *__needle)
-     throw () __asm ("wcswcs") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wcswcs (__const wchar_t *__haystack,
-				      __const wchar_t *__needle)
-     throw () __asm ("wcswcs") __attribute__ ((__pure__));
+extern wchar_t *wcswcs (__const wchar_t *__haystack, __const wchar_t *__needle)
+     throw () __attribute__ ((__pure__));
 
 /* Return the number of wide characters in S, but at most MAXLEN.  */
 extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen)
@@ -11428,11 +11346,8 @@ extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen)
 
 
 /* Search N wide characters of S for C.  */
-extern "C++" wchar_t *wmemchr (wchar_t *__s, wchar_t __c, size_t __n)
-     throw () __asm ("wmemchr") __attribute__ ((__pure__));
-extern "C++" __const wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c,
-				       size_t __n)
-     throw () __asm ("wmemchr") __attribute__ ((__pure__));
+extern wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c, size_t __n)
+     throw () __attribute__ ((__pure__));
 
 /* Compare N wide characters of S1 and S2.  */
 extern int wmemcmp (__const wchar_t *__restrict __s1,
@@ -11884,9 +11799,9 @@ extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
 }
 
 
-
 /* Undefined all __need_* constants in case we are included to get those
    constants but the whole file was already read.  */
+
 
 
 // Need to do a bit of trickery here with mbstate_t as char_traits
@@ -11956,12 +11871,36 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   using ::wmemset;
   using ::wprintf;
   using ::wscanf;
+
   using ::wcschr;
+
+  inline wchar_t*
+  wcschr(wchar_t* __p, wchar_t __c)
+  { return wcschr(const_cast<const wchar_t*>(__p), __c); }
+
   using ::wcspbrk;
+
+  inline wchar_t*
+  wcspbrk(wchar_t* __s1, const wchar_t* __s2)
+  { return wcspbrk(const_cast<const wchar_t*>(__s1), __s2); }
+
   using ::wcsrchr;
+
+  inline wchar_t*
+  wcsrchr(wchar_t* __p, wchar_t __c)
+  { return wcsrchr(const_cast<const wchar_t*>(__p), __c); }
+
   using ::wcsstr;
+
+  inline wchar_t*
+  wcsstr(wchar_t* __s1, const wchar_t* __s2)
+  { return wcsstr(const_cast<const wchar_t*>(__s1), __s2); }
+
   using ::wmemchr;
 
+  inline wchar_t*
+  wmemchr(wchar_t* __p, wchar_t __c, size_t __n)
+  { return wmemchr(const_cast<const wchar_t*>(__p), __c, __n); }
 
 }
 
@@ -11987,9 +11926,92 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 
 
-// XXX If <stdint.h> is really needed, make sure to define the macros
-// before including it, in order not to break <tr1/cstdint> (and <cstdint>
-// in C++0x).  Reconsider all this as soon as possible...
+/* Copyright (C) 1997,1998,1999,2000,2001,2006 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	ISO C99: 7.18 Integer types <stdint.h>
+ */
+
+
+/* Determine the wordsize from the preprocessor defines.  */
+
+
+/* Exact integral types.  */
+
+/* Signed.  */
+
+/* There is some amount of overlap with <sys/types.h> as known by inet code */
+
+/* Unsigned.  */
+typedef unsigned char		uint8_t;
+typedef unsigned short int	uint16_t;
+typedef unsigned int		uint32_t;
+typedef unsigned long int	uint64_t;
+
+
+/* Small types.  */
+
+/* Signed.  */
+typedef signed char		int_least8_t;
+typedef short int		int_least16_t;
+typedef int			int_least32_t;
+typedef long int		int_least64_t;
+
+/* Unsigned.  */
+typedef unsigned char		uint_least8_t;
+typedef unsigned short int	uint_least16_t;
+typedef unsigned int		uint_least32_t;
+typedef unsigned long int	uint_least64_t;
+
+
+/* Fast types.  */
+
+/* Signed.  */
+typedef signed char		int_fast8_t;
+typedef long int		int_fast16_t;
+typedef long int		int_fast32_t;
+typedef long int		int_fast64_t;
+
+/* Unsigned.  */
+typedef unsigned char		uint_fast8_t;
+typedef unsigned long int	uint_fast16_t;
+typedef unsigned long int	uint_fast32_t;
+typedef unsigned long int	uint_fast64_t;
+
+
+/* Types for `void *' pointers.  */
+typedef long int		intptr_t;
+typedef unsigned long int	uintptr_t;
+
+
+/* Largest integral types.  */
+typedef long int		intmax_t;
+typedef unsigned long int	uintmax_t;
+
+
+/* The ISO C99 standard specifies that in C++ implementations these
+   macros should only be defined if explicitly requested.  */
+
+
+/* The ISO C99 standard specifies that in C++ implementations these
+   should only be defined if explicitly requested.  */
+
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
@@ -12008,7 +12030,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
    *  Note: In versions of GCC up to and including GCC 3.3, streamoff
    *  was typedef long.
   */  
-  typedef long          streamoff;
+  typedef int64_t       streamoff;
 
   /// Integral type for I/O operation counts and buffer sizes.
   typedef ptrdiff_t	streamsize; // Signed integral type
@@ -12145,19 +12167,18 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   /// File position for wchar_t streams.
   typedef fpos<mbstate_t> wstreampos;
 
-
 }
 
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -12165,27 +12186,32 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
-/** @file include/cwchar
+/** @file include/cstdio
  *  This is a Standard C++ Library file.  You should @c #include this file
  *  in your programs, rather than any of the "*.h" implementation files.
  *
- *  This is the C++ version of the Standard C Library header @c wchar.h,
+ *  This is the C++ version of the Standard C Library header @c stdio.h,
  *  and its contents are (mostly) the same as that header, but are all
  *  contained in the namespace @c std (except for names which are defined
  *  as macros in C).
  */
 
 //
-// ISO C++ 14882: 21.4
+// ISO C++ 14882: 27.8.2  C Library files
 //
 
 #pragma GCC system_header
@@ -12193,13 +12219,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -12207,14 +12233,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -12260,32 +12291,127 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 /*#endif*/ /* _STDDEF */
 
 
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+// -*- C++ -*- forwarding header.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+// 2006, 2007, 2008
+// Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
 
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file include/cwchar
+ *  This is a Standard C++ Library file.  You should @c #include this file
+ *  in your programs, rather than any of the "*.h" implementation files.
+ *
+ *  This is the C++ version of the Standard C Library header @c wchar.h,
+ *  and its contents are (mostly) the same as that header, but are all
+ *  contained in the namespace @c std (except for names which are defined
+ *  as macros in C).
+ */
+
+//
+// ISO C++ 14882: 21.4
+//
+
+#pragma GCC system_header
+
+// -*- C++ -*- forwarding header.
+
+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+// 2006, 2007, 2008
+// Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file cstddef
+ *  This is a Standard C++ Library file.  You should @c #include this file
+ *  in your programs, rather than any of the "*.h" implementation files.
+ *
+ *  This is the C++ version of the Standard C Library header @c stddef.h,
+ *  and its contents are (mostly) the same as that header, but are all
+ *  contained in the namespace @c std (except for names which are defined
+ *  as macros in C).
+ */
+
+//
+// ISO C++ 14882: 18.1  Types
+//
+
+#pragma GCC system_header
+
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
 
 /*
- *      ISO C99 Standard: 7.24
- *	Extended multibyte and wide character utilities	<wchar.h>
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
  */
 
 
-/* Undefined all __need_* constants in case we are included to get those
-   constants but the whole file was already read.  */
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
+
 
 
 
@@ -12533,8 +12659,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __c1 == __c2; }
 
       static int_type
-      eof()
-      { return static_cast<int_type>((-1)); }
+      eof() { return static_cast<int_type>((-1)); }
 
       static int_type
       not_eof(const int_type& __c)
@@ -12589,20 +12714,17 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return wmemset(__s, __a, __n); }
 
       static char_type
-      to_char_type(const int_type& __c)
-      { return char_type(__c); }
+      to_char_type(const int_type& __c) { return char_type(__c); }
 
       static int_type
-      to_int_type(const char_type& __c)
-      { return int_type(__c); }
+      to_int_type(const char_type& __c) { return int_type(__c); }
 
       static bool
       eq_int_type(const int_type& __c1, const int_type& __c2)
       { return __c1 == __c2; }
 
       static int_type
-      eof()
-      { return static_cast<int_type>((0xffffffffu)); }
+      eof() { return static_cast<int_type>((0xffffffffu)); }
 
       static int_type
       not_eof(const int_type& __c)
@@ -12611,17 +12733,15 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 }
 
-
-
 // Allocators -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -12629,14 +12749,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /*
  * Copyright (c) 1996-1997
@@ -12660,12 +12785,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Define the base class to std::allocator.
 // Base to std::allocator -*- C++ -*-
 
-// Copyright (C) 2004, 2005, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -12673,14 +12798,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file c++allocator.h
  *  This is an internal header file, included by other library headers.
@@ -12691,13 +12821,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Define new_allocator as the base class to std::allocator.
 // Allocator that wraps operator new -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2009
-// Free Software Foundation, Inc.
+// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -12705,14 +12834,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file ext/new_allocator.h
  *  This file is a GNU extension to the Standard C++ Library.
@@ -12722,14 +12856,14 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // The -*- C++ -*- dynamic memory management header.
 
 // Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
-// 2003, 2004, 2005, 2006, 2007, 2009
+// 2003, 2004, 2005, 2006, 2007
 // Free Software Foundation
 
 // This file is part of GCC.
 //
 // GCC is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 3, or (at your option)
+// the Free Software Foundation; either version 2, or (at your option)
 // any later version.
 // 
 // GCC is distributed in the hope that it will be useful,
@@ -12737,14 +12871,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with GCC; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file new
  *  This is a Standard C++ Library header.
@@ -12758,13 +12897,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -12772,14 +12911,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -12827,14 +12971,14 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Exception Handling support header for -*- C++ -*-
 
 // Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-// 2004, 2005, 2006, 2007, 2008, 2009
+// 2004, 2005, 2006, 2007
 // Free Software Foundation
 //
 // This file is part of GCC.
 //
 // GCC is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 3, or (at your option)
+// the Free Software Foundation; either version 2, or (at your option)
 // any later version.
 // 
 // GCC is distributed in the hope that it will be useful,
@@ -12842,14 +12986,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with GCC; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file exception
  *  This is a Standard C++ Library header.
@@ -12863,14 +13012,6 @@ extern "C++" {
 
 namespace std 
 {
-  /**
-   * @defgroup exceptions Exceptions
-   * @ingroup diagnostics
-   *
-   * Classes and functions for reporting errors via exception classes.
-   * @{
-   */
-
   /**
    *  @brief Base class for all library exceptions.
    *
@@ -12936,36 +13077,27 @@ namespace std
    *  result in a call of @c terminate() (15.5.1)."
    */
   bool uncaught_exception() throw();
-
-  // @} group exceptions
 } // namespace std
 
 namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
-  /** 
-   *  @brief A replacement for the standard terminate_handler which
-   *  prints more information about the terminating exception (if any)
-   *  on stderr.  
-   *
-   *  @ingroup exceptions
-   *
-   *  Call
-   *   @code
-   *     std::set_terminate(__gnu_cxx::__verbose_terminate_handler)
-   *   @endcode
-   *  to use.  For more info, see
-   *  http://gcc.gnu.org/onlinedocs/libstdc++/manual/bk01pt02ch06s02.html
-   *
-   *  In 3.4 and later, this is on by default.
-   */
-  void __verbose_terminate_handler();
+  /** A replacement for the standard terminate_handler which prints more
+      information about the terminating exception (if any) on stderr.  Call
+      @code
+        std::set_terminate (__gnu_cxx::__verbose_terminate_handler)
+      @endcode
+      to use.  For more info, see
+      http://gcc.gnu.org/onlinedocs/libstdc++/19_diagnostics/howto.html#4
+
+      In 3.4 and later, this is on by default.
+  */
+  void __verbose_terminate_handler ();
 
 }
   
 } // extern "C++"
 
 #pragma GCC visibility pop
-
 
 
 #pragma GCC visibility push(default)
@@ -12976,7 +13108,6 @@ namespace std
 {
   /**
    *  @brief  Exception possibly thrown by @c new.
-   *  @ingroup exceptions
    *
    *  @c bad_alloc (or classes derived from it) is used to report allocation
    *  errors from the throwing forms of @c new.  */
@@ -13046,7 +13177,6 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
   /**
    *  @brief  An allocator that uses global new, as per [20.4].
-   *  @ingroup allocators
    *
    *  This is precisely the allocator defined in the C++ Standard. 
    *    - all allocation calls operator new
@@ -13130,13 +13260,6 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
-  /**
-   * @defgroup allocators Allocators
-   * @ingroup memory
-   *
-   * Classes encapsulating memory operations.
-   */
-
   template<typename _Tp>
     class allocator;
 
@@ -13158,7 +13281,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
   /**
    * @brief  The "standard" allocator, as per [20.4].
-   * @ingroup allocators
    *
    *  Further details:
    *  http://gcc.gnu.org/onlinedocs/libstdc++/manual/bk01pt04ch11.html
@@ -13259,13 +13381,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Locale support -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -13273,14 +13395,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file localefwd.h
  *  This is an internal header file, included by other library headers.
@@ -13296,13 +13423,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Wrapper for underlying C-language localization -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009
+// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -13310,14 +13437,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file c++locale.h
  *  This is an internal header file, included by other library headers.
@@ -13336,13 +13468,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -13350,14 +13482,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file clocale
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -13375,7 +13512,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1991,1992,1995-2002,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-2002,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13556,6 +13693,8 @@ extern struct lconv *localeconv (void) throw ();
 
 /* Get locale datatype definition.  */
 
+typedef __locale_t locale_t;
+
 /* Return a reference to a data structure representing a set of locale
    datasets.  Unlike for the CATEGORY parameter for `setlocale' the
    CATEGORY_MASK parameter here uses a single bit for each category,
@@ -13604,13 +13743,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -13618,14 +13757,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -13711,13 +13855,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Forwarding declarations -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -13725,14 +13869,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file iosfwd
  *  This is a Standard C++ Library header.
@@ -13802,7 +13951,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   class ios_base; 
 
   /** 
-   *  @defgroup io I/O
+   *  @defgroup s27_2_iosfwd I/O Forward Declarations
    *
    *  Nearly all of the I/O classes are parameterized on the type of
    *  characters they read and write.  (The major exception is ios_base at
@@ -13863,13 +14012,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -13877,14 +14026,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cctype
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -13902,7 +14056,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 #pragma GCC system_header
 
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007,2008,2009
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -13971,11 +14125,11 @@ enum
    doesn't fit into an `unsigned char'.  But today more important is that
    the arrays are also used for multi-byte character sets.  */
 extern __const unsigned short int **__ctype_b_loc (void)
-     throw () __attribute__ ((__const));
+     __attribute__ ((__const));
 extern __const __int32_t **__ctype_tolower_loc (void)
-     throw () __attribute__ ((__const));
+     __attribute__ ((__const));
 extern __const __int32_t **__ctype_toupper_loc (void)
-     throw () __attribute__ ((__const));
+     __attribute__ ((__const));
 
 
 
@@ -14246,12 +14400,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Helpers for ostream inserters -*- C++ -*-
 
-// Copyright (C) 2007, 2008, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2007 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -14259,14 +14413,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file ostream_insert.h
  *  This is an internal header file, included by other library headers.
@@ -14278,13 +14437,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // cxxabi.h subset for inclusion by other library headers -*- C++ -*-
   
-// Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2007 Free Software Foundation, Inc.
 //
 // This file is part of GCC.
 //
 // GCC is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 3, or (at your option)
+// the Free Software Foundation; either version 2, or (at your option)
 // any later version.
 // 
 // GCC is distributed in the hope that it will be useful,
@@ -14292,27 +14451,27 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with GCC; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 
 #pragma GCC visibility push(default)
 
 namespace __cxxabiv1
 {  
-  /** 
-   *  @brief Thrown as part of forced unwinding.
-   *  @ingroup exceptions
-   *
-   *  A magic placeholder class that can be caught by reference to
-   *  recognize forced unwinding.
-   */
+  // A magic placeholder class that can be caught by reference
+  // to recognize forced unwinding.
   class __forced_unwind
   {
     virtual ~__forced_unwind() throw();
@@ -14410,13 +14569,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Functor implementations -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009
+// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -14424,14 +14583,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /*
  *
@@ -14468,9 +14632,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
   // 20.3.1 base classes
-  /** @defgroup functors Function Objects
-   * @ingroup utilities
-   *
+  /** @defgroup s20_3_1_base Functor Base Classes
    *  Function objects, or @e functors, are objects with an @c operator()
    *  defined and accessible.  They can be passed as arguments to algorithm
    *  templates and used in place of a function pointer.  Not only is the
@@ -14502,7 +14664,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
    *  @{
    */
   /**
-   *  This is one of the @link functors functor base classes@endlink.
+   *  This is one of the @link s20_3_1_base functor base classes@endlink.
    */
   template<typename _Arg, typename _Result>
     struct unary_function
@@ -14514,7 +14676,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     };
 
   /**
-   *  This is one of the @link functors functor base classes@endlink.
+   *  This is one of the @link s20_3_1_base functor base classes@endlink.
    */
   template<typename _Arg1, typename _Arg2, typename _Result>
     struct binary_function
@@ -14528,17 +14690,16 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   /** @}  */
 
   // 20.3.2 arithmetic
-  /** @defgroup arithmetic_functors Arithmetic Classes
-   * @ingroup functors
-   *
+  /** @defgroup s20_3_2_arithmetic Arithmetic Classes
+
    *  Because basic math often needs to be done during an algorithm,
    *  the library provides functors for those operations.  See the
-   *  documentation for @link functors the base classes@endlink
+   *  documentation for @link s20_3_1_base the base classes@endlink
    *  for examples of their use.
    *
    *  @{
    */
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
   template<typename _Tp>
     struct plus : public binary_function<_Tp, _Tp, _Tp>
     {
@@ -14547,7 +14708,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x + __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
   template<typename _Tp>
     struct minus : public binary_function<_Tp, _Tp, _Tp>
     {
@@ -14556,7 +14717,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x - __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
   template<typename _Tp>
     struct multiplies : public binary_function<_Tp, _Tp, _Tp>
     {
@@ -14565,7 +14726,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x * __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
   template<typename _Tp>
     struct divides : public binary_function<_Tp, _Tp, _Tp>
     {
@@ -14574,7 +14735,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x / __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
   template<typename _Tp>
     struct modulus : public binary_function<_Tp, _Tp, _Tp>
     {
@@ -14583,7 +14744,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x % __y; }
     };
 
-  /// One of the @link arithmetic_functors math functors@endlink.
+  /// One of the @link s20_3_2_arithmetic math functors@endlink.
   template<typename _Tp>
     struct negate : public unary_function<_Tp, _Tp>
     {
@@ -14594,15 +14755,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   /** @}  */
 
   // 20.3.3 comparisons
-  /** @defgroup comparison_functors Comparison Classes
-   * @ingroup functors
-   *
+  /** @defgroup s20_3_3_comparisons Comparison Classes
    *  The library provides six wrapper functors for all the basic comparisons
    *  in C++, like @c <.
    *
    *  @{
    */
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
   template<typename _Tp>
     struct equal_to : public binary_function<_Tp, _Tp, bool>
     {
@@ -14611,7 +14770,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x == __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
   template<typename _Tp>
     struct not_equal_to : public binary_function<_Tp, _Tp, bool>
     {
@@ -14620,7 +14779,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x != __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
   template<typename _Tp>
     struct greater : public binary_function<_Tp, _Tp, bool>
     {
@@ -14629,7 +14788,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x > __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
   template<typename _Tp>
     struct less : public binary_function<_Tp, _Tp, bool>
     {
@@ -14638,7 +14797,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x < __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
   template<typename _Tp>
     struct greater_equal : public binary_function<_Tp, _Tp, bool>
     {
@@ -14647,7 +14806,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x >= __y; }
     };
 
-  /// One of the @link comparison_functors comparison functors@endlink.
+  /// One of the @link s20_3_3_comparisons comparison functors@endlink.
   template<typename _Tp>
     struct less_equal : public binary_function<_Tp, _Tp, bool>
     {
@@ -14658,15 +14817,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   /** @}  */
 
   // 20.3.4 logical operations
-  /** @defgroup logical_functors Boolean Operations Classes
-   * @ingroup functors
-   *
+  /** @defgroup s20_3_4_logical Boolean Operations Classes
    *  Here are wrapper functors for Boolean operations: @c &&, @c ||,
    *  and @c !.
    *
    *  @{
    */
-  /// One of the @link logical_functors Boolean operations functors@endlink.
+  /// One of the @link s20_3_4_logical Boolean operations functors@endlink.
   template<typename _Tp>
     struct logical_and : public binary_function<_Tp, _Tp, bool>
     {
@@ -14675,7 +14832,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x && __y; }
     };
 
-  /// One of the @link logical_functors Boolean operations functors@endlink.
+  /// One of the @link s20_3_4_logical Boolean operations functors@endlink.
   template<typename _Tp>
     struct logical_or : public binary_function<_Tp, _Tp, bool>
     {
@@ -14684,7 +14841,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return __x || __y; }
     };
 
-  /// One of the @link logical_functors Boolean operations functors@endlink.
+  /// One of the @link s20_3_4_logical Boolean operations functors@endlink.
   template<typename _Tp>
     struct logical_not : public unary_function<_Tp, bool>
     {
@@ -14721,9 +14878,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     };
 
   // 20.3.5 negators
-  /** @defgroup negators Negators
-   * @ingroup functors
-   *
+  /** @defgroup s20_3_5_negators Negators
    *  The functions @c not1 and @c not2 each take a predicate functor
    *  and return an instance of @c unary_negate or
    *  @c binary_negate, respectively.  These classes are functors whose
@@ -14749,7 +14904,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
    *
    *  @{
    */
-  /// One of the @link negators negation functors@endlink.
+  /// One of the @link s20_3_5_negators negation functors@endlink.
   template<typename _Predicate>
     class unary_negate
     : public unary_function<typename _Predicate::argument_type, bool>
@@ -14766,13 +14921,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return !_M_pred(__x); }
     };
 
-  /// One of the @link negators negation functors@endlink.
+  /// One of the @link s20_3_5_negators negation functors@endlink.
   template<typename _Predicate>
     inline unary_negate<_Predicate>
     not1(const _Predicate& __pred)
     { return unary_negate<_Predicate>(__pred); }
 
-  /// One of the @link negators negation functors@endlink.
+  /// One of the @link s20_3_5_negators negation functors@endlink.
   template<typename _Predicate>
     class binary_negate
     : public binary_function<typename _Predicate::first_argument_type,
@@ -14791,7 +14946,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return !_M_pred(__x, __y); }
     };
 
-  /// One of the @link negators negation functors@endlink.
+  /// One of the @link s20_3_5_negators negation functors@endlink.
   template<typename _Predicate>
     inline binary_negate<_Predicate>
     not2(const _Predicate& __pred)
@@ -14799,9 +14954,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   /** @}  */
 
   // 20.3.7 adaptors pointers functions
-  /** @defgroup pointer_adaptors Adaptors for pointers to functions
-   * @ingroup functors
-   *
+  /** @defgroup s20_3_7_adaptors Adaptors for pointers to functions
    *  The advantage of function objects over pointers to functions is that
    *  the objects in the standard library declare nested typedefs describing
    *  their argument and result types with uniform names (e.g., @c result_type
@@ -14820,7 +14973,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
    *
    *  @{
    */
-  /// One of the @link pointer_adaptors adaptors for function pointers@endlink.
+  /// One of the @link s20_3_7_adaptors adaptors for function pointers@endlink.
   template<typename _Arg, typename _Result>
     class pointer_to_unary_function : public unary_function<_Arg, _Result>
     {
@@ -14839,13 +14992,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return _M_ptr(__x); }
     };
 
-  /// One of the @link pointer_adaptors adaptors for function pointers@endlink.
+  /// One of the @link s20_3_7_adaptors adaptors for function pointers@endlink.
   template<typename _Arg, typename _Result>
     inline pointer_to_unary_function<_Arg, _Result>
     ptr_fun(_Result (*__x)(_Arg))
     { return pointer_to_unary_function<_Arg, _Result>(__x); }
 
-  /// One of the @link pointer_adaptors adaptors for function pointers@endlink.
+  /// One of the @link s20_3_7_adaptors adaptors for function pointers@endlink.
   template<typename _Arg1, typename _Arg2, typename _Result>
     class pointer_to_binary_function
     : public binary_function<_Arg1, _Arg2, _Result>
@@ -14865,7 +15018,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return _M_ptr(__x, __y); }
     };
 
-  /// One of the @link pointer_adaptors adaptors for function pointers@endlink.
+  /// One of the @link s20_3_7_adaptors adaptors for function pointers@endlink.
   template<typename _Arg1, typename _Arg2, typename _Result>
     inline pointer_to_binary_function<_Arg1, _Arg2, _Result>
     ptr_fun(_Result (*__x)(_Arg1, _Arg2))
@@ -14911,9 +15064,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     };
 
   // 20.3.8 adaptors pointers members
-  /** @defgroup memory_adaptors Adaptors for pointers to members
-   * @ingroup functors
-   *
+  /** @defgroup s20_3_8_memadaptors Adaptors for pointers to members
    *  There are a total of 8 = 2^3 function objects in this family.
    *   (1) Member functions taking no arguments vs member functions taking
    *        one argument.
@@ -14926,7 +15077,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
    *
    *  @{
    */
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
   /// pointers@endlink.
   template<typename _Ret, typename _Tp>
     class mem_fun_t : public unary_function<_Tp*, _Ret>
@@ -14944,7 +15095,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       _Ret (_Tp::*_M_f)();
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
   /// pointers@endlink.
   template<typename _Ret, typename _Tp>
     class const_mem_fun_t : public unary_function<const _Tp*, _Ret>
@@ -14962,7 +15113,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       _Ret (_Tp::*_M_f)() const;
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
   /// pointers@endlink.
   template<typename _Ret, typename _Tp>
     class mem_fun_ref_t : public unary_function<_Tp, _Ret>
@@ -14980,7 +15131,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       _Ret (_Tp::*_M_f)();
   };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
   /// pointers@endlink.
   template<typename _Ret, typename _Tp>
     class const_mem_fun_ref_t : public unary_function<_Tp, _Ret>
@@ -14998,7 +15149,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       _Ret (_Tp::*_M_f)() const;
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
   /// pointers@endlink.
   template<typename _Ret, typename _Tp, typename _Arg>
     class mem_fun1_t : public binary_function<_Tp*, _Arg, _Ret>
@@ -15016,7 +15167,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       _Ret (_Tp::*_M_f)(_Arg);
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
   /// pointers@endlink.
   template<typename _Ret, typename _Tp, typename _Arg>
     class const_mem_fun1_t : public binary_function<const _Tp*, _Arg, _Ret>
@@ -15034,7 +15185,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       _Ret (_Tp::*_M_f)(_Arg) const;
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
   /// pointers@endlink.
   template<typename _Ret, typename _Tp, typename _Arg>
     class mem_fun1_ref_t : public binary_function<_Tp, _Arg, _Ret>
@@ -15052,7 +15203,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       _Ret (_Tp::*_M_f)(_Arg);
     };
 
-  /// One of the @link memory_adaptors adaptors for member
+  /// One of the @link s20_3_8_memadaptors adaptors for member
   /// pointers@endlink.
   template<typename _Ret, typename _Tp, typename _Arg>
     class const_mem_fun1_ref_t : public binary_function<_Tp, _Arg, _Ret>
@@ -15118,13 +15269,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Functor implementations -*- C++ -*-
 
-// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009
+// Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -15132,14 +15283,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /*
  *
@@ -15176,9 +15332,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
   // 20.3.6 binders
-  /** @defgroup binders Binder Classes
-   * @ingroup functors
-   *
+  /** @defgroup s20_3_6_binder Binder Classes
    *  Binders turn functions/functors with two arguments into functors with
    *  a single argument, storing an argument to be applied later.  For
    *  example, a variable @c B of type @c binder1st is constructed from a
@@ -15208,7 +15362,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
    *
    *  @{
    */
-  /// One of the @link binders binder functors@endlink.
+  /// One of the @link s20_3_6_binder binder functors@endlink.
   template<typename _Operation>
     class binder1st
     : public unary_function<typename _Operation::second_argument_type,
@@ -15234,7 +15388,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return op(value, __x); }
     } ;
 
-  /// One of the @link binders binder functors@endlink.
+  /// One of the @link s20_3_6_binder binder functors@endlink.
   template<typename _Operation, typename _Tp>
     inline binder1st<_Operation>
     bind1st(const _Operation& __fn, const _Tp& __x)
@@ -15243,7 +15397,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       return binder1st<_Operation>(__fn, _Arg1_type(__x));
     }
 
-  /// One of the @link binders binder functors@endlink.
+  /// One of the @link s20_3_6_binder binder functors@endlink.
   template<typename _Operation>
     class binder2nd
     : public unary_function<typename _Operation::first_argument_type,
@@ -15269,7 +15423,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       { return op(__x, value); }
     } ;
 
-  /// One of the @link binders binder functors@endlink.
+  /// One of the @link s20_3_6_binder binder functors@endlink.
   template<typename _Operation, typename _Tp>
     inline binder2nd<_Operation>
     bind2nd(const _Operation& __fn, const _Tp& __x)
@@ -15285,13 +15439,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Components for manipulating sequences of characters -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -15299,14 +15453,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file basic_string.h
  *  This is an internal header file, included by other library headers.
@@ -15322,12 +15481,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Support for atomic operations -*- C++ -*-
 
-// Copyright (C) 2004, 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -15335,14 +15494,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file atomicity.h
  *  This is an internal header file, included by other library headers.
@@ -15352,13 +15516,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 /* Threads compatibility routines for libgcc2.  */
 /* Compile this one with gcc.  */
-/* Copyright (C) 1997, 1998, 2004, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2004 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
 GCC is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
+Software Foundation; either version 2, or (at your option) any later
 version.
 
 GCC is distributed in the hope that it will be useful, but WITHOUT ANY
@@ -15366,14 +15530,17 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 for more details.
 
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING.  If not, write to the Free
+Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301, USA.  */
 
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/* As a special exception, if you link this library with other files,
+   some of which are compiled with GCC, to produce an executable,
+   this library does not by itself cause the resulting executable
+   to be covered by the GNU General Public License.
+   This exception does not however invalidate any other reasons why
+   the executable file might be covered by the GNU General Public License.  */
 
 
 #pragma GCC visibility push(default)
@@ -15418,8 +15585,6 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
      void *__gthread_getspecific (__gthread_key_t key)
      int __gthread_setspecific (__gthread_key_t key, const void *ptr)
 
-     int __gthread_mutex_destroy (__gthread_mutex_t *mutex);
-
      int __gthread_mutex_lock (__gthread_mutex_t *mutex);
      int __gthread_mutex_trylock (__gthread_mutex_t *mutex);
      int __gthread_mutex_unlock (__gthread_mutex_t *mutex);
@@ -15449,56 +15614,25 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    All functions returning int should return zero on success or the error
    number.  If the operation is not supported, -1 is returned.
 
-   If the following are also defined, you should 
-     #define __GTHREADS_CXX0X 1
-   to enable the c++0x thread library. 
- 
-   Types:
-     __gthread_t
-     __gthread_time_t
-
-   Interface:
-     int __gthread_create (__gthread_t *thread, void *(*func) (void*), 
-                           void *args);
-     int __gthread_join (__gthread_t thread, void **value_ptr);
-     int __gthread_detach (__gthread_t thread);
-     int __gthread_equal (__gthread_t t1, __gthread_t t2);
-     __gthread_t __gthread_self (void);
-     int __gthread_yield (void);
-
-     int __gthread_mutex_timedlock (__gthread_mutex_t *m,
-                                    const __gthread_time_t *abs_timeout);
-     int __gthread_recursive_mutex_timedlock (__gthread_recursive_mutex_t *m,
-                                          const __gthread_time_t *abs_time);
-     
-     int __gthread_cond_signal (__gthread_cond_t *cond);
-     int __gthread_cond_timedwait (__gthread_cond_t *cond, 
-                                   __gthread_mutex_t *mutex,
-                                   const __gthread_time_t *abs_timeout);
-     int __gthread_cond_timedwait_recursive (__gthread_cond_t *cond,
-                                             __gthread_recursive_mutex_t *mutex,
-                                             const __gthread_time_t *abs_time)
-
    Currently supported threads packages are
      TPF threads with -D__tpf__
      POSIX/Unix98 threads with -D_PTHREADS
      POSIX/Unix95 threads with -D_PTHREADS95
      DCE threads with -D_DCE_THREADS
      Solaris/UI threads with -D_SOLARIS_THREADS
-   
 */
 
 /* Check first for thread specific defines.  */
 /* Threads compatibility routines for libgcc2 and libobjc.  */
 /* Compile this one with gcc.  */
-/* Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
-   2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
+   Free Software Foundation, Inc.
 
 This file is part of GCC.
 
 GCC is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
+Software Foundation; either version 2, or (at your option) any later
 version.
 
 GCC is distributed in the hope that it will be useful, but WITHOUT ANY
@@ -15506,14 +15640,17 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 for more details.
 
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING.  If not, write to the Free
+Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301, USA.  */
 
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
+/* As a special exception, if you link this library with other files,
+   some of which are compiled with GCC, to produce an executable,
+   this library does not by itself cause the resulting executable
+   to be covered by the GNU General Public License.
+   This exception does not however invalidate any other reasons why
+   the executable file might be covered by the GNU General Public License.  */
 
 
 /* POSIX threads specific definitions.
@@ -15522,7 +15659,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 /* Some implementations of <pthread.h> require this to be defined.  */
 
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -15592,7 +15729,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 /*#endif*/ /* _STDDEF */
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15629,7 +15767,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 /* Get system specific constant and data structure definitions.  */
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996-1999,2001-2003,2005,2006,2007,2008,2009
+   Copyright (C) 1996-1999,2001-2003,2005,2006,2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -15760,7 +15898,8 @@ extern int sched_getaffinity (__pid_t __pid, size_t __cpusetsize,
 
 }
 
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003,2006
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16114,7 +16253,7 @@ extern int getdate_r (__const char *__restrict __string,
 
 
 
-/* Copyright (C) 1991-2003, 2004, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16237,10 +16376,8 @@ enum
 /* Robust mutex or not flags.  */
 enum
 {
-  PTHREAD_MUTEX_STALLED,
-  PTHREAD_MUTEX_STALLED_NP = PTHREAD_MUTEX_STALLED,
-  PTHREAD_MUTEX_ROBUST,
-  PTHREAD_MUTEX_ROBUST_NP = PTHREAD_MUTEX_ROBUST
+  PTHREAD_MUTEX_STALLED_NP,
+  PTHREAD_MUTEX_ROBUST_NP
 };
 
 
@@ -16503,7 +16640,7 @@ extern int pthread_attr_getaffinity_np (__const pthread_attr_t *__attr,
 
 
 /* Initialize thread attribute *ATTR with attributes corresponding to the
-   already running thread TH.  It shall be called on uninitialized ATTR
+   already running thread TH.  It shall be called on unitialized ATTR
    and destroyed with pthread_attr_destroy when no longer needed.  */
 extern int pthread_getattr_np (pthread_t __th, pthread_attr_t *__attr)
      throw () __attribute__ ((__nonnull__ (2)));
@@ -16701,8 +16838,6 @@ extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
 /* Declare the state protected by MUTEX as consistent.  */
 extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
      throw () __attribute__ ((__nonnull__ (1)));
-extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
-     throw () __attribute__ ((__nonnull__ (1)));
 
 
 /* Functions for handling mutex attributes.  */
@@ -16762,17 +16897,11 @@ extern int pthread_mutexattr_setprioceiling (pthread_mutexattr_t *__attr,
      throw () __attribute__ ((__nonnull__ (1)));
 
 /* Get the robustness flag of the mutex attribute ATTR.  */
-extern int pthread_mutexattr_getrobust (__const pthread_mutexattr_t *__attr,
-					int *__robustness)
-     throw () __attribute__ ((__nonnull__ (1, 2)));
 extern int pthread_mutexattr_getrobust_np (__const pthread_mutexattr_t *__attr,
 					   int *__robustness)
      throw () __attribute__ ((__nonnull__ (1, 2)));
 
 /* Set the robustness flag of the mutex attribute ATTR.  */
-extern int pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
-					int __robustness)
-     throw () __attribute__ ((__nonnull__ (1)));
 extern int pthread_mutexattr_setrobust_np (pthread_mutexattr_t *__attr,
 					   int __robustness)
      throw () __attribute__ ((__nonnull__ (1)));
@@ -17036,7 +17165,7 @@ extern int pthread_atfork (void (*__prepare) (void),
 
 }
 
-/* Copyright (C) 1991-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17065,12 +17194,10 @@ extern "C" {
 /* These may be used to determine what facilities are present at compile time.
    Their values can be obtained at run time from `sysconf'.  */
 
-/* POSIX Standard approved as ISO/IEC 9945-1 as of September 2008.  */
+/* POSIX Standard approved as ISO/IEC 9945-1 as of December 2001.  */
 
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
-
-/* The utilities on GNU systems also correspond to this version.  */
 
 /* The utilities on GNU systems also correspond to this version.  */
 
@@ -17187,7 +17314,7 @@ extern "C" {
    */
 
 /* Define POSIX options for Linux.
-   Copyright (C) 1996-2004, 2006, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17224,7 +17351,7 @@ extern "C" {
 
 /* Setting of memory protections is supported.  */
 
-/* Some filesystems allow all users to change file ownership.  */
+/* Only root can change owner of file.  */
 
 /* `c_cc' member of 'struct termios' structure can be disabled by
    using the value _POSIX_VDISABLE.  */
@@ -17251,10 +17378,6 @@ extern "C" {
 
 /* We support priority protection, though only for non-robust
    mutexes.  */
-
-/* We support priority inheritence for robust mutexes.  */
-
-/* We do not support priority protection for robust mutexes.  */
 
 /* We support POSIX.1b semaphores.  */
 
@@ -17314,7 +17437,7 @@ extern "C" {
 
 
 /* Get the environment definitions from Unix98.  */
-/* Copyright (C) 1999, 2001, 2004, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17341,24 +17464,20 @@ extern "C" {
    `-1' means it is never supported.  Undefined means it cannot be
    statically decided.
 
-   _POSIX_V7_ILP32_OFF32   32bit int, long, pointers, and off_t type
-   _POSIX_V7_ILP32_OFFBIG  32bit int, long, and pointers and larger off_t type
+   _POSIX_V6_ILP32_OFF32   32bit int, long, pointers, and off_t type
+   _POSIX_V6_ILP32_OFFBIG  32bit int, long, and pointers and larger off_t type
 
-   _POSIX_V7_LP64_OFF32	   64bit long and pointers and 32bit off_t type
-   _POSIX_V7_LPBIG_OFFBIG  64bit long and pointers and large off_t type
+   _POSIX_V6_LP64_OFF32	   64bit long and pointers and 32bit off_t type
+   _POSIX_V6_LPBIG_OFFBIG  64bit long and pointers and large off_t type
 
-   The macros _POSIX_V6_ILP32_OFF32, _POSIX_V6_ILP32_OFFBIG,
-   _POSIX_V6_LP64_OFF32, _POSIX_V6_LPBIG_OFFBIG, _XBS5_ILP32_OFF32,
-   _XBS5_ILP32_OFFBIG, _XBS5_LP64_OFF32, and _XBS5_LPBIG_OFFBIG were
-   used in previous versions of the Unix standard and are available
-   only for compatibility.
+   The macros _XBS5_ILP32_OFF32, _XBS5_ILP32_OFFBIG, _XBS5_LP64_OFF32, and
+   _XBS5_LPBIG_OFFBIG were used in previous versions of the Unix standard
+   and are available only for compatibility.
 */
 
 
 /* Environments with 32-bit wide pointers are optionally provided.
    Therefore following macros aren't defined:
-   # undef _POSIX_V7_ILP32_OFF32
-   # undef _POSIX_V7_ILP32_OFFBIG
    # undef _POSIX_V6_ILP32_OFF32
    # undef _POSIX_V6_ILP32_OFFBIG
    # undef _XBS5_ILP32_OFF32
@@ -17413,7 +17532,6 @@ extern "C" {
 
 
 
-typedef __intptr_t intptr_t;
 
 typedef __socklen_t socklen_t;
 
@@ -17504,10 +17622,6 @@ extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
 extern int pipe (int __pipedes[2]) throw () ;
-
-/* Same as pipe but apply flags passed in FLAGS to the new file
-   descriptors.  */
-extern int pipe2 (int __pipedes[2], int __flags) throw () ;
 
 /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
    If SECONDS is zero, any currently scheduled alarm will be cancelled.
@@ -17606,10 +17720,6 @@ extern int dup (int __fd) throw () ;
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
 extern int dup2 (int __fd, int __fd2) throw ();
 
-/* Duplicate FD to FD2, closing FD2 and making it open on the same
-   file while setting flags according to FLAGS.  */
-extern int dup3 (int __fd, int __fd2, int __flags) throw ();
-
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;
 extern char **environ;
@@ -17651,12 +17761,6 @@ extern int execvp (__const char *__file, char *__const __argv[])
 extern int execlp (__const char *__file, __const char *__arg, ...)
      throw () __attribute__ ((__nonnull__ (1)));
 
-/* Execute FILE, searching in the `PATH' environment variable if it contains
-   no slashes, with arguments ARGV and environment from `environ'.  */
-extern int execvpe (__const char *__file, char *__const __argv[],
-		    char *__const __envp[])
-     throw () __attribute__ ((__nonnull__ (1)));
-
 
 /* Add INC to priority of the current process.  */
 extern int nice (int __inc) throw () ;
@@ -17670,7 +17774,7 @@ extern void _exit (int __status) __attribute__ ((__noreturn__));
    the `_SC_*' symbols for the NAME argument to `sysconf';
    and the `_CS_*' symbols for the NAME argument to `confstr'.  */
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993,1995-1998,2000,2001,2003,2004,2007,2009
+   Copyright (C) 1993,1995-1998,2000,2001,2003,2004,2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17942,24 +18046,7 @@ enum
     /* Leave room here, maybe we need a few more cache levels some day.  */
 
     _SC_IPV6 = _SC_LEVEL1_ICACHE_SIZE + 50,
-    _SC_RAW_SOCKETS,
-
-    _SC_V7_ILP32_OFF32,
-    _SC_V7_ILP32_OFFBIG,
-    _SC_V7_LP64_OFF64,
-    _SC_V7_LPBIG_OFFBIG,
-
-    _SC_SS_REPL_MAX,
-
-    _SC_TRACE_EVENT_NAME_MAX,
-    _SC_TRACE_NAME_MAX,
-    _SC_TRACE_SYS_MAX,
-    _SC_TRACE_USER_EVENT_MAX,
-
-    _SC_XOPEN_STREAMS,
-
-    _SC_THREAD_ROBUST_PRIO_INHERIT,
-    _SC_THREAD_ROBUST_PRIO_PROTECT
+    _SC_RAW_SOCKETS
   };
 
 /* Values for the NAME argument to `confstr'.  */
@@ -17971,10 +18058,6 @@ enum
 
     _CS_GNU_LIBC_VERSION,
     _CS_GNU_LIBPTHREAD_VERSION,
-
-    _CS_V5_WIDTH_RESTRICTED_ENVS,
-
-    _CS_V7_WIDTH_RESTRICTED_ENVS,
 
     _CS_LFS_CFLAGS = 1000,
     _CS_LFS_LDFLAGS,
@@ -18017,24 +18100,7 @@ enum
     _CS_POSIX_V6_LPBIG_OFFBIG_CFLAGS,
     _CS_POSIX_V6_LPBIG_OFFBIG_LDFLAGS,
     _CS_POSIX_V6_LPBIG_OFFBIG_LIBS,
-    _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAGS,
-
-    _CS_POSIX_V7_ILP32_OFF32_CFLAGS,
-    _CS_POSIX_V7_ILP32_OFF32_LDFLAGS,
-    _CS_POSIX_V7_ILP32_OFF32_LIBS,
-    _CS_POSIX_V7_ILP32_OFF32_LINTFLAGS,
-    _CS_POSIX_V7_ILP32_OFFBIG_CFLAGS,
-    _CS_POSIX_V7_ILP32_OFFBIG_LDFLAGS,
-    _CS_POSIX_V7_ILP32_OFFBIG_LIBS,
-    _CS_POSIX_V7_ILP32_OFFBIG_LINTFLAGS,
-    _CS_POSIX_V7_LP64_OFF64_CFLAGS,
-    _CS_POSIX_V7_LP64_OFF64_LDFLAGS,
-    _CS_POSIX_V7_LP64_OFF64_LIBS,
-    _CS_POSIX_V7_LP64_OFF64_LINTFLAGS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_CFLAGS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_LDFLAGS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_LIBS,
-    _CS_POSIX_V7_LPBIG_OFFBIG_LINTFLAGS
+    _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAGS
   };
 
 /* Get file-specific configuration information about PATH.  */
@@ -18261,7 +18327,7 @@ extern int setlogin (__const char *__name) throw () __attribute__ ((__nonnull__ 
    arguments in ARGV (ARGC of them, minus the program name) for
    options given in OPTS.  */
 /* Declarations for getopt.
-   Copyright (C) 1989-1994,1996-1999,2001,2003,2004,2009
+   Copyright (C) 1989-1994,1996-1999,2001,2003,2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18355,7 +18421,6 @@ extern int optopt;
    errors, only prototype getopt for the GNU C library.  */
 extern int getopt (int ___argc, char *const *___argv, const char *__shortopts)
        throw ();
-
 
 
 }
@@ -18556,13 +18621,11 @@ extern char *ctermid (char *__s) throw ();
 }
 
 
-typedef pthread_t __gthread_t;
 typedef pthread_key_t __gthread_key_t;
 typedef pthread_once_t __gthread_once_t;
 typedef pthread_mutex_t __gthread_mutex_t;
 typedef pthread_mutex_t __gthread_recursive_mutex_t;
 typedef pthread_cond_t __gthread_cond_t;
-typedef struct timespec __gthread_time_t;
 
 /* POSIX like conditional variables are supported.  Please look at comments
    in gthr.h for details. */
@@ -18577,27 +18640,14 @@ typedef struct timespec __gthread_time_t;
 static __typeof(pthread_once) __gthrw_pthread_once __attribute__ ((__weakref__("pthread_once"))); 
 static __typeof(pthread_getspecific) __gthrw_pthread_getspecific __attribute__ ((__weakref__("pthread_getspecific"))); 
 static __typeof(pthread_setspecific) __gthrw_pthread_setspecific __attribute__ ((__weakref__("pthread_setspecific"))); 
-
 static __typeof(pthread_create) __gthrw_pthread_create __attribute__ ((__weakref__("pthread_create"))); 
-static __typeof(pthread_join) __gthrw_pthread_join __attribute__ ((__weakref__("pthread_join"))); 
-static __typeof(pthread_equal) __gthrw_pthread_equal __attribute__ ((__weakref__("pthread_equal"))); 
-static __typeof(pthread_self) __gthrw_pthread_self __attribute__ ((__weakref__("pthread_self"))); 
-static __typeof(pthread_detach) __gthrw_pthread_detach __attribute__ ((__weakref__("pthread_detach"))); 
 static __typeof(pthread_cancel) __gthrw_pthread_cancel __attribute__ ((__weakref__("pthread_cancel"))); 
-static __typeof(sched_yield) __gthrw_sched_yield __attribute__ ((__weakref__("sched_yield"))); 
-
 static __typeof(pthread_mutex_lock) __gthrw_pthread_mutex_lock __attribute__ ((__weakref__("pthread_mutex_lock"))); 
 static __typeof(pthread_mutex_trylock) __gthrw_pthread_mutex_trylock __attribute__ ((__weakref__("pthread_mutex_trylock"))); 
-static __typeof(pthread_mutex_timedlock) __gthrw_pthread_mutex_timedlock __attribute__ ((__weakref__("pthread_mutex_timedlock"))); 
 static __typeof(pthread_mutex_unlock) __gthrw_pthread_mutex_unlock __attribute__ ((__weakref__("pthread_mutex_unlock"))); 
 static __typeof(pthread_mutex_init) __gthrw_pthread_mutex_init __attribute__ ((__weakref__("pthread_mutex_init"))); 
-static __typeof(pthread_mutex_destroy) __gthrw_pthread_mutex_destroy __attribute__ ((__weakref__("pthread_mutex_destroy"))); 
-
 static __typeof(pthread_cond_broadcast) __gthrw_pthread_cond_broadcast __attribute__ ((__weakref__("pthread_cond_broadcast"))); 
-static __typeof(pthread_cond_signal) __gthrw_pthread_cond_signal __attribute__ ((__weakref__("pthread_cond_signal"))); 
 static __typeof(pthread_cond_wait) __gthrw_pthread_cond_wait __attribute__ ((__weakref__("pthread_cond_wait"))); 
-static __typeof(pthread_cond_timedwait) __gthrw_pthread_cond_timedwait __attribute__ ((__weakref__("pthread_cond_timedwait"))); 
-static __typeof(pthread_cond_destroy) __gthrw_pthread_cond_destroy __attribute__ ((__weakref__("pthread_cond_destroy"))); 
 
 static __typeof(pthread_key_create) __gthrw_pthread_key_create __attribute__ ((__weakref__("pthread_key_create"))); 
 static __typeof(pthread_key_delete) __gthrw_pthread_key_delete __attribute__ ((__weakref__("pthread_key_delete"))); 
@@ -18632,191 +18682,101 @@ __gthread_active_p (void)
 
 
 static inline int
-__gthread_create (__gthread_t *__threadid, void *(*__func) (void*),
-		  void *__args)
-{
-  return __gthrw_pthread_create (__threadid, (__null), __func, __args);
-}
-
-static inline int
-__gthread_join (__gthread_t __threadid, void **__value_ptr)
-{
-  return __gthrw_pthread_join (__threadid, __value_ptr);
-}
-
-static inline int
-__gthread_detach (__gthread_t __threadid)
-{
-  return __gthrw_pthread_detach (__threadid);
-}
-
-static inline int
-__gthread_equal (__gthread_t __t1, __gthread_t __t2)
-{
-  return __gthrw_pthread_equal (__t1, __t2);
-}
-
-static inline __gthread_t
-__gthread_self (void)
-{
-  return __gthrw_pthread_self ();
-}
-
-static inline int
-__gthread_yield (void)
-{
-  return __gthrw_sched_yield ();
-}
-
-static inline int
-__gthread_once (__gthread_once_t *__once, void (*__func) (void))
+__gthread_once (__gthread_once_t *once, void (*func) (void))
 {
   if (__gthread_active_p ())
-    return __gthrw_pthread_once (__once, __func);
+    return __gthrw_pthread_once (once, func);
   else
     return -1;
 }
 
 static inline int
-__gthread_key_create (__gthread_key_t *__key, void (*__dtor) (void *))
+__gthread_key_create (__gthread_key_t *key, void (*dtor) (void *))
 {
-  return __gthrw_pthread_key_create (__key, __dtor);
+  return __gthrw_pthread_key_create (key, dtor);
 }
 
 static inline int
-__gthread_key_delete (__gthread_key_t __key)
+__gthread_key_delete (__gthread_key_t key)
 {
-  return __gthrw_pthread_key_delete (__key);
+  return __gthrw_pthread_key_delete (key);
 }
 
 static inline void *
-__gthread_getspecific (__gthread_key_t __key)
+__gthread_getspecific (__gthread_key_t key)
 {
-  return __gthrw_pthread_getspecific (__key);
+  return __gthrw_pthread_getspecific (key);
 }
 
 static inline int
-__gthread_setspecific (__gthread_key_t __key, const void *__ptr)
+__gthread_setspecific (__gthread_key_t key, const void *ptr)
 {
-  return __gthrw_pthread_setspecific (__key, __ptr);
+  return __gthrw_pthread_setspecific (key, ptr);
 }
 
 static inline int
-__gthread_mutex_destroy (__gthread_mutex_t *__mutex)
+__gthread_mutex_lock (__gthread_mutex_t *mutex)
 {
   if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_destroy (__mutex);
+    return __gthrw_pthread_mutex_lock (mutex);
   else
     return 0;
 }
 
 static inline int
-__gthread_mutex_lock (__gthread_mutex_t *__mutex)
+__gthread_mutex_trylock (__gthread_mutex_t *mutex)
 {
   if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_lock (__mutex);
+    return __gthrw_pthread_mutex_trylock (mutex);
   else
     return 0;
 }
 
 static inline int
-__gthread_mutex_trylock (__gthread_mutex_t *__mutex)
+__gthread_mutex_unlock (__gthread_mutex_t *mutex)
 {
   if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_trylock (__mutex);
-  else
-    return 0;
-}
-
-static inline int
-__gthread_mutex_timedlock (__gthread_mutex_t *__mutex,
-			   const __gthread_time_t *__abs_timeout)
-{
-  if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_timedlock (__mutex, __abs_timeout);
-  else
-    return 0;
-}
-
-static inline int
-__gthread_mutex_unlock (__gthread_mutex_t *__mutex)
-{
-  if (__gthread_active_p ())
-    return __gthrw_pthread_mutex_unlock (__mutex);
+    return __gthrw_pthread_mutex_unlock (mutex);
   else
     return 0;
 }
 
 
 static inline int
-__gthread_recursive_mutex_lock (__gthread_recursive_mutex_t *__mutex)
+__gthread_recursive_mutex_lock (__gthread_recursive_mutex_t *mutex)
 {
-  return __gthread_mutex_lock (__mutex);
+  return __gthread_mutex_lock (mutex);
 }
 
 static inline int
-__gthread_recursive_mutex_trylock (__gthread_recursive_mutex_t *__mutex)
+__gthread_recursive_mutex_trylock (__gthread_recursive_mutex_t *mutex)
 {
-  return __gthread_mutex_trylock (__mutex);
+  return __gthread_mutex_trylock (mutex);
 }
 
 static inline int
-__gthread_recursive_mutex_timedlock (__gthread_recursive_mutex_t *__mutex,
-				     const __gthread_time_t *__abs_timeout)
+__gthread_recursive_mutex_unlock (__gthread_recursive_mutex_t *mutex)
 {
-  return __gthread_mutex_timedlock (__mutex, __abs_timeout);
+  return __gthread_mutex_unlock (mutex);
 }
 
 static inline int
-__gthread_recursive_mutex_unlock (__gthread_recursive_mutex_t *__mutex)
+__gthread_cond_broadcast (__gthread_cond_t *cond)
 {
-  return __gthread_mutex_unlock (__mutex);
+  return __gthrw_pthread_cond_broadcast (cond);
 }
 
 static inline int
-__gthread_cond_broadcast (__gthread_cond_t *__cond)
+__gthread_cond_wait (__gthread_cond_t *cond, __gthread_mutex_t *mutex)
 {
-  return __gthrw_pthread_cond_broadcast (__cond);
+  return __gthrw_pthread_cond_wait (cond, mutex);
 }
 
 static inline int
-__gthread_cond_signal (__gthread_cond_t *__cond)
+__gthread_cond_wait_recursive (__gthread_cond_t *cond,
+			       __gthread_recursive_mutex_t *mutex)
 {
-  return __gthrw_pthread_cond_signal (__cond);
-}
-
-static inline int
-__gthread_cond_wait (__gthread_cond_t *__cond, __gthread_mutex_t *__mutex)
-{
-  return __gthrw_pthread_cond_wait (__cond, __mutex);
-}
-
-static inline int
-__gthread_cond_timedwait (__gthread_cond_t *__cond, __gthread_mutex_t *__mutex,
-			  const __gthread_time_t *__abs_timeout)
-{
-  return __gthrw_pthread_cond_timedwait (__cond, __mutex, __abs_timeout);
-}
-
-static inline int
-__gthread_cond_wait_recursive (__gthread_cond_t *__cond,
-			       __gthread_recursive_mutex_t *__mutex)
-{
-  return __gthread_cond_wait (__cond, __mutex);
-}
-
-static inline int
-__gthread_cond_timedwait_recursive (__gthread_cond_t *__cond,
-				    __gthread_recursive_mutex_t *__mutex,
-				    const __gthread_time_t *__abs_timeout)
-{
-  return __gthread_cond_timedwait (__cond, __mutex, __abs_timeout);
-}
-
-static inline int
-__gthread_cond_destroy (__gthread_cond_t* __cond)
-{
-  return __gthrw_pthread_cond_destroy (__cond);
+  return __gthread_cond_wait (cond, mutex);
 }
 
 
@@ -18827,12 +18787,12 @@ __gthread_cond_destroy (__gthread_cond_t* __cond)
 
 // Low-level type for atomic operations -*- C++ -*-
 
-// Copyright (C) 2004, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2004 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -18840,14 +18800,19 @@ __gthread_cond_destroy (__gthread_cond_t* __cond)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file atomic_word.h
  *  This file is a GNU extension to the Standard C++ Library.
@@ -18922,36 +18887,6 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default"))) {
 // that the compiler doesn't reorder memory accesses across the
 // barriers.
 
-// std::initializer_list support -*- C++ -*-
-
-// Copyright (C) 2008, 2009 Free Software Foundation, Inc.
-//
-// This file is part of GCC.
-//
-// GCC is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 3, or (at your option)
-// any later version.
-// 
-// GCC is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
-
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
-
-/** @file initializer_list
- *  This is a Standard C++ Library header.
- */
-
-
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
 
@@ -18959,7 +18894,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
    *  @class basic_string basic_string.h <string>
    *  @brief  Managing sequences of characters and character-like objects.
    *
-   *  @ingroup sequences
+   *  @ingroup Containers
+   *  @ingroup Sequences
    *
    *  Meets the requirements of a <a href="tables.html#65">container</a>, a
    *  <a href="tables.html#66">reversible container</a>, and a
@@ -19360,7 +19296,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
        *  @param  n  Number of characters to copy.
        *  @param  a  Allocator to use (default is default allocator).
        *
-       *  NB: @a s must have at least @a n characters, '\\0' has no special
+       *  NB: @a s must have at least @a n characters, '\0' has no special
        *  meaning.
        */
       basic_string(const _CharT* __s, size_type __n,
@@ -19378,7 +19314,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
        *  @param  a  Allocator to use (default is default allocator).
        */
       basic_string(size_type __n, _CharT __c, const _Alloc& __a = _Alloc());
-
 
       /**
        *  @brief  Construct string as copy of a range.
@@ -19425,7 +19360,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 	this->assign(1, __c); 
 	return *this;
       }
-
 
       // Iterators:
       /**
@@ -19698,7 +19632,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 	return *this;
       }
 
-
       /**
        *  @brief  Append a string to this string.
        *  @param str  The string to append.
@@ -19753,7 +19686,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
        */
       basic_string&
       append(size_type __n, _CharT __c);
-
 
       /**
        *  @brief  Append a range of characters.
@@ -19863,7 +19795,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
         assign(_InputIterator __first, _InputIterator __last)
         { return this->replace(_M_ibegin(), _M_iend(), __first, __last); }
 
-
       /**
        *  @brief  Insert multiple characters.
        *  @param p  Iterator referencing location in string to insert at.
@@ -19895,7 +19826,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
         void
         insert(iterator __p, _InputIterator __beg, _InputIterator __end)
         { this->replace(__p, __p, __beg, __end); }
-
 
       /**
        *  @brief  Insert value of a string.
@@ -20333,7 +20263,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 			     __k1.base(), __k2 - __k1);
       }
       
-
     private:
       template<class _Integer>
 	basic_string&
@@ -20954,7 +20883,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
        *  result of the comparison is nonzero returns it, otherwise the shorter
        *  one is ordered first.
        *
-       *  NB: s must have at least n2 characters, '\\0' has no special
+       *  NB: s must have at least n2 characters, '\0' has no special
        *  meaning.
       */
       int
@@ -21370,17 +21299,16 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 }
 
 
-
 // Components for manipulating sequences of characters -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -21388,14 +21316,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file basic_string.tcc
  *  This is an internal header file, included by other library headers.
@@ -21593,7 +21526,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     basic_string(_InputIterator __beg, _InputIterator __end, const _Alloc& __a)
     : _M_dataplus(_S_construct(__beg, __end, __a), __a)
     { }
-
 
   template<typename _CharT, typename _Traits, typename _Alloc>
     basic_string<_CharT, _Traits, _Alloc>&
@@ -22608,12 +22540,24 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 
 
 
+
+
+
+
+
+
+
+
+
+
 /* - these function templates are for computing boundary values, currently
  *   icc doesn't support capturing the lambda function by function objects,
  *   so, we have to utilize the function pointers!
  * - because these functions will be called inside T & operator() functions,
  *   so we have to return a value of T&
  */
+
+
 
 
 
@@ -22647,13 +22591,13 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 
 // Standard iostream objects -*- C++ -*-
 
-// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2005, 2008, 2009
+// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2005, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -22661,14 +22605,19 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file iostream
  *  This is a Standard C++ Library header. 
@@ -22684,13 +22633,13 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 // Output streams -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -22698,14 +22647,19 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file ostream
  *  This is a Standard C++ Library header.
@@ -22721,12 +22675,12 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 // Iostreams base classes -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-// 2005, 2006, 2007, 2009 Free Software Foundation, Inc.
+// 2005, 2006, 2007 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -22734,14 +22688,19 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file ios
  *  This is a Standard C++ Library header.
@@ -22757,13 +22716,13 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 // Iostreams base classes -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -22771,14 +22730,19 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file ios_base.h
  *  This is an internal header file, included by other library headers.
@@ -22795,13 +22759,13 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 // Locale support -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -22809,14 +22773,19 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file locale_classes.h
  *  This is an internal header file, included by other library headers.
@@ -23590,12 +23559,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Locale support -*- C++ -*-
 
-// Copyright (C) 2007, 2008, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2007, 2008 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -23603,14 +23572,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file locale_classes.tcc
  *  This is an internal header file, included by other library headers.
@@ -23845,6 +23819,127 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 }
 
 
+// -*- C++ -*- forwarding header.
+
+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+// 2006, 2007, 2008
+// Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file include/cstdio
+ *  This is a Standard C++ Library file.  You should @c #include this file
+ *  in your programs, rather than any of the "*.h" implementation files.
+ *
+ *  This is the C++ version of the Standard C Library header @c stdio.h,
+ *  and its contents are (mostly) the same as that header, but are all
+ *  contained in the namespace @c std (except for names which are defined
+ *  as macros in C).
+ */
+
+//
+// ISO C++ 14882: 27.8.2  C Library files
+//
+
+#pragma GCC system_header
+
+// -*- C++ -*- forwarding header.
+
+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+// 2006, 2007, 2008
+// Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file cstddef
+ *  This is a Standard C++ Library file.  You should @c #include this file
+ *  in your programs, rather than any of the "*.h" implementation files.
+ *
+ *  This is the C++ version of the Standard C Library header @c stddef.h,
+ *  and its contents are (mostly) the same as that header, but are all
+ *  contained in the namespace @c std (except for names which are defined
+ *  as macros in C).
+ */
+
+//
+// ISO C++ 14882: 18.1  Types
+//
+
+#pragma GCC system_header
+
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
+
+/*
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
+
 
 
 namespace std __attribute__ ((__visibility__ ("default"))) {
@@ -23993,7 +24088,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   // 27.4.2  Class ios_base
   /**
    *  @brief  The base of the I/O class hierarchy.
-   *  @ingroup io
    *
    *  This class defines everything that can be defined about I/O that does
    *  not depend on the type of characters being input or output.  Most
@@ -24004,12 +24098,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   {
   public:
 
-    /** 
-     *  @brief These are thrown to indicate problems with io.
-     *  @ingroup exceptions
-     *
-     *  27.4.2.1.1  Class ios_base::failure
-     */
+    // 27.4.2.1.1  Class ios_base::failure
+    /// These are thrown to indicate problems.  Doc me.
     class failure : public exception
     {
     public:
@@ -24772,16 +24862,15 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 }
 
 
-
 // Stream buffer classes -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+// 2006, 2007, 2008 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -24789,14 +24878,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file streambuf
  *  This is a Standard C++ Library header.
@@ -25557,13 +25651,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Stream buffer classes -*- C++ -*-
 
-// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2009  Free Software Foundation, Inc.
+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+// Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -25571,14 +25665,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file streambuf.tcc
  *  This is an internal header file, included by other library headers.
@@ -25726,13 +25825,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Iostreams base classes -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -25740,14 +25839,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file basic_ios.h
  *  This is an internal header file, included by other library headers.
@@ -25760,13 +25864,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Locale support -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -25774,14 +25878,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file locale_facets.h
  *  This is an internal header file, included by other library headers.
@@ -25798,13 +25907,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -25812,14 +25921,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cwctype
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -25838,7 +25952,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 #pragma GCC system_header
 
 
-/* Copyright (C) 1996-2002,2005,2007,2008,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25864,33 +25978,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 
 
-/* Get wint_t from <stddef.h>.  */
-/**
-***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
-***
-*** The information and source code contained herein is the exclusive
-*** property of Intel Corporation and may not be disclosed, examined
-*** or reproduced in whole or in part without explicit written authorization
-*** from the company.
-**/
-
-/*
- * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
- * Consult your license regarding permissions and restrictions.
- */
-
-
-/* stddef.h standard header */
-
-		/* macros */
-		/* type definitions */
-
-
-
-
-
-
-/*#endif*/ /* _STDDEF */
+/* Get wint_t from <wchar.h>.  */
 
 /* Constant expression of type `wint_t' whose value does not correspond
    to any member of the extended character set.  */
@@ -26183,13 +26271,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -26197,14 +26285,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cctype
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -26225,13 +26318,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // Locale support -*- C++ -*-
 
-// Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2009
+// Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -26239,14 +26332,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 //
 // ISO C++ 14882: 22.1  Locales
@@ -26287,13 +26385,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Streambuf iterators
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -26301,14 +26399,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file streambuf_iterator.h
  *  This is an internal header file, included by other library headers.
@@ -26696,7 +26799,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     {
       static void
       _S_pad(ios_base& __io, _CharT __fill, _CharT* __news,
-	     const _CharT* __olds, streamsize __newlen, streamsize __oldlen);
+	     const _CharT* __olds, const streamsize __newlen,
+	     const streamsize __oldlen);
     };
 
   // Used by both numeric and monetary facets.
@@ -27762,9 +27866,48 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       }
 
     private:
-      void _M_narrow_init() const;
-      void _M_widen_init() const;
+
+      void _M_widen_init() const
+      {
+	char __tmp[sizeof(_M_widen)];
+	for (size_t __i = 0; __i < sizeof(_M_widen); ++__i)
+	  __tmp[__i] = __i;
+	do_widen(__tmp, __tmp + sizeof(__tmp), _M_widen);
+
+	_M_widen_ok = 1;
+	// Set _M_widen_ok to 2 if memcpy can't be used.
+	if (__builtin_memcmp(__tmp, _M_widen, sizeof(_M_widen)))
+	  _M_widen_ok = 2;
+      }
+
+      // Fill in the narrowing cache and flag whether all values are
+      // valid or not.  _M_narrow_ok is set to 2 if memcpy can't
+      // be used.
+      void _M_narrow_init() const
+      {
+	char __tmp[sizeof(_M_narrow)];
+	for (size_t __i = 0; __i < sizeof(_M_narrow); ++__i)
+	  __tmp[__i] = __i;
+	do_narrow(__tmp, __tmp + sizeof(__tmp), 0, _M_narrow);
+
+	_M_narrow_ok = 1;
+	if (__builtin_memcmp(__tmp, _M_narrow, sizeof(_M_narrow)))
+	  _M_narrow_ok = 2;
+	else
+	  {
+	    // Deal with the special case of zero: renarrow with a
+	    // different default and compare.
+	    char __c;
+	    do_narrow(__tmp, __tmp + 1, 1, &__c);
+	    if (__c == 1)
+	      _M_narrow_ok = 2;
+	  }
+      }
     };
+
+  template<>
+    const ctype<char>&
+    use_facet<ctype<char> >(const locale& __loc);
 
   // 22.2.1.3  ctype<wchar_t> specialization
   /**
@@ -28067,6 +28210,10 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       _M_initialize_ctype();
     };
 
+  template<>
+    const ctype<wchar_t>&
+    use_facet<ctype<wchar_t> >(const locale& __loc);
+
   /// class ctype_byname [22.2.1.2].
   template<typename _CharT>
     class ctype_byname : public ctype<_CharT>
@@ -28112,12 +28259,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Include host and configuration specific ctype inlines.
 // Locale support -*- C++ -*-
 
-// Copyright (C) 2000, 2002, 2009 Free Software Foundation, Inc.
+// Copyright (C) 2000, 2002 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -28125,14 +28272,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file ctype_inline.h
  *  This is an internal header file, included by other library headers.
@@ -28770,12 +28922,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
       iter_type
       _M_extract_float(iter_type, iter_type, ios_base&, ios_base::iostate&,
-		       string&) const;
+		       string& __xtrc) const;
 
       template<typename _ValueT>
         iter_type
         _M_extract_int(iter_type, iter_type, ios_base&, ios_base::iostate&,
-		       _ValueT&) const;
+		       _ValueT& __v) const;
 
       template<typename _CharT2>
       typename __gnu_cxx::__enable_if<__is_char<_CharT2>::__value, int>::__type
@@ -28833,35 +28985,29 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       virtual iter_type
       do_get(iter_type, iter_type, ios_base&, ios_base::iostate&, bool&) const;
 
-      virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, long& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, unsigned short& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate&, long&) const;
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, unsigned int& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	      unsigned short&) const;
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, unsigned long& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	     unsigned int&) const;
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, long long& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }	
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	     unsigned long&) const;
 
       virtual iter_type
-      do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, unsigned long long& __v) const
-      { return _M_extract_int(__beg, __end, __io, __err, __v); }
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	     long long&) const;
+
+      virtual iter_type
+      do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
+	     unsigned long long&) const;
 
       virtual iter_type
       do_get(iter_type, iter_type, ios_base&, ios_base::iostate& __err,
@@ -29118,23 +29264,16 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       do_put(iter_type, ios_base&, char_type __fill, bool __v) const;
 
       virtual iter_type
-      do_put(iter_type __s, ios_base& __io, char_type __fill, long __v) const
-      { return _M_insert_int(__s, __io, __fill, __v); }	
+      do_put(iter_type, ios_base&, char_type __fill, long __v) const;
 
       virtual iter_type
-      do_put(iter_type __s, ios_base& __io, char_type __fill,
-	     unsigned long __v) const
-      { return _M_insert_int(__s, __io, __fill, __v); }
+      do_put(iter_type, ios_base&, char_type __fill, unsigned long) const;
 
       virtual iter_type
-      do_put(iter_type __s, ios_base& __io, char_type __fill,
-	     long long __v) const
-      { return _M_insert_int(__s, __io, __fill, __v); }
+      do_put(iter_type, ios_base&, char_type __fill, long long __v) const;
 
       virtual iter_type
-      do_put(iter_type __s, ios_base& __io, char_type __fill,
-	     unsigned long long __v) const
-      { return _M_insert_int(__s, __io, __fill, __v); }
+      do_put(iter_type, ios_base&, char_type __fill, unsigned long long) const;
 
       virtual iter_type
       do_put(iter_type, ios_base&, char_type __fill, double __v) const;
@@ -29243,13 +29382,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Locale support -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -29257,14 +29396,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file locale_facets.tcc
  *  This is an internal header file, included by other library headers.
@@ -29326,9 +29470,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       __np.grouping().copy(__grouping, _M_grouping_size);
       _M_grouping = __grouping;
       _M_use_grouping = (_M_grouping_size
-			 && static_cast<signed char>(_M_grouping[0]) > 0
-			 && (_M_grouping[0]
-			     != __gnu_cxx::__numeric_traits<char>::__max));
+			 && static_cast<signed char>(__np.grouping()[0]) > 0);
 
       _M_truename_size = __np.truename().size();
       _CharT* __truename = new _CharT[_M_truename_size];
@@ -29582,9 +29724,12 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
           if (!std::__verify_grouping(__lc->_M_grouping, 
 				      __lc->_M_grouping_size,
 				      __found_grouping))
-	    __err = ios_base::failbit;
+	    __err |= ios_base::failbit;
         }
 
+      // Finish up.
+      if (__testeof)
+        __err |= ios_base::eofbit;
       return __beg;
     }
 
@@ -29619,7 +29764,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 	if (!__testeof)
 	  {
 	    __c = *__beg;
-	    __negative = __c == __lit[__num_base::_S_iminus];
+	    if (__gnu_cxx::__numeric_traits<_ValueT>::__is_signed)
+	      __negative = __c == __lit[__num_base::_S_iminus];
 	    if ((__negative || __c == __lit[__num_base::_S_iplus])
 		&& !(__lc->_M_use_grouping && __c == __lc->_M_thousands_sep)
 		&& !(__c == __lc->_M_decimal_point))
@@ -29687,9 +29833,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 	if (__lc->_M_use_grouping)
 	  __found_grouping.reserve(32);
 	bool __testfail = false;
-	bool __testoverflow = false;
-	const __unsigned_type __max =
-	  (__negative && __gnu_cxx::__numeric_traits<_ValueT>::__is_signed)
+	const __unsigned_type __max = __negative
 	  ? -__gnu_cxx::__numeric_traits<_ValueT>::__min
 	  : __gnu_cxx::__numeric_traits<_ValueT>::__max;
 	const __unsigned_type __smax = __max / __base;
@@ -29706,11 +29850,11 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 		break;
 	      
 	      if (__result > __smax)
-		__testoverflow = true;
+		__testfail = true;
 	      else
 		{
 		  __result *= __base;
-		  __testoverflow |= __result > __max - __digit;
+		  __testfail |= __result > __max - __digit;
 		  __result += __digit;
 		  ++__sep_pos;
 		}
@@ -29753,11 +29897,11 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 		  if (__digit > 15)
 		    __digit -= 6;
 		  if (__result > __smax)
-		    __testoverflow = true;
+		    __testfail = true;
 		  else
 		    {
 		      __result *= __base;
-		      __testoverflow |= __result > __max - __digit;
+		      __testfail |= __result > __max - __digit;
 		      __result += __digit;
 		      ++__sep_pos;
 		    }
@@ -29779,28 +29923,14 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 	    if (!std::__verify_grouping(__lc->_M_grouping,
 					__lc->_M_grouping_size,
 					__found_grouping))
-	      __err = ios_base::failbit;
+	      __err |= ios_base::failbit;
 	  }
 
-	// _GLIBCXX_RESOLVE_LIB_DEFECTS
-	// 23. Num_get overflow result.
-	if ((!__sep_pos && !__found_zero && !__found_grouping.size())
-	    || __testfail)
-	  {
-	    __v = 0;
-	    __err = ios_base::failbit;
-	  }
-	else if (__testoverflow)
-	  {
-	    if (__negative
-		&& __gnu_cxx::__numeric_traits<_ValueT>::__is_signed)
-	      __v = __gnu_cxx::__numeric_traits<_ValueT>::__min;
-	    else
-	      __v = __gnu_cxx::__numeric_traits<_ValueT>::__max;
-	    __err = ios_base::failbit;
-	  }
-	else
+	if (!__testfail && (__sep_pos || __found_zero 
+			    || __found_grouping.size()))
 	  __v = __negative ? -__result : __result;
+	else
+	  __err |= ios_base::failbit;
 
 	if (__testeof)
 	  __err |= ios_base::eofbit;
@@ -29825,85 +29955,100 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 	  if (__l == 0 || __l == 1)
 	    __v = bool(__l);
 	  else
-	    {
-	      // _GLIBCXX_RESOLVE_LIB_DEFECTS
-	      // 23. Num_get overflow result.
-	      __v = true;
-	      __err = ios_base::failbit;
-	      if (__beg == __end)
-		__err |= ios_base::eofbit;
-	    }
+            __err |= ios_base::failbit;
         }
       else
         {
 	  // Parse bool values as alphanumeric.
-	  typedef __numpunct_cache<_CharT>  __cache_type;
+	  typedef __numpunct_cache<_CharT>              __cache_type;
 	  __use_cache<__cache_type> __uc;
 	  const locale& __loc = __io._M_getloc();
 	  const __cache_type* __lc = __uc(__loc);
 
 	  bool __testf = true;
 	  bool __testt = true;
-	  bool __donef = __lc->_M_falsename_size == 0;
-	  bool __donet = __lc->_M_truename_size == 0;
-	  bool __testeof = false;
-	  size_t __n = 0;
-	  while (!__donef || !__donet)
-	    {
-	      if (__beg == __end)
-		{
-		  __testeof = true;
-		  break;
-		}
-
+	  size_t __n;
+	  bool __testeof = __beg == __end;
+          for (__n = 0; !__testeof; ++__n)
+            {
 	      const char_type __c = *__beg;
 
-	      if (!__donef)
-		__testf = __c == __lc->_M_falsename[__n];
+	      if (__testf)
+	        {
+		  if (__n < __lc->_M_falsename_size)
+		    __testf = __c == __lc->_M_falsename[__n];
+		  else
+		    break;
+		}
 
-	      if (!__testf && __donet)
+	      if (__testt)
+	        {
+		  if (__n < __lc->_M_truename_size)
+		    __testt = __c == __lc->_M_truename[__n];
+		  else
+		    break;
+		}
+
+	      if (!__testf && !__testt)
 		break;
-
-	      if (!__donet)
-		__testt = __c == __lc->_M_truename[__n];
-
-	      if (!__testt && __donef)
-		break;
-
-	      if (!__testt && !__testf)
-		break;
-
-	      ++__n;
-	      ++__beg;
-
-	      __donef = !__testf || __n >= __lc->_M_falsename_size;
-	      __donet = !__testt || __n >= __lc->_M_truename_size;
-	    }
-	  if (__testf && __n == __lc->_M_falsename_size && __n)
-	    {
-	      __v = false;
-	      if (__testt && __n == __lc->_M_truename_size)
-		__err = ios_base::failbit;
-	      else
-		__err = __testeof ? ios_base::eofbit : ios_base::goodbit;
-	    }
-	  else if (__testt && __n == __lc->_M_truename_size && __n)
-	    {
-	      __v = true;
-	      __err = __testeof ? ios_base::eofbit : ios_base::goodbit;
-	    }
+	      
+	      if (++__beg == __end)
+		__testeof = true;
+            }
+	  if (__testf && __n == __lc->_M_falsename_size)
+	    __v = false;
+	  else if (__testt && __n == __lc->_M_truename_size)
+	    __v = true;
 	  else
-	    {
-	      // _GLIBCXX_RESOLVE_LIB_DEFECTS
-	      // 23. Num_get overflow result.
-	      __v = false;
-	      __err = ios_base::failbit;
-	      if (__testeof)
-		__err |= ios_base::eofbit;
-	    }
-	}
+	    __err |= ios_base::failbit;
+
+          if (__testeof)
+            __err |= ios_base::eofbit;
+        }
       return __beg;
     }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, long& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, unsigned short& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, unsigned int& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, unsigned long& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, long long& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
+
+  template<typename _CharT, typename _InIter>
+    _InIter
+    num_get<_CharT, _InIter>::
+    do_get(iter_type __beg, iter_type __end, ios_base& __io,
+           ios_base::iostate& __err, unsigned long long& __v) const
+    { return _M_extract_int(__beg, __end, __io, __err, __v); }
 
   template<typename _CharT, typename _InIter>
     _InIter
@@ -29915,8 +30060,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
       std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
-      if (__beg == __end)
-	__err |= ios_base::eofbit;
       return __beg;
     }
 
@@ -29930,8 +30073,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
       std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
-      if (__beg == __end)
-	__err |= ios_base::eofbit;
       return __beg;
     }
 
@@ -29946,8 +30087,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
       std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
-      if (__beg == __end)
-	__err |= ios_base::eofbit;
       return __beg;
     }
 
@@ -29972,7 +30111,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       // Reset from hex formatted input.
       __io.flags(__fmt);
 
-      __v = reinterpret_cast<void*>(__ul);
+      if (!(__err & ios_base::failbit))
+	__v = reinterpret_cast<void*>(__ul);
       return __beg;
     }
 
@@ -30299,31 +30439,43 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 	  const streamsize __w = __io.width();
 	  if (__w > static_cast<streamsize>(__len))
 	    {
-	      const streamsize __plen = __w - __len;
-	      _CharT* __ps
+	      _CharT* __cs
 		= static_cast<_CharT*>(__builtin_alloca(sizeof(_CharT)
-							* __plen));
-
-	      char_traits<_CharT>::assign(__ps, __plen, __fill);
-	      __io.width(0);
-
-	      if ((__flags & ios_base::adjustfield) == ios_base::left)
-		{
-		  __s = std::__write(__s, __name, __len);
-		  __s = std::__write(__s, __ps, __plen);
-		}
-	      else
-		{
-		  __s = std::__write(__s, __ps, __plen);
-		  __s = std::__write(__s, __name, __len);
-		}
-	      return __s;
+							* __w));
+	      _M_pad(__fill, __w, __io, __cs, __name, __len);
+	      __name = __cs;
 	    }
 	  __io.width(0);
 	  __s = std::__write(__s, __name, __len);
 	}
       return __s;
     }
+
+  template<typename _CharT, typename _OutIter>
+    _OutIter
+    num_put<_CharT, _OutIter>::
+    do_put(iter_type __s, ios_base& __io, char_type __fill, long __v) const
+    { return _M_insert_int(__s, __io, __fill, __v); }
+
+  template<typename _CharT, typename _OutIter>
+    _OutIter
+    num_put<_CharT, _OutIter>::
+    do_put(iter_type __s, ios_base& __io, char_type __fill,
+           unsigned long __v) const
+    { return _M_insert_int(__s, __io, __fill, __v); }
+
+  template<typename _CharT, typename _OutIter>
+    _OutIter
+    num_put<_CharT, _OutIter>::
+    do_put(iter_type __s, ios_base& __io, char_type __fill, long long __v) const
+    { return _M_insert_int(__s, __io, __fill, __v); }
+
+  template<typename _CharT, typename _OutIter>
+    _OutIter
+    num_put<_CharT, _OutIter>::
+    do_put(iter_type __s, ios_base& __io, char_type __fill,
+           unsigned long long __v) const
+    { return _M_insert_int(__s, __io, __fill, __v); }
 
   template<typename _CharT, typename _OutIter>
     _OutIter
@@ -30347,7 +30499,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     {
       const ios_base::fmtflags __flags = __io.flags();
       const ios_base::fmtflags __fmt = ~(ios_base::basefield
-					 | ios_base::uppercase);
+					 | ios_base::uppercase
+					 | ios_base::internal);
       __io.flags((__flags & __fmt) | (ios_base::hex | ios_base::showbase));
 
       typedef __gnu_cxx::__conditional_type<(sizeof(const void*)
@@ -30373,7 +30526,8 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
     void
     __pad<_CharT, _Traits>::_S_pad(ios_base& __io, _CharT __fill,
 				   _CharT* __news, const _CharT* __olds,
-				   streamsize __newlen, streamsize __oldlen)
+				   const streamsize __newlen,
+				   const streamsize __oldlen)
     {
       const size_t __plen = static_cast<size_t>(__newlen - __oldlen);
       const ios_base::fmtflags __adjust = __io.flags() & ios_base::adjustfield;
@@ -30428,8 +30582,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
       size_t __ctr = 0;
 
       while (__last - __first > __gbeg[__idx]
-	     && static_cast<signed char>(__gbeg[__idx]) > 0
-	     && __gbeg[__idx] != __gnu_cxx::__numeric_traits<char>::__max)
+	     && static_cast<signed char>(__gbeg[__idx]) > 0)
 	{
 	  __last -= __gbeg[__idx];
 	  __idx < __gsize - 1 ? ++__idx : ++__ctr;
@@ -30465,10 +30618,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   extern template class ctype_byname<char>;
 
   extern template
-    const ctype<char>&
-    use_facet<ctype<char> >(const locale&);
-
-  extern template
     const numpunct<char>&
     use_facet<numpunct<char> >(const locale&);
 
@@ -30501,10 +30650,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   extern template class  num_get<wchar_t>;
   extern template class  num_put<wchar_t>;
   extern template class ctype_byname<wchar_t>;
-
-  extern template
-    const ctype<wchar_t>&
-    use_facet<ctype<wchar_t> >(const locale&);
 
   extern template
     const numpunct<wchar_t>&
@@ -30552,7 +30697,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   // 27.4.5  Template class basic_ios
   /**
    *  @brief  Virtual base class for all stream classes.
-   *  @ingroup io
    *
    *  Most of the member functions called dispatched on stream objects
    *  (e.g., @c std::cout.foo(bar);) are consolidated in this class.
@@ -30968,13 +31112,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 
 // basic_ios member functions -*- C++ -*-
 
-// Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
-// 2009  Free Software Foundation, Inc.
+// Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
+// Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -30982,14 +31126,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file basic_ios.tcc
  *  This is an internal header file, included by other library headers.
@@ -31154,7 +31303,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   // [27.6.2.1] Template class basic_ostream
   /**
    *  @brief  Controlling output.
-   *  @ingroup io
    *
    *  This is the base class for all output streams.  It provides text
    *  formatting of all builtin types, and communicates with any class
@@ -31671,13 +31819,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // ostream classes -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -31685,14 +31833,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file ostream.tcc
  *  This is an internal header file, included by other library headers.
@@ -32067,13 +32220,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Input streams -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -32081,14 +32234,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 //
 // ISO C++ 14882: 27.6.1  Input streams
@@ -32107,7 +32265,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   // [27.6.1.1] Template class basic_istream
   /**
    *  @brief  Controlling input.
-   *  @ingroup io
    *
    *  This is the base class for all input streams.  It provides text
    *  formatting of all builtin types, and communicates with any class
@@ -32812,7 +32969,6 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
   // 27.6.1.5 Template class basic_iostream
   /**
    *  @brief  Merging istream and ostream capabilities.
-   *  @ingroup io
    *
    *  This class multiply inherits from the input and output stream classes
    *  simply to provide a single interface.
@@ -32887,13 +33043,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // istream classes -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -32901,14 +33057,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file istream.tcc
  *  This is an internal header file, included by other library headers.
@@ -33904,7 +34065,7 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
    *  The &lt;iostream&gt; header declares the eight <em>standard stream
    *  objects</em>.  For other declarations, see
    *  http://gcc.gnu.org/onlinedocs/libstdc++/manual/bk01pt11ch24.html
-   *  and the @link iosfwd I/O forward declarations @endlink
+   *  and the @link s27_2_iosfwd I/O forward declarations @endlink
    *
    *  They are required by default to cooperate with the global C library's
    *  @c FILE streams, and to be available during program startup and
@@ -33930,13 +34091,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // Standard stream manipulators -*- C++ -*-
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
-// 2006, 2007, 2009
+// 2006, 2007
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -33944,14 +34105,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file iomanip
  *  This is a Standard C++ Library header.
@@ -34216,13 +34382,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34230,14 +34396,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cstdio
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -34258,13 +34429,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34272,14 +34443,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -34328,13 +34504,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34342,14 +34518,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cstdlib
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -34370,13 +34551,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34384,14 +34565,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -34466,13 +34652,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34480,14 +34666,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -34535,13 +34726,13 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34549,14 +34740,19 @@ namespace std __attribute__ ((__visibility__ ("default"))) {
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cassert
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -34826,13 +35022,13 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34840,14 +35036,19 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cstdlib
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -34868,13 +35069,13 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34882,14 +35083,19 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -34938,13 +35144,13 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34952,14 +35158,19 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file include/cstdio
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -34980,13 +35191,13 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -34994,14 +35205,19 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cstddef
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -35050,13 +35266,13 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // -*- C++ -*- forwarding header.
 
 // Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-// 2006, 2007, 2008, 2009
+// 2006, 2007, 2008
 // Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
+// Free Software Foundation; either version 2, or (at your option)
 // any later version.
 
 // This library is distributed in the hope that it will be useful,
@@ -35064,14 +35280,19 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
 
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
 
 /** @file cassert
  *  This is a Standard C++ Library file.  You should @c #include this file
@@ -35184,6 +35405,259 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
  *
  */
 
+/* Cilk API -- Functions callable by the user to modify the operation of the
+ * Cilk scheduler.
+ */
+
+
+
+/*
+ *  Copyright 2010 Intel Corporation.  All Rights Reserved.
+ *
+ *  The source code contained or described herein and all documents related
+ *  to the source code ("Material") are owned by Intel Corporation or its
+ *  suppliers or licensors.  Title to the Material remains with Intel
+ *  Corporation or its suppliers and licensors.  The Material is protected
+ *  by worldwide copyright laws and treaty provisions.  No part of the
+ *  Material may be used, copied, reproduced, modified, published, uploaded,
+ *  posted, transmitted, distributed, or disclosed in any way without
+ *  Intel's prior express written permission.
+ *
+ *  No license under any patent, copyright, trade secret or other
+ *  intellectual property right is granted to or conferred upon you by
+ *  disclosure or delivery of the Materials, either expressly, by
+ *  implication, inducement, estoppel or otherwise.  Any license under such
+ *  intellectual property rights must be express and approved by Intel in
+ *  writing.
+ *
+ */
+
+
+// -*- C++ -*- forwarding header.
+
+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+// 2006, 2007, 2008
+// Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License along
+// with this library; see the file COPYING.  If not, write to the Free
+// Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+// USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file cassert
+ *  This is a Standard C++ Library file.  You should @c #include this file
+ *  in your programs, rather than any of the "*.h" implementation files.
+ *
+ *  This is the C++ version of the Standard C Library header @c assert.h,
+ *  and its contents are (mostly) the same as that header, but are all
+ *  contained in the namespace @c std (except for names which are defined
+ *  as macros in C).
+ */
+
+//
+// ISO C++ 14882: 19.2  Assertions
+//
+
+// No include guards on this header...
+
+#pragma GCC system_header
+
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2007
+   Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	ISO C99 Standard: 7.2 Diagnostics	<assert.h>
+ */
+
+
+
+
+
+
+
+/* void assert (int expression);
+
+   If NDEBUG is defined, do nothing.
+   If not, and EXPRESSION is zero, print an error message and abort.  */
+
+
+
+/* void assert_perror (int errnum);
+
+   If NDEBUG is defined, do nothing.  If not, and ERRNUM is not zero, print an
+   error message with the error text for ERRNUM and abort.
+   (This is a GNU extension.) */
+
+
+
+/* Prefix standard library function and type names with __STDNS in order to
+ * get correct lookup in both C and C++.
+ */
+
+/* CILK_EXPORT - Define export of runtime functions from shared library.
+ * Should be exported only from cilkrts*.dll/cilkrts*.so
+ */
+
+
+
+/* CILK_API: Called explicitly by the programmer.
+ * CILK_ABI: Called by compiler-generated code.
+ * CILK_ABI_THROWS: An ABI function that may throw an exception
+ *
+ * Even when these are the same definitions, they should be separate macros so
+ * that they can be easily found in the code.
+ */
+
+
+/* __CILKRTS_ASSERT should be defined for debugging only, otherwise it
+ * interferes with vectorization.  Since NDEBUG is not reliable (it must be
+ * set by the user), we must use a platform-specific detection of debug mode.
+ */
+  /* C++ non-debug */
+
+
+
+extern "C" {
+
+/* Runtime control.  First argument is parameter name, second is its value.
+ *
+ * Return value is zero on success, nonzero on failure (unrecognized
+ * parameter, invalid value, called at the wrong time, or other failure).
+ *
+ * The wide character version is only available on Windows.
+ *
+ * Allowable parameter names:
+ *
+ * - "nworkers" -- number of processors that should run Cilk code.
+ *   The value is a string of digits to be parsed by strtol.
+ *
+ * - "force reduce" -- test reducer callbacks by allocating new views
+ *   for every spawn within which a reducer is accessed.  This can
+ *   significantly reduce performance.  The value is "1" or "true"
+ *   to enable, "0" or "false" to disable.
+ */
+ int __attribute__((nothrow)) __cilkrts_set_param(const char *param, const char *value);
+
+/* Shut down and deallocate all Cilk state.  The runtime will abort
+ * if Cilk is still in use by this thread.  Otherwise the runtime
+ * will wait for all other threads using Cilk to exit. */
+ void __attribute__((nothrow)) __cilkrts_end_cilk(void);
+
+/* Allocate Cilk data structures. */
+ void __attribute__((nothrow)) __cilkrts_init(void);
+
+/* Return the number of worker threads that this instance of Cilk
+ * will attempt to use. */
+ int __attribute__((nothrow)) __cilkrts_get_nworkers(void);
+
+/* Return the number of worker threads allocated. */
+ int __attribute__((nothrow)) __cilkrts_get_total_workers(void);
+
+/* Return a small integer indicating which Cilk worker the function is
+ * currently running on.  The return value of this function is always less
+ * than the return value of __cilkrts_get_total_workers(); */
+ int __attribute__((nothrow)) __cilkrts_get_worker_number(void);
+
+/* Return non-zero if force reduce mode is on */
+ int __attribute__((nothrow)) __cilkrts_get_force_reduce(void);
+
+/* Interact with tools */
+ void __attribute__((nothrow))
+    __cilkrts_metacall(unsigned int tool, unsigned int code, void *data);
+
+}
+
+
+/*
+ *  Copyright 2009-2010 Intel Corporation.  All Rights Reserved.
+ *
+ *  The source code contained or described herein and all documents related
+ *  to the source code ("Material") are owned by Intel Corporation or its
+ *  suppliers or licensors.  Title to the Material remains with Intel
+ *  Corporation or its suppliers and licensors.  The Material is protected
+ *  by worldwide copyright laws and treaty provisions.  No part of the
+ *  Material may be used, copied, reproduced, modified, published, uploaded,
+ *  posted, transmitted, distributed, or disclosed in any way without
+ *  Intel's prior express written permission.
+ *
+ *  No license under any patent, copyright, trade secret or other
+ *  intellectual property right is granted to or conferred upon you by
+ *  disclosure or delivery of the Materials, either expressly, by
+ *  implication, inducement, estoppel or otherwise.  Any license under such
+ *  intellectual property rights must be express and approved by Intel in
+ *  writing.
+ *
+ */
+
+/*
+ * reducer_opadd.h
+ *
+ * Purpose: Reducer hyperobject to sum values
+ */
+
+
+/* reducer.h                  -*-C++-*-
+ *
+ *************************************************************************
+ *                         INTEL CONFIDENTIAL
+ *
+ * Copyright 2009-2010 Intel Corporation All Rights Reserved.
+ *
+ * The source code contained or described herein and all documents related
+ * to the source code ("Material") are owned by Intel Corporation or its
+ * suppliers or licensors.  Title to the Material remains with Intel
+ * Corporation or its suppliers and licensors.  The Material contains
+ * trade secrets and proprietary and confidential information of Intel
+ * or its suppliers and licensors.  The Material is protected by worldwide
+ * copyright and trade secret laws and treaty provisions.  No part of the
+ * Material may be used, copied, reproduced, modified, published, uploaded,
+ * posted, transmitted, distributed, or disclosed in any way without
+ * Intel's prior express written permission.
+ *
+ * No license under any patent, copyright, trade secret or other
+ * intellectual property right is granted to or conferred upon you by
+ * disclosure or delivery of the Materials, either expressly, by
+ * implication, inducement, estoppel or otherwise.  Any license under such
+ * intellectual property rights must be express and approved by Intel in
+ * writing.
+ *
+ **************************************************************************/
 
 
 /*
@@ -35208,58 +35682,1034 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
  */
 
 
-/* Cilk API -- functions called by the user.  All of these are optional. */
+// -*- C++ -*- forwarding header.
+
+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+// 2006, 2007, 2008
+// Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file include/cstdlib
+ *  This is a Standard C++ Library file.  You should @c #include this file
+ *  in your programs, rather than any of the "*.h" implementation files.
+ *
+ *  This is the C++ version of the Standard C Library header @c stdlib.h,
+ *  and its contents are (mostly) the same as that header, but are all
+ *  contained in the namespace @c std (except for names which are defined
+ *  as macros in C).
+ */
+
+//
+// ISO C++ 14882: 20.4.6  C library
+//
+
+#pragma GCC system_header
+
+// -*- C++ -*- forwarding header.
+
+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+// 2006, 2007, 2008
+// Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file cstddef
+ *  This is a Standard C++ Library file.  You should @c #include this file
+ *  in your programs, rather than any of the "*.h" implementation files.
+ *
+ *  This is the C++ version of the Standard C Library header @c stddef.h,
+ *  and its contents are (mostly) the same as that header, but are all
+ *  contained in the namespace @c std (except for names which are defined
+ *  as macros in C).
+ */
+
+//
+// ISO C++ 14882: 18.1  Types
+//
+
+#pragma GCC system_header
+
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
+
+/*
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
+
+
+// -*- C++ -*- forwarding header.
+
+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+// 2006, 2007, 2008
+// Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this library; see the file COPYING.  If not, write to
+// the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+// Boston, MA 02110-1301, USA.
+
+// As a special exception, you may use this file as part of a free software
+// library without restriction.  Specifically, if other files instantiate
+// templates or use macros or inline functions from this file, or you compile
+// this file and link it with other files to produce an executable, this
+// file does not by itself cause the resulting executable to be covered by
+// the GNU General Public License.  This exception does not however
+// invalidate any other reasons why the executable file might be covered by
+// the GNU General Public License.
+
+/** @file cstddef
+ *  This is a Standard C++ Library file.  You should @c #include this file
+ *  in your programs, rather than any of the "*.h" implementation files.
+ *
+ *  This is the C++ version of the Standard C Library header @c stddef.h,
+ *  and its contents are (mostly) the same as that header, but are all
+ *  contained in the namespace @c std (except for names which are defined
+ *  as macros in C).
+ */
+
+//
+// ISO C++ 14882: 18.1  Types
+//
+
+#pragma GCC system_header
+
+/**
+***  Copyright (C) 2002-2010 Intel Corporation. All rights reserved.
+***
+*** The information and source code contained herein is the exclusive
+*** property of Intel Corporation and may not be disclosed, examined
+*** or reproduced in whole or in part without explicit written authorization
+*** from the company.
+**/
+
+/*
+ * Copyright (c) 1994-2002 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+
+
+/* stddef.h standard header */
+
+		/* macros */
+		/* type definitions */
+
+
+
+
+
+
+/*#endif*/ /* _STDDEF */
+
+
+
+
+/* Macro to cache-align a declaration.  Argument(s) comprise either a
+ * variable or a struct declaration. */
+
+/* The __CILKRTS_STRAND_PURE attribute tells the compiler that the value
+ * returned by 'func' for a given argument to 'func' will remain valid until
+ * the next strand boundary (spawn or sync) or until the next call to a
+ * function with the __CILKRTS_STRAND_STALE attribute using the same function
+ * argument.
+ */
+
+/*****************************************************************************
+ * C runtime interface to the hyperobject subsystem
+ *****************************************************************************/
 
 extern "C" {
 
-/* Runtime control.  First argument is parameter name, second value.
+/* Callback function signatures.  The 'r' argument always points to the
+ * reducer itself and is commonly ignored. */
+typedef void (*cilk_c_reducer_reduce_fn_t)(void* r, void* lhs, void* rhs);
+typedef void (*cilk_c_reducer_identity_fn_t)(void* r, void* view);
+typedef void (*cilk_c_reducer_destroy_fn_t)(void* r, void* view);
+typedef void* (*cilk_c_reducer_allocate_fn_t)(void* r, std:: size_t bytes);
+typedef void (*cilk_c_reducer_deallocate_fn_t)(void* r, void* view);
+
+/* Representation of the monoid */
+typedef struct cilk_c_monoid {
+    cilk_c_reducer_reduce_fn_t          reduce_fn;
+    cilk_c_reducer_identity_fn_t        identity_fn;
+    cilk_c_reducer_destroy_fn_t         destroy_fn;
+    cilk_c_reducer_allocate_fn_t        allocate_fn;
+    cilk_c_reducer_deallocate_fn_t      deallocate_fn;
+} cilk_c_monoid;
+
+typedef struct __cilkrts_hyperobject_base
+{
+    cilk_c_monoid       __c_monoid;
+    unsigned long long  __flags;
+    std:: ptrdiff_t   __view_offset;  /* offset (in bytes) to leftmost view */
+    std:: size_t      __view_size;    /* Size of each view */
+} __cilkrts_hyperobject_base;
+
+/* Library functions. */
+
+    void __cilkrts_hyper_create(__cilkrts_hyperobject_base *key);
+ void __cilkrts_hyper_destroy(__cilkrts_hyperobject_base *key);
+ void* __cilkrts_hyper_lookup(__cilkrts_hyperobject_base *key);
+
+
+    void* __cilkrts_hyperobject_alloc(void* ignore, std:: size_t bytes);
+
+    void __cilkrts_hyperobject_dealloc(void* ignore, void* view);
+
+/* No-op destroy function */
+
+    void __cilkrts_hyperobject_noop_destroy(void* ignore, void* ignore2);
+
+}
+
+
+/*
+ * C++ and C interfaces for Cilk reducer hyperobjects
+ */
+
+/* Utility macros */
+
+
+//===================== C++ interfaces ===================================
+
+
+
+// MONOID CONCEPT AND monoid_base CLASS TEMPLATE
+//
+// In mathematics, a "monoid" comprises a set of values (type), an associative
+// operation on that set, and an identity value for that set and that
+// operation.  So for example (integer, +, 0) is a monoid, as is (real, *, 1).
+// The 'Monoid' concept in Cilk++ has a typedef and three functions that
+// represent a that map to a monoid, (T, OP, IDENTITY), as follows:
+//..
+//  value_type          is a typedef for T
+//  reduce(left,right)  evaluates '*left = *left OP *right'
+//  identity(p)         constructs IDENTITY value into the uninitilized '*p'
+//  destroy(p)          calls the destructor on the object pointed-to by 'p'
+//  allocate(size)      return a pointer to size bytes of raw memory
+//  deallocate(p)       deallocate the raw memory at p
+//..
+// 'left', 'right', and 'p' are all pointers to objects of type 'value_type'.
+// All functions must be either 'static' or 'const'.  A class that meets the
+// requirements of the 'Monoid' concept is usually stateless, but will
+// sometimes contain state used to initialize the identity object.
+
+// The 'monoid_base' class template is a useful base class for a large set
+// of monoid classes for which the identity value is a default-constructed
+// value of type 'T', allocated using operator new.  A derived class of
+// 'monoid_base' need only declare and implement the 'reduce' function.
+namespace cilk {
+
+template <class T>
+class monoid_base
+{
+  public:
+    typedef T value_type;
+    void identity(T* p) const { new ((void*) p) T(); }
+    void destroy(T* p) const { p->~T(); }
+    void* allocate(size_t s) const { return operator new(s); }
+    void deallocate(void* p) const { operator delete(p); }
+};
+
+} // end namspace cilk
+
+
+// reducer CLASS TEMPLATE
+//
+// A reducer is instantiated on a Monoid.  The Monoid provides the value type,
+// associative reduce function, and identity for the reducer.  Function view()
+// and operator()() return the current view of the reducer.
+
+namespace cilk {
+
+template <class Monoid>
+class reducer
+{
+    typedef typename Monoid::value_type value_type;
+
+    __cilkrts_hyperobject_base  base_;
+    const Monoid                monoid_; // implementation of monoid interface
+    void*                       initialThis_; // Sanity checker
+
+    __declspec(align(64)) value_type leftmost_;
+
+    // Wrappers around C monoid dispatch functions
+    static void reduce_wrapper(void* r, void* lhs, void* rhs);
+    static void identity_wrapper(void* r, void* view);
+    static void destroy_wrapper(void* r, void* view);
+    static void* allocate_wrapper(void* r, std:: size_t bytes);
+    static void deallocate_wrapper(void* r, void* view);
+
+    void init();
+
+    /* disable copy */
+    reducer(const reducer&);
+    reducer& operator=(const reducer&);
+
+  public:
+    reducer() : monoid_(), leftmost_()
+    {
+        init();
+    }
+
+    // Special case: allow reducer(A) construction from both const and
+    // non-const reference to A.  Allowing this for all argument combinations
+    // is desirable but would result in at least 93 overloads.
+    template <typename A>
+    explicit reducer(A& a)
+        : base_(), monoid_(), leftmost_(a)
+    {
+        init();
+    }
+
+    template <typename A>
+    explicit reducer(const A& a)
+      : base_(), monoid_(), leftmost_(a)
+    {
+        init();
+    }
+
+    template <typename A, typename B>
+    reducer(const A& a, const B& b)
+        : base_(), monoid_(), leftmost_(a,b)
+    {
+        init();
+    }
+
+    template <typename A, typename B, typename C>
+    reducer(const A& a, const B& b, const C& c)
+      : base_(), monoid_(), leftmost_(a,b,c)
+    {
+        init();
+    }
+
+    template <typename A, typename B, typename C, typename D>
+    reducer(const A& a, const B& b, const C& c, const D& d)
+      : base_(), monoid_(), leftmost_(a,b,c,d)
+    {
+        init();
+    }
+
+    template <typename A, typename B, typename C, typename D, typename E>
+    reducer(const A& a, const B& b, const C& c, const D& d, const E& e)
+      : base_(), monoid_(), leftmost_(a,b,c,d,e)
+    {
+        init();
+    }
+
+    // Special case: both const and non-const Monoid reference are needed
+    // so that reducer(Monoid&) is more specialised than
+    // template <typename A> explicit reducer(A& a) and
+    // reducer(const Monoid&) is more specialised than
+    // template <typename A> explicit reducer(const A& a)
+    explicit reducer(Monoid& hmod)
+        : base_(), monoid_(hmod), leftmost_()
+    {
+        init();
+    }
+
+    explicit reducer(const Monoid& hmod)
+        : base_(), monoid_(hmod), leftmost_()
+    {
+        init();
+    }
+
+    // Special case: allow reducer(Monoid,A) construction from both const and
+    // non-const references to A.  Allowing this for all argument combinations
+    // is desirable but would result in at least 93 overloads.
+    template <typename A>
+    reducer(const Monoid& hmod, A& a)
+      : base_(), monoid_(hmod), leftmost_(a)
+    {
+        init();
+    }
+
+    template <typename A>
+    reducer(const Monoid& hmod, const A& a)
+      : base_(), monoid_(hmod), leftmost_(a)
+    {
+        init();
+    }
+
+    template <typename A, typename B>
+    reducer(const Monoid& hmod, const A& a, const B& b)
+      : base_(), monoid_(hmod), leftmost_(a,b)
+    {
+        init();
+    }
+
+    template <typename A, typename B, typename C>
+    reducer(const Monoid& hmod, const A& a, const B& b, const C& c)
+      : base_(), monoid_(hmod), leftmost_(a,b,c)
+    {
+        init();
+    }
+
+    template <typename A, typename B, typename C, typename D>
+    reducer(const Monoid& hmod, const A& a, const B& b, const C& c,
+                const D& d)
+      : base_(), monoid_(hmod), leftmost_(a,b,c,d)
+    {
+        init();
+    }
+
+    template <typename A, typename B, typename C, typename D, typename E>
+    reducer(const Monoid& hmod, const A& a, const B& b, const C& c,
+                const D& d, const E& e)
+      : base_(), monoid_(hmod), leftmost_(a,b,c,d,e)
+    {
+        init();
+    }
+
+    ~reducer();
+
+    /* access the unwrapped object */
+    value_type& view() {
+        /* look up reducer in current map */
+        return *static_cast<value_type *>(__cilkrts_hyper_lookup(&base_));
+    }
+
+    value_type const& view() const {
+        /* look up reducer in current map */
+        return const_cast<reducer*>(this)->view();
+    }
+
+    value_type&       operator()()       { return view(); }
+    value_type const& operator()() const { return view(); }
+
+    const Monoid& monoid() const { return monoid_; }
+};
+
+template <typename Monoid>
+void reducer<Monoid>::init()
+{
+    static const cilk_c_monoid c_monoid_initializer = {
+        (cilk_c_reducer_reduce_fn_t)     &reduce_wrapper,
+        (cilk_c_reducer_identity_fn_t)   &identity_wrapper,
+        (cilk_c_reducer_destroy_fn_t)    &destroy_wrapper,
+        (cilk_c_reducer_allocate_fn_t)   &allocate_wrapper,
+        (cilk_c_reducer_deallocate_fn_t) &deallocate_wrapper
+    };
+
+    base_.__c_monoid = c_monoid_initializer;
+    base_.__flags = 0;
+    base_.__view_offset = (char*) &leftmost_ - (char*) this;
+    base_.__view_size = sizeof(value_type);
+    initialThis_ = this;
+
+    __cilkrts_hyper_create(&base_);
+}
+
+template <typename Monoid>
+void reducer<Monoid>::reduce_wrapper(void* r, void* lhs, void* rhs)
+{
+    reducer* self = static_cast<reducer*>(r);
+    self->monoid_.reduce(static_cast<value_type*>(lhs),
+                         static_cast<value_type*>(rhs));
+}
+
+template <typename Monoid>
+void reducer<Monoid>::identity_wrapper(void* r, void* view)
+{
+    reducer* self = static_cast<reducer*>(r);
+    self->monoid_.identity(static_cast<value_type*>(view));
+}
+
+template <typename Monoid>
+void reducer<Monoid>::destroy_wrapper(void* r, void* view)
+{
+    reducer* self = static_cast<reducer*>(r);
+    self->monoid_.destroy(static_cast<value_type*>(view));
+}
+
+template <typename Monoid>
+void* reducer<Monoid>::allocate_wrapper(void* r, std:: size_t bytes)
+{
+    reducer* self = static_cast<reducer*>(r);
+    return self->monoid_.allocate(bytes);
+}
+
+template <typename Monoid>
+void reducer<Monoid>::deallocate_wrapper(void* r, void* view)
+{
+    reducer* self = static_cast<reducer*>(r);
+    self->monoid_.deallocate(static_cast<value_type*>(view));
+}
+
+template <typename Monoid>
+reducer<Monoid> ::~reducer()
+{
+    // Make sure we haven't been memcopy'd or corrupted
+    static_cast<void>(0);
+    __cilkrts_hyper_destroy(&base_);
+}
+
+} // end namespace cilk
+
+
+
+/*===================== C interfaces ===================================*/
+
+
+/* MACROS FOR DEFINING AND USING C REDUCERS
  *
- * Allowable names:
+ * Example use of these macros
  *
- * "nworkers" -- number of processors that should run Cilk code.
- * The value is a number to be parsed by strtol.
+ *  double array[ARRAY_LEN];
+ *  double sum()
+ *  {
+ *      extern void* double_summing_identity();
+ *      extern void double_summing_reduce(void* lhs, void* rhs);
  *
- * "force reduce" -- test reducer callbacks by allocating new views
- * for every spawn within which a reducer is accessed.  This can
- * significantly reduce performance.  The value is "1" or "true"
- * to enable, "0" or "false" to disable.
+ *      CILK_C_DECLARE_REDUCER(double) total =
+ *          CILK_C_INIT_REDUCER(sizeof(double),
+ *                              double_summing_reduce,
+ *                              double_summing_identity,
+ *                              free,
+ *                              0);
+ *      int i;
  *
- * Return value is zero on success, nonzero on failure (unrecognized
- * parameter, invalid value, called at the wrong time, or other failure). */
-extern __attribute__((visibility("default"),nothrow,nonnull(1)))
-int __cilkrts_set_param(const char *, const char *);
+ *      CILK_C_REGISTER_REDUCER(total);
+ *
+ *      cilk_for (i = 0; i < ARRAY_LEN; ++i)
+ *          REDUCER_VIEW(total) += array[i];
+ *
+ *      CILK_C_UNREGISTER_REDUCER(total);
+ *
+ *      return total.value;
+ *  }
+ */
 
-/* Shut down and deallocate all Cilk state.  The runtime will abort
- * if Cilk is still in use by this thread.  Otherwise the runtime
- * will wait for all other threads using Cilk to exit. */
-extern __attribute__((visibility("default"),nothrow))
-void __cilkrts_end_cilk(void);
+/***************************************************************************
+ *              Common to real and stub implementations
+ ***************************************************************************/
 
-/* Allocate Cilk data structures. */
-extern __attribute__((visibility("default"),nothrow))
-void __cilkrts_init(void);
-
-/* get_workers returns the number of worker threads that this instance
- * of Cilk will attempt to use simultaneously.  get_total_workers returns
- * the number of worker descriptors allocated; this number is usually
- * greater than the return value of get_workers.  Both values are constant
- * within a program. */
-extern __attribute__((visibility("default"),nothrow))
-int __cilkrts_get_nworkers(void), __cilkrts_get_total_workers(void);
-
-/* get_worker_number return a small integer indicating which Cilk
- * worker the function is currently running on.  The number is in
- * the range 0..get_total_workers()-1.  */
-extern __attribute__((visibility("default"),nothrow))
-int __cilkrts_get_worker_number(void);
-
-/* Return non-zero if force reduce mode is on */
-extern __attribute__((visibility("default"),nothrow))
-int __cilkrts_get_force_reduce(void);
-
-} // extern "C"
+extern "C" {
 
 
+}
+
+
+
+/***************************************************************************
+ *              Real implementation
+ ***************************************************************************/
+
+extern "C" {
+
+/* Declare a reducer with 'Type' value type */
+
+/* Initialize a reducer using the Identity, Reduce, and Destroy functions
+ * (the monoid) and with an arbitrary-length comma-separated initializer list.
+ */
+
+/* Register a local reducer. */
+
+/* Unregister a local reducer. */
+
+/* Get the current view for a reducer */
+
+}
+
+
+
+
+/* C++ Interface
+ *
+ * Classes: reducer_opadd<Type>
+ *
+ * Description:
+ * ============
+ * This component provides a reducer-type hyperobject representation
+ * that allows adding values to a non-local variable using the +=, -=,
+ * ++, --, +, and - operators.  A common operation when traversing a data
+ * structure is to sum values into a non-local numeric variable.  When
+ * Cilk parallelism is introduced, however, a data race will occur on
+ * the variable holding the sum.  By replacing the variable with the
+ * hyperobject defined in this component, the data race is eliminated.
+ *
+ * Usage Example:
+ * ==============
+ * Assume we wish to traverse an array of objects, performing an operation on
+ * each object and accumulating the result of the operation into an integer
+ * variable.
+ *..
+ *  int compute(const X& v);
+ *
+ *  int test()
+ *  {
+ *      const std::size_t ARRAY_SIZE = 1000000;
+ *      extern X myArray[ARRAY_SIZE];
+ *      // ...
+ *
+ *      int result;
+ *      for (std::size_t i = 0; i < ARRAY_SIZE; ++i)
+ *      {
+ *          result += compute(myArray[i]);
+ *      }
+ *
+ *      std::cout << "The result is: " << result << std::endl;
+ *
+ *      return 0;
+ *  }
+ *..
+ * Changing the 'for' to a 'cilk_for' will cause the loop to run in parallel,
+ * but doing so will create a data race on the 'result' variable.
+ * The race is solved by changing 'result' to a 'reducer_opadd' hyperobject:
+ *..
+ *  int compute(const X& v);
+ *
+ *  int test()
+ *  {
+ *      const std::size_t ARRAY_SIZE = 1000000;
+ *      extern X myArray[ARRAY_SIZE];
+ *      // ...
+ *
+ *      cilk::reducer_opadd<int> result;
+ *      cilk_for (std::size_t i = 0; i < ARRAY_SIZE; ++i)
+ *      {
+ *          result += compute(myArray[i]);
+ *      }
+ *
+ *      std::cout << "The result is: " << result.get_value() << std::endl;
+ *
+ *      return 0;
+ *  }
+ *..
+ *
+ * Operations provided:
+ * ====================
+ * Given 'reducer_opadd' objects, x and y, the following are
+ * valid statements:
+ *..
+ *  x += 5;
+ *  x = x + 5;
+ *  x -= 5;
+ *  y = y - 5;
+ *  ++x;
+ *  --x;
+ *  x++;
+ *  x--;
+ *..
+ * The following are not valid expressions and will result in a run-time error
+ * in a debug build:
+ *..
+ *  x = y;     // Cannot assign one reducer to another
+ *  x = y + 5; // Mixed reducers
+ *  x = 5 + x; // operator+ is not necessarily commutative
+ *  x = 5 - x; // Violates associativity
+ *..
+ * The the current value of the reducer can be get and set using the
+ * 'get_value' and 'set_value' methods, respectively.  As with most reducers,
+ * 'set_value' and 'get_value' methods produce deterministic results only if
+ * called before the first spawn after creating a 'hyperobject' or when all
+ * strands spawned since creating the 'hyperobject' have been synced.  However,
+ * the difference two values of the same reducer read twice in the same Cilk
+ * strand *is* typically deterministic (assuming the usual relationship between
+ * operator '+' and operator '-' for the specified 'Type'):
+ *..
+ *  cilk::reducer_opadd<int> x;
+ *  cilk_spawn func();
+ *  int a = x.get_value();
+ *  x += 5;
+ *  int b = x.get_value();
+ *  assert(b - a == 5);
+ *..
+ *
+ * Requirements on the 'Type' parameter
+ * ====================================
+ * The 'Type' parameter used to instantiate the 'reducer_opadd' class must
+ * provide a += operator that meets the requirements for an
+ * *associative* *mutating* *operator* as defined in the Cilk++ user manual.
+ * The default constructor for 'Type' must yield an additive identity, i.e.,
+ * a value (such as integer zero) that, when added to any other value, yields
+ * the other value.  If 'Type' also provides a -= operator, then subtraction
+ * is also supported by this reducer. C++ integral types satisfy these
+ * requirements.
+ *
+ * Note that C++ floating-point types do not support truly
+ * associative addition in that (a + b) + c will exhibit different
+ * round-off error than a + (b + c).  However, for numbers of similar
+ * magnitude, a floating-point 'reducer_opadd' may still be useful.
+ */
+
+namespace cilk {
+
+template <typename Type>
+class reducer_opadd
+{
+  public:
+    // Definition of data view, operation, and identity
+    class Monoid : public monoid_base<Type>
+    {
+      public:
+        static void reduce(Type* left, Type* right);
+    };
+
+    // "PRIVATE" HELPER CLASS
+    class temp_sum {
+        friend class reducer_opadd;
+
+        Type* valuePtr_;
+
+        // Default copy constructor, no assignment operator
+        temp_sum& operator=(const temp_sum&);
+
+        explicit temp_sum(Type* valuePtr);
+
+      public:
+        temp_sum& operator+(const Type& x);
+        temp_sum& operator-(const Type& x);
+    };
+
+  public:
+
+    // Construct an 'reducer_opadd' object with a value of 'Type()'.
+    reducer_opadd();
+
+    // Construct an 'reducer_opadd' object with the specified initial value.
+    explicit reducer_opadd(const Type& initial_value);
+
+    // Return a const reference to the current value of this object.
+    const Type& get_value() const;
+
+    // Set the value of this object.  Warning: Setting the value of a
+    // reducer such that it violates the associative operation
+    // algebra will yield results that are likely to differ from
+    // serial execution and may differ from run to run.
+    void set_value(const Type& value);
+
+    // Add 'x' to the value of this reducer and produce a temporary sum object.
+    // The temporary sum can be used for additional arithmetic or assigned back
+    // to this reducer.
+    temp_sum operator+(const Type& x) const;
+
+    // Subtract 'x' from the value of this reducer and produce a temporary sum
+    // object.  The temporary sum can be used for additional arithmetic or
+    // assigned back to this reducer.
+    temp_sum operator-(const Type& x) const;
+
+    // Add 'x' to the value of this object.
+    reducer_opadd& operator+=(const Type& x);
+
+    // Subtract 'x' from the value of this object.
+    reducer_opadd& operator-=(const Type& x);
+
+    // Increment the value of this object using pre-increment syntax.
+    reducer_opadd& operator++();
+
+    // Increment the value of this object using post-increment syntax.  
+    // Because the reducer is not copy-constructible, it is not possible to
+    // return the previous value.
+    void operator++(int);
+
+    // Decrement the value of this object using pre-decrement syntax.
+    reducer_opadd& operator--();
+
+    // Decrement the value of this object using post-decrement syntax.  
+    // Because the reducer is not copy-constructible, it is not possible to
+    // return the previous value.
+    void operator--(int);
+
+    // Merge the result of an addition into this object.  The addition
+    // must involve this reducer, i.e., x = x + 5; not x = y + 5;
+    reducer_opadd& operator=(const temp_sum& temp);
+
+  private:
+    friend class temp_sum;
+
+    // Hyperobject to serve up views
+    reducer<Monoid> imp_;
+
+    // Not copyable
+    reducer_opadd(const reducer_opadd&);
+    reducer_opadd& operator=(const reducer_opadd&);
+};
+
+/////////////////////////////////////////////////////////////////////////////
+// Implementation of inline and template functions
+/////////////////////////////////////////////////////////////////////////////
+
+// ------------------------------------
+// template class reducer_opadd::Monoid
+// ------------------------------------
+
+template <typename Type>
+void
+reducer_opadd<Type>::Monoid::reduce(Type* left, Type* right)
+{
+    *left += *right;
+}
+
+// ----------------------------
+// template class reducer_opadd
+// ----------------------------
+
+template <typename Type>
+inline
+reducer_opadd<Type>::reducer_opadd()
+    : imp_(Type())
+{
+}
+
+template <typename Type>
+inline
+reducer_opadd<Type>::reducer_opadd(const Type& initial_value)
+    : imp_(initial_value)
+{
+}
+
+template <typename Type>
+inline
+const Type& reducer_opadd<Type>::get_value() const
+{
+    return imp_.view();
+}
+
+template <typename Type>
+inline
+void reducer_opadd<Type>::set_value(const Type& value)
+{
+    imp_.view() = value;
+}
+
+template <typename Type>
+inline
+typename reducer_opadd<Type>::temp_sum
+reducer_opadd<Type>::operator+(const Type& x) const
+{
+    Type* valuePtr = const_cast<Type*>(&imp_.view());
+    *valuePtr = *valuePtr + x;
+    return temp_sum(valuePtr);
+}
+
+template <typename Type>
+inline
+typename reducer_opadd<Type>::temp_sum
+reducer_opadd<Type>::operator-(const Type& x) const
+{
+    Type* valuePtr = const_cast<Type*>(&imp_.view());
+    *valuePtr = *valuePtr - x;
+    return temp_sum(valuePtr);
+}
+
+template <typename Type>
+inline
+reducer_opadd<Type>& reducer_opadd<Type>::operator+=(const Type& x)
+{
+    imp_.view() += x;
+    return *this;
+}
+
+template <typename Type>
+inline
+reducer_opadd<Type>& reducer_opadd<Type>::operator-=(const Type& x)
+{
+    imp_.view() -= x;
+    return *this;
+}
+
+template <typename Type>
+inline
+reducer_opadd<Type>& reducer_opadd<Type>::operator++()
+{
+    imp_.view() += 1;
+    return *this;
+}
+
+template <typename Type>
+inline
+void reducer_opadd<Type>::operator++(int)
+{
+    imp_.view() += 1;
+}
+
+template <typename Type>
+inline
+reducer_opadd<Type>& reducer_opadd<Type>::operator--()
+{
+    imp_.view() -= 1;
+    return *this;
+}
+
+template <typename Type>
+inline
+void reducer_opadd<Type>::operator--(int)
+{
+    imp_.view() -= 1;
+}
+
+template <typename Type>
+inline
+reducer_opadd<Type>&
+reducer_opadd<Type>::operator=(
+    const typename reducer_opadd<Type>::temp_sum& temp)
+{
+    // No-op.  Just test that temp was constructed from this.
+    static_cast<void>(0);
+    return *this;
+}
+
+// --------------------------------------
+// template class reducer_opadd::temp_sum
+// --------------------------------------
+
+template <typename Type>
+inline
+reducer_opadd<Type>::temp_sum::temp_sum(Type *valuePtr)
+    : valuePtr_(valuePtr)
+{
+}
+
+template <typename Type>
+inline
+typename reducer_opadd<Type>::temp_sum&
+reducer_opadd<Type>::temp_sum::operator+(const Type& x)
+{
+    *valuePtr_ = *valuePtr_ + x;
+    return *this;
+}
+
+template <typename Type>
+inline
+typename reducer_opadd<Type>::temp_sum&
+reducer_opadd<Type>::temp_sum::operator-(const Type& x)
+{
+    *valuePtr_ = *valuePtr_ - x;
+    return *this;
+}
+
+} // namespace cilk
+
+
+/* C Interface
+ */
+
+extern "C" {
+
+
+/* Declare an instance of the reducer for a specific numeric type */
+
+/* Declare an instance of the reducer type for each numeric type */
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) char value; } cilk_c_reducer_opadd_char;  void cilk_c_reducer_opadd_reduce_char(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_char(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) unsigned char value; } cilk_c_reducer_opadd_uchar;  void cilk_c_reducer_opadd_reduce_uchar(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_uchar(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) signed char value; } cilk_c_reducer_opadd_schar;  void cilk_c_reducer_opadd_reduce_schar(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_schar(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) wchar_t value; } cilk_c_reducer_opadd_wchar_t;  void cilk_c_reducer_opadd_reduce_wchar_t(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_wchar_t(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) short value; } cilk_c_reducer_opadd_short;  void cilk_c_reducer_opadd_reduce_short(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_short(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) unsigned short value; } cilk_c_reducer_opadd_ushort;  void cilk_c_reducer_opadd_reduce_ushort(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_ushort(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) int value; } cilk_c_reducer_opadd_int;  void cilk_c_reducer_opadd_reduce_int(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_int(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) unsigned int value; } cilk_c_reducer_opadd_uint;  void cilk_c_reducer_opadd_reduce_uint(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_uint(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) unsigned int value; } cilk_c_reducer_opadd_unsigned;  void cilk_c_reducer_opadd_reduce_unsigned(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_unsigned(void* key, void* v);; /* alternate name */
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) long value; } cilk_c_reducer_opadd_long;  void cilk_c_reducer_opadd_reduce_long(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_long(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) unsigned long value; } cilk_c_reducer_opadd_ulong;  void cilk_c_reducer_opadd_reduce_ulong(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_ulong(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) long long value; } cilk_c_reducer_opadd_longlong;  void cilk_c_reducer_opadd_reduce_longlong(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_longlong(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) unsigned long long value; } cilk_c_reducer_opadd_ulonglong;  void cilk_c_reducer_opadd_reduce_ulonglong(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_ulonglong(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) float value; } cilk_c_reducer_opadd_float;  void cilk_c_reducer_opadd_reduce_float(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_float(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) double value; } cilk_c_reducer_opadd_double;  void cilk_c_reducer_opadd_reduce_double(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_double(void* key, void* v);;
+typedef struct { __cilkrts_hyperobject_base __cilkrts_hyperbase; __declspec(align(64)) long double value; } cilk_c_reducer_opadd_longdouble;  void cilk_c_reducer_opadd_reduce_longdouble(void* key, void* l, void* r);  void cilk_c_reducer_opadd_identity_longdouble(void* key, void* v);;
+
+/* Declare function bodies for the reducer for a specific numeric type */
+
+/* c_reducers.c contains definitions for all of the monoid functions
+   for the C numeric tyeps.  The contents of reducer_opadd.c are as follows:
+
+CILK_C_REDUCER_OPADD_IMP(char,char)
+CILK_C_REDUCER_OPADD_IMP(unsigned char,uchar)
+CILK_C_REDUCER_OPADD_IMP(signed char,schar)
+CILK_C_REDUCER_OPADD_IMP(wchar_t,wchar_t)
+CILK_C_REDUCER_OPADD_IMP(short,short)
+CILK_C_REDUCER_OPADD_IMP(unsigned short,ushort)
+CILK_C_REDUCER_OPADD_IMP(int,int)
+CILK_C_REDUCER_OPADD_IMP(unsigned int,uint)
+CILK_C_REDUCER_OPADD_IMP(unsigned int,unsigned) // alternate name
+CILK_C_REDUCER_OPADD_IMP(long,long)
+CILK_C_REDUCER_OPADD_IMP(unsigned long,ulong)
+CILK_C_REDUCER_OPADD_IMP(long long,longlong)
+CILK_C_REDUCER_OPADD_IMP(unsigned long long,ulonglong)
+CILK_C_REDUCER_OPADD_IMP(float,float)
+CILK_C_REDUCER_OPADD_IMP(double,double)
+CILK_C_REDUCER_OPADD_IMP(long double,longdouble)
+
+*/
+
+}
 
 
 using namespace std;
@@ -35267,6 +36717,111 @@ using namespace std;
 template <int N_RANK, typename BF>
 struct meta_grid_boundary {
 	static inline void single_step(int t, grid_info<N_RANK> const & grid, grid_info<N_RANK> const & initial_grid, BF const & bf); 
+};
+
+template <typename BF>
+struct meta_grid_boundary <8, BF>{
+	static inline void single_step(int t, grid_info<8> const & grid, grid_info<8> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[7]; i < grid.x1[7]; ++i) {
+            int new_i = ((i) - (((initial_grid . x1[7])-(initial_grid . x0[7])) & -((i)>=(initial_grid . x1[7]))));
+			for (int j = grid.x0[6]; j < grid.x1[6]; ++j) {
+                int new_j = ((j) - (((initial_grid . x1[6])-(initial_grid . x0[6])) & -((j)>=(initial_grid . x1[6]))));
+        for (int k = grid.x0[5]; k < grid.x1[5]; ++k) {
+            int new_k = ((k) - (((initial_grid . x1[5])-(initial_grid . x0[5])) & -((k)>=(initial_grid . x1[5]))));
+            for (int l = grid.x0[4]; l < grid.x1[4]; ++l) {
+                int new_l = ((l) - (((initial_grid . x1[4])-(initial_gird . x0[4])) & -((l)>=(initial_grid . x1[4]))));
+        for (int m = grid.x0[3]; m < grid.x1[3]; ++m) {
+            int new_m = ((m) - (((initial_grid . x1[3])-(initial_grid . x0[3])) & -((m)>=(initial_grid . x1[3]))));
+            for (int n = grid.x0[2]; n < grid.x1[2]; ++n) {
+                int new_n = ((n) - (((initial_grid . x1[2])-(initial_grid . x0[2])) & -((n)>=(initial_grid . x1[2]))));
+        for (int o = grid.x0[1]; o < grid.x1[1]; ++o) {
+            int new_o = ((o) - (((initial_grid . x1[1])-(initial_grid . x0[1])) & -((o)>=(initial_grid . x1[1]))));
+            for (int p = grid.x0[0]; p < grid.x1[0]; ++p) {
+                int new_p = ((p) - (((initial_grid . x1[0])-(initial_grid . x0[0])) & -((p)>=(initial_grid . x1[0]))));
+                bf(t, new_i, new_j, new_k, new_l, new_m, new_n, new_o, new_p);
+            } } } } } } } }
+    }
+};
+
+template <typename BF>
+struct meta_grid_boundary <7, BF>{
+	static inline void single_step(int t, grid_info<7> const & grid, grid_info<7> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[6]; i < grid.x1[6]; ++i) {
+            int new_i = ((i) - (((initial_grid . x1[6])-(initial_grid . x0[6])) & -((i)>=(initial_grid . x1[6]))));
+			for (int j = grid.x0[5]; j < grid.x1[5]; ++j) {
+                int new_j = ((j) - (((initial_grid . x1[5])-(initial_grid . x0[5])) & -((j)>=(initial_grid . x1[5]))));
+        for (int k = grid.x0[4]; k < grid.x1[4]; ++k) {
+            int new_k = ((k) - (((initial_grid . x1[4])-(initial_grid . x0[4])) & -((k)>=(initial_grid . x1[4]))));
+            for (int l = grid.x0[3]; l < grid.x1[3]; ++l) {
+                int new_l = ((l) - (((initial_grid . x1[3])-(initial_gird . x0[3])) & -((l)>=(initial_grid . x1[3]))));
+        for (int m = grid.x0[2]; m < grid.x1[2]; ++m) {
+            int new_m = ((m) - (((initial_grid . x1[2])-(initial_grid . x0[2])) & -((m)>=(initial_grid . x1[2]))));
+            for (int n = grid.x0[1]; n < grid.x1[1]; ++n) {
+                int new_n = ((n) - (((initial_grid . x1[1])-(initial_grid . x0[1])) & -((n)>=(initial_grid . x1[1]))));
+        for (int o = grid.x0[0]; o < grid.x1[0]; ++o) {
+            int new_o = ((o) - (((initial_grid . x1[0])-(initial_grid . x0[0])) & -((o)>=(initial_grid . x1[0]))));
+                bf(t, new_i, new_j, new_k, new_l, new_m, new_n, new_o);
+            } } } } } } }
+    }
+};
+
+template <typename BF>
+struct meta_grid_boundary <6, BF>{
+	static inline void single_step(int t, grid_info<6> const & grid, grid_info<6> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[5]; i < grid.x1[5]; ++i) {
+            int new_i = ((i) - (((initial_grid . x1[5])-(initial_grid . x0[5])) & -((i)>=(initial_grid . x1[5]))));
+			for (int j = grid.x0[4]; j < grid.x1[4]; ++j) {
+                int new_j = ((j) - (((initial_grid . x1[4])-(initial_grid . x0[4])) & -((j)>=(initial_grid . x1[4]))));
+        for (int k = grid.x0[3]; k < grid.x1[3]; ++k) {
+            int new_k = ((k) - (((initial_grid . x1[3])-(initial_grid . x0[3])) & -((k)>=(initial_grid . x1[3]))));
+            for (int l = grid.x0[2]; l < grid.x1[2]; ++l) {
+                int new_l = ((l) - (((initial_grid . x1[2])-(initial_gird . x0[2])) & -((l)>=(initial_grid . x1[2]))));
+        for (int m = grid.x0[1]; m < grid.x1[1]; ++m) {
+            int new_m = ((m) - (((initial_grid . x1[1])-(initial_grid . x0[1])) & -((m)>=(initial_grid . x1[1]))));
+            for (int n = grid.x0[0]; n < grid.x1[0]; ++n) {
+                int new_n = ((n) - (((initial_grid . x1[0])-(initial_grid . x0[0])) & -((n)>=(initial_grid . x1[0]))));
+                bf(t, new_i, new_j, new_k, new_l, new_m, new_n);
+            } } } } } } 
+    }
+};
+
+template <typename BF>
+struct meta_grid_boundary <5, BF>{
+	static inline void single_step(int t, grid_info<5> const & grid, grid_info<5> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[4]; i < grid.x1[4]; ++i) {
+            int new_i = ((i) - (((initial_grid . x1[4])-(initial_grid . x0[4])) & -((i)>=(initial_grid . x1[4]))));
+			for (int j = grid.x0[3]; j < grid.x1[3]; ++j) {
+                int new_j = ((j) - (((initial_grid . x1[3])-(initial_grid . x0[3])) & -((j)>=(initial_grid . x1[3]))));
+        for (int k = grid.x0[2]; k < grid.x1[2]; ++k) {
+            int new_k = ((k) - (((initial_grid . x1[2])-(initial_grid . x0[2])) & -((k)>=(initial_grid . x1[2]))));
+            for (int l = grid.x0[1]; l < grid.x1[1]; ++l) {
+                int new_l = ((l) - (((initial_grid . x1[1])-(initial_gird . x0[1])) & -((l)>=(initial_grid . x1[1]))));
+        for (int m = grid.x0[0]; m < grid.x1[0]; ++m) {
+            int new_m = ((m) - (((initial_grid . x1[0])-(initial_grid . x0[0])) & -((m)>=(initial_grid . x1[0]))));
+                bf(t, new_i, new_j, new_k, new_l, new_m);
+            } } } } } 
+    }
+};
+
+template <typename BF>
+struct meta_grid_boundary <4, BF>{
+	static inline void single_step(int t, grid_info<4> const & grid, grid_info<4> const & initial_grid, BF const & bf) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[3]; i < grid.x1[3]; ++i) {
+            int new_i = ((i) - (((initial_grid . x1[3])-(initial_grid . x0[3])) & -((i)>=(initial_grid . x1[3]))));
+			for (int j = grid.x0[2]; j < grid.x1[2]; ++j) {
+                int new_j = ((j) - (((initial_grid . x1[2])-(initial_grid . x0[2])) & -((j)>=(initial_grid . x1[2]))));
+        for (int k = grid.x0[1]; k < grid.x1[1]; ++k) {
+            int new_k = ((k) - (((initial_grid . x1[1])-(initial_grid . x0[1])) & -((k)>=(initial_grid . x1[1]))));
+            for (int l = grid.x0[0]; l < grid.x1[0]; ++l) {
+                int new_l = ((l) - (((initial_grid . x1[0])-(initial_gird . x0[0])) & -((l)>=(initial_grid . x1[0]))));
+                bf(t, new_i, new_j, new_k, new_l);
+            } } } } 
+    } 
 };
 
 template <typename BF>
@@ -35280,9 +36835,7 @@ struct meta_grid_boundary <3, BF>{
         for (int k = grid.x0[0]; k < grid.x1[0]; ++k) {
             int new_k = ((k) - (((initial_grid . x1[0])-(initial_grid . x0[0])) & -((k)>=(initial_grid . x1[0]))));
                 bf(t, new_i, new_j, new_k);
-        }
-			}
-		}
+        } } }
 	} 
 };
 
@@ -35294,8 +36847,7 @@ struct meta_grid_boundary <2, BF>{
 			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
                 int new_j = ((j) - (((initial_grid . x1[0])-(initial_grid . x0[0])) & -((j)>=(initial_grid . x1[0]))));
                 bf(t, new_i, new_j);
-			}
-		}
+			} }
 	} 
 };
 
@@ -35315,6 +36867,82 @@ struct meta_grid_interior {
 };
 
 template <typename F>
+struct meta_grid_interior <8, F>{
+	static inline void single_step(int t, grid_info<8> const & grid, grid_info<8> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[7]; i < grid.x1[7]; ++i) {
+			for (int j = grid.x0[6]; j < grid.x1[6]; ++j) {
+        for (int k = grid.x0[5]; k < grid.x1[5]; ++k) {
+            for (int l = grid.x0[4]; l < grid.x1[4]; ++l) {
+        for (int m = grid.x0[3]; m < grid.x1[3]; ++m) {
+            for (int n = grid.x0[2]; n < grid.x1[2]; ++n) {
+        for (int o = grid.x0[1]; o < grid.x1[1]; ++o) {
+            for (int p = grid.x0[0]; p < grid.x1[0]; ++p) {
+                f(t, i, j, k, l, m, n, o, p);
+            } } } } } } } }
+    }
+};
+
+template <typename F>
+struct meta_grid_interior <7, F>{
+	static inline void single_step(int t, grid_info<7> const & grid, grid_info<7> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[6]; i < grid.x1[6]; ++i) {
+			for (int j = grid.x0[5]; j < grid.x1[5]; ++j) {
+        for (int k = grid.x0[4]; k < grid.x1[4]; ++k) {
+            for (int l = grid.x0[3]; l < grid.x1[3]; ++l) {
+        for (int m = grid.x0[2]; m < grid.x1[2]; ++m) {
+            for (int n = grid.x0[1]; n < grid.x1[1]; ++n) {
+        for (int o = grid.x0[0]; o < grid.x1[0]; ++o) {
+                f(t, i, j, k, l, m, n, o);
+            } } } } } } }
+    }
+};
+
+template <typename F>
+struct meta_grid_interior <6, F>{
+	static inline void single_step(int t, grid_info<6> const & grid, grid_info<6> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[5]; i < grid.x1[5]; ++i) {
+			for (int j = grid.x0[4]; j < grid.x1[4]; ++j) {
+        for (int k = grid.x0[3]; k < grid.x1[3]; ++k) {
+            for (int l = grid.x0[2]; l < grid.x1[2]; ++l) {
+        for (int m = grid.x0[1]; m < grid.x1[1]; ++m) {
+            for (int n = grid.x0[0]; n < grid.x1[0]; ++n) {
+                f(t, i, j, k, l, m, n);
+            } } } } } }
+    } 
+};
+
+template <typename F>
+struct meta_grid_interior <5, F>{
+	static inline void single_step(int t, grid_info<5> const & grid, grid_info<5> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[4]; i < grid.x1[4]; ++i) {
+			for (int j = grid.x0[3]; j < grid.x1[3]; ++j) {
+        for (int k = grid.x0[2]; k < grid.x1[2]; ++k) {
+            for (int l = grid.x0[1]; l < grid.x1[1]; ++l) {
+        for (int m = grid.x0[0]; m < grid.x1[0]; ++m) {
+                f(t, i, j, k, l, m);
+            } } } } } 
+    }
+};
+
+template <typename F>
+struct meta_grid_interior <4, F>{
+	static inline void single_step(int t, grid_info<4> const & grid, grid_info<4> const & initial_grid, F const & f) {
+        /* add cilk_for here will only lower the performance */
+		for (int i = grid.x0[3]; i < grid.x1[3]; ++i) {
+			for (int j = grid.x0[2]; j < grid.x1[2]; ++j) {
+        for (int k = grid.x0[1]; k < grid.x1[1]; ++k) {
+            for (int l = grid.x0[0]; l < grid.x1[0]; ++l) {
+                f(t, i, j, k, l);
+            } } } }
+	} 
+};
+
+
+template <typename F>
 struct meta_grid_interior <3, F>{
 	static inline void single_step(int t, grid_info<3> const & grid, grid_info<3> const & initial_grid, F const & f) {
         /* add cilk_for here will only lower the performance */
@@ -35322,9 +36950,7 @@ struct meta_grid_interior <3, F>{
 			for (int j = grid.x0[1]; j < grid.x1[1]; ++j) {
         for (int k = grid.x0[0]; k < grid.x1[0]; ++k) {
                 f(t, i, j, k);
-        }
-			}
-		}
+        } } }
 	} 
 };
 
@@ -35334,8 +36960,7 @@ struct meta_grid_interior <2, F>{
 		for (int i = grid.x0[1]; i < grid.x1[1]; ++i) {
 			for (int j = grid.x0[0]; j < grid.x1[0]; ++j) {
                 f(t, i, j);
-			}
-		}
+			} }
 	} 
 };
 
@@ -35358,6 +36983,16 @@ static inline void set_worker_count(const char * nstr)
 }
 
 template <int N_RANK>
+struct power {
+    enum { value = 5 * power<N_RANK-1>::value };
+};
+
+template <>
+struct power<1> {
+    enum {value = 5};
+}; 
+
+template <int N_RANK>
 struct Algorithm {
 	private:
         /* different stencils will have different slopes */
@@ -35369,26 +37004,31 @@ struct Algorithm {
         int dx_recursive_boundary_[N_RANK];
         const int dt_recursive_;
         const int dt_recursive_boundary_;
+        int Z;
+        const int r_t; /* # of pieces cut in time dimension */
         int N_CORES;
-	public:
-    typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
-    typedef int index_info[N_RANK];
-    typedef struct {
-        int level; /* level is how many dimensions we have cut so far */
-        int t0, t1;
-        grid_info<N_RANK> grid;
-    } queue_info;
+        typedef int index_info[N_RANK];
+        typedef struct {
+            int level; /* level is how many dimensions we have cut so far */
+            int t0, t1;
+            grid_info<N_RANK> grid;
+        } queue_info;
 
-    /* we can use toggled circular queue! */
-    grid_info<N_RANK> phys_grid_;
-    int phys_length_[N_RANK];
-	int slope_[N_RANK];
-    int stride_[N_RANK];
-    int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
-    bool boundarySet, physGridSet, slopeSet;
+        int ALGOR_QUEUE_SIZE;
+
+        /* we can use toggled circular queue! */
+        grid_info<N_RANK> phys_grid_;
+        int phys_length_[N_RANK];
+        int slope_[N_RANK];
+        int stride_[N_RANK];
+        int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
+        bool boundarySet, physGridSet, slopeSet;
+	public:
+
+    typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(1), dt_recursive_boundary_(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -35396,12 +37036,16 @@ struct Algorithm {
             ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
         }
-        for (int i = N_RANK-1; i > 0; --i)
-            dx_recursive_[i] = 1;
-        dx_recursive_[0] = 1;
+        for (int i = N_RANK-1; i > 1; --i)
+            dx_recursive_[i] = 3;
+        dx_recursive_[1] = 3;
+        dx_recursive_[0] = 1000;
+        Z = 10000;
         boundarySet = false;
         physGridSet = false;
         slopeSet = true;
+        /* ALGOR_QUEUE_SIZE = 3^N_RANK */
+        // ALGOR_QUEUE_SIZE = power<N_RANK>::value;
         N_CORES = __cilkrts_get_nworkers();
 //        cout << " N_CORES = " << N_CORES << endl;
 
@@ -35432,16 +37076,6 @@ struct Algorithm {
     template <typename F, typename BF>
     inline void sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 
-    template <typename F>
-    inline void sim_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
-    template <typename F>
-    inline void sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
-
-    template <typename F, typename BF>
-    inline void sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
-    template <typename F, typename BF>
-    inline void sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
-
     template <typename F> 
 	inline void base_case_kernel_interior(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename BF> 
@@ -35455,6 +37089,8 @@ struct Algorithm {
     template <typename F> 
     inline void walk_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     /* recursive algorithm for obase */
+    template <typename F> 
+    inline void obase_m(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
     inline void obase_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
@@ -35481,10 +37117,6 @@ struct Algorithm {
     inline void naive_cut_space_ncores(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F> 
     inline void cut_space_ncores_boundary(int dim, int t0, int t1, grid_info<N_RANK> const grid, F const & f);
-	void print_grid(FILE * fp, int t0, int t1, grid_info<N_RANK> const & grid);
-	void print_sync(FILE * fp);
-	void print_index(int t, int const idx[]);
-	void print_region(int t, int const head[], int const tail[]);
 };
 
 template <int N_RANK>
@@ -35555,105 +37187,6 @@ inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_in
 	}
 }
 
-template <int N_RANK>
-void Algorithm<N_RANK>::print_grid(FILE *fp, int t0, int t1, grid_info<N_RANK> const & grid)
-{
-    int i;
-    fprintf(fp, "{ BASE, ");
-    fprintf(fp, "t = {%d, %d}, {", t0, t1);
-
-    fprintf(fp, "x0 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print x0[3] */
-        fprintf(fp, "%lu, ", grid.x0[i]);
-    }
-    fprintf(fp, "%lu}, ", grid.x0[i]);
-
-    fprintf(fp, "x1 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print x1[3] */
-        fprintf(fp, "%lu, ", grid.x1[i]);
-    }
-    fprintf(fp, "%lu}, ", grid.x1[i]);
-
-    fprintf(fp, "dx0 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print dx0[3] */
-        fprintf(fp, "%d, ", grid.dx0[i]);
-    }
-    fprintf(fp, "%d}, ", grid.dx0[i]);
-
-    fprintf(fp, "dx1 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print dx1[3] */
-        fprintf(fp, "%d, ", grid.dx1[i]);
-    }
-    fprintf(fp, "%d}}}, \n", grid.dx1[i]);
-    fflush(fp);
-    return;
-}
-
-template <int N_RANK>
-void Algorithm<N_RANK>::print_sync(FILE * fp)
-{
-    int i;
-    fprintf(fp, "{ SYNC, ");
-    fprintf(fp, "t = {0, 0}, {");
-
-    fprintf(fp, "x0 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print x0[3] */
-        fprintf(fp, "0, ");
-    }
-    fprintf(fp, "0}, ");
-
-    fprintf(fp, "x1 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print x1[3] */
-        fprintf(fp, "0, ");
-    }
-    fprintf(fp, "0}, ");
-
-    fprintf(fp, "dx0 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print dx0[3] */
-        fprintf(fp, "0, ");
-    }
-    fprintf(fp, "0}, ");
-
-    fprintf(fp, "dx1 = {");
-    for (i = 0; i < N_RANK-1; ++i) {
-        /* print dx1[3] */
-        fprintf(fp, "0, ");
-    }
-    fprintf(fp, "0}}}, \n");
-    fflush(fp);
-    return;
-}
-
-template <int N_RANK>
-void Algorithm<N_RANK>::print_index(int t, int const idx[])
-{
-    printf("U(t=%lu, {", t);
-    for (int i = 0; i < N_RANK; ++i) {
-        printf("%lu ", idx[i]);
-    }
-    printf("}) ");
-    fflush(stdout);
-}
-
-template <int N_RANK>
-void Algorithm<N_RANK>::print_region(int t, int const head[], int const tail[])
-{
-    printf("%s:%lu t=%lu, {", __FUNCTION__, 436, t);
-    for (int i = 0; i < N_RANK; ++i) {
-        printf("{%lu, %lu} ", head[i], tail[i]);
-    }
-    printf("}\n");
-    fflush(stdout);
-
-}
-
 /*
  **********************************************************************************
  *  Copyright (C) 2010  Massachusetts Institute of Technology
@@ -35712,7 +37245,7 @@ inline bool Algorithm<N_RANK>::within_boundary(int t0, int t1, grid_info<N_RANK>
     bool l_touch_boundary = false;
     int lt = t1 - t0;
     for (int i = 0; i < N_RANK; ++i) {
-        l_touch_boundary |= touch_boundary(i, t1-t0, grid);
+        l_touch_boundary |= touch_boundary(i, lt, grid);
     }
     return !l_touch_boundary;
 }
@@ -35845,12 +37378,13 @@ inline void Algorithm<N_RANK>::walk_bicut(int t0, int t1, grid_info<N_RANK> cons
 
 
 
-/* This is for interior region space cut! */
+/* ************************************************************************************** */
+/* following are the procedures for obase */
 template <int N_RANK> template <typename F>
-inline void Algorithm<N_RANK>::sim_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
+inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
-    queue_info *l_father, *l_son;
-    queue_info circular_queue_[2][200];
+    queue_info *l_father;
+    queue_info circular_queue_[2][(power<N_RANK> ::value)];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
 
     for (int i = 0; i < 2; ++i) {
@@ -35858,339 +37392,86 @@ inline void Algorithm<N_RANK>::sim_space_cut(int t0, int t1, grid_info<N_RANK> c
     }
 
     /* set up the initial grid */
-    do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+    do { (static_cast<void> (0)); circular_queue_[0][queue_tail_[0]]. level = N_RANK-1; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[0] + 1))>=((power<N_RANK> ::value))))); } while(0);
     for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         const int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
-            do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-            if (l_father->level == N_RANK) {
+            do { (static_cast<void> (0)); l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } while(0);
+            if (l_father->level < 0) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                _Cilk_spawn sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
+                if (queue_len_[curr_dep_pointer] == 0)
+                    sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                else
+                    _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
             } else {
                 /* performing a space cut on dimension 'level' */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
+                do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
                 const grid_info<N_RANK> l_father_grid = l_father->grid;
-                grid_info<N_RANK> l_son_grid = l_father->grid;
                 const int t0 = l_father->t0, t1 = l_father->t1;
+                const int lt = (t1 - t0);
                 const int level = l_father->level;
+                const int thres = 2 * slope_[level] * lt;
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
-                const int sep = (int)lb/2;
-                const int r = 2;
-                const int l_start = (l_father_grid.x0[level]);
-                const int l_end = (l_father_grid.x1[level]);
+                const bool can_cut = (lb >= 2 * thres && lb > dx_recursive_[level]);
+                if (!can_cut) {
+                    /* if we can't cut into this dimension, just directly push 
+                     * it into the circular queue 
+                     */
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                } else {
+                    /* can_cut! */
+                    const int sep = (int)lb/2;
+                    const int r = 2;
+                    grid_info<N_RANK> l_son_grid = l_father_grid;
+                    const int l_start = (l_father_grid.x0[level]);
+                    const int l_end = (l_father_grid.x1[level]);
 
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_end;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                /* cilk_sync */
-                const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = -slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = slope_[level];
-                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                if (l_father_grid.dx0[level] != slope_[level]) {
+                    /* push one sub-grid into circular queue of (curr_dep) */
                     l_son_grid.x0[level] = l_start;
-                    l_son_grid.dx0[level] = l_father_grid.dx0[level];
-                    l_son_grid.x1[level] = l_start;
-                    l_son_grid.dx1[level] = slope_[level];
-                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                }
-                if (l_father_grid.dx1[level] != -slope_[level]) {
-                    l_son_grid.x0[level] = l_end;
-                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start + sep;
+                    l_son_grid.dx0[level] = slope_[level];
                     l_son_grid.x1[level] = l_end;
-                    l_son_grid.dx1[level] = l_father_grid.dx1[level];
-                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                }
-            }
-        } /* end while (queue_len_[curr_dep] > 0) */
-        _Cilk_sync;
-        (static_cast<void> (0));
-    } /* end for (curr_dep < N_RANK+1) */
-}
+                    l_son_grid.dx1[level] = -slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
 
-/* This is for boundary region space cut! */
-template <int N_RANK> template <typename F, typename BF>
-inline void Algorithm<N_RANK>::sim_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
-{
-    queue_info *l_father, *l_son;
-    queue_info circular_queue_[2][200];
-    int queue_head_[2], queue_tail_[2], queue_len_[2];
-
-    for (int i = 0; i < 2; ++i) {
-        queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
-    }
-
-    /* set up the initial grid */
-    do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
-        const int curr_dep_pointer = (curr_dep & 0x1);
-        while (queue_len_[curr_dep_pointer] > 0) {
-            do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-            if (l_father->level == N_RANK) {
-                /* spawn all the grids in circular_queue_[curr_dep][] */
-                /* use cilk_spawn to spawn all the sub-grid */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
-                    _Cilk_spawn sim_bicut(l_father->t0, l_father->t1, l_father->grid, f);
-                } else {
-                    _Cilk_spawn sim_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
-                }
-            } else {
-                /* performing a space cut on dimension 'level' */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                const grid_info<N_RANK> l_father_grid = l_father->grid;
-                grid_info<N_RANK> l_son_grid = l_father->grid;
-                const int t0 = l_father->t0, t1 = l_father->t1;
-                const int level = l_father->level;
-                const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
-                bool initial_cut = (lb == phys_length_[level]);
-                const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
-                const int r = 2;
-                const int l_start = (initial_cut) ? (l_father_grid.x0[level]+slope_[level]) : (l_father_grid.x0[level]);
-                const int l_end = (initial_cut) ? (l_father_grid.x1[level]-slope_[level]) : (l_father_grid.x1[level]);
-
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_end;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                /* cilk_sync */
-                const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = -slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = slope_[level];
-                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                if (initial_cut) {
-                    /* merge triangles! */
-                    l_son_grid.x0[level] = l_end;
+                    /* cilk_sync */
+                    const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                    /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                    l_son_grid.x0[level] = l_start + sep;
                     l_son_grid.dx0[level] = -slope_[level];
-                    l_son_grid.x1[level] = l_end+2*slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
                     l_son_grid.dx1[level] = slope_[level];
-                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                } else {
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
                     if (l_father_grid.dx0[level] != slope_[level]) {
                         l_son_grid.x0[level] = l_start;
                         l_son_grid.dx0[level] = l_father_grid.dx0[level];
                         l_son_grid.x1[level] = l_start;
                         l_son_grid.dx1[level] = slope_[level];
-                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                     }
                     if (l_father_grid.dx1[level] != -slope_[level]) {
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
                         l_son_grid.dx1[level] = l_father_grid.dx1[level];
-                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                     }
-                }
-            }
-        } /* end while (queue_len_[curr_dep] > 0) */
-        _Cilk_sync;
-        (static_cast<void> (0));
-    } /* end for (curr_dep < N_RANK+1) */
-}
-
-/* This is the version for interior region cut! */
-template <int N_RANK> template <typename F>
-inline void Algorithm<N_RANK>::sim_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
-{
-    const int lt = t1 - t0;
-    bool can_cut = true;
-    index_info lb, thres;
-    grid_info<N_RANK> l_son_grid;
-
-    for (int i = N_RANK-1; i >= 0; --i) {
-        lb[i] = (grid.x1[i] - grid.x0[i]);
-        thres[i] = 2 * (2 * slope_[i] * lt);
-        can_cut = can_cut && (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
-    }
-
-    if (can_cut) {
-        /* cut into space */
-        sim_space_cut(t0, t1, grid, f);
-        return;
-    } else if (lt > dt_recursive_) {
-        /* cut into time */
-        int halflt = lt / 2;
-        l_son_grid = grid;
-        sim_bicut(t0, t0+halflt, l_son_grid, f);
-
-        for (int i = 0; i < N_RANK; ++i) {
-            l_son_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
-            l_son_grid.dx0[i] = grid.dx0[i];
-            l_son_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
-            l_son_grid.dx1[i] = grid.dx1[i];
-        }
-        sim_bicut(t0+halflt, t1, l_son_grid, f);
-        return;
-    } else {
-        // base case
-        base_case_kernel_interior(t0, t1, grid, f);
-        return;
-    }
-}
-
-/* This is the version for boundary region cut! */
-template <int N_RANK> template <typename F, typename BF>
-inline void Algorithm<N_RANK>::sim_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
-{
-    const int lt = t1 - t0;
-    bool can_cut = true, call_boundary = false;
-    index_info lb, thres;
-    grid_info<N_RANK> l_father_grid = grid, l_son_grid;
-    bool l_touch_boundary[N_RANK];
-
-    for (int i = N_RANK-1; i >= 0; --i) {
-        /* l_father_grid may be mapped to a new region in touch_boundary() */
-        l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
-        call_boundary |= l_touch_boundary[i];
-        lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
-        thres[i] = 2 * (2 * slope_[i] * lt);
-        /* for the initial cut, we exclude the begining and end point to minimize
-         * the overhead on boundary
-        */
-        /* some dimension touches the boundary, some may NOT! */
-        can_cut = can_cut && ((l_touch_boundary[i]) ? ((lb[i] == phys_length_[i]) ? (lb[i] - 2 * slope_[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i])) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
-        // can_cut = can_cut && ((l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
-    }
-
-    if (can_cut) {
-        /* cut into space */
-        /* push the first grid that can be cut into the circular queue */
-        /* boundary cuts! */
-        if (call_boundary) 
-            sim_space_cut_p(t0, t1, l_father_grid, f, bf);
-        else
-            sim_space_cut(t0, t1, l_father_grid, f);
-        return;
-    } else if ((call_boundary) ? (lt > dt_recursive_boundary_) : (lt > dt_recursive_)) {
-        /* cut into time */
-        int halflt = lt / 2;
-        l_son_grid = l_father_grid;
-        sim_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
-
-        for (int i = 0; i < N_RANK; ++i) {
-            l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
-            l_son_grid.dx0[i] = l_father_grid.dx0[i];
-            l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
-            l_son_grid.dx1[i] = l_father_grid.dx1[i];
-        }
-        sim_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
-        return;
-    } else {
-        // base case
-        if (call_boundary) {
-            base_case_kernel_boundary(t0, t1, l_father_grid, bf);
-        } else {
-            base_case_kernel_interior(t0, t1, l_father_grid, f);
-        }
-        return;
-    }
-}
-/* ************************************************************************************** */
-/* following are the procedures for obase */
-template <int N_RANK> template <typename F>
-inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
-{
-    queue_info *l_father, *l_son;
-    queue_info circular_queue_[2][200];
-    int queue_head_[2], queue_tail_[2], queue_len_[2];
-
-    for (int i = 0; i < 2; ++i) {
-        queue_head_[i] = queue_tail_[i] = queue_len_[i] = 0;
-    }
-
-    /* set up the initial grid */
-    do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-    for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
-        const int curr_dep_pointer = (curr_dep & 0x1);
-        while (queue_len_[curr_dep_pointer] > 0) {
-            do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-            if (l_father->level == N_RANK) {
-                /* spawn all the grids in circular_queue_[curr_dep][] */
-                /* use cilk_spawn to spawn all the sub-grid */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
-            } else {
-                /* performing a space cut on dimension 'level' */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                const grid_info<N_RANK> l_father_grid = l_father->grid;
-                grid_info<N_RANK> l_son_grid = l_father->grid;
-                const int t0 = l_father->t0, t1 = l_father->t1;
-                const int level = l_father->level;
-                const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
-                const int sep = (int)lb/2;
-                const int r = 2;
-                const int l_start = (l_father_grid.x0[level]);
-                const int l_end = (l_father_grid.x1[level]);
-
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_end;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                /* cilk_sync */
-                const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = -slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = slope_[level];
-                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                if (l_father_grid.dx0[level] != slope_[level]) {
-                    l_son_grid.x0[level] = l_start;
-                    l_son_grid.dx0[level] = l_father_grid.dx0[level];
-                    l_son_grid.x1[level] = l_start;
-                    l_son_grid.dx1[level] = slope_[level];
-                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                }
-                if (l_father_grid.dx1[level] != -slope_[level]) {
-                    l_son_grid.x0[level] = l_end;
-                    l_son_grid.dx0[level] = -slope_[level];
-                    l_son_grid.x1[level] = l_end;
-                    l_son_grid.dx1[level] = l_father_grid.dx1[level];
-                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                }
-            }
+                } /* end if (can_cut) */
+            } /* end if (performing a space cut) */
         } /* end while (queue_len_[curr_dep] > 0) */
         _Cilk_sync;
         (static_cast<void> (0));
@@ -36201,8 +37482,8 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut(int t0, int t1, grid_info<N_R
 template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
-    queue_info *l_father, *l_son;
-    queue_info circular_queue_[2][200];
+    queue_info *l_father;
+    queue_info circular_queue_[2][(power<N_RANK> ::value)];
     int queue_head_[2], queue_tail_[2], queue_len_[2];
 
     for (int i = 0; i < 2; ++i) {
@@ -36210,81 +37491,98 @@ inline void Algorithm<N_RANK>::sim_obase_space_cut_p(int t0, int t1, grid_info<N
     }
 
     /* set up the initial grid */
-    do { if (queue_len_[0] < 200) { circular_queue_[0][queue_tail_[0]]. level = 0; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - ((200) & -(((queue_tail_[0] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+    do { (static_cast<void> (0)); circular_queue_[0][queue_tail_[0]]. level = N_RANK-1; circular_queue_[0][queue_tail_[0]]. t0 = t0; circular_queue_[0][queue_tail_[0]]. t1 = t1; circular_queue_[0][queue_tail_[0]]. grid = grid; ++queue_len_[0]; queue_tail_[0] = (((queue_tail_[0] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[0] + 1))>=((power<N_RANK> ::value))))); } while(0);
     for (int curr_dep = 0; curr_dep < N_RANK+1; ++curr_dep) {
         const int curr_dep_pointer = (curr_dep & 0x1);
         while (queue_len_[curr_dep_pointer] > 0) {
-            do { if (queue_len_[curr_dep_pointer] > 0) { l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-            if (l_father->level == N_RANK) {
+            do { (static_cast<void> (0)); l_father = &(circular_queue_[curr_dep_pointer][queue_head_[curr_dep_pointer]]); } while(0);
+            if (l_father->level < 0) {
                 /* spawn all the grids in circular_queue_[curr_dep][] */
                 /* use cilk_spawn to spawn all the sub-grid */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                if (within_boundary(l_father->t0, l_father->t1, l_father->grid)) {
-                    _Cilk_spawn sim_obase_bicut(l_father->t0, l_father->t1, l_father->grid, f);
+                do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
+                if (queue_len_[curr_dep_pointer] == 0) {
+                    sim_obase_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
                 } else {
                     _Cilk_spawn sim_obase_bicut_p(l_father->t0, l_father->t1, l_father->grid, f, bf);
                 }
             } else {
                 /* performing a space cut on dimension 'level' */
-                do { if (queue_len_[curr_dep_pointer] > 0) { queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - ((200) & -(((queue_head_[curr_dep_pointer] + 1))>=(200)))); --queue_len_[curr_dep_pointer]; } else { fprintf(stderr, "circular queue underflowed!\n"); exit(1); } } while(0);
-                const grid_info<N_RANK> l_father_grid = l_father->grid;
-                grid_info<N_RANK> l_son_grid = l_father->grid;
+                do { (static_cast<void> (0)); queue_head_[curr_dep_pointer] = (((queue_head_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_head_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); --queue_len_[curr_dep_pointer]; } while(0);
+                grid_info<N_RANK> l_father_grid = l_father->grid;
                 const int t0 = l_father->t0, t1 = l_father->t1;
+                const int lt = (t1 - t0);
                 const int level = l_father->level;
+                const int thres = 2 * slope_[level] * lt;
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
-                bool initial_cut = (lb == phys_length_[level]);
-                const int sep = (initial_cut) ? (int)(lb-2*slope_[level])/2 : (int)lb/2;
-                const int r = 2;
-                const int l_start = (initial_cut) ? (l_father_grid.x0[level]+slope_[level]) : (l_father_grid.x0[level]);
-                const int l_end = (initial_cut) ? (l_father_grid.x1[level]-slope_[level]) : (l_father_grid.x1[level]);
-
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                /* push one sub-grid into circular queue of (curr_dep) */
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = slope_[level];
-                l_son_grid.x1[level] = l_end;
-                l_son_grid.dx1[level] = -slope_[level];
-                do { if (queue_len_[curr_dep_pointer] < 200) { circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level+1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - ((200) & -(((queue_tail_[curr_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                /* cilk_sync */
-                const int next_dep_pointer = (curr_dep + 1) & 0x1;
-                /* push one sub-grid into circular queue of (curr_dep + 1)*/
-                l_son_grid.x0[level] = l_start + sep;
-                l_son_grid.dx0[level] = -slope_[level];
-                l_son_grid.x1[level] = l_start + sep;
-                l_son_grid.dx1[level] = slope_[level];
-                do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-
-                if (initial_cut) {
-                    /* merge triangles! */
-                    l_son_grid.x0[level] = l_end;
-                    l_son_grid.dx0[level] = -slope_[level];
-                    l_son_grid.x1[level] = l_end+2*slope_[level];
-                    l_son_grid.dx1[level] = slope_[level];
-                    do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                const bool l_touch_boundary = touch_boundary(level, lt, l_father_grid);
+                const bool can_cut = l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[level]) : (lb >= 2 * thres & lb > dx_recursive_[level]);
+                if (!can_cut) {
+                    /* if we can't cut into this dimension, just directly push
+                     * it into the circular queue
+                    */
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_father_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
                 } else {
-                    if (l_father_grid.dx0[level] != slope_[level]) {
-                        l_son_grid.x0[level] = l_start;
-                        l_son_grid.dx0[level] = l_father_grid.dx0[level];
-                        l_son_grid.x1[level] = l_start;
-                        l_son_grid.dx1[level] = slope_[level];
-                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
-                    }
-                    if (l_father_grid.dx1[level] != -slope_[level]) {
+                    /* can_cut */
+                    const int sep = (int)lb/2;
+                    const int r = 2;
+                    grid_info<N_RANK> l_son_grid = l_father_grid;
+                    const int l_start = (l_father_grid.x0[level]);
+                    const int l_end = (l_father_grid.x1[level]);
+
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start;
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                    /* push one sub-grid into circular queue of (curr_dep) */
+                    l_son_grid.x0[level] = l_start + sep;
+                    l_son_grid.dx0[level] = slope_[level];
+                    l_son_grid.x1[level] = l_end;
+                    l_son_grid.dx1[level] = -slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. level = level-1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t0 = t0; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. t1 = t1; circular_queue_[curr_dep_pointer][queue_tail_[curr_dep_pointer]]. grid = l_son_grid; ++queue_len_[curr_dep_pointer]; queue_tail_[curr_dep_pointer] = (((queue_tail_[curr_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[curr_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                    /* cilk_sync */
+                    const int next_dep_pointer = (curr_dep + 1) & 0x1;
+                    /* push one sub-grid into circular queue of (curr_dep + 1)*/
+                    l_son_grid.x0[level] = l_start + sep;
+                    l_son_grid.dx0[level] = -slope_[level];
+                    l_son_grid.x1[level] = l_start + sep;
+                    l_son_grid.dx1[level] = slope_[level];
+                    (static_cast<void> (0));
+                    do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+
+                    if (lb == phys_length_[level]) {
+                        /* initial cut - merge triangles! */
                         l_son_grid.x0[level] = l_end;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
-                        l_son_grid.dx1[level] = l_father_grid.dx1[level];
-                        do { if (queue_len_[next_dep_pointer] < 200) { circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level+1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - ((200) & -(((queue_tail_[next_dep_pointer] + 1))>=(200)))); } else { fprintf(stderr, "circular queue overflowed!\n"); exit(1); } } while(0);
+                        l_son_grid.dx1[level] = slope_[level];
+                        (static_cast<void> (0));
+                        do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                    } else {
+                        if (l_father_grid.dx0[level] != slope_[level]) {
+                            l_son_grid.x0[level] = l_start;
+                            l_son_grid.dx0[level] = l_father_grid.dx0[level];
+                            l_son_grid.x1[level] = l_start;
+                            l_son_grid.dx1[level] = slope_[level];
+                            (static_cast<void> (0));
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        }
+                        if (l_father_grid.dx1[level] != -slope_[level]) {
+                            l_son_grid.x0[level] = l_end;
+                            l_son_grid.dx0[level] = -slope_[level];
+                            l_son_grid.x1[level] = l_end;
+                            l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                            (static_cast<void> (0));
+                            do { (static_cast<void> (0)); circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. level = level-1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t0 = t0; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. t1 = t1; circular_queue_[next_dep_pointer][queue_tail_[next_dep_pointer]]. grid = l_son_grid; ++queue_len_[next_dep_pointer]; queue_tail_[next_dep_pointer] = (((queue_tail_[next_dep_pointer] + 1)) - (((power<N_RANK> ::value)) & -(((queue_tail_[next_dep_pointer] + 1))>=((power<N_RANK> ::value))))); } while(0);
+                        }
                     }
-                }
-            }
+                } /* end if (can_cut) */
+            } /* end if (performing a space cut) */
         } /* end while (queue_len_[curr_dep] > 0) */
         _Cilk_sync;
         (static_cast<void> (0));
@@ -36296,22 +37594,29 @@ template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
     const int lt = t1 - t0;
-    bool can_cut = true;
-    index_info lb, thres;
+    bool sim_can_cut = false;
     grid_info<N_RANK> l_son_grid;
 
     for (int i = N_RANK-1; i >= 0; --i) {
-        lb[i] = (grid.x1[i] - grid.x0[i]);
-        thres[i] = 2 * (2 * slope_[i] * lt);
-        can_cut = can_cut && (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]);
+        int lb, thres, tb;
+        lb = (grid.x1[i] - grid.x0[i]);
+        thres = (2 * slope_[i] * lt);
+        bool l_can_cut = (lb >= 2 * thres && lb > dx_recursive_[i]);
+        /* as long as there's one dimension can conduct a cut, we conduct a 
+         * multi-dimensional cut!
+         */
+        sim_can_cut |= l_can_cut; 
     }
 
-    if (can_cut) {
+    if (sim_can_cut) {
         /* cut into space */
         sim_obase_space_cut(t0, t1, grid, f);
         return;
+    // } else if (lt > dt_recursive_ && l_total_points > Z) {
     } else if (lt > dt_recursive_) {
         /* cut into time */
+//        assert(dt_recursive_ >= r_t);
+        (static_cast<void> (0));
         int halflt = lt / 2;
         l_son_grid = grid;
         sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
@@ -36329,7 +37634,7 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         f(t0, t1, grid);
 //        base_case_kernel_interior(t0, t1, grid, f);
         return;
-    }
+    }  
 }
 
 /* This is the version for boundary region cut! */
@@ -36337,39 +37642,52 @@ template <int N_RANK> template <typename F, typename BF>
 inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf)
 {
     const int lt = t1 - t0;
-    bool can_cut = true, call_boundary = false;
-    index_info lb, thres;
+    bool sim_can_cut = false, call_boundary = false;
     grid_info<N_RANK> l_father_grid = grid, l_son_grid;
-    bool l_touch_boundary[N_RANK];
+    int l_dt_stop;
+
 
     for (int i = N_RANK-1; i >= 0; --i) {
+        int lb, thres;
+        bool l_touch_boundary = touch_boundary(i, lt, l_father_grid);
+        lb = (grid.x1[i] - grid.x0[i]);
+        thres = (2 * slope_[i] * lt);
         /* l_father_grid may be mapped to a new region in touch_boundary() */
-        l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
-        call_boundary |= l_touch_boundary[i];
-        lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
-        thres[i] = 2 * (2 * slope_[i] * lt);
         /* for the initial cut, we exclude the begining and end point to minimize
          * the overhead on boundary
         */
-        /* some dimension touches the boundary, some may NOT! */
-        can_cut = can_cut && ((l_touch_boundary[i]) ? ((lb[i] == phys_length_[i]) ? (lb[i] - 2 * slope_[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i])) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
-        // can_cut = can_cut && ((l_touch_boundary[i]) ? (lb[i] >= thres[i] && lb[i] > dx_recursive_boundary_[i]) : (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]));
+        /* lb == phys_length_[i] indicates an initial cut! */
+        bool l_can_cut = l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres & lb > dx_recursive_[i]);
+        call_boundary |= l_touch_boundary;
+        sim_can_cut |= l_can_cut;
     }
 
-    if (can_cut) {
+
+    if (sim_can_cut) {
         /* cut into space */
-        /* push the first grid that can be cut into the circular queue */
+        /* push the first l_father_grid that can be cut into the circular queue */
         /* boundary cuts! */
         if (call_boundary) 
             sim_obase_space_cut_p(t0, t1, l_father_grid, f, bf);
         else
             sim_obase_space_cut(t0, t1, l_father_grid, f);
         return;
-    } else if ((call_boundary) ? (lt > dt_recursive_boundary_) : (lt > dt_recursive_)) {
+    } 
+
+    if (call_boundary)
+        l_dt_stop = dt_recursive_boundary_;
+    else
+        l_dt_stop = dt_recursive_;
+
+    if (lt > l_dt_stop) {
         /* cut into time */
         int halflt = lt / 2;
         l_son_grid = l_father_grid;
-        sim_obase_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
+        if (call_boundary) {
+            sim_obase_bicut_p(t0, t0+halflt, l_son_grid, f, bf);
+        } else {
+            sim_obase_bicut(t0, t0+halflt, l_son_grid, f);
+        }
 
         for (int i = 0; i < N_RANK; ++i) {
             l_son_grid.x0[i] = l_father_grid.x0[i] + l_father_grid.dx0[i] * halflt;
@@ -36377,20 +37695,29 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
             l_son_grid.x1[i] = l_father_grid.x1[i] + l_father_grid.dx1[i] * halflt;
             l_son_grid.dx1[i] = l_father_grid.dx1[i];
         }
-        sim_obase_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
+        if (call_boundary) {
+            sim_obase_bicut_p(t0+halflt, t1, l_son_grid, f, bf);
+        } else {
+            sim_obase_bicut(t0+halflt, t1, l_son_grid, f);
+        }
         return;
-    } else {
+    } 
+
+    // if (l_total_area <= Z || base_cube_t) {
+        /* for base_cube_t: -- prevent too small time cut! 
+         *      (cut_lb && lb > dx_recursive_boundary_ && lb < 2 * thres)
+         *  ||  (!cut_lb && tb > dx_recursive_boundary_ && lb < thres)
+         */
         // base case
         if (call_boundary) {
             base_case_kernel_boundary(t0, t1, l_father_grid, bf);
         } else {
-            //base_case_kernel_interior(t0, t1, l_father_grid, f);
             f(t0, t1, l_father_grid);
         }
         return;
-    }
 }
 
+/* ************************************************************************************** */
 /* walk_adaptive() is just for interior region */
 template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::walk_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
@@ -36827,6 +38154,91 @@ inline void Algorithm<N_RANK>::obase_bicut(int t0, int t1, grid_info<N_RANK> con
 
 /* this is for interior region */
 template <int N_RANK> template <typename F>
+inline void Algorithm<N_RANK>::obase_m(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
+{
+	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
+	   for the rest cut into that dimension, cut into as many as we can!
+	 */
+	int lt = t1 - t0;
+	bool base_cube = (lt <= dt_recursive_); /* dt_recursive_ : temporal dimension stop */
+	bool cut_yet = false;
+	//int lb[N_RANK];
+	//int thres[N_RANK];
+	index_info lb, thres, tb;
+    bool cut_lb[N_RANK];
+	grid_info<N_RANK> l_grid;
+
+	for (int i = 0; i < N_RANK; ++i) {
+		lb[i] = grid.x1[i] - grid.x0[i];
+        tb[i] = (grid.x1[i] + grid.dx1[i] * lt) - (grid.x0[i] + grid.dx0[i] * lt);
+        cut_lb[i] = (grid.dx0[i] >= 0 && grid.dx1[i] <= 0);
+		thres[i] = 2 * (2 * slope_[i] * lt);
+		base_cube = base_cube && (lb[i] <= dx_recursive_[i] || lb[i] < thres[i]); 
+	}	
+	if (base_cube) {
+		f(t0, t1, grid);
+		return;
+	} else  {
+		for (int i = N_RANK-1; i >= 0 && !cut_yet; --i) {
+			if (lb[i] >= thres[i] && lb[i] > dx_recursive_[i]) { 
+				l_grid = grid;
+				int sep = (2 * slope_[i] * lt);
+				int r = (lb[i]/sep);
+				int j;
+				for (j = 0; j < r-1; ++j) {
+					l_grid.x0[i] = grid.x0[i] + sep * j;
+					l_grid.dx0[i] = slope_[i];
+					l_grid.x1[i] = grid.x0[i] + sep * (j+1);
+					l_grid.dx1[i] = -slope_[i];
+					_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+	//			j_loc = r-1;
+				l_grid.x0[i] = grid.x0[i] + sep * (r-1);
+				l_grid.dx0[i] = slope_[i];
+				l_grid.x1[i] = grid.x1[i];
+				l_grid.dx1[i] = -slope_[i];
+				_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				_Cilk_sync;
+				if (grid.dx0[i] != slope_[i]) {
+					l_grid.x0[i] = grid.x0[i]; l_grid.dx0[i] = grid.dx0[i];
+					l_grid.x1[i] = grid.x0[i]; l_grid.dx1[i] = slope_[i];
+					_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+				for (int j = 1; j < r; ++j) {
+					l_grid.x0[i] = grid.x0[i] + sep * j;
+					l_grid.dx0[i] = -slope_[i];
+					l_grid.x1[i] = grid.x0[i] + sep * j;
+					l_grid.dx1[i] = slope_[i];
+					_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+				if (grid.dx1[i] != -slope_[i]) {
+					l_grid.x0[i] = grid.x1[i]; l_grid.dx0[i] = -slope_[i];
+					l_grid.x1[i] = grid.x1[i]; l_grid.dx1[i] = grid.dx1[i];
+					_Cilk_spawn obase_m(t0, t1, l_grid, f);
+				}
+				cut_yet = true;
+			}/* end if */
+		} /* end for */
+		if (!cut_yet && lt > dt_recursive_) {
+			int halflt = lt / 2;
+			l_grid = grid;
+			obase_m(t0, t0+halflt, l_grid, f);
+			for (int i = 0; i < N_RANK; ++i) {
+				l_grid.x0[i] = grid.x0[i] + grid.dx0[i] * halflt;
+				l_grid.dx0[i] = grid.dx0[i];
+				l_grid.x1[i] = grid.x1[i] + grid.dx1[i] * halflt;
+				l_grid.dx1[i] = grid.dx1[i];
+			}
+			obase_m(t0+halflt, t1, l_grid, f);
+			cut_yet = true;
+		}
+		(static_cast<void> (0));
+		return;
+	}
+}
+
+/* this is for interior region */
+template <int N_RANK> template <typename F>
 inline void Algorithm<N_RANK>::obase_adaptive(int t0, int t1, grid_info<N_RANK> const grid, F const & f)
 {
 	/* for the initial cut on each dimension, cut into exact N_CORES pieces,
@@ -36979,7 +38391,7 @@ inline void Algorithm<N_RANK>::obase_bicut_boundary_p(int t0, int t1, grid_info<
             return;
 		}/* end if */
 	} /* end for */
-	if (lt > dt_recursive_) {
+	if (lt > dt_recursive_boundary_) {
 		int halflt = lt / 2;
 		l_son_grid = l_father_grid;
         obase_bicut_boundary_p(t0, t0+halflt, l_son_grid, bf);
@@ -38069,7 +39481,7 @@ class SProxy {
 //            set_boundary_ = false;
             return *this;
         }
-        inline T & value() { return value_; }
+//        inline T & value() { return value_; }
         inline T const & value() const { return value_; }
         inline bool set_boundary() const { return set_boundary_; }
         inline T bvalue() const { return bvalue_; }
@@ -38175,10 +39587,20 @@ class Pochoir_Array {
         typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
+        typedef T (*BValue_4D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int);
+        typedef T (*BValue_5D)(Pochoir_Array<T, 5, TOGGLE> &, int, int, int, int, int, int);
+        typedef T (*BValue_6D)(Pochoir_Array<T, 6, TOGGLE> &, int, int, int, int, int, int, int);
+        typedef T (*BValue_7D)(Pochoir_Array<T, 7, TOGGLE> &, int, int, int, int, int, int, int, int);
+        typedef T (*BValue_8D)(Pochoir_Array<T, 8, TOGGLE> &, int, int, int, int, int, int, int, int, int);
         T * l_null;
         BValue_1D bv1_;
         BValue_2D bv2_;
         BValue_3D bv3_;
+        BValue_4D bv4_;
+        BValue_5D bv5_;
+        BValue_6D bv6_;
+        BValue_7D bv7_;
+        BValue_8D bv8_;
 	public:
 		/* create array with initial size 
          * - Following dimensions for constructors are spatial dimension
@@ -38230,6 +39652,121 @@ class Pochoir_Array {
             l_null = (T*) calloc(1, sizeof(T));
 		}
 
+		explicit Pochoir_Array (int sz3, int sz2, int sz1, int sz0) {
+			logic_size_[3] = sz3; logic_size_[2] = sz2; logic_size_[1] = sz1; logic_size_[0] = sz0; 
+			phys_size_[3] = sz3; phys_size_[2] = sz2; phys_size_[1] = sz1; phys_size_[0] = sz0; 
+            logic_start_[0] = 0; logic_end_[0] = sz0;
+            logic_start_[1] = 0; logic_end_[1] = sz1;
+            logic_start_[2] = 0; logic_end_[2] = sz2;
+            logic_start_[3] = 0; logic_end_[3] = sz3;
+			stride_[0] = 1;  
+			total_size_ = phys_size_[3];
+			for (int i = 0; i < 3; ++i) {
+				total_size_ *= phys_size_[i];
+				stride_[i+1] = stride_[i] * phys_size_[i];
+			}
+			view_ = (__null);
+			/* double the total_size_ because we are using toggle array */
+			view_ = new Storage<T>(TOGGLE*total_size_) ;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null);
+            data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
+		}
+
+		explicit Pochoir_Array (int sz4, int sz3, int sz2, int sz1, int sz0) {
+			logic_size_[4] = sz4; logic_size_[3] = sz3; logic_size_[2] = sz2; logic_size_[1] = sz1; logic_size_[0] = sz0; 
+			phys_size_[4] = sz4; phys_size_[3] = sz3; phys_size_[2] = sz2; phys_size_[1] = sz1; phys_size_[0] = sz0; 
+            logic_start_[0] = 0; logic_end_[0] = sz0;
+            logic_start_[1] = 0; logic_end_[1] = sz1;
+            logic_start_[2] = 0; logic_end_[2] = sz2;
+            logic_start_[3] = 0; logic_end_[3] = sz3;
+            logic_start_[4] = 0; logic_end_[4] = sz4;
+			stride_[0] = 1;  
+			total_size_ = phys_size_[4];
+			for (int i = 0; i < 4; ++i) {
+				total_size_ *= phys_size_[i];
+				stride_[i+1] = stride_[i] * phys_size_[i];
+			}
+			view_ = (__null);
+			/* double the total_size_ because we are using toggle array */
+			view_ = new Storage<T>(TOGGLE*total_size_) ;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null);
+            data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
+		}
+
+		explicit Pochoir_Array (int sz5, int sz4, int sz3, int sz2, int sz1, int sz0) {
+			logic_size_[5] = sz5; logic_size_[4] = sz4; logic_size_[3] = sz3; logic_size_[2] = sz2; logic_size_[1] = sz1; logic_size_[0] = sz0; 
+			phys_size_[5] = sz5; phys_size_[4] = sz4; phys_size_[3] = sz3; phys_size_[2] = sz2; phys_size_[1] = sz1; phys_size_[0] = sz0; 
+            logic_start_[0] = 0; logic_end_[0] = sz0;
+            logic_start_[1] = 0; logic_end_[1] = sz1;
+            logic_start_[2] = 0; logic_end_[2] = sz2;
+            logic_start_[3] = 0; logic_end_[3] = sz3;
+            logic_start_[4] = 0; logic_end_[4] = sz4;
+            logic_start_[5] = 0; logic_end_[5] = sz5;
+			stride_[0] = 1;  
+			total_size_ = phys_size_[5];
+			for (int i = 0; i < 5; ++i) {
+				total_size_ *= phys_size_[i];
+				stride_[i+1] = stride_[i] * phys_size_[i];
+			}
+			view_ = (__null);
+			/* double the total_size_ because we are using toggle array */
+			view_ = new Storage<T>(TOGGLE*total_size_) ;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null);
+            data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
+		}
+
+		explicit Pochoir_Array (int sz6, int sz5, int sz4, int sz3, int sz2, int sz1, int sz0) {
+			logic_size_[6] = sz6; logic_size_[5] = sz5; logic_size_[4] = sz4; logic_size_[3] = sz3; logic_size_[2] = sz2; logic_size_[1] = sz1; logic_size_[0] = sz0; 
+			phys_size_[6] = sz6; phys_size_[5] = sz5; phys_size_[4] = sz4; phys_size_[3] = sz3; phys_size_[2] = sz2; phys_size_[1] = sz1; phys_size_[0] = sz0; 
+            logic_start_[0] = 0; logic_end_[0] = sz0;
+            logic_start_[1] = 0; logic_end_[1] = sz1;
+            logic_start_[2] = 0; logic_end_[2] = sz2;
+            logic_start_[3] = 0; logic_end_[3] = sz3;
+            logic_start_[4] = 0; logic_end_[4] = sz4;
+            logic_start_[5] = 0; logic_end_[5] = sz5;
+            logic_start_[6] = 0; logic_end_[6] = sz6;
+			stride_[0] = 1;  
+			total_size_ = phys_size_[6];
+			for (int i = 0; i < 6; ++i) {
+				total_size_ *= phys_size_[i];
+				stride_[i+1] = stride_[i] * phys_size_[i];
+			}
+			view_ = (__null);
+			/* double the total_size_ because we are using toggle array */
+			view_ = new Storage<T>(TOGGLE*total_size_) ;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null);
+            data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
+		}
+
+		explicit Pochoir_Array (int sz7, int sz6, int sz5, int sz4, int sz3, int sz2, int sz1, int sz0) {
+			logic_size_[7] = sz7; logic_size_[6] = sz6; logic_size_[5] = sz5; logic_size_[4] = sz4; logic_size_[3] = sz3; logic_size_[2] = sz2; logic_size_[1] = sz1; logic_size_[0] = sz0; 
+			phys_size_[7] = sz7; phys_size_[6] = sz6; phys_size_[5] = sz5; phys_size_[4] = sz4; phys_size_[3] = sz3; phys_size_[2] = sz2; phys_size_[1] = sz1; phys_size_[0] = sz0; 
+            logic_start_[0] = 0; logic_end_[0] = sz0;
+            logic_start_[1] = 0; logic_end_[1] = sz1;
+            logic_start_[2] = 0; logic_end_[2] = sz2;
+            logic_start_[3] = 0; logic_end_[3] = sz3;
+            logic_start_[4] = 0; logic_end_[4] = sz4;
+            logic_start_[5] = 0; logic_end_[5] = sz5;
+            logic_start_[6] = 0; logic_end_[6] = sz6;
+            logic_start_[7] = 0; logic_end_[7] = sz7;
+			stride_[0] = 1;  
+			total_size_ = phys_size_[7];
+			for (int i = 0; i < 7; ++i) {
+				total_size_ *= phys_size_[i];
+				stride_[i+1] = stride_[i] * phys_size_[i];
+			}
+			view_ = (__null);
+			/* double the total_size_ because we are using toggle array */
+			view_ = new Storage<T>(TOGGLE*total_size_) ;
+            bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null);
+            data_ = view_->data();
+            l_null = (T*) calloc(1, sizeof(T));
+		}
+
 		/* Copy constructor -- create another view of the
 		 * same array
 		 */
@@ -38248,6 +39785,11 @@ class Pochoir_Array {
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
+            bv4_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_4D(); 
+            bv5_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_5D(); 
+            bv6_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_6D(); 
+            bv7_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_7D(); 
+            bv8_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_8D(); 
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
 		}
@@ -38267,6 +39809,11 @@ class Pochoir_Array {
             bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
             bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
             bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
+            bv4_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_4D(); 
+            bv5_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_5D(); 
+            bv6_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_6D(); 
+            bv7_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_7D(); 
+            bv8_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_8D(); 
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
             return *this;
@@ -38287,13 +39834,23 @@ class Pochoir_Array {
         BValue_1D bv_1D(void) { return bv1_; }
         BValue_2D bv_2D(void) { return bv2_; }
         BValue_3D bv_3D(void) { return bv3_; }
+        BValue_4D bv_4D(void) { return bv4_; }
+        BValue_5D bv_5D(void) { return bv5_; }
+        BValue_6D bv_6D(void) { return bv6_; }
+        BValue_7D bv_7D(void) { return bv7_; }
+        BValue_8D bv_8D(void) { return bv8_; }
 
         /* guarantee that only one version of boundary function is registered ! */
-        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = (__null); bv3_ = (__null); }
-        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = (__null); bv3_ = (__null); }
-        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = (__null); bv2_ = (__null); }
+        void registerBV(BValue_1D _bv1) { bv1_ = _bv1;  bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_2D _bv2) { bv2_ = _bv2;  bv1_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_3D _bv3) { bv3_ = _bv3;  bv1_ = (__null); bv2_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_4D _bv4) { bv4_ = _bv4;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_5D _bv5) { bv5_ = _bv5;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_6D _bv6) { bv6_ = _bv6;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv7_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_7D _bv7) { bv7_ = _bv7;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv8_ = (__null);}
+        void registerBV(BValue_8D _bv8) { bv8_ = _bv8;  bv1_ = (__null); bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); bv5_ = (__null); bv6_ = (__null); bv7_ = (__null);}
 
-        void unregisterBV(void) { bv1_ = (__null);  bv2_ = (__null); bv3_ = (__null); }
+        void unregisterBV(void) { bv1_ = (__null);  bv2_ = (__null); bv3_ = (__null); bv4_ = (__null); ; bv5_ = (__null); bv6_ = (__null); bv7_ = (__null); bv8_ = (__null)}
 
         void registerDomain(grid_info<N_RANK> initial_grid) {
             for (int i = 0; i < N_RANK; ++i) {
@@ -38319,25 +39876,17 @@ class Pochoir_Array {
             bool touch_boundary = false;
             for (int i = 0; i < N_RANK; ++i) {
                 touch_boundary |= (_idx[i] < logic_start_[i]
-                                || _idx[i] >= logic_end_[i]);
+                                | _idx[i] >= logic_end_[i]);
             }
             return touch_boundary;
         }
 
-        inline bool check_boundary(int _idx1, int _idx0) {
-            return (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0]);
-        }
 
-        inline bool check_boundary(int _idx2, int _idx1, int _idx0) {
-            return (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0]
-                 || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1]);
-        }
 
-        inline bool check_boundary(int _idx3, int _idx2, int _idx1, int _idx0) {
-            return (_idx0 < logic_start_[0] || _idx0 >= logic_end_[0]
-                 || _idx1 < logic_start_[1] || _idx1 >= logic_end_[1]
-                 || _idx2 < logic_start_[2] || _idx2 >= logic_end_[2]);
-        }
+
+
+
+
 
         /* 
          * orig_value() is reserved for "ostream" : cout << Pochoir_Array
@@ -38355,7 +39904,23 @@ class Pochoir_Array {
             } else if (l_boundary && bv3_ != (__null)) {
                 l_bvalue = bv3_(*this, _timestep, _idx[2], _idx[1], _idx[0]);
                 set_boundary = true;
+            } else if (l_boundary && bv4_ != (__null)) {
+                l_bvalue = bv4_(*this, _timestep, _idx[3], _idx[2], _idx[1], _idx[0]);
+                set_boundary = true;
+            } else if (l_boundary && bv5_ != (__null)) {
+                l_bvalue = bv5_(*this, _timestep, _idx[4], _idx[3], _idx[2], _idx[1], _idx[0]);
+                set_boundary = true;
+            } else if (l_boundary && bv6_ != (__null)) {
+                l_bvalue = bv6_(*this, _timestep, _idx[5], _idx[4], _idx[3], _idx[2], _idx[1], _idx[0]);
+                set_boundary = true;
+            } else if (l_boundary && bv7_ != (__null)) {
+                l_bvalue = bv7_(*this, _timestep, _idx[6], _idx[5], _idx[4], _idx[3], _idx[2], _idx[1], _idx[0]);
+                set_boundary = true;
+            } else if (l_boundary && bv8_ != (__null)) {
+                l_bvalue = bv8_(*this, _timestep, _idx[7], _idx[6], _idx[5], _idx[4], _idx[3], _idx[2], _idx[1], _idx[0]);
+                set_boundary = true;
             }
+
             /* the highest dimension is time dimension! */
             int l_idx = cal_index<N_RANK>(_idx, stride_) + toggle_base<TOGGLE>(_timestep) * total_size_;
             return (set_boundary) ? l_bvalue : (*view_)[l_idx];
@@ -38366,55 +39931,136 @@ class Pochoir_Array {
          * - this is the uninterior version
          */
 		inline T operator() (int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary(_idx1, _idx0);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0]);
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
              */
             bool set_boundary = (l_boundary && bv1_ != (__null));
-            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? (l_bvalue) : (*view_)[l_idx]);
 		}
 
 		inline T operator() (int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1]);
             bool set_boundary = (l_boundary && bv2_ != (__null));
-            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2]);
             bool set_boundary = (l_boundary && bv3_ != (__null));
-            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T operator() (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3]);
+            bool set_boundary = (l_boundary && bv4_ != (__null));
+            T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T operator() (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4]);
+            bool set_boundary = (l_boundary && bv5_ != (__null));
+            T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T operator() (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5]);
+            bool set_boundary = (l_boundary && bv6_ != (__null));
+            T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T operator() (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5] | _idx6 < logic_start_[6] | _idx5 >= logic_end_[6]);
+            bool set_boundary = (l_boundary && bv7_ != (__null));
+            T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T operator() (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5] | _idx6 < logic_start_[6] | _idx5 >= logic_end_[6] | _idx7 < logic_start_[7] | _idx5 >= logic_end_[7]);
+            bool set_boundary = (l_boundary && bv8_ != (__null));
+            T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx1, int _idx0) {
-            bool l_boundary = check_boundary(_idx1, _idx0);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0]);
             bool set_boundary = (l_boundary && bv1_ != (__null));
-            (*l_null) = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1]);
             bool set_boundary = (l_boundary && bv2_ != (__null));
-            (*l_null) = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2]);
             bool set_boundary = (l_boundary && bv3_ != (__null));
-            (*l_null) = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-            return (set_boundary ? (*l_null) : (*view_)[l_idx]);
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
+
+		inline T & operator() (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3]);
+            bool set_boundary = (l_boundary && bv4_ != (__null));
+            T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T & operator() (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4]);
+            bool set_boundary = (l_boundary && bv5_ != (__null));
+            T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T & operator() (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5]);
+            bool set_boundary = (l_boundary && bv6_ != (__null));
+            T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T & operator() (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5] | _idx6 < logic_start_[6] | _idx5 >= logic_end_[6]);
+            bool set_boundary = (l_boundary && bv7_ != (__null));
+            T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T & operator() (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = (_idx0 < logic_start_[0] | _idx0 >= logic_end_[0] | _idx1 < logic_start_[1] | _idx1 >= logic_end_[1] | _idx2 < logic_start_[2] | _idx2 >= logic_end_[2] | _idx3 < logic_start_[3] | _idx3 >= logic_end_[3] | _idx4 < logic_start_[4] | _idx4 >= logic_end_[4] | _idx5 < logic_start_[5] | _idx5 >= logic_end_[5] | _idx6 < logic_start_[6] | _idx5 >= logic_end_[6] | _idx7 < logic_start_[7] | _idx5 >= logic_end_[7]);
+            bool set_boundary = (l_boundary && bv8_ != (__null));
+            T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
         /* set()/get() pair to set/get boundary value in user supplied bvalue function */
 		inline T & set (int _idx1, int _idx0) {
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
@@ -38428,6 +40074,31 @@ class Pochoir_Array {
 
 		inline T & set (int _idx3, int _idx2, int _idx1, int _idx0) {
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & set (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & set (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & set (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & set (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & set (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
 			return (*view_)[l_idx];
 		}
 
@@ -38446,20 +40117,29 @@ class Pochoir_Array {
 			return (*view_)[l_idx];
 		}
 
-        /* pointer() is for SIter */
-		inline T * pointer (int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return data_ + l_idx;
+		inline T & get (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			return (*view_)[l_idx];
 		}
 
-		inline T * pointer (int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return data_ + l_idx;
+		inline T & get (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			return (*view_)[l_idx];
 		}
 
-		inline T * pointer (int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return data_ + l_idx;
+		inline T & get (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & get (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & get (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+			return (*view_)[l_idx];
 		}
 
 		/* index operator() for the format of a.interior(i, j, k) 
@@ -38481,6 +40161,31 @@ class Pochoir_Array {
 			return (*view_)[l_idx];
 		}
 
+		inline T interior (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T interior (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T interior (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T interior (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T interior (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+			return (*view_)[l_idx];
+		}
+
 		inline T & interior (int _idx1, int _idx0) {
 			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
 			return (*view_)[l_idx];
@@ -38493,6 +40198,31 @@ class Pochoir_Array {
 
 		inline T & interior (int _idx3, int _idx2, int _idx1, int _idx0) {
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & interior (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & interior (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & interior (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & interior (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			return (*view_)[l_idx];
+		}
+
+		inline T & interior (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
 			return (*view_)[l_idx];
 		}
 
@@ -38563,6 +40293,11 @@ class Pochoir {
         typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
+        typedef T (*BValue_4D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int);
+        typedef T (*BValue_5D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int, int);
+        typedef T (*BValue_6D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int, int, int);
+        typedef T (*BValue_7D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int, int, int, int);
+        typedef T (*BValue_8D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int, int, int, int, int);
         int arr_len_;
         int arr_idx_;
         bool regArrayFlag, regLogicDomainFlag, regPhysDomainFlag, regShapeFlag;
@@ -38596,6 +40331,16 @@ class Pochoir {
     void registerDomain(Domain const & i, Domain const & j);
     template <typename Domain>
     void registerDomain(Domain const & i, Domain const & j, Domain const & k);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n, Domain const & o);
+    template <typename Domain>
+    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n, Domain const & o, Domain const & p);
 
     /* register boundary value function with corresponding Pochoir_Array object directly */
     void registerBoundaryFn(Pochoir_Array<T, 1, TOGGLE> & arr, BValue_1D _bv1) {
@@ -38608,6 +40353,26 @@ class Pochoir {
     } 
     void registerBoundaryFn(Pochoir_Array<T, 3, TOGGLE> & arr, BValue_3D _bv3) {
         arr.registerBV(_bv3);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 4, TOGGLE> & arr, BValue_4D _bv4) {
+        arr.registerBV(_bv4);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 5, TOGGLE> & arr, BValue_5D _bv5) {
+        arr.registerBV(_bv5);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 6, TOGGLE> & arr, BValue_6D _bv6) {
+        arr.registerBV(_bv6);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 7, TOGGLE> & arr, BValue_7D _bv7) {
+        arr.registerBV(_bv7);
+        registerArray(arr);
+    } 
+    void registerBoundaryFn(Pochoir_Array<T, 8, TOGGLE> & arr, BValue_8D _bv8) {
+        arr.registerBV(_bv8);
         registerArray(arr);
     } 
     /* Executable Spec */
@@ -38627,7 +40392,7 @@ class Pochoir {
 template <typename T, int N_RANK, int TOGGLE>
 void Pochoir<T, N_RANK, TOGGLE>::checkFlag(bool flag, char const * str) {
     if (!flag) {
-        printf("\n<%s:%s:%d> :\nYou forgot register %s!\n", "/home/yuantang/Git/Pochoir/ExecSpec_refine2/pochoir.hpp", __FUNCTION__, 112, str);
+        printf("\n<%s:%s:%d> :\nYou forgot register %s!\n", "/scratch/Pochoir_clean/Pochoir/ExecSpec_refine/pochoir.hpp", __FUNCTION__, 146, str);
         exit(1);
     }
 }
@@ -38700,6 +40465,121 @@ void Pochoir<T, N_RANK, TOGGLE>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N
 }
 
 template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n, Domain const & r_o, Domain const & r_p) {
+    logic_grid_.x0[7] = r_i.first();
+    logic_grid_.x1[7] = r_i.first() + r_i.size();
+    logic_grid_.x0[6] = r_j.first();
+    logic_grid_.x1[6] = r_j.first() + r_j.size();
+    logic_grid_.x0[5] = r_k.first();
+    logic_grid_.x1[5] = r_k.first() + r_k.size();
+    logic_grid_.x0[4] = r_l.first();
+    logic_grid_.x1[4] = r_l.first() + r_l.size();
+    logic_grid_.x0[3] = r_m.first();
+    logic_grid_.x1[3] = r_m.first() + r_m.size();
+    logic_grid_.x0[2] = r_n.first();
+    logic_grid_.x1[2] = r_n.first() + r_n.size();
+    logic_grid_.x0[1] = r_o.first();
+    logic_grid_.x1[1] = r_o.first() + r_o.size();
+    logic_grid_.x0[0] = r_p.first();
+    logic_grid_.x1[0] = r_p.first() + r_p.size();
+    stride_[7] = r_i.stride();
+    stride_[6] = r_j.stride();
+    stride_[5] = r_k.stride();
+    stride_[4] = r_l.stride();
+    stride_[3] = r_m.stride();
+    stride_[2] = r_n.stride();
+    stride_[1] = r_o.stride();
+    stride_[0] = r_p.stride();
+    regLogicDomainFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n, Domain const & r_o) {
+    logic_grid_.x0[6] = r_i.first();
+    logic_grid_.x1[6] = r_i.first() + r_i.size();
+    logic_grid_.x0[5] = r_j.first();
+    logic_grid_.x1[5] = r_j.first() + r_j.size();
+    logic_grid_.x0[4] = r_k.first();
+    logic_grid_.x1[4] = r_k.first() + r_k.size();
+    logic_grid_.x0[3] = r_l.first();
+    logic_grid_.x1[3] = r_l.first() + r_l.size();
+    logic_grid_.x0[2] = r_m.first();
+    logic_grid_.x1[2] = r_m.first() + r_m.size();
+    logic_grid_.x0[1] = r_n.first();
+    logic_grid_.x1[1] = r_n.first() + r_n.size();
+    logic_grid_.x0[0] = r_o.first();
+    logic_grid_.x1[0] = r_o.first() + r_o.size();
+    stride_[6] = r_i.stride();
+    stride_[5] = r_j.stride();
+    stride_[4] = r_k.stride();
+    stride_[3] = r_l.stride();
+    stride_[2] = r_m.stride();
+    stride_[1] = r_n.stride();
+    stride_[0] = r_o.stride();
+    regLogicDomainFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n) {
+    logic_grid_.x0[5] = r_i.first();
+    logic_grid_.x1[5] = r_i.first() + r_i.size();
+    logic_grid_.x0[4] = r_j.first();
+    logic_grid_.x1[4] = r_j.first() + r_j.size();
+    logic_grid_.x0[3] = r_k.first();
+    logic_grid_.x1[3] = r_k.first() + r_k.size();
+    logic_grid_.x0[2] = r_l.first();
+    logic_grid_.x1[2] = r_l.first() + r_l.size();
+    logic_grid_.x0[1] = r_m.first();
+    logic_grid_.x1[1] = r_m.first() + r_m.size();
+    logic_grid_.x0[0] = r_n.first();
+    logic_grid_.x1[0] = r_n.first() + r_n.size();
+    stride_[5] = r_i.stride();
+    stride_[4] = r_j.stride();
+    stride_[3] = r_k.stride();
+    stride_[2] = r_l.stride();
+    stride_[1] = r_m.stride();
+    stride_[0] = r_n.stride();
+    regLogicDomainFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m) {
+    logic_grid_.x0[4] = r_i.first();
+    logic_grid_.x1[4] = r_i.first() + r_i.size();
+    logic_grid_.x0[3] = r_j.first();
+    logic_grid_.x1[3] = r_j.first() + r_j.size();
+    logic_grid_.x0[2] = r_k.first();
+    logic_grid_.x1[2] = r_k.first() + r_k.size();
+    logic_grid_.x0[1] = r_l.first();
+    logic_grid_.x1[1] = r_l.first() + r_l.size();
+    logic_grid_.x0[0] = r_m.first();
+    logic_grid_.x1[0] = r_m.first() + r_m.size();
+    stride_[4] = r_i.stride();
+    stride_[3] = r_j.stride();
+    stride_[2] = r_k.stride();
+    stride_[1] = r_l.stride();
+    stride_[0] = r_m.stride();
+    regLogicDomainFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
+void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l) {
+    logic_grid_.x0[3] = r_i.first();
+    logic_grid_.x1[3] = r_i.first() + r_i.size();
+    logic_grid_.x0[2] = r_j.first();
+    logic_grid_.x1[2] = r_j.first() + r_j.size();
+    logic_grid_.x0[1] = r_k.first();
+    logic_grid_.x1[1] = r_k.first() + r_k.size();
+    logic_grid_.x0[0] = r_l.first();
+    logic_grid_.x1[0] = r_l.first() + r_l.size();
+    stride_[3] = r_i.stride();
+    stride_[2] = r_j.stride();
+    stride_[1] = r_k.stride();
+    stride_[0] = r_l.stride();
+    regLogicDomainFlag = true;
+}
+
+template <typename T, int N_RANK, int TOGGLE> template <typename Domain>
 void Pochoir<T, N_RANK, TOGGLE>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k) {
     logic_grid_.x0[2] = r_i.first();
     logic_grid_.x1[2] = r_i.first() + r_i.size();
@@ -38766,7 +40646,9 @@ void Pochoir<T, N_RANK, TOGGLE>::run(int timestep, F const & f, BF const & bf) {
      */
     timestep_ = timestep;
     checkFlags();
+#pragma isat marker M2_begin
     algor.walk_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+#pragma isat marker M2_end
 }
 
 /* obase for zero-padded area! */
@@ -38778,13 +40660,16 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.set_stride(stride_);
     timestep_ = timestep;
     checkFlags();
-//  It seems that whether it's bicut or adaptive cut only matters in small scale!
+    fprintf(stderr, "Call sim_obase_bicut\n");
+#pragma isat marker M2_begin
     algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+#pragma isat marker M2_end
 }
 
 /* obase for interior and ExecSpec for boundary */
 template <typename T, int N_RANK, int TOGGLE> template <typename F, typename BF>
 void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const & bf) {
+    int l_total_points = 1;
     Algorithm<N_RANK> algor(slope_);
     getPhysDomainFromArray();
     algor.set_phys_grid(phys_grid_);
@@ -38794,7 +40679,10 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
      */
     timestep_ = timestep;
     checkFlags();
-    algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    fprintf(stderr, "Call sim_obase_bicut_P\n");
+#pragma isat marker M2_begin
+    algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+#pragma isat marker M2_end
 }
 
 
@@ -39959,7 +41847,7 @@ void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int nu
     } 
         if (z == ((130) - 1 + 1)) { 
             /* outflow */ 
-            int (z + 1) = z - 1; 
+//            int z1 = z - 1; 
             double rho1 = + PoCellEntry( pa( t, (z + 1), y, x) )._C + PoCellEntry( pa( t, (z + 1), y, x) )._N + PoCellEntry( pa( t, (z + 1), y, x) )._S + PoCellEntry( pa( t, (z + 1), y, x) )._E + PoCellEntry( pa( t, (z + 1), y, x) )._W + PoCellEntry( pa( t, (z + 1), y, x) )._T + PoCellEntry( pa( t, (z + 1), y, x) )._B + PoCellEntry( pa( t, (z + 1), y, x) )._NE + PoCellEntry( pa( t, (z + 1), y, x) )._NW + PoCellEntry( pa( t, (z + 1), y, x) )._SE + PoCellEntry( pa( t, (z + 1), y, x) )._SW + PoCellEntry( pa( t, (z + 1), y, x) )._NT + PoCellEntry( pa( t, (z + 1), y, x) )._NB + PoCellEntry( pa( t, (z + 1), y, x) )._ST + PoCellEntry( pa( t, (z + 1), y, x) )._SB + PoCellEntry( pa( t, (z + 1), y, x) )._ET + PoCellEntry( pa( t, (z + 1), y, x) )._EB + PoCellEntry( pa( t, (z + 1), y, x) )._WT + PoCellEntry( pa( t, (z + 1), y, x) )._WB; 
             double ux1 = + PoCellEntry( pa(t, (z + 1), y, x) )._E  - PoCellEntry( pa(t, (z + 1), y, x) )._W + PoCellEntry( pa(t, (z + 1), y, x) )._NE - PoCellEntry( pa(t, (z + 1), y, x) )._NW + PoCellEntry( pa(t, (z + 1), y, x) )._SE - PoCellEntry( pa(t, (z + 1), y, x) )._SW + PoCellEntry( pa(t, (z + 1), y, x) )._ET + PoCellEntry( pa(t, (z + 1), y, x) )._EB - PoCellEntry( pa(t, (z + 1), y, x) )._WT - PoCellEntry( pa(t, (z + 1), y, x) )._WB; 
             double uy1 = + PoCellEntry( pa(t, (z + 1), y, x) )._N  - PoCellEntry( pa(t, (z + 1), y, x) )._S + PoCellEntry( pa(t, (z + 1), y, x) )._NE + PoCellEntry( pa(t, (z + 1), y, x) )._NW - PoCellEntry( pa(t, (z + 1), y, x) )._SE - PoCellEntry( pa(t, (z + 1), y, x) )._SW + PoCellEntry( pa(t, (z + 1), y, x) )._NT + PoCellEntry( pa(t, (z + 1), y, x) )._NB - PoCellEntry( pa(t, (z + 1), y, x) )._ST - PoCellEntry( pa(t, (z + 1), y, x) )._SB; 
@@ -39967,7 +41855,7 @@ void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int nu
             ux1 /= rho1; 
             uy1 /= rho1; 
             uz1 /= rho1; 
-            int (z + 2) = z - 2;		
+//            int z2 = z - 2;		
             double rho2 = + PoCellEntry( pa(t, (z + 2), y, x) )._C  + PoCellEntry( pa(t, (z + 2), y, x) )._N + PoCellEntry( pa(t, (z + 2), y, x) )._S  + PoCellEntry( pa(t, (z + 2), y, x) )._E + PoCellEntry( pa(t, (z + 2), y, x) )._W  + PoCellEntry( pa(t, (z + 2), y, x) )._T + PoCellEntry( pa(t, (z + 2), y, x) )._B  + PoCellEntry( pa(t, (z + 2), y, x) )._NE + PoCellEntry( pa(t, (z + 2), y, x) )._NW + PoCellEntry( pa(t, (z + 2), y, x) )._SE + PoCellEntry( pa(t, (z + 2), y, x) )._SW + PoCellEntry( pa(t, (z + 2), y, x) )._NT + PoCellEntry( pa(t, (z + 2), y, x) )._NB + PoCellEntry( pa(t, (z + 2), y, x) )._ST + PoCellEntry( pa(t, (z + 2), y, x) )._SB + PoCellEntry( pa(t, (z + 2), y, x) )._ET + PoCellEntry( pa(t, (z + 2), y, x) )._EB + PoCellEntry( pa(t, (z + 2), y, x) )._WT + PoCellEntry( pa(t, (z + 2), y, x) )._WB; 
             double ux2 = + PoCellEntry( pa(t, (z + 2), y, x) )._E  - PoCellEntry( pa(t, (z + 2), y, x) )._W + PoCellEntry( pa(t, (z + 2), y, x) )._NE - PoCellEntry( pa(t, (z + 2), y, x) )._NW + PoCellEntry( pa(t, (z + 2), y, x) )._SE - PoCellEntry( pa(t, (z + 2), y, x) )._SW + PoCellEntry( pa(t, (z + 2), y, x) )._ET + PoCellEntry( pa(t, (z + 2), y, x) )._EB - PoCellEntry( pa(t, (z + 2), y, x) )._WT - PoCellEntry( pa(t, (z + 2), y, x) )._WB; 
             double uy2 = + PoCellEntry( pa(t, (z + 2), y, x) )._N  - PoCellEntry( pa(t, (z + 2), y, x) )._S  + PoCellEntry( pa(t, (z + 2), y, x) )._NE + PoCellEntry( pa(t, (z + 2), y, x) )._NW - PoCellEntry( pa(t, (z + 2), y, x) )._SE - PoCellEntry( pa(t, (z + 2), y, x) )._SW + PoCellEntry( pa(t, (z + 2), y, x) )._NT + PoCellEntry( pa(t, (z + 2), y, x) )._NB - PoCellEntry( pa(t, (z + 2), y, x) )._ST - PoCellEntry( pa(t, (z + 2), y, x) )._SB; 

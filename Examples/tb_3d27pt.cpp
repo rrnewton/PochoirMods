@@ -35,6 +35,7 @@
 
 #define TIMES 1
 #define TOLERANCE (1e-6)
+#define CHECK 0
 
 using namespace std;
 
@@ -62,7 +63,7 @@ int main(int argc, char *argv[])
     const double gamma = 0.0654;
     const double delta = 0.0543;
     double min_tdiff = INF;
-    int Nx, Ny, Nz, T;
+    long Nx, Ny, Nz, T;
     int t;
 
     if (argc > 3) {
@@ -77,7 +78,10 @@ int main(int argc, char *argv[])
     printf("Order-%d 3D-Stencil (%d points) with space %dx%dx%d and time %d\n", 
        ds, 27, Nx, Ny, Nz, T);
 
-    Pochoir_Array<double, 3> pa(Nz, Ny, Nx), pb(Nz, Ny, Nx);
+    Pochoir_Array<double, 3> pa(Nz, Ny, Nx);
+#if CHECK
+    Pochoir_Array<double, 3> pb(Nz, Ny, Nx);
+#endif
 
     Pochoir<double, 3> fd_3D;
     Pochoir_Domain I(0+ds, Nx-ds), J(0+ds, Ny-ds), K(0+ds, Nz-ds);
@@ -110,8 +114,10 @@ int main(int argc, char *argv[])
                     pa(1, i, j, k) = 0;
 #endif
                 }
+#if CHECK
                 pb(0, i, j, k) = pa(0, i, j, k);
                 pb(1, i, j, k) = 0;
+#endif
             }
         }
     }
@@ -137,10 +143,12 @@ int main(int argc, char *argv[])
         gettimeofday(&start, 0);
         fd_3D.run(T, fd_3D_fn);
         gettimeofday(&end, 0);
-        min_tdiff = min(min_tdiff, (1.0e3 * tdiff(&end, &start)));
+        min_tdiff = min(min_tdiff, (tdiff(&end, &start)));
     }
-    std::cout << "Pochoir ET consumed time : " << min_tdiff << " ms " << std::endl;
+    std::cout << "Pochoir consumed time : " << min_tdiff << " sec " << std::endl;
+	std::cout << "Pochoir GStencil/sec : " << ((Nz-2*ds)*(Ny-2*ds)*(Nx-2*ds)*(1e-9)*T)/(min_tdiff) << std::endl;
 
+#if CHECK
     min_tdiff = INF;
     /* cilk_for + zero-padding */
     for (int times = 0; times < TIMES; ++times) {
@@ -165,9 +173,10 @@ int main(int argc, char *argv[])
                     pb.interior(t-1, i+1, j-1, k+1) + pb.interior(t-1, i+1, j+1, k+1));
     } } } }
     gettimeofday(&end, 0);
-    min_tdiff = min(min_tdiff, (1.0e3 * tdiff(&end, &start)));
+    min_tdiff = min(min_tdiff, (tdiff(&end, &start)));
     }
-    std::cout << "Naive Loop consumed time :" << min_tdiff << "ms" << std::endl;
+    std::cout << "Naive Loop consumed time :" << min_tdiff << " sec " << std::endl;
+	std::cout << "Naive Loop GStencil/sec : " << ((Nz-2*ds)*(Ny-2*ds)*(Nx-2*ds)*(1e-9)*T)/(min_tdiff) << std::endl;
 
     t = T+1;
     for (int i = ds; i < Nz-ds; ++i) {
@@ -175,6 +184,7 @@ int main(int argc, char *argv[])
     for (int k = ds; k < Nx-ds; ++k) {
         check_result(t, i, j, k, pa.interior(t, i, j, k), pb.interior(t, i, j, k));
     } } }
+#endif
 
     return 0;
 }
