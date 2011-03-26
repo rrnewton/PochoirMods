@@ -57,10 +57,10 @@ int main(int argc, char *argv[])
     struct timeval start, end;
     const int BASE = 1024;
     const int ds = 1; /* this is the thickness for ghost cells */
-    const double alpha = 8.0;
-    const double beta = 7.0;
-    const double gamma = 6.0;
-    const double delta = 5.0;
+    const double alpha = 0.0876;
+    const double beta = 0.0765;
+    const double gamma = 0.0654;
+    const double delta = 0.0543;
     double min_tdiff = INF;
     int Nx, Ny, Nz, T;
     int t;
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
       T = atoi(argv[4]);
 
     printf("Order-%d 3D-Stencil (%d points) with space %dx%dx%d and time %d\n", 
-       ds, ds*2*3+1, Nx, Ny, Nz, T);
+       ds, 27, Nx, Ny, Nz, T);
 
     Pochoir_Array<double, 3> pa(Nz, Ny, Nx), pb(Nz, Ny, Nx);
 
