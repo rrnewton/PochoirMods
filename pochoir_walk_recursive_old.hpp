@@ -325,7 +325,7 @@ inline void Algorithm<N_RANK>::duo_sim_obase_space_cut(int t0, int t1, grid_info
                 const int lb = (l_father_grid.x1[level] - l_father_grid.x0[level]);
                 const int tb = (l_father_grid.x1[level] + l_father_grid.dx1[level] * lt - l_father_grid.x0[level] - l_father_grid.dx0[level] * lt);
                 const bool cut_lb = (lb >= tb);
-                const bool can_cut = cut_lb ? (lb >= 2 * thres & lb > dx_recursive_[level]) : (tb >= 2 * thres & tb > dx_recursive_[level]);
+                const bool can_cut = cut_lb ? (lb >= 2 * thres & lb > dx_recursive_[level]) : (tb >= 2 * thres & lb > dx_recursive_[level]);
                 if (!can_cut) {
                     /* if we can't cut into this dimension, just directly push 
                      * it into the circular queue 
@@ -459,7 +459,7 @@ inline void Algorithm<N_RANK>::duo_sim_obase_space_cut_p(int t0, int t1, grid_in
                 const int tb = (l_father_grid.x1[level] + l_father_grid.dx1[level] * lt - l_father_grid.x0[level] - l_father_grid.dx0[level] * lt);
                 const bool cut_lb = (lb >= tb);
                 const bool l_touch_boundary = touch_boundary(level, lt, l_father_grid);
-                const bool can_cut = cut_lb ? (l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[level]) : (lb >= 2 * thres & lb > dx_recursive_[level])) : (l_touch_boundary ? (tb >= 2 * thres & tb > dx_recursive_boundary_[level]) : (tb >= 2 * thres & tb > dx_recursive_[level]));
+                const bool can_cut = cut_lb ? (l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[level]) : (lb >= 2 * thres & lb > dx_recursive_[level])) : (l_touch_boundary ? (tb >= 2 * thres & lb > dx_recursive_boundary_[level]) : (tb >= 2 * thres & lb > dx_recursive_[level]));
                 if (!can_cut) {
                     /* if we can't cut into this dimension, just directly push
                      * it into the circular queue
@@ -565,7 +565,7 @@ inline void Algorithm<N_RANK>::duo_sim_obase_space_cut_p(int t0, int t1, grid_in
                         l_son_grid.x0[level] = l_start + sep + delta_x;
                         l_son_grid.dx0[level] = -slope_[level];
                         l_son_grid.x1[level] = l_end;
-                        l_son_grid.dx1[level] = l_father_grid.dx1[level];
+                        l_son_grid.dx1[level] = slope_[level];
                         push_queue(next_dep_pointer, level-1, t0, t1, l_son_grid);
                     } /* end if (cut_tb) */
                 } /* end if (can_cut) */
@@ -839,7 +839,7 @@ inline void Algorithm<N_RANK>::duo_sim_obase_bicut(int t0, int t1, grid_info<N_R
         tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
         bool cut_lb = (lb >= tb);
         thres = (2 * slope_[i] * lt);
-        bool l_can_cut = cut_lb ? (lb >= 2 * thres & lb > dx_recursive_[i]) : (tb >= 2 * thres & tb > dx_recursive_[i]);
+        bool l_can_cut = cut_lb ? (lb >= 2 * thres & lb > dx_recursive_[i]) : (tb >= 2 * thres & lb > dx_recursive_[i]);
         /* as long as there's one dimension can conduct a cut, we conduct a 
          * multi-dimensional cut!
          */
@@ -921,7 +921,7 @@ inline void Algorithm<N_RANK>::duo_sim_obase_bicut_p(int t0, int t1, grid_info<N
         */
         /* lb == phys_length_[i] indicates an initial cut! */
         bool cut_lb = (lb >= tb);
-        bool l_can_cut = cut_lb ? (l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres & lb > dx_recursive_[i])) : (l_touch_boundary ? (tb >= 2 * thres & tb > dx_recursive_boundary_[i]) : (tb > 2 * thres & tb > dx_recursive_[i]));
+        bool l_can_cut = cut_lb ? (l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres & lb > dx_recursive_[i])) : (l_touch_boundary ? (tb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (tb > 2 * thres & lb > dx_recursive_[i]));
         call_boundary |= l_touch_boundary;
 #if STAT
         l_count_cut = (l_can_cut ? l_count_cut + 1 : l_count_cut);
