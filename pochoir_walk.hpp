@@ -365,7 +365,7 @@ struct Algorithm {
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1), r_t(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -374,9 +374,9 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 1; --i)
-            dx_recursive_[i] = 100;
-        dx_recursive_[1] = 100;
-        dx_recursive_[0] = 100;
+            dx_recursive_[i] = 3;
+        dx_recursive_[1] = 3;
+        dx_recursive_[0] = 1000;
         Z = 10000;
         boundarySet = false;
         physGridSet = false;
@@ -410,6 +410,18 @@ struct Algorithm {
     void set_slope(int const slope[]);
     inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
 
+    /* followings are the sim cut of both top and bottom bar */
+    template <typename F>
+    inline void duo_sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F>
+    inline void duo_sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+
+    template <typename F, typename BF>
+    inline void duo_sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    template <typename F, typename BF>
+    inline void duo_sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+
+    /* followings are sim cut only on bottom bar */
     template <typename F>
     inline void sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
     template <typename F>
