@@ -2,12 +2,8 @@
 CC = ./pochoir
 ICC = icpc
 #ICC_FLAGS = -ipo -unroll-aggressive -xHOST -simd
-<<<<<<< .mine
 ICC_FLAGS = -unroll-aggressive -ipo -xHOST -fno-alias -fno-fnalias 
-=======
 #ICC_FLAGS = -unroll-aggressive -xHOST 
-ICC_FLAGS = -unroll-aggressive -fno-fnalias -fno-alias -xHost 
->>>>>>> .r20875
 all : clean klein 3dfd life heat_P heat_NP psa rna rna_struct
 loop_iter : tb_loop_iter.cpp
 	${ICC} -o loop_iter -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_loop_iter.cpp
