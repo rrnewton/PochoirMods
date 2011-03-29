@@ -428,8 +428,8 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
 #else
     fprintf(stderr, "Call duo_sim_obase_bicut\n");
 #pragma isat marker M2_begin
-    algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
-    // algor.duo_sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+    // algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+    algor.duo_sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 #pragma isat marker M2_end
 #if STAT
     for (int i = 1; i < SUPPORT_RANK; ++i) {
