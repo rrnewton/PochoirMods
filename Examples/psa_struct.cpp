@@ -55,7 +55,7 @@ using namespace std;
 #define MAX_ID_LENGTH 100
 
 #ifndef MAX_SEQ_LENGTH
-  #define MAX_SEQ_LENGTH  100000000
+  #define MAX_SEQ_LENGTH  100000
 #endif
 
 
@@ -479,7 +479,7 @@ int stencilPSAStruct( int nX, char *X, int nY, char *Y, int goCost, int geCost, 
 //         NODE(pArray( 0, i )).vG = i;
         pArray( 0, i ).vG = i;
 //        int v = NODE( pArray( 0, i ) ).vG;
-        int v = pArray( 0, i ).vG;
+        int v = NODE( pArray( 0, i ) ).vG;
 //        printf( "v = %d\n", v );
       }
     
@@ -539,7 +539,7 @@ int stencilPSAStruct( int nX, char *X, int nY, char *Y, int goCost, int geCost, 
 
     pSeq.run( t, pSeq_fn );
     
-    int optCost = min( pArray( t + 1, nY ).vG, min( pArray( t + 1, nY ).vD, pArray( t + 1, nY ).vI ) );
+    int optCost = min( NODE( pArray( t + 1, nY ) ).vG, min( NODE( pArray( t + 1, nY ) ).vD, NODE( pArray( t + 1, nY ) ).vI ) );
 
     return optCost;    
 }
@@ -673,7 +673,6 @@ int main( int argc, char *argv[ ] )
         printf( "\t alignment cost = %d\n", optCost );    
         printf( "\t running time = %.3lf sec\n\n", t0 );    
 
-#if 0
         printf( "Running pochoir-based DP ( without struct )..." );
         fflush( stdout );
                       
@@ -687,7 +686,6 @@ int main( int argc, char *argv[ ] )
         printf( "\t alignment cost = %d\n", optCost2 );    
         if ( t0 > 0 ) printf( "\t running time = %.3lf sec ( %.3lf x Pochoir-Struct )\n\n", t1, t1 / t0 );    
         else printf( "\t running time = %.3lf sec\n\n", t1 );    
-#endif
       
         if ( runIterativeStencil )
           {

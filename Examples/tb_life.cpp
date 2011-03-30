@@ -34,7 +34,7 @@
 #include <pochoir.hpp>
 
 using namespace std;
-#define TIMES 1
+#define TIMES 3
 /* N_RANK includes both time and space dimensions */
 #define N_RANK 2
 // #define N_SIZE 555
@@ -57,7 +57,6 @@ void check_result(int t, int j, int i, bool a, bool b)
          * boundary rvalue is not necessary!!! 
          */
         int new_i = i, new_j = j;
-#if 0
         if (new_i < 0)
             new_i += arr.size(1);
         else if (new_i >= arr.size(1))
@@ -67,13 +66,7 @@ void check_result(int t, int j, int i, bool a, bool b)
             new_j += arr.size(0);
         else if (new_j >= arr.size(0))
             new_j -= arr.size(0);
-#else
-     	const int arr_size_1 = arr.size(1);
-		const int arr_size_0 = arr.size(0);
-		new_i = (i < 0 ? new_i + arr_size_1 : (i >= arr_size_1 ? new_i - arr_size_1 : new_i));
-		new_j = (j < 0 ? new_j + arr_size_0 : (j >= arr_size_0 ? new_j - arr_size_0 : new_j));
-#endif
-		return arr.get(t, new_i, new_j);
+        return arr.get(t, new_i, new_j);
     Pochoir_Boundary_end
 
 int main(int argc, char * argv[])
@@ -90,9 +83,7 @@ int main(int argc, char * argv[])
     T_SIZE = StrToInt(argv[2]);
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
-	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE);
-//	Pochoir_Array<bool, N_RANK> b(N_SIZE, N_SIZE);
-//	Pochoir_Array<bool, N_RANK> c(N_SIZE, N_SIZE);
+	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE), c(N_SIZE, N_SIZE);
     Pochoir <bool, N_RANK> life_2D, bt_life_2D;
 //	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 #if 0
@@ -100,6 +91,9 @@ int main(int argc, char * argv[])
 #else
     Pochoir_Shape<2> life_shape_2D[9] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, 1}, {-1, 0, -1}, {-1, 1, 1}, {-1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}};
 #endif
+
+    life_2D.registerBoundaryFn(a, life_bv_2D);
+    bt_life_2D.registerBoundaryFn(c, life_bv_2D);
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -110,17 +104,13 @@ int main(int argc, char * argv[])
 		a(0, i, j) = (rand() & 0x1) ? true : false;
 		a(1, i, j) = 0; 
 #endif
-//        b(0, i, j) = a(0, i, j);
-//        b(1, i, j) = 0;
-//        c(0, i, j) = a(0, i, j);
-//        c(1, i, j) = 0;
+        b(0, i, j) = a(0, i, j);
+        b(1, i, j) = 0;
+        c(0, i, j) = a(0, i, j);
+        c(1, i, j) = 0;
 	} }
 
     printf("Game of Life : %d x %d, %d time steps\n", N_SIZE, N_SIZE, T_SIZE);
-
-#if 1
-#if 1
-    life_2D.registerBoundaryFn(a, life_bv_2D);
 
     Pochoir_kernel_2D(life_2D_fn, t, i, j)
     int neighbors = a(t-1, i-1, j-1) + a(t-1, i-1, j) + a(t-1, i-1, j+1) +
@@ -148,10 +138,7 @@ int main(int argc, char * argv[])
     }
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
-#endif
 
-#if 0
-    bt_life_2D.registerBoundaryFn(c, life_bv_2D);
     Pochoir_kernel_2D(bt_life_2D_fn, t, i, j)
     int neighbors = c(t-1, i-1, j-1) + c(t-1, i-1, j) + c(t-1, i-1, j+1) +
                     c(t-1, i, j-1)                  + c(t-1, i, j+1) +
@@ -186,10 +173,7 @@ int main(int argc, char * argv[])
     }
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET (Bit Trick): consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
-#endif
-#endif
 
-#if 0
 	gettimeofday(&start, 0);
     // we can handle the boundary condition either by register a boundary function
     // or using following explicit modulo operation
@@ -222,8 +206,6 @@ int main(int argc, char * argv[])
 	gettimeofday(&end, 0);
 	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start) / TIMES << "ms" << std::endl;
 
-#endif
-#if 0
 	t = T_SIZE;
     printf("compare a with b : ");
 	for (int i = 0; i < N_SIZE; ++i) {
@@ -238,6 +220,6 @@ int main(int argc, char * argv[])
 		check_result(t, i, j, c(t, i, j), b(t, i, j));
 	} } 
     printf("passed!\n");
-#endif
+
 	return 0;
 }

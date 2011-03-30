@@ -52,8 +52,12 @@ void check_result(int t, int j, int i, double a, double b)
 }
 
     Pochoir_Boundary_2D(heat_bv_2D, arr, t, i, j)
+        /* this is non-periodic boundary value */
+        /* we already shrinked by using range I, J, K,
+         * so the following code to set boundary index and
+         * boundary rvalue is not necessary!!! 
+         */
         int new_i = i, new_j = j;
-#if 0
         if (new_i < 0) 
             new_i += arr.size(1);
         else if (new_i >= arr.size(1))
@@ -65,13 +69,6 @@ void check_result(int t, int j, int i, double a, double b)
             new_j -= arr.size(0);
         if (new_i == i && new_j == j)
             printf("a(%d, %d) called without changing index!", i, j);
-#else
-		const int arr_size_1 = arr.size(1);
-		const int arr_size_0 = arr.size(0);
-		new_i = (i < 0 ? new_i + arr_size_1 : (i >= arr_size_1 ? new_i - arr_size_1 : new_i));
-		new_j = (j < 0 ? new_j + arr_size_0 : (j >= arr_size_0 ? new_j - arr_size_0 : new_j));
-
-#endif
         return arr.get(t, new_i, new_j);
     Pochoir_Boundary_end
 
@@ -90,22 +87,23 @@ int main(int argc, char * argv[])
     T_SIZE = StrToInt(argv[2]);
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
-	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE);
-//	Pochoir_Array<double, N_RANK> b(N_SIZE, N_SIZE);
-    Pochoir<double, N_RANK> heat_2D;
+	Pochoir_Array_2D(double, 2) a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
+    Pochoir_2D(double, 2) heat_2D;
 //    Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 #if 0
-    Pochoir_Shape<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
+    Pochoir_Shape_2D heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
 #else
-    Pochoir_Shape<2> heat_shape_2D[5] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
+    Pochoir_Shape_2D heat_shape_2D[5] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
 #endif
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
+#if 0
         if (i == 0 || i == N_SIZE-1
             || j == 0 || j == N_SIZE-1) {
             a(0, i, j) = a(1, i, j) = 0;
         } else {
+#endif
 #if DEBUG 
 		    a(0, i, j) = i * N_SIZE + j;
 		    a(1, i, j) = 0;
@@ -113,13 +111,14 @@ int main(int argc, char * argv[])
             a(0, i, j) = 1.0 * (rand() % BASE); 
             a(1, i, j) = 0; 
 #endif
+#if 0
         }
-//        b(0, i, j) = a(0, i, j);
-//        b(1, i, j) = 0;
+#endif
+        b(0, i, j) = a(0, i, j);
+        b(1, i, j) = 0;
 	} }
 
-	cout << "Serial Loops: a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
-#if 1
+	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
     Pochoir_kernel_2D(heat_2D_fn, t, i, j)
 #if 0
 	    a(t+1, i, j) = 0.125 * (a(t, i+1, j) - 2.0 * a(t, i, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) - 2.0 * a(t, i, j) + a(t, i, j-1)) + a(t, i, j);
@@ -145,10 +144,10 @@ int main(int argc, char * argv[])
     }
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
-#endif
-#if 0
+
+#if 1
 //    b.registerShape(heat_shape_2D);
-//    b.registerBV(heat_bv_2D);
+    b.registerBV(heat_bv_2D);
 
 	gettimeofday(&start, 0);
     for (int times = 0; times < TIMES; ++times) {
@@ -156,18 +155,16 @@ int main(int argc, char * argv[])
 	for (int t = 0; t < T_SIZE; ++t) {
     cilk_for (int i = 0; i <= N_SIZE-1; ++i) {
 	for (int j = 0; j <= N_SIZE-1; ++j) {
-        b.interior(t+1, i, j) = 0.125 * (b.interior(t, (i+1)%N_SIZE, j) - 2.0 * b.interior(t, i, j) + b.interior(t, (i-1+N_SIZE)%N_SIZE, j)) + 0.125 * (b.interior(t, i, (j+1)%N_SIZE) - 2.0 * b.interior(t, i, j) + b.interior(t, i, (j-1+N_SIZE)%N_SIZE)) + b.interior(t, i, j); } } }
+        b(t+1, i, j) = 0.125 * (b(t, i+1, j) - 2.0 * b(t, i, j) + b(t, i-1, j)) + 0.125 * (b(t, i, j+1) - 2.0 * b(t, i, j) + b(t, i, j-1)) + b(t, i, j); } } }
     }
 	gettimeofday(&end, 0);
 	std::cout << "Naive Loop: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
 
-#if 1
 	t = T_SIZE;
 	for (int i = 0; i <= N_SIZE-1; ++i) {
 	for (int j = 0; j <= N_SIZE-1; ++j) {
 		check_result(t, i, j, a.interior(t, i, j), b.interior(t, i, j));
 	} } 
-#endif
 #endif
 	return 0;
 }

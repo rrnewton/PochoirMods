@@ -48,51 +48,30 @@ using namespace std;
 
 #define base_pair( a1, a2 ) ( a1 + a2 == 0 )
 
-#define not_base_pair( a1, a2 ) ( a1 + a2 )
+#define match_pair( a1, a2 ) ( base_pair( a1, a2 ) ? 1 : -INF )
 
 #ifndef MAX_SEQ_LENGTH
   #define MAX_SEQ_LENGTH  1000000
 #endif
 
 #ifndef INF
-  #define INF 10000000 /*( 10 * MAX_SEQ_LENGTH )*/
+  #define INF ( 10 * MAX_SEQ_LENGTH )
 #endif
 
-typedef struct
-{
-   int SL, SR, SM, SMAX, SP;
-} NODE;
+#define pArrayR2T3  Pochoir_Array< int, N_RANK, 3 >
+#define P_ARRAY_R2_T3  pArrayR2T3
 
+//#define TEST_TYPEDEF
 
-#define P_ARRAY_STRUCT_R2_T3 Pochoir_Array< NODE, N_RANK, 3 >
+//#ifdef TEST_TYPEDEF
+//  #define P_ARRAY_R2_T3 pArrayR2T3
+//#else
+//  #define P_ARRAY_R2_T3 Pochoir_Array< int, N_RANK, 3 >
+//#endif  
 
-#define P_ARRAY_R2_T3 Pochoir_Array< int, N_RANK, 3 >
-
-#define min2( x, y ) ( ( y ) ^ ( ( ( x ) ^ ( y ) ) & -( ( x ) < ( y ) ) ) ) 
-#define max2( x, y ) ( ( x ) ^ ( ( ( x ) ^ ( y ) ) & -( ( x ) < ( y ) ) ) ) 
-
-#define min3( x, y ) ( ( y ) + ( ( ( x ) - ( y ) ) & ( ( ( x ) - ( y ) ) >> 31 ) ) )
-#define max3( x, y ) ( ( x ) - ( ( ( x ) - ( y ) ) & ( ( ( x ) - ( y ) ) >> 31 ) ) )
-
-enum alphabet{ A = -1, U = 1, G = -2, C = 2 };
+enum alphabet{ A = -1, U = 1, G = -2, C = 2, ALPHABET_SIZE };
 
 enum err_msgs{ SEQUENCE_READ, LENGTH_READ, NO_SEQUENCE, SEQUENCE_TOO_LONG, INVALID_SEQUENCE_LENGTH, FILE_OPEN_ERROR, MEM_ALLOC_ERROR };
-
-//#define cilk_for for
-
-int inline maxxx( int a, int b, int c ) 
-{ 
-  __asm__ ( 
-           "cmp     %0, %1\n\t"  
-           "cmoge  %1, %0\n\t" 
-           "cmp     %0, %2\n\t" 
-           "cmoge  %2, %0\n\t"  
-          : "+r"(a) :  
-            "%r"(b), "r"(c) 
-          ); 
-          
-  return a; 
-} 
 
 
 int read_next_seq( char *fn, char **sq, int *len )
@@ -310,186 +289,6 @@ int read_command_line( int argc, char *argv[ ], int &nx, char **fnX, int &run_st
 
 
 void stencilRNAi0( int nX, char *X, int i_0, 
-                   P_ARRAY_STRUCT_R2_T3 &pArray )
-{
-    Pochoir< NODE, N_RANK, 3 > pRNA;    
-    Pochoir_Shape< N_RANK > pRNA_shape[ 6 ] = { { 2, 0, 0 }, 
-                                                { 1, 0, 0 }, { 1, 0, -1 }, { 1, -1, 0 },
-                                                { 0, -1, 0 }, { 0, 0, -1 } };    
-
-    cilk_for ( int k_0 = 1; k_0 <= nX; ++k_0 )
-      for ( int i = i_0; i < k_0 - 1; ++i )
-         pArray( 0, i, k_0 ).SP = -INF;
-
-    for ( int t = 0; t < 2; ++t )
-      cilk_for ( int i = 0; i <= nX; ++i )
-        for ( int k = 0; k <= nX; ++k )      
-          {
-            pArray( t, i, k ).SMAX = -INF;
-            
-            int j = t - i - k, jj = nX - j + 1;
-            
-            if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) && ( i < jj ) && ( jj <= k ) )
-               {    
-                 bool b0 = ( jj == k ) || ( i >= i_0 ), b1 = base_pair( X[ i ], X[ jj ] );
-                 
-                 pArray( t, i, k ).SL = b0 ? ( b1 ? 1 : -INF ) : 0;
-                                
-                 b0 = ( k == jj + 1 ) || ( i != i_0 - 1 );            
-                 b1 = base_pair( X[ jj ], X[ k ] );   
-                 
-                 pArray( t, i, k ).SR = b0 ? ( b1 ? 1 : -INF ) : 0;               
-        
-                 b0 = ( i == i_0 - 1 ) || ( t == 0 );
-                 
-                 if ( b0 ) pArray( t, i, k ).SM = 0;  
-                 else
-                   {
-                     int v1 = -INF, v2 = -INF;
-                     
-                     if ( jj < k ) 
-                       {
-                         int sr = pArray( 0, i, k - 1 ).SR, sm = pArray( 0, i, k - 1 ).SM, smax = pArray( 0, i, k ).SMAX;
-                         
-                         v1 = max( sr, sm );
-                         v1 = max( v1, smax );
-                       } 
-                     
-                     if ( i - 1 < jj ) 
-                       {
-                         int sl = pArray( 0, i - 1, k ).SL, sm = pArray( 0, i - 1, k ).SM;
-                          
-                         v2 = max( sl, sm );                           
-                       }  
-                                                
-                     pArray( t, i, k ).SM = max( v1, v2 );  
-                   }
-                   
-                 int sl = pArray( t, i, k ).SL, sr = pArray( t, i, k ).SR, sm = pArray( t, i, k ).SM;  
-                                     
-                 int smax = max( sl, sr );       
-                        
-                 smax = max( smax, sm );       
-                        
-                 pArray( t, i, k ).SMAX = smax;       
-                 
-                 b0 = ( i_0 <= i ) && ( jj < k );
-                 
-                 int sp = pArray( 0, i, k ).SP;
-                 
-                 pArray( 0, i, k ).SP = b0 ? max( smax, sp ) : -INF;                            
-               }  
-          }
-
-
-    Pochoir_kernel_2D( pRNA_fn, t, i, k )
-      
-       int j = t + 2 - i - k, jj = nX - j + 1;
-
-       if ( ( j >= 0 ) && ( j <= nX ) && ( i < jj ) )
-         {                   
-           if ( ( i_0 - 1 < i ) && ( jj + 1 < k ) )
-             {
-	       int sr = pArray( t + 1, i, k - 1 ).SR, smr = pArray( t + 1, i, k - 1 ).SM;
-	       int sl = pArray( t + 1, i - 1, k ).SL, sml = pArray( t + 1, i - 1, k ).SM;
-	       int smax = pArray( t + 1, i, k ).SMAX;
-	       	       	      
-               int v1 = max( sr, smr );
-               int v2 = max( sl, sml );
-
-               v1 = max( v1, smax );
-                                                    
-               pArray( t + 2, i, k ).SM = max( v1, v2 );  
-
-               pArray( t + 2, i, k ).SL = sl = not_base_pair( X[ i ], X[ jj ] ) ? -INF : ( 1 + pArray( t, i - 1, k ).SMAX );                       
-               pArray( t + 2, i, k ).SR = sr = not_base_pair( X[ jj ], X[ k ] ) ? -INF : ( 1 + pArray( t, i, k - 1 ).SMAX );        
-
-               v1 = max( sl, sr );       
-                      
-               smr = pArray( t + 2, i, k ).SM;       
-                      
-               pArray( t + 2, i, k ).SMAX = smax = max( v1, smr );       
-               
-               int sp = pArray( 0, i, k ).SP;       
-                          
-               pArray( 0, i, k ).SP = max( smax, sp );
-             }       
-           else if ( ( i_0 - 1 <= i ) && ( jj <= k ) )
-                 {                   
-                   int sl, sr, sm = 0;
-                   
-                   bool b0 = ( i_0 - 1 == i ) && ( k <= jj + 1 );
-                   
-                   sl = sr = b0 ? 0 : -INF;
-
-                   b0 = base_pair( X[ i ], X[ jj ] );
-                   bool b1 = ( jj == k ), b2 = ~b1 && ( ( i_0 - 1 < i ) || ( jj + 1 != k ) ) && b0;
-                   b1 = b1 && b0;
-                   
-                   pArray( t + 2, i, k ).SL = sl = b1 ? 1 : ( b2 ? ( 1 + pArray( t, i - 1, k ).SMAX ) : sl );
-                                              
-                   b0 = base_pair( X[ jj ], X[ k ] );
-                   b1 = ( i_0 - 1 == i );
-                   b2 = ( jj + 1 <= k - 1 );                           
-                   bool b3 = ( b1 && ( jj + 1 == k ) ) || ( ~b1 && ~b2 );
-                   b3 = b3 && b0; 
-                   b2 = b2 && b1 && b0;        
-                        
-                   pArray( t + 2, i, k ).SR = sr = b3 ? 1 : ( b2 ? ( 1 + pArray( t, i, k - 1 ).SMAX ) : sr );     
-                                     
-                   if ( i > i_0 - 1 ) 
-                     {
-                       int v1 = -INF, v2 = -INF;
-                       
-                       if ( jj < k ) 
-                         {
-                           int sr = pArray( t + 1, i, k - 1 ).SR, sm = pArray( t + 1, i, k - 1 ).SM, smax = pArray( t + 1, i, k ).SMAX;
-                           
-                           v1 = max( sr, sm );
-                           v1 = max( v1, smax );
-                         } 
-                       
-                       if ( i - 1 < jj ) 
-                         {
-                           int sl = pArray( t + 1, i - 1, k ).SL, sm = pArray( t + 1, i - 1, k ).SM;
-                           
-                           v2 = max( sl, sm );
-                         }  
-                       
-                       sm = max( v1, v2 );  
-                     }
-          
-                   pArray( t + 2, i, k ).SM = sm;  
-                                                  
-                   int v = max( sl, sr );       
-                          
-                   int smax = max( v, sm );;
-                          
-                   pArray( t + 2, i, k ).SMAX = smax;       
-                              
-                   b0 = ( i_0 <= i ) && ( jj < k );           
-                   
-                   int sp = pArray( 0, i, k ).SP;
-                   
-                   pArray( 0, i, k ).SP = b0 ? max( smax, sp ) : -INF;
-                 }
-         }
-                      	      
-    Pochoir_kernel_end
-
-    pRNA.registerShape( pRNA_shape );
-
-    pRNA.registerArray( pArray );
-                    
-    int t = 3 * nX - 1;
-
-    pRNA.run( t, pRNA_fn );
-}
-
-
-
-
-void stencilRNAi0( int nX, char *X, int i_0, 
                    P_ARRAY_R2_T3 &SL, 
                    P_ARRAY_R2_T3 &SR, 
                    P_ARRAY_R2_T3 &SM,
@@ -497,16 +296,17 @@ void stencilRNAi0( int nX, char *X, int i_0,
                    P_ARRAY_R2_T3 &SP )
 {
     Pochoir< int, N_RANK, 3 > pRNA;    
+//    Pochoir_Domain I( 0, nX + 1 ), K( 0, nX + 1 );
     Pochoir_Shape< N_RANK > pRNA_shape[ 6 ] = { { 2, 0, 0 }, 
                                                 { 1, 0, 0 }, { 1, 0, -1 }, { 1, -1, 0 },
                                                 { 0, -1, 0 }, { 0, 0, -1 } };    
 
-    cilk_for ( int k_0 = 1; k_0 <= nX; ++k_0 )
+    for ( int k_0 = 1; k_0 <= nX; ++k_0 )
       for ( int i = i_0; i < k_0 - 1; ++i )
          SP( 0, i, k_0 ) = -INF;
 
     for ( int t = 0; t < 2; ++t )
-      cilk_for ( int i = 0; i <= nX; ++i )
+      for ( int i = 0; i <= nX; ++i )
         for ( int k = 0; k <= nX; ++k )      
           {
             SMAX( t, i, k ) = -INF;
@@ -514,54 +314,60 @@ void stencilRNAi0( int nX, char *X, int i_0,
             int j = t - i - k, jj = nX - j + 1;
             
             if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) && ( i < jj ) && ( jj <= k ) )
-               {    
-                 bool b0 = ( jj == k ) || ( i >= i_0 ), b1 = base_pair( X[ i ], X[ jj ] );
-                 
-                 SL( t, i, k ) = b0 ? ( b1 ? 1 : -INF ) : 0;
-                                
-                 b0 = ( k == jj + 1 ) || ( i != i_0 - 1 );            
-                 b1 = base_pair( X[ jj ], X[ k ] );   
-                 
-                 SR( t, i, k ) = b0 ? ( b1 ? 1 : -INF ) : 0;               
-        
-                 b0 = ( i == i_0 - 1 ) || ( t == 0 );
-                 
-                 if ( b0 ) SM( t, i, k ) = 0;  
-                 else
+               {                   
+                 if ( jj == k )
                    {
-                     int v1 = -INF, v2 = -INF;
-                     
-                     if ( jj < k ) 
-                       {
-                         int sr = SR( 0, i, k - 1 ), sm = SM( 0, i, k - 1 ), smax = SMAX( 0, i, k );
-                         
-                         v1 = max( sr, sm );
-                         v1 = max( v1, smax );
-                       } 
-                     
-                     if ( i - 1 < jj ) 
-                       {
-                         int sl = SL( 0, i - 1, k ), sm = SM( 0, i - 1, k );
-                          
-                         v2 = max( sl, sm );                           
-                       }  
-                                                
-                     SM( t, i, k ) = max( v1, v2 );  
+                     if ( base_pair( X[ i ], X[ jj ] ) ) SL( t, i, k ) = 1;
+                     else SL( t, i, k ) = -INF;             
                    }
-                   
-                 int sl = SL( t, i, k ), sr = SR( t, i, k ), sm = SM( t, i, k );  
+                 else if ( i >= i_0 )
+                        {
+                          if ( base_pair( X[ i ], X[ jj ] ) ) SL( t, i, k ) = 1;
+                          else SL( t, i, k ) = -INF;
+                        }  
+                      else SL( t, i, k ) = 0;
+                         
+                 if ( i == i_0 - 1 )
+                   {
+                     if ( k == jj + 1 )
+                       {
+                         if ( base_pair( X[ jj ], X[ k ] ) ) SR( t, i, k ) = 1;
+                         else SR( t, i, k ) = -INF;                                             
+                       }
+                     else SR( t, i, k ) = 0;  
+                   }
+                 else   
+                   {
+                     if ( base_pair( X[ jj ], X[ k ] ) ) SR( t, i, k ) = 1;
+                     else SR( t, i, k ) = -INF;             
+                   }
+        
+                 if ( i == i_0 - 1 ) SM( t, i, k ) = 0;  
+                 else if ( t > 0 )
+                         {
+                           int v1 = -INF, v2 = -INF;
+                           
+                           if ( jj < k ) 
+                             {
+                               v1 = max( SR( 0, i, k - 1 ), SM( 0, i, k - 1 ) );
+                               v1 = max( v1, SMAX( 0, i, k ) );
+                             } 
+                           
+                           if ( i - 1 < jj ) v2 = max( SL( 0, i - 1, k ), SM( 0, i - 1, k ) );                           
+                                                      
+                           SM( t, i, k ) = max( v1, v2 );  
+                         }
+                      else SM( t, i, k ) = 0;     
                                      
-                 int smax = max( sl, sr );       
+                 int v = max( SL( t, i, k ), SR( t, i, k ) );       
                         
-                 smax = max( smax, sm );       
-                        
-                 SMAX( t, i, k ) = smax;       
-                 
-                 b0 = ( i_0 <= i ) && ( jj < k );
-                 
-                 int sp = SP( 0, i, k );
-                 
-                 SP( 0, i, k ) = b0 ? max( smax, sp ) : -INF;                            
+                 SMAX( t, i, k ) = max( v, SM( t, i, k ) );       
+                            
+                 if ( ( i_0 <= i ) && ( jj < k ) )           
+                   {
+                     SP( 0, i, k ) = max( SMAX( t, i, k ), SP( 0, i, k ) );
+                   }
+                 else SP( 0, i, k ) = -INF;   
                }  
           }
 
@@ -570,93 +376,65 @@ void stencilRNAi0( int nX, char *X, int i_0,
       
        int j = t + 2 - i - k, jj = nX - j + 1;
 
-       if ( ( j >= 0 ) && ( j <= nX ) && ( i < jj ) )
+       if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) && ( i < jj ) && ( jj <= k ) )
          {                   
-           if ( ( i_0 - 1 < i ) && ( jj + 1 < k ) )
+           if ( jj == k )
              {
-	       int sr = SR( t + 1, i, k - 1 ), smr = SM( t + 1, i, k - 1 );
-	       int sl = SL( t + 1, i - 1, k ), sml = SM( t + 1, i - 1, k );
-	       int smax = SMAX( t + 1, i, k );
-	       	       	      
-               int v1 = max( sr, smr );
-               int v2 = max( sl, sml );
-
-               v1 = max( v1, smax );
-                                                    
-               SM( t + 2, i, k ) = max( v1, v2 );  
-
-               SL( t + 2, i, k ) = sl = not_base_pair( X[ i ], X[ jj ] ) ? -INF : ( 1 + SMAX( t, i - 1, k ) );                       
-               SR( t + 2, i, k ) = sr = not_base_pair( X[ jj ], X[ k ] ) ? -INF : ( 1 + SMAX( t, i, k - 1 ) );        
-
-               v1 = max( sl, sr );       
-                      
-               smr = SM( t + 2, i, k );       
-                      
-               SMAX( t + 2, i, k ) = smax = max( v1, smr );       
-               
-               int sp = SP( 0, i, k );       
-                          
-               SP( 0, i, k ) = max( smax, sp );
-             }       
-           else if ( ( i_0 - 1 <= i ) && ( jj <= k ) )
-                 {                   
-                   int sl, sr, sm = 0;
+               if ( base_pair( X[ i ], X[ jj ] ) ) SL( t + 2, i, k ) = 1;
+               else SL( t + 2, i, k ) = -INF;             
+             }
+           else if ( i >= i_0 )
+                  {
+                    if ( base_pair( X[ i ], X[ jj ] ) ) 
+                      {
+                        if ( i - 1 < jj + 1 )  SL( t + 2, i, k ) = 1 + SMAX( t, i - 1, k );
+                        else SL( t + 2, i, k ) = 1;
+                      }  
+                    else SL( t + 2, i, k ) = -INF;
+                 }  
+               else SL( t + 2, i, k ) = 0;
                    
-                   bool b0 = ( i_0 - 1 == i ) && ( k <= jj + 1 );
-                   
-                   sl = sr = b0 ? 0 : -INF;
-
-                   b0 = base_pair( X[ i ], X[ jj ] );
-                   bool b1 = ( jj == k ), b2 = ~b1 && ( ( i_0 - 1 < i ) || ( jj + 1 != k ) ) && b0;
-                   b1 = b1 && b0;
-                   
-                   SL( t + 2, i, k ) = sl = b1 ? 1 : ( b2 ? ( 1 + SMAX( t, i - 1, k ) ) : sl );
-                                              
-                   b0 = base_pair( X[ jj ], X[ k ] );
-                   b1 = ( i_0 - 1 == i );
-                   b2 = ( jj + 1 <= k - 1 );                           
-                   bool b3 = ( b1 && ( jj + 1 == k ) ) || ( ~b1 && ~b2 );
-                   b3 = b3 && b0; 
-                   b2 = b2 && b1 && b0;        
-                        
-                   SR( t + 2, i, k ) = sr = b3 ? 1 : ( b2 ? ( 1 + SMAX( t, i, k - 1 ) ) : sr );     
-                                     
-                   if ( i > i_0 - 1 ) 
-                     {
-                       int v1 = -INF, v2 = -INF;
-                       
-                       if ( jj < k ) 
-                         {
-                           int sr = SR( t + 1, i, k - 1 ), sm = SM( t + 1, i, k - 1 ), smax = SMAX( t + 1, i, k );
-                           
-                           v1 = max( sr, sm );
-                           v1 = max( v1, smax );
-                         } 
-                       
-                       if ( i - 1 < jj ) 
-                         {
-                           int sl = SL( t + 1, i - 1, k ), sm = SM( t + 1, i - 1, k );
-                           
-                           v2 = max( sl, sm );
-                         }  
-                       
-                       sm = max( v1, v2 );  
-                     }
-          
-                   SM( t + 2, i, k ) = sm;  
-                                                  
-                   int v = max( sl, sr );       
-                          
-                   int smax = max( v, sm );;
-                          
-                   SMAX( t + 2, i, k ) = smax;       
-                              
-                   b0 = ( i_0 <= i ) && ( jj < k );           
-                   
-                   int sp = SP( 0, i, k );
-                   
-                   SP( 0, i, k ) = b0 ? max( smax, sp ) : -INF;
+           if ( i == i_0 - 1 )
+             {
+               if ( k == jj + 1 )
+                 {
+                   if ( base_pair( X[ jj ], X[ k ] ) ) SR( t + 2, i, k ) = 1;
+                   else SR( t + 2, i, k ) = -INF;                                             
                  }
+               else SR( t + 2, i, k ) = 0;  
+             }
+           else   
+             {
+               if ( base_pair( X[ jj ], X[ k ] ) ) 
+                 {
+                   if ( jj + 1 <= k - 1 ) SR( t + 2, i, k ) = 1 + SMAX( t, i, k - 1 );
+                   else SR( t + 2, i, k ) = 1;
+                 }  
+               else SR( t + 2, i, k ) = -INF;             
+             }
+
+           if ( i == i_0 - 1 ) SM( t + 2, i, k ) = 0;  
+           else
+             {
+               int v1 = -INF, v2 = -INF;
+               
+               if ( jj < k ) 
+                 {
+                   v1 = max( SR( t + 1, i, k - 1 ), SM( t + 1, i, k - 1 ) );
+                   v1 = max( v1, SMAX( t + 1, i, k ) );
+                 } 
+               
+               if ( i - 1 < jj ) v2 = max( SL( t + 1, i - 1, k ), SM( t + 1, i - 1, k ) );
+               
+               SM( t + 2, i, k ) = max( v1, v2 );  
+             }
+                               
+           int v = max( SL( t + 2, i, k ), SR( t + 2, i, k ) );       
+                  
+           SMAX( t + 2, i, k ) = max( v, SM( t + 2, i, k ) );       
+                      
+           if ( ( i_0 <= i ) && ( jj < k ) ) SP( 0, i, k ) = max( SMAX( t + 2, i, k ), SP( 0, i, k ) );
+           else SP( 0, i, k ) = -INF;   
          }
                       	      
     Pochoir_kernel_end
@@ -669,177 +447,11 @@ void stencilRNAi0( int nX, char *X, int i_0,
     pRNA.registerArray( SMAX );
     pRNA.registerArray( SP );
                     
+//    pRNA.registerDomain( I, K );    
+
     int t = 3 * nX - 1;
 
     pRNA.run( t, pRNA_fn );
-}
-
-
-
-
-void iterativeStencilRNAi0( int nX, char *X, int i_0, 
-			    P_ARRAY_STRUCT_R2_T3 &pArray )
-{
-    cilk_for ( int k_0 = 1; k_0 <= nX; ++k_0 )
-      for ( int i = i_0; i < k_0 - 1; ++i )
-         pArray.interior( 0, i, k_0 ).SP = -INF;
-
-    for ( int t = 0; t < 2; ++t )
-      cilk_for ( int i = 0; i <= nX; ++i )
-        for ( int k = 0; k <= nX; ++k )      
-          {
-            pArray.interior( t, i, k ).SMAX = -INF;
-            
-            int j = t - i - k, jj = nX - j + 1;
-            
-            if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) && ( i < jj ) && ( jj <= k ) )
-               {    
-                 bool b0 = ( jj == k ) || ( i >= i_0 ), b1 = base_pair( X[ i ], X[ jj ] );
-                 
-                 pArray.interior( t, i, k ).SL = b0 ? ( b1 ? 1 : -INF ) : 0;
-                                
-                 b0 = ( k == jj + 1 ) || ( i != i_0 - 1 );            
-                 b1 = base_pair( X[ jj ], X[ k ] );   
-                 
-                 pArray.interior( t, i, k ).SR = b0 ? ( b1 ? 1 : -INF ) : 0;               
-        
-                 b0 = ( i == i_0 - 1 ) || ( t == 0 );
-                 
-                 if ( b0 ) pArray.interior( t, i, k ).SM = 0;  
-                 else
-                   {
-                     int v1 = -INF, v2 = -INF;
-                     
-                     if ( jj < k ) 
-                       {
-                         int sr = pArray.interior( 0, i, k - 1 ).SR, sm = pArray.interior( 0, i, k - 1 ).SM, smax = pArray.interior( 0, i, k ).SMAX;
-                         
-                         v1 = max( sr, sm );
-                         v1 = max( v1, smax );
-                       } 
-                     
-                     if ( i - 1 < jj ) 
-                       {
-                         int sl = pArray.interior( 0, i - 1, k ).SL, sm = pArray.interior( 0, i - 1, k ).SM;
-                          
-                         v2 = max( sl, sm );                           
-                       }  
-                                                
-                     pArray.interior( t, i, k ).SM = max( v1, v2 );  
-                   }
-                   
-                 int sl = pArray.interior( t, i, k ).SL, sr = pArray.interior( t, i, k ).SR, sm = pArray.interior( t, i, k ).SM;  
-                                     
-                 int smax = max( sl, sr );       
-                        
-                 smax = max( smax, sm );       
-                        
-                 pArray.interior( t, i, k ).SMAX = smax;       
-                 
-                 b0 = ( i_0 <= i ) && ( jj < k );
-                 
-                 int sp = pArray.interior( 0, i, k ).SP;
-                 
-                 pArray.interior( 0, i, k ).SP = b0 ? max( smax, sp ) : -INF;                            
-               }  
-          }
-
-    
-    for ( int t = 0; t <= 3 * nX - 2; ++t )
-      cilk_for ( int i = 0; i < nX + 1; ++i )
-        for ( int k = 0; k < nX + 1; ++k )      
-          {
-             int j = t + 2 - i - k, jj = nX - j + 1;
-      
-             if ( ( j >= 0 ) && ( j <= nX ) && ( i < jj ) )
-               {                   
-                 if ( ( i_0 - 1 < i ) && ( jj + 1 < k ) )
-                   {
-        	     int sr = pArray.interior( t + 1, i, k - 1 ).SR, smr = pArray.interior( t + 1, i, k - 1 ).SM;
-        	     int sl = pArray.interior( t + 1, i - 1, k ).SL, sml = pArray.interior( t + 1, i - 1, k ).SM;
-        	     int smax = pArray.interior( t + 1, i, k ).SMAX;
-      	       	       	      
-                     int v1 = max( sr, smr );
-                     int v2 = max( sl, sml );
-      
-                     v1 = max( v1, smax );
-                                                           
-                     pArray.interior( t + 2, i, k ).SM = max( v1, v2 );  
-                     
-                     pArray.interior( t + 2, i, k ).SL = sl = not_base_pair( X[ i ], X[ jj ] ) ? -INF : ( 1 + pArray( t, i - 1, k ).SMAX );                       
-                     pArray.interior( t + 2, i, k ).SR = sr = not_base_pair( X[ jj ], X[ k ] ) ? -INF : ( 1 + pArray( t, i, k - 1 ).SMAX );        
-                                                    
-                     int v = max( sl, sr );       
-                            
-                     smr = pArray.interior( t + 2, i, k ).SM;       
-                            
-                     pArray.interior( t + 2, i, k ).SMAX = smax = max( v, smr );       
-                     
-                     int sp = pArray.interior( 0, i, k ).SP;       
-                                
-                     pArray.interior( 0, i, k ).SP = max( smax, sp );
-                   }       
-                 else if ( ( i_0 - 1 <= i ) && ( jj <= k ) )
-                       {                   
-                         int sl, sr, sm = 0;
-                         
-                         bool b0 = ( i_0 - 1 == i ) && ( k <= jj + 1 );
-                         
-                         sl = sr = b0 ? 0 : -INF;
-      
-                         b0 = base_pair( X[ i ], X[ jj ] );
-                         bool b1 = ( jj == k ), b2 = ~b1 && ( ( i_0 - 1 < i ) || ( jj + 1 != k ) ) && b0;
-                         b1 = b1 && b0;
-                         
-                         pArray.interior( t + 2, i, k ).SL = sl = b1 ? 1 : ( b2 ? ( 1 + pArray.interior( t, i - 1, k ).SMAX ) : sl );
-                                                    
-                         b0 = base_pair( X[ jj ], X[ k ] );
-                         b1 = ( i_0 - 1 == i );
-                         b2 = ( jj + 1 <= k - 1 );                           
-                         bool b3 = ( b1 && ( jj + 1 == k ) ) || ( ~b1 && ~b2 );
-                         b3 = b3 && b0; 
-                         b2 = b2 && b1 && b0;        
-                              
-                         pArray.interior( t + 2, i, k ).SR = sr = b3 ? 1 : ( b2 ? ( 1 + pArray.interior( t, i, k - 1 ).SMAX ) : sr );     
-                                           
-                         if ( i > i_0 - 1 ) 
-                           {
-                             int v1 = -INF, v2 = -INF;
-                             
-                             if ( jj < k ) 
-                               {
-                                 int sr = pArray.interior( t + 1, i, k - 1 ).SR, sm = pArray.interior( t + 1, i, k - 1 ).SM, smax = pArray.interior( t + 1, i, k ).SMAX;
-                                 
-                                 v1 = max( sr, sm );
-                                 v1 = max( v1, smax );
-                               } 
-                             
-                             if ( i - 1 < jj ) 
-                               {
-                                 int sl = pArray.interior( t + 1, i - 1, k ).SL, sm = pArray.interior( t + 1, i - 1, k ).SM;
-                                 
-                                 v2 = max( sl, sm );
-                               }  
-                             
-                             sm = max( v1, v2 );  
-                           }
-                
-                         pArray.interior( t + 2, i, k ).SM = sm;  
-                                                        
-                         int v = max( sl, sr );       
-                                
-                         int smax = max( v, sm );;
-                                
-                         pArray.interior( t + 2, i, k ).SMAX = smax;       
-                                    
-                         b0 = ( i_0 <= i ) && ( jj < k );           
-                         
-                         int sp = pArray.interior( 0, i, k ).SP;
-                         
-                         pArray.interior( 0, i, k ).SP = b0 ? max( smax, sp ) : -INF;
-                       }
-               }
-          }
 }
 
 
@@ -852,67 +464,77 @@ void iterativeStencilRNAi0( int nX, char *X, int i_0,
                    P_ARRAY_R2_T3 &SMAX,                    
                    P_ARRAY_R2_T3 &SP )
 {
-    cilk_for ( int k_0 = 1; k_0 <= nX; ++k_0 )
+    for ( int k_0 = 1; k_0 <= nX; ++k_0 )
       for ( int i = i_0; i < k_0 - 1; ++i )
-         SP.interior( 0, i, k_0 ) = -INF;
+         SP( 0, i, k_0 ) = -INF;
 
     for ( int t = 0; t < 2; ++t )
-      cilk_for ( int i = 0; i <= nX; ++i )
+      for ( int i = 0; i <= nX; ++i )
         for ( int k = 0; k <= nX; ++k )      
           {
-            SMAX.interior( t, i, k ) = -INF;
-            
+            SMAX( t, i, k ) = -INF;
+                      
             int j = t - i - k, jj = nX - j + 1;
             
             if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) && ( i < jj ) && ( jj <= k ) )
-               {    
-                 bool b0 = ( jj == k ) || ( i >= i_0 ), b1 = base_pair( X[ i ], X[ jj ] );
-                 
-                 SL( t, i, k ) = b0 ? ( b1 ? 1 : -INF ) : 0;
-                                
-                 b0 = ( k == jj + 1 ) || ( i != i_0 - 1 );            
-                 b1 = base_pair( X[ jj ], X[ k ] );   
-                 
-                 SR( t, i, k ) = b0 ? ( b1 ? 1 : -INF ) : 0;               
-        
-                 b0 = ( i == i_0 - 1 ) || ( t == 0 );
-                 
-                 if ( b0 ) SM.interior( t, i, k ) = 0;  
-                 else
+               {                   
+                 if ( jj == k )
                    {
-                     int v1 = -INF, v2 = -INF;
-                     
-                     if ( jj < k ) 
-                       {
-                         int sr = SR.interior( 0, i, k - 1 ), sm = SM.interior( 0, i, k - 1 ), smax = SMAX.interior( 0, i, k );
-                         
-                         v1 = max( sr, sm );
-                         v1 = max( v1, smax );
-                       } 
-                     
-                     if ( i - 1 < jj ) 
-                       {
-                         int sl = SL( 0, i - 1, k ), sm = SM( 0, i - 1, k );
-                          
-                         v2 = max( sl, sm );                           
-                       }  
-                                                
-                     SM.interior( t, i, k ) = max( v1, v2 );  
+                     if ( base_pair( X[ i ], X[ jj ] ) ) SL( t, i, k ) = 1;
+                     else SL( t, i, k ) = -INF;             
                    }
-                   
-                 int sl = SL.interior( t, i, k ), sr = SR.interior( t, i, k ), sm = SM.interior( t, i, k );  
+                 else if ( i >= i_0 )
+                        {
+                          if ( base_pair( X[ i ], X[ jj ] ) ) 
+                            {
+                              if ( i - 1 < jj + 1 )  SL( t + 2, i, k ) = 1 + SMAX( t, i - 1, k );
+                              else SL( t + 2, i, k ) = 1;
+                            }  
+                          else SL( t + 2, i, k ) = -INF;
+                        }  
+                      else SL( t, i, k ) = 0;
+                         
+                 if ( i == i_0 - 1 )
+                   {
+                     if ( k == jj + 1 )
+                       {
+                         if ( base_pair( X[ jj ], X[ k ] ) ) SR( t, i, k ) = 1;
+                         else SR( t, i, k ) = -INF;                                             
+                       }
+                     else SR( t, i, k ) = 0;  
+                   }
+                 else   
+                   {
+                     if ( base_pair( X[ jj ], X[ k ] ) ) SR( t, i, k ) = 1;
+                     else SR( t, i, k ) = -INF;             
+                   }
+        
+                 if ( i == i_0 - 1 ) SM( t, i, k ) = 0;  
+                 else if ( t > 0 )
+                         {
+                           int v1 = -INF, v2 = -INF;
+
+                           if ( jj < k ) 
+                             {
+                               v1 = max( SR( 0, i, k - 1 ), SM( 0, i, k - 1 ) );
+                               v1 = max( v1, SMAX( 0, i, k ) );
+                             } 
+                           
+                           if ( i - 1 < jj ) v2 = max( SL( 0, i - 1, k ), SM( 0, i - 1, k ) );
+                                          
+                           SM( t, i, k ) = max( v1, v2 );  
+                         }
+                      else SM( t, i, k ) = 0;     
                                      
-                 int smax = max( sl, sr );       
+                 int v = max( SL( t, i, k ), SR( t, i, k ) );       
                         
-                 smax = max( smax, sm );       
-                        
-                 SMAX.interior( t, i, k ) = smax;       
-                 
-                 b0 = ( i_0 <= i ) && ( jj < k );
-                 
-                 int sp = SP.interior( 0, i, k );
-                 
-                 SP.interior( 0, i, k ) = b0 ? max( smax, sp ) : -INF;                            
+                 SMAX( t, i, k ) = max( v, SM( t, i, k ) );       
+                            
+                 if ( ( i_0 <= i ) && ( jj < k ) )           
+                   {
+                     SP( 0, i, k ) = max( SMAX( t, i, k ), SP( 0, i, k ) );
+                   }
+                 else SP( 0, i, k ) = -INF;   
                }  
           }
 
@@ -923,207 +545,116 @@ void iterativeStencilRNAi0( int nX, char *X, int i_0,
           {
              int j = t + 2 - i - k, jj = nX - j + 1;
       
-             if ( ( j >= 0 ) && ( j <= nX ) && ( i < jj ) )
+             if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) && ( i < jj ) && ( jj <= k ) )
                {                   
-                 if ( ( i_0 - 1 < i ) && ( jj + 1 < k ) )
+                 if ( jj == k )
                    {
-        	     int sr = SR.interior( t + 1, i, k - 1 ), smr = SM.interior( t + 1, i, k - 1 );
-        	     int sl = SL.interior( t + 1, i - 1, k ), sml = SM.interior( t + 1, i - 1, k );
-        	     int smax = SMAX.interior( t + 1, i, k );
-      	       	       	      
-                     int v1 = max( sr, smr );
-                     int v2 = max( sl, sml );
-      
-                     v1 = max( v1, smax );
-                                                           
-                     SM.interior( t + 2, i, k ) = max( v1, v2 );  
-                     
-                     SL.interior( t + 2, i, k ) = sl = not_base_pair( X[ i ], X[ jj ] ) ? -INF : ( 1 + SMAX( t, i - 1, k ) );                       
-                     SR.interior( t + 2, i, k ) = sr = not_base_pair( X[ jj ], X[ k ] ) ? -INF : ( 1 + SMAX( t, i, k - 1 ) );        
-                                                    
-                     int v = max( sl, sr );       
-                            
-                     smr = SM.interior( t + 2, i, k );       
-                            
-                     SMAX.interior( t + 2, i, k ) = smax = max( v, smr );       
-                     
-                     int sp = SP.interior( 0, i, k );       
-                                
-                     SP.interior( 0, i, k ) = max( smax, sp );
-                   }       
-                 else if ( ( i_0 - 1 <= i ) && ( jj <= k ) )
-                       {                   
-                         int sl, sr, sm = 0;
+                     if ( base_pair( X[ i ], X[ jj ] ) ) SL( t + 2, i, k ) = 1;
+                     else SL( t + 2, i, k ) = -INF;             
+                   }
+                 else if ( i >= i_0 )
+                        {
+                          if ( base_pair( X[ i ], X[ jj ] ) ) SL( t + 2, i, k ) = 1 + SMAX( t, i - 1, k );
+                          else SL( t + 2, i, k ) = -INF;
+                       }  
+                     else SL( t + 2, i, k ) = 0;
                          
-                         bool b0 = ( i_0 - 1 == i ) && ( k <= jj + 1 );
-                         
-                         sl = sr = b0 ? 0 : -INF;
-      
-                         b0 = base_pair( X[ i ], X[ jj ] );
-                         bool b1 = ( jj == k ), b2 = ~b1 && ( ( i_0 - 1 < i ) || ( jj + 1 != k ) ) && b0;
-                         b1 = b1 && b0;
-                         
-                         SL.interior( t + 2, i, k ) = sl = b1 ? 1 : ( b2 ? ( 1 + SMAX( t, i - 1, k ) ) : sl );
-                                                    
-                         b0 = base_pair( X[ jj ], X[ k ] );
-                         b1 = ( i_0 - 1 == i );
-                         b2 = ( jj + 1 <= k - 1 );                           
-                         bool b3 = ( b1 && ( jj + 1 == k ) ) || ( ~b1 && ~b2 );
-                         b3 = b3 && b0; 
-                         b2 = b2 && b1 && b0;        
-                              
-                         SR.interior( t + 2, i, k ) = sr = b3 ? 1 : ( b2 ? ( 1 + SMAX( t, i, k - 1 ) ) : sr );     
-                                           
-                         if ( i > i_0 - 1 ) 
-                           {
-                             int v1 = -INF, v2 = -INF;
-                             
-                             if ( jj < k ) 
-                               {
-                                 int sr = SR.interior( t + 1, i, k - 1 ), sm = SM.interior( t + 1, i, k - 1 ), smax = SMAX.interior( t + 1, i, k );
-                                 
-                                 v1 = max( sr, sm );
-                                 v1 = max( v1, smax );
-                               } 
-                             
-                             if ( i - 1 < jj ) 
-                               {
-                                 int sl = SL.interior( t + 1, i - 1, k ), sm = SM.interior( t + 1, i - 1, k );
-                                 
-                                 v2 = max( sl, sm );
-                               }  
-                             
-                             sm = max( v1, v2 );  
-                           }
-                
-                         SM.interior( t + 2, i, k ) = sm;  
-                                                        
-                         int v = max( sl, sr );       
-                                
-                         int smax = max( v, sm );;
-                                
-                         SMAX.interior( t + 2, i, k ) = smax;       
-                                    
-                         b0 = ( i_0 <= i ) && ( jj < k );           
-                         
-                         int sp = SP.interior( 0, i, k );
-                         
-                         SP.interior( 0, i, k ) = b0 ? max( smax, sp ) : -INF;
+                 if ( i == i_0 - 1 )
+                   {
+                     if ( k == jj + 1 )
+                       {
+                         if ( base_pair( X[ jj ], X[ k ] ) ) SR( t + 2, i, k ) = 1;
+                         else SR( t + 2, i, k ) = -INF;                                             
                        }
+                     else SR( t + 2, i, k ) = 0;  
+                   }
+                 else   
+                   {
+                     if ( base_pair( X[ jj ], X[ k ] ) ) 
+                       {
+                         if ( jj + 1 <= k - 1 ) SR( t + 2, i, k ) = 1 + SMAX( t, i, k - 1 );
+                         else SR( t + 2, i, k ) = 1;
+                       }  
+                     else SR( t + 2, i, k ) = -INF;             
+                   }
+        
+                 if ( i == i_0 - 1 ) SM( t + 2, i, k ) = 0;  
+                 else
+                   {
+                     int v1 = -INF, v2 = -INF;
+
+                     if ( jj < k ) 
+                       {
+                         v1 = max( SR( t + 1, i, k - 1 ), SM( t + 1, i, k - 1 ) );
+                         v1 = max( v1, SMAX( t + 1, i, k ) );
+                       } 
+                     
+                     if ( i - 1 < jj ) v2 = max( SL( t + 1, i - 1, k ), SM( t + 1, i - 1, k ) );
+                                                         
+                     SM( t + 2, i, k ) = max( v1, v2 );  
+                   }
+                                     
+                 int v = max( SL( t + 2, i, k ), SR( t + 2, i, k ) );       
+                        
+                 SMAX( t + 2, i, k ) = max( v, SM( t + 2, i, k ) );       
+                            
+                 if ( ( i_0 <= i ) && ( jj < k ) ) SP( 0, i, k ) = max( SMAX( t + 2, i, k ), SP( 0, i, k ) );
+                 else SP( 0, i, k ) = -INF;   
                }
           }
 }
 
 
-
-int stencilRNA( int nX, char *X, bool recursive, bool useStruct )
+int stencilRNA( int nX, char *X, bool recursive )
 {
-    int S[ nX + 2 ][ nX + 2 ];
+    P_ARRAY_R2_T3 SL( nX + 1, nX + 1 ), SR( nX + 1, nX + 1 ), SM( nX + 1, nX + 1 ), SMAX( nX + 1, nX + 1 );
+    P_ARRAY_R2_T3 SP( nX + 1, nX + 1 ), S( nX + 2, nX + 2 );
 
-    for ( int i = 1; i < nX + 2; i++ )
-      for ( int j = 0; j <= i; j++ )
-	 S[ i ][ j ] = 0;
-
-    if ( useStruct )
+    for ( int i_0 = 1; i_0 <= nX; ++i_0 )
       {
-        P_ARRAY_STRUCT_R2_T3 pArray( nX + 1, nX + 1 );
-     
-        for ( int i_0 = 1; i_0 <= nX; ++i_0 )
+        if ( recursive ) stencilRNAi0( nX, X, i_0, SL, SR, SM, SMAX, SP );
+        else iterativeStencilRNAi0( nX, X, i_0, SL, SR, SM, SMAX, SP );
+
+        for ( int k_0 = 1, v = -INF; k_0 <= nX; ++k_0 )
           {
-            if ( recursive ) stencilRNAi0( nX, X, i_0, pArray );
-            else iterativeStencilRNAi0( nX, X, i_0, pArray );
-      
-            for ( int k_0 = 1, v = -INF; k_0 <= nX; ++k_0 )
-              {
-                v = max( pArray( 0, i_0, k_0 ).SP, v );
-            
-                for ( int i = i_0 + 1; i < k_0 - 1; ++i )
-                   v = max( pArray( 0, i, k_0 ).SP, v );
-            
-                pArray( 0, i_0, k_0 ).SP = v; 
-              } 
-            
-            for ( int k_0 = 0; k_0 < i_0 + 2; ++k_0 )
-               pArray( 1, i_0, k_0 ).SP = -INF;
-                    
-            for ( int k_0 = i_0 + 2; k_0 <= nX; ++k_0 )
-               pArray( 1, i_0, k_0 ).SP = max( pArray( 1, i_0, k_0 - 1 ).SP, pArray( 0, i_0, k_0 ).SP );            
-          }
-          
-//        for ( int j = 0; j <= nX + 1; ++j )
-//           S[ nX + 1 ][ j ] = 0;
-//      
-//        for ( int i = 0; i <= nX + 1; ++i )
-//           S[ i ][ 0 ] = 0;
-      
-        for ( int i = nX; i >= 1; --i )
-          for ( int j = i + 1; j <= nX; ++j )
-            {
-              int v;
-              
-              if ( base_pair( X[ i ], X[ j ] ) ) v = 1 + S[ i + 1 ][ j - 1 ];
-              else v = -INF;
-              
-              v = max( v, NODE( pArray( 1, i, j ) ).SP );
-              
-              for ( int k = i + 1; k <= j; k++ )
-                v = max( v, S[ i ][ k - 1 ] + S[ k ][ j ] );
+            v = max( SP( 0, i_0, k_0 ), v );
+        
+            for ( int i = i_0 + 1; i < k_0 - 1; ++i )
+               v = max( SP( 0, i, k_0 ), v );
+        
+            SP( 0, i_0, k_0 ) = v; 
+          } 
+        
+        for ( int k_0 = 0; k_0 < i_0 + 2; ++k_0 )
+           SP( 1, i_0, k_0 ) = -INF;
                 
-              S[ i ][ j ] = v; 
-            }                      
+        for ( int k_0 = i_0 + 2; k_0 <= nX; ++k_0 )
+           SP( 1, i_0, k_0 ) = max( SP( 1, i_0, k_0 - 1 ), SP( 0, i_0, k_0 ) );            
       }
-    else
-      {
-        P_ARRAY_R2_T3 SL( nX + 1, nX + 1 ), SR( nX + 1, nX + 1 ), SM( nX + 1, nX + 1 ), SMAX( nX + 1, nX + 1 );
-        P_ARRAY_R2_T3 SP( nX + 1, nX + 1 );
       
-        for ( int i_0 = 1; i_0 <= nX; ++i_0 )
-          {
-            if ( recursive ) stencilRNAi0( nX, X, i_0, SL, SR, SM, SMAX, SP );
-            else iterativeStencilRNAi0( nX, X, i_0, SL, SR, SM, SMAX, SP );
-      
-            for ( int k_0 = 1, v = -INF; k_0 <= nX; ++k_0 )
-              {
-                v = max( SP( 0, i_0, k_0 ), v );
-            
-                for ( int i = i_0 + 1; i < k_0 - 1; ++i )
-                   v = max( SP( 0, i, k_0 ), v );
-            
-                SP( 0, i_0, k_0 ) = v; 
-              } 
-            
-            for ( int k_0 = 0; k_0 < i_0 + 2; ++k_0 )
-               SP( 1, i_0, k_0 ) = -INF;
-                    
-            for ( int k_0 = i_0 + 2; k_0 <= nX; ++k_0 )
-               SP( 1, i_0, k_0 ) = max( SP( 1, i_0, k_0 - 1 ), SP( 0, i_0, k_0 ) );            
-          }
+    for ( int j = 0; j <= nX + 1; ++j )
+       S( 0, nX + 1, j ) = 0;
 
-//        for ( int j = 0; j <= nX + 1; ++j )
-//           S[ nX + 1 ][ j ] = 0;
-//      
-//        for ( int i = 0; i <= nX + 1; ++i )
-//           S[ i ][ 0 ] = 0;
-      
-        for ( int i = nX; i >= 1; --i )
-          for ( int j = i + 1; j <= nX; ++j )
-            {
-              int v;
-              
-              if ( base_pair( X[ i ], X[ j ] ) ) v = 1 + S[ i + 1 ][ j - 1 ];
-              else v = -INF;
-              
-              v = max( v, SP( 1, i, j ) );
-              
-              for ( int k = i + 1; k <= j; k++ )
-                v = max( v, S[ i ][ k - 1 ] + S[ k ][ j ] );
-                
-              S[ i ][ j ] = v; 
-            }                            
-      }  
-      
+    for ( int i = 0; i <= nX + 1; ++i )
+       S( 0, i, 0 ) = 0;
 
-    return S[ 1 ][ nX ];
+    for ( int i = nX; i >= 1; --i )
+      for ( int j = i + 1; j <= nX; ++j )
+        {
+          int v;
+          
+          if ( base_pair( X[ i ], X[ j ] ) ) v = 1 + S( 0, i + 1, j - 1 );
+          else v = -INF;
+          
+          v = max( v, SP( 1, i, j ) );
+          
+          for ( int k = i + 1; k <= j; k++ )
+            v = max( v, S( 0, i, k - 1 ) + S( 0, k, j ) );
+            
+          S( 0, i, j ) = v; 
+        }  
+
+    return S.interior( 0, 1, nX );
 }
 
 
@@ -1168,69 +699,36 @@ int main( int argc, char *argv[ ] )
       
         struct timeval start, end;
 
-        printf( "Running pochoir-based DP ( with struct )..." );
+        printf( "Running pochoir-based DP..." );
         fflush( stdout );
                
         gettimeofday( &start, 0 );        
-        int maxNumBP = stencilRNA( nX, X, true, true );    
+        int maxNumBP = stencilRNA( nX, X, true );    
         gettimeofday( &end, 0 );
 
         double t0 = tdiff( &end, &start );
               
-        printf( "\n\nPochoir ( with struct ):\n" );
+        printf( "\n\nPochoir:\n" );
         if ( maxNumBP == -INF ) printf( "\t maximum number of base pairs = -inf\n" );    
         else printf( "\t maximum number of base pairs = %d\n", maxNumBP );    
         printf( "\t running time = %.3lf sec\n\n", t0 );    
-
-
-        printf( "Running pochoir-based DP ( without struct )..." );
-        fflush( stdout );
-               
-        gettimeofday( &start, 0 );        
-        int maxNumBP2 = stencilRNA( nX, X, true, false );    
-        gettimeofday( &end, 0 );
-
-        double t1 = tdiff( &end, &start );
-              
-        printf( "\n\nPochoir ( without struct ):\n" );
-        if ( maxNumBP2 == -INF ) printf( "\t maximum number of base pairs = -inf\n" );    
-        else printf( "\t maximum number of base pairs = %d\n", maxNumBP2 );    
-        if ( t0 > 0 ) printf( "\t running time = %.3lf sec ( %.3lf x Pochoir-Struct )\n\n", t1, t1 / t0 );    
-        else printf( "\t running time = %.3lf sec\n\n", t1 );
-
       
         if ( runIterativeStencil )
           {
-            printf( "Running iterative stencil ( with struct )..." );
+            printf( "Running iterative stencil..." );
             fflush( stdout );
                           
             gettimeofday( &start, 0 );        
-            int maxNumBPITST = stencilRNA( nX, X, false, true );
+            int maxNumBPITST = stencilRNA( nX, X, false );
             gettimeofday( &end, 0 );
 
-            double t2 = tdiff( &end, &start );
+            double t1 = tdiff( &end, &start );
           
-            printf( "\n\nIterative Stencil ( with struct ):\n" );
+            printf( "\n\nIterative Stencil:\n" );
             if ( maxNumBPITST == -INF ) printf( "\t maximum number of base pairs = -inf\n" );    
             else printf( "\t maximum number of base pairs = %d\n", maxNumBPITST );                
-            if ( t0 > 0 ) printf( "\t running time = %.3lf sec ( %.3lf x Pochoir-Struct )\n\n", t2, t2 / t0 );    
-            else printf( "\t running time = %.3lf sec\n\n", t2 );
-            
-            
-            printf( "Running iterative stencil ( without struct )..." );
-            fflush( stdout );
-                          
-            gettimeofday( &start, 0 );        
-            int maxNumBPITST2 = stencilRNA( nX, X, false, false );
-            gettimeofday( &end, 0 );
-
-            double t3 = tdiff( &end, &start );
-          
-            printf( "\n\nIterative Stencil ( without struct ):\n" );
-            if ( maxNumBPITST2 == -INF ) printf( "\t maximum number of base pairs = -inf\n" );    
-            else printf( "\t maximum number of base pairs = %d\n", maxNumBPITST2 );                
-            if ( t0 > 0 ) printf( "\t running time = %.3lf sec ( %.3lf x Pochoir-Struct )\n\n", t3, t3 / t0 );    
-            else printf( "\t running time = %.3lf sec\n\n", t3 );                
+            if ( t0 > 0 ) printf( "\t running time = %.3lf sec ( %.3lf x Pochoir )\n\n", t1, t1 / t0 );    
+            else printf( "\t running time = %.3lf sec\n\n", t1 );    
           }
       }
 
