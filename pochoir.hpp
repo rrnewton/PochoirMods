@@ -426,7 +426,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f) {
     algor.obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 #pragma isat marker M2_end
 #else
-    fprintf(stderr, "Call duo_sim_obase_bicut\n");
+//     fprintf(stderr, "Call duo_sim_obase_bicut\n");
 #pragma isat marker M2_begin
     // algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
     algor.duo_sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
@@ -462,7 +462,7 @@ void Pochoir<T, N_RANK, TOGGLE>::run_obase(int timestep, F const & f, BF const &
     algor.obase_bicut_boundary_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #pragma isat marker M2_end
 #else
-    fprintf(stderr, "Call sim_obase_bicut_P\n");
+//    fprintf(stderr, "Call sim_obase_bicut_P\n");
 #pragma isat marker M2_begin
    //  algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
     algor.duo_sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);

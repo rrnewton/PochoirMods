@@ -154,6 +154,35 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
     return;
 }
 
+#define Pochoir_1D(type, toggle) Pochoir<type, 1, toggle>
+#define Pochoir_2D(type, toggle) Pochoir<type, 2, toggle>
+#define Pochoir_3D(type, toggle) Pochoir<type, 3, toggle>
+#define Pochoir_4D(type, toggle) Pochoir<type, 4, toggle>
+#define Pochoir_5D(type, toggle) Pochoir<type, 5, toggle>
+#define Pochoir_6D(type, toggle) Pochoir<type, 6, toggle>
+#define Pochoir_7D(type, toggle) Pochoir<type, 7, toggle>
+#define Pochoir_8D(type, toggle) Pochoir<type, 8, toggle>
+
+#define Pochoir_Array_1D(type, toggle) Pochoir_Array<type, 1, toggle>
+#define Pochoir_Array_2D(type, toggle) Pochoir_Array<type, 2, toggle>
+#define Pochoir_Array_3D(type, toggle) Pochoir_Array<type, 3, toggle>
+#define Pochoir_Array_4D(type, toggle) Pochoir_Array<type, 4, toggle>
+#define Pochoir_Array_5D(type, toggle) Pochoir_Array<type, 5, toggle>
+#define Pochoir_Array_6D(type, toggle) Pochoir_Array<type, 6, toggle>
+#define Pochoir_Array_7D(type, toggle) Pochoir_Array<type, 7, toggle>
+#define Pochoir_Array_8D(type, toggle) Pochoir_Array<type, 8, toggle>
+
+#define Pochoir_Shape_1D Pochoir_Shape<1>
+#define Pochoir_Shape_2D Pochoir_Shape<2>
+#define Pochoir_Shape_3D Pochoir_Shape<3>
+#define Pochoir_Shape_4D Pochoir_Shape<4>
+#define Pochoir_Shape_5D Pochoir_Shape<5>
+#define Pochoir_Shape_6D Pochoir_Shape<6>
+#define Pochoir_Shape_7D Pochoir_Shape<7>
+#define Pochoir_Shape_8D Pochoir_Shape<8>
+
+
+
 /* these lambda functions are for computing internal/boundary region,
  * the original 'f'/'bf'
  */
