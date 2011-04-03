@@ -154,23 +154,23 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
     return;
 }
 
-#define Pochoir_1D(type, toggle) Pochoir<type, 1, toggle>
-#define Pochoir_2D(type, toggle) Pochoir<type, 2, toggle>
-#define Pochoir_3D(type, toggle) Pochoir<type, 3, toggle>
-#define Pochoir_4D(type, toggle) Pochoir<type, 4, toggle>
-#define Pochoir_5D(type, toggle) Pochoir<type, 5, toggle>
-#define Pochoir_6D(type, toggle) Pochoir<type, 6, toggle>
-#define Pochoir_7D(type, toggle) Pochoir<type, 7, toggle>
-#define Pochoir_8D(type, toggle) Pochoir<type, 8, toggle>
+#define Pochoir_1D Pochoir<1>
+#define Pochoir_2D Pochoir<2>
+#define Pochoir_3D Pochoir<3>
+#define Pochoir_4D Pochoir<4>
+#define Pochoir_5D Pochoir<5>
+#define Pochoir_6D Pochoir<6>
+#define Pochoir_7D Pochoir<7>
+#define Pochoir_8D Pochoir<8>
 
-#define Pochoir_Array_1D(type, toggle) Pochoir_Array<type, 1, toggle>
-#define Pochoir_Array_2D(type, toggle) Pochoir_Array<type, 2, toggle>
-#define Pochoir_Array_3D(type, toggle) Pochoir_Array<type, 3, toggle>
-#define Pochoir_Array_4D(type, toggle) Pochoir_Array<type, 4, toggle>
-#define Pochoir_Array_5D(type, toggle) Pochoir_Array<type, 5, toggle>
-#define Pochoir_Array_6D(type, toggle) Pochoir_Array<type, 6, toggle>
-#define Pochoir_Array_7D(type, toggle) Pochoir_Array<type, 7, toggle>
-#define Pochoir_Array_8D(type, toggle) Pochoir_Array<type, 8, toggle>
+#define Pochoir_Array_1D(type) Pochoir_Array<type, 1>
+#define Pochoir_Array_2D(type) Pochoir_Array<type, 2>
+#define Pochoir_Array_3D(type) Pochoir_Array<type, 3>
+#define Pochoir_Array_4D(type) Pochoir_Array<type, 4>
+#define Pochoir_Array_5D(type) Pochoir_Array<type, 5>
+#define Pochoir_Array_6D(type) Pochoir_Array<type, 6>
+#define Pochoir_Array_7D(type) Pochoir_Array<type, 7>
+#define Pochoir_Array_8D(type) Pochoir_Array<type, 8>
 
 #define Pochoir_Shape_1D Pochoir_Shape<1>
 #define Pochoir_Shape_2D Pochoir_Shape<2>
@@ -180,8 +180,6 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 #define Pochoir_Shape_6D Pochoir_Shape<6>
 #define Pochoir_Shape_7D Pochoir_Shape<7>
 #define Pochoir_Shape_8D Pochoir_Shape<8>
-
-
 
 /* these lambda functions are for computing internal/boundary region,
  * the original 'f'/'bf'
@@ -243,36 +241,36 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
  *   so we have to return a value of T&
  */
 #define Pochoir_Boundary_1D(name, arr, t, i) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 1, TOGGLE> & arr, int t, int i) { 
+    template <typename T> \
+    T name (Pochoir_Array<T, 1> & arr, int t, int i) { 
 
 #define Pochoir_Boundary_2D(name, arr, t, i, j) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 2, TOGGLE> & arr, int t, int i, int j) { 
+    template <typename T> \
+    T name (Pochoir_Array<T, 2> & arr, int t, int i, int j) { 
 
 #define Pochoir_Boundary_3D(name, arr, t, i, j, k) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 3, TOGGLE> & arr, int t, int i, int j, int k) { 
+    template <typename T> \
+    T name (Pochoir_Array<T, 3> & arr, int t, int i, int j, int k) { 
 
 #define Pochoir_Boundary_4D(name, arr, t, i, j, k, l) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 4, TOGGLE> & arr, int t, int i, int j, int k, int l) { 
+    template <typename T> \
+    T name (Pochoir_Array<T, 4> & arr, int t, int i, int j, int k, int l) { 
 
 #define Pochoir_Boundary_5D(name, arr, t, i, j, k, l, m) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 5, TOGGLE> & arr, int t, int i, int j, int k, int l, int m) { 
+    template <typename T> \
+    T name (Pochoir_Array<T, 5> & arr, int t, int i, int j, int k, int l, int m) { 
 
 #define Pochoir_Boundary_6D(name, arr, t, i, j, k, l, m, n) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 6, TOGGLE> & arr, int t, int i, int j, int k, int l, int m, int n) { 
+    template <typename T> \
+    T name (Pochoir_Array<T, 6> & arr, int t, int i, int j, int k, int l, int m, int n) { 
 
 #define Pochoir_Boundary_7D(name, arr, t, i, j, k, l, m, n, o) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 7, TOGGLE> & arr, int t, int i, int j, int k, int l, int m, int n, int o) { 
+    template <typename T> \
+    T name (Pochoir_Array<T, 7> & arr, int t, int i, int j, int k, int l, int m, int n, int o) { 
 
 #define Pochoir_Boundary_8D(name, arr, t, i, j, k, l, m, n, o, p) \
-    template <typename T, int TOGGLE> \
-    T name (Pochoir_Array<T, 8, TOGGLE> & arr, int t, int i, int j, int k, int l, int m, int n, int o, int p) { 
+    template <typename T> \
+    T name (Pochoir_Array<T, 8> & arr, int t, int i, int j, int k, int l, int m, int n, int o, int p) { 
 
 #define Pochoir_Boundary_end }
 

@@ -111,6 +111,7 @@ int main(int argc, char * argv[])
 #else
 //       a(t+1, i, j) = a(t, i-1, j-1) + a(t, i, j-1) + 0.01; 
 	   a(t+1, i, j) = 0.125 * (a(t, i+1, j) - 2.0 * a(t, i, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) - 2.0 * a(t, i, j) + a(t, i, j-1)) + a(t, i, j);
+//	   a(t+1, i, j) = 0.125 * (a(t, i+1, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) + a(t, i, j-1)) + (0.5)*a(t, i, j);
 #endif
     Pochoir_kernel_end
 
@@ -136,7 +137,7 @@ int main(int argc, char * argv[])
     // b.registerShape(heat_shape_2D);
     // b.registerBV(heat_bv_2D);
 #endif
-#if 0
+#if 1
     min_tdiff = INF;
     /* cilk_for + zero-padding */
     for (int times = 0; times < TIMES; ++times) {

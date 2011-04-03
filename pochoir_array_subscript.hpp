@@ -47,33 +47,6 @@ inline int cal_index<0>(int const * _idx, int const * _stride) {
 	return (_idx[0] * _stride[0]);
 }
 
-template <int TOGGLE>
-inline int toggle_base(int const & _idx0) {
-    return (_idx0 % TOGGLE);
-}
-
-template <>
-inline int toggle_base<4>(int const & _idx0) {
-    return (_idx0 & 0x11);
-}
-
-#if 0
-template <>
-inline int toggle_base<3>(int const & _idx0) {
-    return (_idx0 % 3);
-}
-#endif
-
-template <>
-inline int toggle_base<2>(int const & _idx0) {
-    return (_idx0 & 0x1);
-}
-
-template <>
-inline int toggle_base<1>(int const & _idx0) {
-    return 0;
-}
-
 template <typename T>
 class Storage {
 	private:
@@ -114,7 +87,7 @@ class Storage {
 		T * data() { return storage_; }
 };
 
-template <typename T, int N_RANK, int TOGGLE=2>
+template <typename T, int N_RANK>
 class Pochoir_Array {
 	private:
 		Storage<T> * view_; // real storage of elements
@@ -124,15 +97,17 @@ class Pochoir_Array {
 		size_info logic_start_, logic_end_; 
 		size_info phys_size_; // physical of elements in each dimension
 		size_info stride_; // stride of each dimension
+        bool allocMemFlag_;
 		int total_size_;
-        typedef T (*BValue_1D)(Pochoir_Array<T, 1, TOGGLE> &, int, int);
-        typedef T (*BValue_2D)(Pochoir_Array<T, 2, TOGGLE> &, int, int, int);
-        typedef T (*BValue_3D)(Pochoir_Array<T, 3, TOGGLE> &, int, int, int, int);
-        typedef T (*BValue_4D)(Pochoir_Array<T, 4, TOGGLE> &, int, int, int, int, int);
-        typedef T (*BValue_5D)(Pochoir_Array<T, 5, TOGGLE> &, int, int, int, int, int, int);
-        typedef T (*BValue_6D)(Pochoir_Array<T, 6, TOGGLE> &, int, int, int, int, int, int, int);
-        typedef T (*BValue_7D)(Pochoir_Array<T, 7, TOGGLE> &, int, int, int, int, int, int, int, int);
-        typedef T (*BValue_8D)(Pochoir_Array<T, 8, TOGGLE> &, int, int, int, int, int, int, int, int, int);
+        int slope_[N_RANK], toggle_;
+        typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
+        typedef T (*BValue_2D)(Pochoir_Array<T, 2> &, int, int, int);
+        typedef T (*BValue_3D)(Pochoir_Array<T, 3> &, int, int, int, int);
+        typedef T (*BValue_4D)(Pochoir_Array<T, 4> &, int, int, int, int, int);
+        typedef T (*BValue_5D)(Pochoir_Array<T, 5> &, int, int, int, int, int, int);
+        typedef T (*BValue_6D)(Pochoir_Array<T, 6> &, int, int, int, int, int, int, int);
+        typedef T (*BValue_7D)(Pochoir_Array<T, 7> &, int, int, int, int, int, int, int, int);
+        typedef T (*BValue_8D)(Pochoir_Array<T, 8> &, int, int, int, int, int, int, int, int, int);
         T * l_null;
         BValue_1D bv1_;
         BValue_2D bv2_;
@@ -153,10 +128,11 @@ class Pochoir_Array {
             stride_[0] = 1; 
             total_size_ = sz0;
             view_ = NULL;
-            view_ = new Storage<T>(TOGGLE * total_size_);
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
-            data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = false;
+//            view_ = new Storage<T>(TOGGLE * total_size_);
+//            data_ = view_->data();
         }
 
 		explicit Pochoir_Array (int sz1, int sz0) {
@@ -167,10 +143,11 @@ class Pochoir_Array {
 			stride_[1] = sz0; stride_[0] = 1; 
 			total_size_ = phys_size_[0] * phys_size_[1];
 			view_ = NULL;
-			view_ = new Storage<T>(TOGGLE * total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
-            data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = false;
+//			  view_ = new Storage<T>(TOGGLE * total_size_) ;
+//            data_ = view_->data();
 		}
 
 		explicit Pochoir_Array (int sz2, int sz1, int sz0) {
@@ -187,10 +164,11 @@ class Pochoir_Array {
 			}
 			view_ = NULL;
 			/* double the total_size_ because we are using toggle array */
-			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
-            data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = false;
+//  		  view_ = new Storage<T>(TOGGLE*total_size_) ;
+//            data_ = view_->data();
 		}
 
 		explicit Pochoir_Array (int sz3, int sz2, int sz1, int sz0) {
@@ -208,10 +186,11 @@ class Pochoir_Array {
 			}
 			view_ = NULL;
 			/* double the total_size_ because we are using toggle array */
-			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
-            data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = false;
+//			  view_ = new Storage<T>(TOGGLE*total_size_) ;
+//            data_ = view_->data();
 		}
 
 		explicit Pochoir_Array (int sz4, int sz3, int sz2, int sz1, int sz0) {
@@ -230,10 +209,11 @@ class Pochoir_Array {
 			}
 			view_ = NULL;
 			/* double the total_size_ because we are using toggle array */
-			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL;
-            data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = false;
+//			  view_ = new Storage<T>(TOGGLE*total_size_) ;
+//            data_ = view_->data();
 		}
 
 		explicit Pochoir_Array (int sz5, int sz4, int sz3, int sz2, int sz1, int sz0) {
@@ -253,10 +233,11 @@ class Pochoir_Array {
 			}
 			view_ = NULL;
 			/* double the total_size_ because we are using toggle array */
-			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL;
-            data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = false;
+//			  view_ = new Storage<T>(TOGGLE*total_size_) ;
+//            data_ = view_->data();
 		}
 
 		explicit Pochoir_Array (int sz6, int sz5, int sz4, int sz3, int sz2, int sz1, int sz0) {
@@ -277,10 +258,11 @@ class Pochoir_Array {
 			}
 			view_ = NULL;
 			/* double the total_size_ because we are using toggle array */
-			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL;
-            data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = false;
+//			  view_ = new Storage<T>(TOGGLE*total_size_) ;
+//            data_ = view_->data();
 		}
 
 		explicit Pochoir_Array (int sz7, int sz6, int sz5, int sz4, int sz3, int sz2, int sz1, int sz0) {
@@ -302,16 +284,17 @@ class Pochoir_Array {
 			}
 			view_ = NULL;
 			/* double the total_size_ because we are using toggle array */
-			view_ = new Storage<T>(TOGGLE*total_size_) ;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL;
-            data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = false;
+//			  view_ = new Storage<T>(TOGGLE*total_size_) ;
+//            data_ = view_->data();
 		}
 
 		/* Copy constructor -- create another view of the
 		 * same array
 		 */
-		Pochoir_Array (Pochoir_Array<T, N_RANK, TOGGLE> const & orig) {
+		Pochoir_Array (Pochoir_Array<T, N_RANK> const & orig) {
 			total_size_ = orig.total_size();
 			for (int i = 0; i < N_RANK; ++i) {
 				phys_size_[i] = orig.phys_size(i);
@@ -320,23 +303,24 @@ class Pochoir_Array {
                 logic_start_[i] = 0; logic_end_[i] = logic_size_[i];
 			}
 			view_ = NULL;
-			view_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).view();
+			view_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).view();
 			view_->inc_ref();
             /* We also get the BValue function pointer from orig */
-            bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
-            bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
-            bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            bv4_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_4D(); 
-            bv5_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_5D(); 
-            bv6_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_6D(); 
-            bv7_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_7D(); 
-            bv8_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_8D(); 
+            bv1_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_1D(); 
+            bv2_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_2D(); 
+            bv3_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_3D(); 
+            bv4_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_4D(); 
+            bv5_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_5D(); 
+            bv6_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_6D(); 
+            bv7_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_7D(); 
+            bv8_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_8D(); 
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = true;
 		}
 
         /* assignment operator for vector<> */
-		Pochoir_Array<T, N_RANK, TOGGLE> & operator= (Pochoir_Array<T, N_RANK, TOGGLE> const & orig) {
+		Pochoir_Array<T, N_RANK> & operator= (Pochoir_Array<T, N_RANK> const & orig) {
 			total_size_ = orig.total_size();
 			for (int i = 0; i < N_RANK; ++i) {
 				phys_size_[i] = orig.phys_size(i);
@@ -344,25 +328,27 @@ class Pochoir_Array {
 				stride_[i] = orig.stride(i);
 			}
 			view_ = NULL;
-			view_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).view();
+			view_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).view();
 			view_->inc_ref();
             /* We also get the BValue function pointer from orig */
-            bv1_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_1D(); 
-            bv2_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_2D(); 
-            bv3_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_3D(); 
-            bv4_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_4D(); 
-            bv5_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_5D(); 
-            bv6_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_6D(); 
-            bv7_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_7D(); 
-            bv8_ = const_cast<Pochoir_Array<T, N_RANK, TOGGLE> &>(orig).bv_8D(); 
+            bv1_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_1D(); 
+            bv2_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_2D(); 
+            bv3_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_3D(); 
+            bv4_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_4D(); 
+            bv5_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_5D(); 
+            bv6_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_6D(); 
+            bv7_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_7D(); 
+            bv8_ = const_cast<Pochoir_Array<T, N_RANK> &>(orig).bv_8D(); 
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
+            allocMemFlag_ = true;
             return *this;
 		}
 
 		/* destructor : free memory */
 		~Pochoir_Array() {
 			view_->dec_ref();
+            allocMemFlag_ = false;
             free(l_null);
 		}
 
@@ -401,6 +387,41 @@ class Pochoir_Array {
             }
         }
 
+        template <size_t N_SIZE>
+        void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
+            /* currently we just get the slope_[] out of the shape[] */
+            int l_min_time_shift=0, l_max_time_shift=0, time_slope=0;
+            for (int i = 0; i < N_SIZE; ++i) {
+                if (shape[i].shift[0] < l_min_time_shift)
+                    l_min_time_shift = shape[i].shift[0];
+                if (shape[i].shift[0] > l_max_time_shift)
+                    l_max_time_shift = shape[i].shift[0];
+                for (int r = 1; r < N_RANK+1; ++r) {
+                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs(shape[i].shift[r]));
+                }
+            }
+            time_slope = l_max_time_shift - l_min_time_shift;
+            toggle_ = time_slope + 1;
+            for (int i = 0; i < N_RANK; ++i) {
+                slope_[i] = (int)ceil((float)slope_[i]/time_slope);
+            }
+            if (!allocMemFlag_) {
+                alloc_mem();
+            }
+        }
+
+        void set_slope(int _slope[N_RANK]) { 
+            for (int i = 0; i < N_RANK; ++i) 
+                slope_[i] = _slope[i]; 
+        }
+        void set_toggle(int _toggle) { toggle_ = _toggle; }
+        void alloc_mem(void) {
+            if (!allocMemFlag_) {
+                view_ = new Storage<T>(toggle_*total_size_) ;
+                data_ = view_->data();
+                allocMemFlag_ = true;
+            }
+        }
 		/* return size */
 		int phys_size(int _dim) const { return phys_size_[_dim]; }
 		int logic_size(int _dim) const { return logic_size_[_dim]; }
@@ -570,7 +591,7 @@ class Pochoir_Array {
             }
 
             /* the highest dimension is time dimension! */
-            int l_idx = cal_index<N_RANK>(_idx, stride_) + toggle_base<TOGGLE>(_timestep) * total_size_;
+            int l_idx = cal_index<N_RANK>(_idx, stride_) + (_timestep % toggle_) * total_size_;
             return (set_boundary) ? l_bvalue : (*view_)[l_idx];
         }
 
@@ -578,58 +599,6 @@ class Pochoir_Array {
          * - The highest dimension is always time dimension
          * - this is the uninterior version
          */
-#if 0
-		inline SProxy<T> operator() (int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary(_idx1, _idx0);
-            /* we have to guard the use of bv_ by conditional, 
-             * otherwise it may lead to some segmentation fault!
-             */
-            (*l_null) = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv1_ != NULL);
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
-		}
-
-		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            (*l_null) = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv2_ != NULL);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
-		}
-
-		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            (*l_null) = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv3_ != NULL);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
-		}
-
-		inline SProxy<T> operator() (int _idx1, int _idx0) {
-            bool l_boundary = check_boundary(_idx1, _idx0);
-            (*l_null) = (l_boundary && bv1_ != NULL) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv1_ != NULL);
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
-		}
-
-		inline SProxy<T> operator() (int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = check_boundary(_idx2, _idx1, _idx0);
-            (*l_null) = (l_boundary && bv2_ != NULL) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv2_ != NULL);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
-		}
-
-		inline SProxy<T> operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
-            bool l_boundary = check_boundary(_idx3, _idx2, _idx1, _idx0);
-            (*l_null) = (l_boundary && bv3_ != NULL) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-            bool set_boundary = (l_boundary && bv3_ != NULL);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return SProxy<T>((*view_)[l_idx], set_boundary, (*l_null));
-		}
-#else
 		inline T operator() (int _idx1, int _idx0) const {
             bool l_boundary = check_boundary1(_idx1, _idx0);
             /* we have to guard the use of bv_ by conditional, 
@@ -637,7 +606,7 @@ class Pochoir_Array {
              */
             bool set_boundary = (l_boundary && bv1_ != NULL);
             T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
+			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
             return (set_boundary ? (l_bvalue) : (*view_)[l_idx]);
 		}
 
@@ -645,7 +614,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv2_ != NULL);
             T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -653,7 +622,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv3_ != NULL);
             T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -661,7 +630,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv4_ != NULL);
             T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -669,7 +638,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv5_ != NULL);
             T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -677,7 +646,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv6_ != NULL);
             T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -685,7 +654,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv7_ != NULL);
             T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -693,7 +662,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv8_ != NULL);
             T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -701,7 +670,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary1(_idx1, _idx0);
             bool set_boundary = (l_boundary && bv1_ != NULL);
             T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
+			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -709,7 +678,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv2_ != NULL);
             T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -717,7 +686,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv3_ != NULL);
             T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -725,7 +694,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv4_ != NULL);
             T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -733,7 +702,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv5_ != NULL);
             T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -741,7 +710,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv6_ != NULL);
             T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -749,7 +718,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv7_ != NULL);
             T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
@@ -757,195 +726,172 @@ class Pochoir_Array {
             bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv8_ != NULL);
             T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
-#endif
         /* set()/get() pair to set/get boundary value in user supplied bvalue function */
 		inline T & set (int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
+			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & set (int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & set (int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & set (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & set (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & set (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & set (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & set (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8i % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & get (int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
+			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & get (int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & get (int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & get (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & get (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & get (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & get (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & get (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
-#if 0
-        /* pointer() is for SIter */
-		inline T * pointer (int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
-			return data_ + l_idx;
-		}
-
-		inline T * pointer (int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
-			return data_ + l_idx;
-		}
-
-		inline T * pointer (int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
-			return data_ + l_idx;
-		}
-
-		inline T * pointer (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
-			return data_ + l_idx;
-		}
-#endif
 		/* index operator() for the format of a.interior(i, j, k) 
          * - The highest dimension is always time dimension
          * - this is the interior (non-checking) version
          */
 		inline T interior (int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
+			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T interior (int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T interior (int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T interior (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T interior (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T interior (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T interior (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T interior (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & interior (int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + toggle_base<TOGGLE>(_idx1) * total_size_;
+			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & interior (int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + toggle_base<TOGGLE>(_idx2) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & interior (int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + toggle_base<TOGGLE>(_idx3) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & interior (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + toggle_base<TOGGLE>(_idx4) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & interior (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + toggle_base<TOGGLE>(_idx5) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5i % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & interior (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + toggle_base<TOGGLE>(_idx6) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & interior (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + toggle_base<TOGGLE>(_idx7) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
 		inline T & interior (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + toggle_base<TOGGLE>(_idx8) * total_size_;
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 

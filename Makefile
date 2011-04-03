@@ -24,4 +24,4 @@ endif
 pochoir : ${PP_FILE} 
 	ghc -o pochoir -O --make PMain.hs
 clean: 
-	rm *.o
+	rm *.o *.hi pochoir

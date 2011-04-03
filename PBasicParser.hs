@@ -53,7 +53,7 @@ lexer = Token.makeTokenParser (javaStyle
                                   "<<=", ">>=", "^=", "++", "--", "?", ":", "&", "|", "~",
                                   ">>", "<<", "%", "^"],
                reservedNames = ["Pochoir_Array", "Pochoir", "Pochoir_Domain", 
-                                "Pochoir", "Pochoir_pRange", 
+                                "Pochoir", 
                                 "Pochoir_kernel_1D", "Pochoir_kernel_2D", 
                                 "Pochoir_kernel_3D", "Pochoir_kernel_end",
                                 "auto", "};", "const", "volatile", "register", 
@@ -110,68 +110,110 @@ pMember l_memFunc =
        l_body <- string l_memFunc
        return (l_memFunc)
 
-ppStencil :: String -> PStencil -> ParserState -> GenParser Char ParserState String
-ppStencil l_id l_stencil l_state = 
+ppArray :: String -> ParserState -> GenParser Char ParserState String
+ppArray l_id l_state =
+    do try $ pMember "registerBV"
+       l_boundaryFn <- parens pIdentifier
+       semi
+       case Map.lookup l_id $ pArray l_state of
+           Nothing -> return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* UNKNOWN registerBV with " ++ l_id ++ "*/" ++ breakline)
+           Just l_array -> 
+                do updateState $ updateArrayBoundary l_id True 
+                   return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
+           -- registerBV l_id l_boundaryFn l_array 
+
+ppStencil :: String -> ParserState -> GenParser Char ParserState String
+ppStencil l_id l_state = 
         do try $ pMember "registerArray"
            l_array <- parens identifier
            semi
-           case Map.lookup l_array $ pArray l_state of
-               Nothing -> registerUndefinedArray l_id l_array l_stencil 
-               Just l_pArray -> registerArray l_id l_array l_pArray
+           case Map.lookup l_id $ pStencil l_state of 
+               Nothing -> return (l_id ++ ".registerArray(" ++ l_array ++ "); /* UNKNOWN registerArray with" ++ l_id ++ "*/" ++ breakline)
+               Just l_stencil -> 
+                   case Map.lookup l_array $ pArray l_state of
+                       Nothing -> registerUndefinedArray l_id l_array l_stencil 
+                       Just l_pArray -> registerArray l_id l_array l_pArray l_stencil
+    <|> do try $ pMember "registerShape"
+           l_shape <- parens identifier
+           semi
+           case Map.lookup l_id $ pStencil l_state of
+               Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with" ++ l_id ++ "*/" ++ breakline)
+               Just l_stencil ->
+                   case Map.lookup l_shape $ pShape l_state of
+                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with" ++ l_id ++ "*/" ++ breakline)
+                       Just l_pShape -> registerShape l_id l_shape l_pShape
     <|> do try $ pMember "registerBoundaryFn"
            l_boundaryParams <- parens $ commaSep1 identifier
            semi
            let l_array = head l_boundaryParams
            let l_bdry = head $ tail l_boundaryParams 
-           case Map.lookup l_array $ pArray l_state of
-               Nothing -> registerUndefinedBoundaryFn l_id l_boundaryParams l_stencil
-               Just l_pArray -> registerBoundaryFn l_id l_boundaryParams l_pArray
+           case Map.lookup l_id $ pStencil l_state of
+               Nothing -> return (l_id ++ ".registerBoundaryFn(" ++ intercalate ", " l_boundaryParams ++ "); /* UNKNOWN registerBoundaryFn with" ++ l_id ++ "*/" ++ breakline)
+               Just l_stencil -> 
+                   case Map.lookup l_array $ pArray l_state of
+                       Nothing -> registerUndefinedBoundaryFn l_id l_boundaryParams l_stencil
+                       Just l_pArray -> registerBoundaryFn l_id l_boundaryParams l_pArray
     <|> do try $ pMember "run"
            (l_tstep, l_func) <- parens pStencilRun
            semi
-           case Map.lookup l_func $ pKernel l_state of
-               Nothing -> return ("{" ++ breakline ++ l_id ++ ".run(" ++ 
-                                   l_tstep ++ ", " ++ l_func ++ ");" ++ breakline ++ 
-                                   "}" ++ breakline)
-               Just l_kernel -> 
-                    let l_revKernel = transKernel l_kernel l_stencil $ pMode l_state
-                    in case pMode l_state of
-                            PDefault -> 
-                                let l_showKernel = 
-                                       if sRank l_stencil < 3
-                                           then pShowOptPointerKernel
-                                           else pShowPointerKernel
-                                in  pSplitObase
-                                        ("Default_", l_id, l_tstep, l_revKernel, l_stencil)
-                                        l_showKernel
-                            PTypeShadow -> 
-                                pSplitScope 
-                                    ("type_", l_id, l_tstep, l_revKernel, l_stencil) 
-                                    (pShowTypeKernel $ sArrayInUse l_stencil)
-                            PMacroShadow -> 
-                                pSplitScope 
-                                    ("macro_", l_id, l_tstep, l_revKernel, l_stencil) 
-                                    (pShowMacroKernel $ sArrayInUse l_stencil)
-                            PInterior -> 
-                                pSplitScope 
-                                    ("interior_", l_id, l_tstep, l_revKernel, l_stencil) 
-                                    pShowInteriorKernel
-                            PIter -> 
-                                pSplitObase 
-                                    ("Iter_", l_id, l_tstep, l_revKernel, l_stencil) 
-                                    pShowObaseKernel
-                            PPointer -> 
-                                pSplitObase 
-                                    ("Pointer_", l_id, l_tstep, l_revKernel, l_stencil) 
-                                    pShowPointerKernel
-                            POptPointer -> 
-                                pSplitObase 
-                                    ("Opt_Pointer_", l_id, l_tstep, l_revKernel, l_stencil) 
-                                    pShowOptPointerKernel
-                            PCPointer -> 
-                                pSplitObase 
-                                    ("C_Pointer_", l_id, l_tstep, l_revKernel, l_stencil) 
-                                    pShowCPointerKernel
+           case Map.lookup l_id $ pStencil l_state of
+               Nothing -> return (l_id ++ ".run(" ++ show l_tstep ++ ", " ++ l_func ++ "); /* UNKNOWN run with " ++ l_id ++ "*/" ++ breakline)
+               Just l_stencil -> 
+                   do let l_arrayInUse = sArrayInUse l_stencil
+                      let l_regBound = foldr (||) False $ map (getArrayRegBound l_state) l_arrayInUse 
+                      updateState $ updateStencilBoundary l_id l_regBound 
+                      l_newState <- getState
+                      let l_newStencil = getPStencil l_id l_newState l_stencil
+                      case Map.lookup l_func $ pKernel l_newState of
+                          Nothing -> return ("{" ++ breakline ++ l_id ++ ".run(" ++ l_tstep ++ ", " ++ l_func ++ ");" ++ breakline ++ "}" ++ breakline)
+                          Just l_kernel -> 
+                              let l_revKernel = transKernel l_kernel l_newStencil $ pMode l_newState
+                              in  
+                                case pMode l_newState of
+                                    PDefault -> 
+                                        let l_showKernel = 
+                                              if sRank l_newStencil < 3
+                                                 then pShowOptPointerKernel
+                                                 else pShowPointerKernel
+                                        in  pSplitObase 
+                                             ("Default_", l_id, l_tstep, l_revKernel, 
+                                               l_newStencil) 
+                                             l_showKernel
+                                    PTypeShadow -> 
+                                        pSplitScope 
+                                          ("type_", l_id, l_tstep, l_revKernel, 
+                                            l_newStencil) 
+                                          (pShowTypeKernel $ sArrayInUse l_newStencil)
+                                    PMacroShadow -> 
+                                        pSplitScope 
+                                          ("macro_", l_id, l_tstep, l_revKernel, 
+                                            l_newStencil) 
+                                          (pShowMacroKernel $ sArrayInUse l_newStencil)
+                                    PInterior -> 
+                                        pSplitScope 
+                                          ("interior_", l_id, l_tstep, l_revKernel, 
+                                            l_newStencil) 
+                                          pShowInteriorKernel
+                                    PIter -> 
+                                         pSplitObase 
+                                          ("Iter_", l_id, l_tstep, l_revKernel, 
+                                            l_newStencil) 
+                                          pShowObaseKernel
+                                    PPointer -> 
+                                         pSplitObase 
+                                          ("Pointer_", l_id, l_tstep, l_revKernel, 
+                                            l_newStencil) 
+                                          pShowPointerKernel
+                                    POptPointer -> 
+                                         pSplitObase 
+                                          ("Opt_Pointer_", l_id, l_tstep, l_revKernel, 
+                                            l_newStencil) 
+                                          pShowOptPointerKernel
+                                    PCPointer -> 
+                                         pSplitObase 
+                                          ("C_Pointer_", l_id, l_tstep, l_revKernel, 
+                                            l_newStencil) 
+                                          pShowCPointerKernel
     <|> do return (l_id)
 
 -- get all iterators from Kernel
@@ -247,15 +289,26 @@ pStencilRun =
            return (show l_tstep, l_func)
     <?> "Stencil Run Parameters"
 
+registerBV :: String -> String -> PArray -> GenParser Char ParserState String
+registerBV l_id l_boundaryFn l_array =
+    do updateState $ updateArrayBoundary l_id True 
+       return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
+
+registerShape :: String -> String -> PShape -> GenParser Char ParserState String
+registerShape l_id l_shape l_pShape = 
+    do updateState $ updateStencilToggle l_id $ shapeToggle l_pShape
+       return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* registerShape */" ++ breakline)
+
 registerUndefinedBoundaryFn :: String -> [String] -> PStencil -> GenParser Char ParserState String
 registerUndefinedBoundaryFn l_id l_boundaryParams l_stencil =
     let l_arrayName = head l_boundaryParams
         l_pArray = PArray {aName = l_arrayName,
-                           aType = sType l_stencil,
+                           aType = PType { basicType = PUserType, typeName = "UnknownType" },
                            aRank = sRank l_stencil,
                            aDims = [],
                            aMaxShift = 0,
-                           aToggle = sToggle l_stencil}
+                           aToggle = 0,
+                           aRegBound = True}
     in do -- updateState $ updatePArray [(l_arrayName, l_pArray)]
           -- updateState $ updateStencilArray l_id l_pArray
           -- updateState $ updateStencilBoundary l_id True
@@ -272,21 +325,24 @@ registerBoundaryFn l_id l_boundaryParams l_pArray =
 registerUndefinedArray :: String -> String -> PStencil -> GenParser Char ParserState String
 registerUndefinedArray l_id l_arrayName l_stencil =
     let l_pArray = PArray {aName = l_arrayName,
-                           aType = sType l_stencil,
+                           aType = PType { basicType = PUserType, typeName = "UnknownType" },
                            aRank = sRank l_stencil,
                            aDims = [],
                            aMaxShift = 0,
-                           aToggle = sToggle l_stencil}
+                           aToggle = 0,
+                           aRegBound = False}
     in  do -- updateState $ updatePArray [(l_arrayName, l_pArray)]
            -- updateState $ updateStencilArray l_id l_pArray 
            return (l_id ++ ".registerArray (" ++ l_arrayName ++ 
                    "); /* register Undefined Array */" ++ breakline)
     
-registerArray :: String -> String -> PArray -> GenParser Char ParserState String
-registerArray l_id l_arrayName l_pArray =
-    do updateState $ updateStencilArray l_id l_pArray
-       return (l_id ++ ".registerArray (" ++ l_arrayName ++ 
-               "); /* register Array */" ++ breakline)
+registerArray :: String -> String -> PArray -> PStencil -> GenParser Char ParserState String
+registerArray l_id l_arrayName l_pArray l_stencil =
+    -- assume all participating array has the same shape/toggle! Is that true?
+    let l_revArray = l_pArray { aToggle = sToggle l_stencil }
+    in  do updateState $ updateStencilArray l_id l_revArray
+           return (l_id ++ ".registerArray (" ++ l_arrayName ++ 
+                   "); /* register Array */" ++ breakline)
 
 -- pDeclStatic <type, rank, toggle>
 pDeclStatic :: GenParser Char ParserState (PType, PValue, PValue)

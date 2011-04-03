@@ -79,16 +79,17 @@ int main(int argc, char *argv[])
 
     Pochoir_Array<double, 3> pa(Nz, Ny, Nx), pb(Nz, Ny, Nx);
 
-    Pochoir<double, 3> fd_3D;
+    Pochoir<3> fd_3D;
     Pochoir_Domain I(0+ds, Nx-ds), J(0+ds, Ny-ds), K(0+ds, Nz-ds);
     Pochoir_Shape<3> fd_shape_3D[] = {
         {0,0,0,0},
         {-1,0,0,0}, {-1,-1,0,0}, {-1,0,-1,0}, {-1,0,0,-1}, {-1,1,0,0}, {-1,0,1,0}, {-1,0,0,1}};
 
 //  fd_3D.registerBoundaryFn(pa, fd_bv_3D);
-    fd_3D.registerArray(pa);
     fd_3D.registerShape(fd_shape_3D);
+    fd_3D.registerArray(pa);
     fd_3D.registerDomain(I, J, K);
+    pb.registerShape(fd_shape_3D);
 
     /* initialization! */
     for (int i = 0; i < Nz; ++i) {
@@ -129,7 +130,7 @@ int main(int argc, char *argv[])
     std::cout << "Pochoir ET consumed time : " << min_tdiff << " ms " << std::endl;
     std::cout << "GStencil/s : " << ((Nx-2*ds)*(Ny-2*ds)*(Nz-2*ds)*(1e-6)*T)/(min_tdiff) << std::endl;
 
-#if 0
+#if 1
     min_tdiff = INF;
     /* cilk_for + zero-padding */
     for (int times = 0; times < TIMES; ++times) {

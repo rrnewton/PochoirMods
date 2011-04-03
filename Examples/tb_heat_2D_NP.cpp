@@ -86,14 +86,37 @@ int main(int argc, char * argv[])
     T_SIZE = StrToInt(argv[2]);
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
-	Pochoir_Array_2D(double, 2) a(N_SIZE, N_SIZE), b(N_SIZE+2, N_SIZE+2);
-    Pochoir_2D(double, 2) heat_2D;
+	Pochoir_Array<double, 2> a(N_SIZE, N_SIZE), b(N_SIZE+2, N_SIZE+2);
+    Pochoir<2> heat_2D;
     Pochoir_Domain I(1, N_SIZE-1), J(1, N_SIZE-1);
 #if 1
     Pochoir_Shape_2D heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, -1, -1}, {0, 0, -1}, {0, 0, 1}};
 #else
     Pochoir_Shape_2D heat_shape_2D[] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
 #endif
+
+	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
+    Pochoir_kernel_2D(heat_2D_fn, t, i, j)
+#if DEBUG
+       a(t+1, i, j) = a(t, i-1, j-1) + 0.01; 
+#else
+//       a(t+1, i, j) = a(t, i-1, j-1) + a(t, i, j-1) + 0.01; 
+	   a(t+1, i, j) = 0.125 * (a(t, i+1, j) - 2.0 * a(t, i, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) - 2.0 * a(t, i, j) + a(t, i, j-1)) + a(t, i, j);
+#endif
+    Pochoir_kernel_end
+
+    /* we have to bind arrayInUse and Shape together 
+     * => One arrayInUse, one shape[] => One slope[]
+     * because each arrayInUse needs to know the slope to determine
+     * the boundary region and when to call the user supplied boundary
+     * value function
+     */
+    a.registerBV(heat_bv_2D);
+//    heat_2D.registerBoundaryFn(a, heat_bv_2D);
+    heat_2D.registerShape(heat_shape_2D);
+    heat_2D.registerArray(a);
+    b.registerShape(heat_shape_2D);
+//    heat_2D.registerDomain(I, J);
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -113,26 +136,6 @@ int main(int argc, char * argv[])
         b(1, i+1, j+1) = 0;
 	} }
 
-	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
-    Pochoir_kernel_2D(heat_2D_fn, t, i, j)
-#if DEBUG
-       a(t+1, i, j) = a(t, i-1, j-1) + 0.01; 
-#else
-//       a(t+1, i, j) = a(t, i-1, j-1) + a(t, i, j-1) + 0.01; 
-	   a(t+1, i, j) = 0.125 * (a(t, i+1, j) - 2.0 * a(t, i, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) - 2.0 * a(t, i, j) + a(t, i, j-1)) + a(t, i, j);
-#endif
-    Pochoir_kernel_end
-
-    /* we have to bind arrayInUse and Shape together 
-     * => One arrayInUse, one shape[] => One slope[]
-     * because each arrayInUse needs to know the slope to determine
-     * the boundary region and when to call the user supplied boundary
-     * value function
-     */
-    heat_2D.registerBoundaryFn(a, heat_bv_2D);
-//    heat_2D.registerArray(a);
-    heat_2D.registerShape(heat_shape_2D);
-//    heat_2D.registerDomain(I, J);
 
 #if 1
     for (int times = 0; times < TIMES; ++times) {
@@ -143,7 +146,6 @@ int main(int argc, char * argv[])
     }
 	std::cout << "Pochoir ET: consumed time :" << min_tdiff << "ms" << std::endl;
 
-    // b.registerShape(heat_shape_2D);
     // b.registerBV(heat_bv_2D);
 #endif
 #if 1

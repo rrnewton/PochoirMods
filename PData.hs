@@ -62,11 +62,11 @@ data PArray = PArray {
     aRank :: Int,
     aMaxShift :: Int,
     aToggle :: Int,
-    aDims :: [DimExpr]
+    aDims :: [DimExpr],
+    aRegBound :: Bool
 } deriving (Show, Eq)
 data PStencil = PStencil {
     sName :: PName,
-    sType :: PType,
     sRank :: Int,
     sToggle :: Int,
     sArrayInUse :: [PArray],
@@ -76,6 +76,7 @@ data PShape = PShape {
     shapeName :: PName,
     shapeRank :: Int,
     shapeLen :: Int,
+    shapeToggle :: Int,
     shape :: [[Int]]
 } deriving Show
 data PRange = PRange {

@@ -51,9 +51,9 @@ updatePMacro :: (PName, PValue) -> ParserState -> ParserState
 updatePMacro (l_name, l_value) parserState =
     parserState { pMacro = Map.insert l_name l_value (pMacro parserState) }
 
-updatePShape :: (PName, Int, PValue, [[Int]]) -> ParserState -> ParserState
-updatePShape (l_name, l_rank, l_len, l_shape) parserState =
-    let l_pShape = PShape {shapeName = l_name, shapeRank = l_rank, shapeLen = l_len, shape = l_shape}
+updatePShape :: (PName, Int, PValue, Int, [[Int]]) -> ParserState -> ParserState
+updatePShape (l_name, l_rank, l_len, l_toggle, l_shape) parserState =
+    let l_pShape = PShape {shapeName = l_name, shapeRank = l_rank, shapeLen = l_len, shapeToggle = l_toggle, shape = l_shape}
     in parserState { pShape = Map.insert l_name l_pShape (pShape parserState) }
 
 updatePArray :: [(PName, PArray)] -> ParserState -> ParserState
@@ -89,6 +89,41 @@ updateStencilBoundary l_id l_regBound parserState =
                 then Just $ x { sRegBound = l_regBound }
                 else Nothing
     in  parserState { pStencil = Map.updateWithKey f l_id $ pStencil parserState }
+
+updateStencilToggle :: String -> Int -> ParserState -> ParserState
+updateStencilToggle l_id l_toggle parserState =
+    let f k x =
+            if sName x == l_id
+                then Just $ x { sToggle = l_toggle }
+                else Nothing
+    in  parserState { pStencil = Map.updateWithKey f l_id $ pStencil parserState }
+
+updateArrayBoundary :: String -> Bool -> ParserState -> ParserState
+updateArrayBoundary l_id l_regBound parserState =
+    let f k x =
+            if aName x == l_id
+                then Just $ x { aRegBound = l_regBound }
+                else Nothing
+    in parserState { pArray = Map.updateWithKey f l_id $ pArray parserState }
+
+getToggleFromShape :: [[Int]] -> Int
+getToggleFromShape l_shapes =
+    let l_t = map head l_shapes
+        l_t_max = maximum l_t
+        l_t_min = minimum l_t
+    in  (1 + l_t_max - l_t_min)
+
+getArrayRegBound :: ParserState -> PArray -> Bool
+getArrayRegBound l_state l_pArray =
+    case Map.lookup (aName l_pArray) $ pArray l_state of
+        Nothing -> False
+        Just l_array -> aRegBound l_array
+    
+getPStencil :: String -> ParserState -> PStencil -> PStencil
+getPStencil l_id l_state l_oldStencil =
+    case Map.lookup l_id $ pStencil l_state of
+        Nothing -> l_oldStencil
+        Just l_stencil -> l_stencil
 
 getIter :: PArray -> Expr -> [Iter]
 getIter arrayInUse (PVAR q v dL) =

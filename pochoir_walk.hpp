@@ -351,7 +351,6 @@ struct Algorithm {
         grid_info<N_RANK> phys_grid_;
         int phys_length_[N_RANK];
         int slope_[N_RANK];
-        int stride_[N_RANK];
         int ulb_boundary[N_RANK], uub_boundary[N_RANK], lub_boundary[N_RANK];
         bool boundarySet, physGridSet, slopeSet;
 	public:
@@ -365,7 +364,7 @@ struct Algorithm {
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1), r_t(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -374,9 +373,9 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 1; --i)
-            dx_recursive_[i] = 3;
-        dx_recursive_[1] = 3;
-        dx_recursive_[0] = 1000;
+            dx_recursive_[i] = 100;
+        dx_recursive_[1] = 100;
+        dx_recursive_[0] = 100;
         Z = 10000;
         boundarySet = false;
         physGridSet = false;
@@ -406,7 +405,7 @@ struct Algorithm {
     inline bool within_boundary(int t0, int t1, grid_info<N_RANK> & grid);
 
     void set_phys_grid(grid_info<N_RANK> const & grid);
-    void set_stride(int const stride[]);
+    // void set_stride(int const stride[]);
     void set_slope(int const slope[]);
     inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
 
@@ -496,13 +495,6 @@ void Algorithm<N_RANK>::set_phys_grid(grid_info<N_RANK> const & grid)
             lub_boundary[i] = phys_grid_.x0[i] + slope_[i];
         }
     }
-}
-
-template <int N_RANK>
-void Algorithm<N_RANK>::set_stride(int const stride[])
-{
-    for (int i = 0; i < N_RANK; ++i)
-        stride_[i] = stride[i];
 }
 
 template <int N_RANK>

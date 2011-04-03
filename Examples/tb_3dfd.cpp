@@ -417,7 +417,7 @@ void dotest()
   double stop;
 	
   ///////////////////////////////////////////////                                                                      
-#if 0
+#if 1
   
   init_variables();
   start = cilk_ticks_to_seconds(cilk_getticks());

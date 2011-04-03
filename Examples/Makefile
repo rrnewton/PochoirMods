@@ -1,8 +1,8 @@
 #!/bin/bash
 CC = ./pochoir
 ICC = icpc
-#ICC_FLAGS = -ipo -unroll-aggressive -xHOST -simd
-ICC_FLAGS = -unroll-aggressive -ipo -xHOST -fno-alias -fno-fnalias 
+# ICC_FLAGS = -unroll-aggressive -funroll-loops -scalar-rep -ipo -xHOST -fno-alias -fno-fnalias 
+ICC_FLAGS = -unroll-aggressive -funroll-loops -scalar-rep -ipo -xHOST -fno-alias  
 all : clean klein 3dfd life heat_P heat_NP psa rna rna_struct
 loop_iter : tb_loop_iter.cpp
 	${ICC} -o loop_iter -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_loop_iter.cpp
@@ -19,7 +19,7 @@ heat_NP_zero : tb_heat_2D_NP_zero.cpp
 	${CC} -o heat_duo -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero.cpp
 	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_pochoir.cpp
 	perl repair.pl tb_heat_2D_NP_zero_pochoir.s > duo.s
-	${ICC} -o heat_duo duo.s
+	${ICC} -o heat_long duo.s
 berkeley3d7pt : tb_3d7pt.cpp
 	${CC} -o tb_3d7pt -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt.cpp
 	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp
@@ -31,8 +31,9 @@ berkeley3d27pt : tb_3d27pt.cpp
 	perl repair.pl tb_3d27pt_pochoir.s > 3d27pt.s
 	${ICC} -o 3d27pt_sim 3d27pt.s
 heat_NP : tb_heat_2D_NP.cpp
-	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-c-pointer tb_heat_2D_NP.cpp
-$	${ICC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -opt-report 3 ${ICC_FLAGS} tb_heat_2D_NP_pochoir.cpp
+	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
+#	${CC} -o tb_heat_2D_NP_pochoir -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-c-pointer tb_heat_2D_NP.cpp
+#	${ICC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -opt-report 3 ${ICC_FLAGS} tb_heat_2D_NP_pochoir.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP.cpp
 heat_P : tb_heat_2D_P.cpp
 	${CC} -o tb_heat_2D_P_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_P.cpp

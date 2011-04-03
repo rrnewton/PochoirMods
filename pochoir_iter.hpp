@@ -27,16 +27,16 @@
 
 #include "pochoir_common.hpp"
 //#include "pochoir_array.hpp"
-template <typename T, int N_RANK, int TOGGLE> class Pochoir_Array;
+template <typename T, int N_RANK> class Pochoir_Array;
 
-template <typename T, int N_RANK, int TOGGLE=2>
+template <typename T, int N_RANK=2>
 class interior_shadow {
     private:
-        Pochoir_Array<T, N_RANK, TOGGLE> & arr_;
+        Pochoir_Array<T, N_RANK> & arr_;
     public:
-        explicit interior_shadow(Pochoir_Array<T, N_RANK, TOGGLE> & _arr) : arr_(_arr) {}
-        explicit interior_shadow(interior_shadow<T, N_RANK, TOGGLE> & _shadow) : arr_(_shadow.getArray()) {}
-        Pochoir_Array<T, N_RANK, TOGGLE> & getArray() { return arr_; }
+        explicit interior_shadow(Pochoir_Array<T, N_RANK> & _arr) : arr_(_arr) {}
+        explicit interior_shadow(interior_shadow<T, N_RANK> & _shadow) : arr_(_shadow.getArray()) {}
+        Pochoir_Array<T, N_RANK> & getArray() { return arr_; }
         inline T & operator() (int _t, int _i) {
             return arr_.interior(_t, _i);
         }
@@ -48,17 +48,17 @@ class interior_shadow {
         }
 };
 
-template <typename T, int N_RANK, int TOGGLE=2>
+template <typename T, int N_RANK=2>
 class Pochoir_Iterator {
     /* This is the safe version, we don't check index range for 
      * each type conversion or assignment!!
      * For unsafe access, we leave it to the index version!
      */
     private:
-        Pochoir_Array<T, N_RANK, TOGGLE> & arr_;
+        Pochoir_Array<T, N_RANK> & arr_;
         T * curr_;
     public:
-        explicit Pochoir_Iterator(Pochoir_Array<T, N_RANK, TOGGLE> & _arr) : arr_(_arr) {
+        explicit Pochoir_Iterator(Pochoir_Array<T, N_RANK> & _arr) : arr_(_arr) {
             curr_ = arr_.view()->data();
         }
 
@@ -91,13 +91,13 @@ class Pochoir_Iterator {
             return *curr_;
         }
 
-        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (T const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK> & operator= (T const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = rhs;
             return *this;
         }
 
-        inline Pochoir_Iterator<T, N_RANK, TOGGLE> & operator= (Pochoir_Iterator<T, N_RANK, TOGGLE> const & rhs) {
+        inline Pochoir_Iterator<T, N_RANK> & operator= (Pochoir_Iterator<T, N_RANK> const & rhs) {
             /* overloaded assignment, for reference appears on the left side of '=' */
             *curr_ = *rhs;
             return *this;
