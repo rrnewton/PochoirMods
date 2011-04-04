@@ -272,6 +272,40 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
     template <typename T> \
     T name (Pochoir_Array<T, 8> & arr, int t, int i, int j, int k, int l, int m, int n, int o, int p) { 
 
+/* constant boundary function for automatic zero-padding */
+#define Pochoir_Constant_Boundary_1D(name, arr, i) \
+    template <typename T> \
+    T name (Pochoir_Array<T, 1> & arr, int i) { 
+
+#define Pochoir_Constant_Boundary_2D(name, arr, i, j) \
+    template <typename T> \
+    T name (Pochoir_Array<T, 2> & arr, int i, int j) { 
+
+#define Pochoir_Constant_Boundary_3D(name, arr, i, j, k) \
+    template <typename T> \
+    T name (Pochoir_Array<T, 3> & arr, int i, int j, int k) { 
+
+#define Pochoir_Constant_Boundary_4D(name, arr, i, j, k, l) \
+    template <typename T> \
+    T name (Pochoir_Array<T, 4> & arr, int i, int j, int k, int l) { 
+
+#define Pochoir_Constant_Boundary_5D(name, arr, i, j, k, l, m) \
+    template <typename T> \
+    T name (Pochoir_Array<T, 5> & arr, int i, int j, int k, int l, int m) { 
+
+#define Pochoir_Constant_Boundary_6D(name, arr, i, j, k, l, m, n) \
+    template <typename T> \
+    T name (Pochoir_Array<T, 6> & arr, int i, int j, int k, int l, int m, int n) { 
+
+#define Pochoir_Constant_Boundary_7D(name, arr, i, j, k, l, m, n, o) \
+    template <typename T> \
+    T name (Pochoir_Array<T, 7> & arr, int i, int j, int k, int l, int m, int n, int o) { 
+
+#define Pochoir_Constant_Boundary_8D(name, arr, i, j, k, l, m, n, o, p) \
+    template <typename T> \
+    T name (Pochoir_Array<T, 8> & arr, int i, int j, int k, int l, int m, int n, int o, int p) { 
+
+
 #define Pochoir_Boundary_end }
 
 #endif /* POCHOIR_COMMON_H */
