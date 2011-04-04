@@ -90,7 +90,6 @@ int main(int argc, char *argv[])
 
 //    fd_3D.registerBoundaryFn(pa, fd_bv_3D);
 //    fd_3D.registerShape(fd_shape_3D);
-    fd_3D.registerShape(fd_shape_3D);
     fd_3D.registerArray(pa);
     fd_3D.registerDomain(I, J, K);
     pb.registerShape(fd_shape_3D);

@@ -47,6 +47,8 @@ class Pochoir {
         void getPhysDomainFromArray(T_Array & arr);
         template <typename T_Array>
         void cmpPhysDomainFromArray(T_Array & arr);
+        template <size_t N_SIZE>
+        void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]);
 
     public:
     template <size_t N_SIZE>
@@ -65,8 +67,6 @@ class Pochoir {
     /* We get the grid_info out of arrayInUse */
     template <typename T_Array>
     void registerArray(T_Array & arr);
-    template <size_t N_SIZE>
-    void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]);
 
     /* We should still keep the registerDomain for zero-padding!!! */
     template <typename Domain>
