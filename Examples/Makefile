@@ -24,12 +24,12 @@ berkeley3d7pt : tb_3d7pt.cpp
 	${CC} -o tb_3d7pt -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt.cpp
 	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp
 	perl repair.pl tb_3d7pt_pochoir.s > 3d7pt.s
-	${ICC} -o 3d7pt_sim 3d7pt.s
+	${ICC} -o 3d7pt 3d7pt.s
 berkeley3d27pt : tb_3d27pt.cpp
 	${CC} -o tb_3d27pt -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d27pt.cpp
 	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d27pt_pochoir.cpp
 	perl repair.pl tb_3d27pt_pochoir.s > 3d27pt.s
-	${ICC} -o 3d27pt_sim 3d27pt.s
+	${ICC} -o 3d27pt 3d27pt.s
 heat_NP : tb_heat_2D_NP.cpp
 	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-c-pointer tb_heat_2D_NP.cpp

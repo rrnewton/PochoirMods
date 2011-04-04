@@ -364,7 +364,7 @@ struct Algorithm {
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(5), dt_recursive_boundary_(1), r_t(1) {
+    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -373,9 +373,9 @@ struct Algorithm {
             // dx_recursive_boundary_[i] = 10;
         }
         for (int i = N_RANK-1; i > 1; --i)
-            dx_recursive_[i] = 100;
-        dx_recursive_[1] = 100;
-        dx_recursive_[0] = 100;
+            dx_recursive_[i] = 3;
+        dx_recursive_[1] = 3;
+        dx_recursive_[0] = 1000;
         Z = 10000;
         boundarySet = false;
         physGridSet = false;

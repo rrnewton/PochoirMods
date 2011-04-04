@@ -112,22 +112,15 @@ pMember l_memFunc =
 
 ppArray :: String -> ParserState -> GenParser Char ParserState String
 ppArray l_id l_state =
-        do try $ pMember "registerBV"
-           l_boundaryFn <- parens pIdentifier
-           semi
-           case Map.lookup l_id $ pArray l_state of
-               Nothing -> return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* UNKNOWN registerBV with " ++ l_id ++ "*/" ++ breakline)
-               Just l_array -> 
-                    do updateState $ updateArrayBoundary l_id True 
-                       return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
-    <|> do try $ pMember "registerBCV"
-           l_bcvFn <- parens pIdentifier
-           semi
-           case Map.lookup l_id $ pArray l_state of
-               Nothing -> return (l_id ++ ".registerBCV(" ++ l_bcvFn ++ "); /* UNKNOWN registerBCV with " ++ l_id ++ "*/" ++ breakline)
-               Just l_array ->
-                    do updateState $ updateArrayBoundary l_id False
-                       return (l_id ++ ".registerBCV(" ++ l_bcvFn ++ "); /* registerBCV */" ++ breakline)
+    do try $ pMember "registerBV"
+       l_boundaryFn <- parens pIdentifier
+       semi
+       case Map.lookup l_id $ pArray l_state of
+           Nothing -> return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* UNKNOWN registerBV with " ++ l_id ++ "*/" ++ breakline)
+           Just l_array -> 
+                do updateState $ updateArrayBoundary l_id True 
+                   return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
+           -- registerBV l_id l_boundaryFn l_array 
 
 ppStencil :: String -> ParserState -> GenParser Char ParserState String
 ppStencil l_id l_state = 
@@ -144,10 +137,10 @@ ppStencil l_id l_state =
            l_shape <- parens identifier
            semi
            case Map.lookup l_id $ pStencil l_state of
-               Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with UNKNOWN stencil " ++ l_id ++ "*/" ++ breakline)
+               Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with" ++ l_id ++ "*/" ++ breakline)
                Just l_stencil ->
                    case Map.lookup l_shape $ pShape l_state of
-                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with UNKNOWN shape " ++ l_shape ++ "*/" ++ breakline)
+                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with" ++ l_id ++ "*/" ++ breakline)
                        Just l_pShape -> registerShape l_id l_shape l_pShape
     <|> do try $ pMember "registerBoundaryFn"
            l_boundaryParams <- parens $ commaSep1 identifier
@@ -361,7 +354,7 @@ pDeclStatic = do l_type <- pType
                  return (l_type, l_rank, l_toggle)
 
 pDeclStaticNum :: GenParser Char ParserState (PValue)
-pDeclStaticNum = do l_rank <- option 0 exprDeclDim
+pDeclStaticNum = do l_rank <- exprDeclDim
                     return (l_rank)
 
 pDeclDynamic :: GenParser Char ParserState ([PName], PName, [DimExpr])

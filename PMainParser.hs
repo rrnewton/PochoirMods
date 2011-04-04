@@ -99,13 +99,13 @@ pParsePochoirShapeInfo =
     do reserved "Pochoir_Shape"
        l_rank <- angles pDeclStaticNum
        l_name <- identifier
-       l_len <- brackets pDeclStaticNum
+       l_len <- brackets $ option 0 pDeclStaticNum
        reservedOp "="
        l_shapes <- braces (commaSep1 ppShape)
        semi
        let l_revLen = length l_shapes
        let l_toggle = getToggleFromShape l_shapes
-       updateState $ updatePShape (l_name, l_rank, l_revLen, l_toggle, l_shapes)
+       updateState $ updatePShape (l_name, l_rank, l_len, l_toggle, l_shapes)
        return (breakline ++ "/* Known */ Pochoir_Shape <" ++ show l_rank ++ "> " ++ l_name ++ " [" ++ show l_revLen ++ "] = " ++ pShowShapes l_shapes ++ ";\n")
 
 pParsePochoirDomain :: GenParser Char ParserState String
@@ -116,7 +116,7 @@ pParsePochoirDomain =
        let l_rangeDecl = [l_rangeDecl0] ++ l_rangeDecl1
        semi
        updateState $ updatePRange $ transURange l_rangeDecl
-       return (breakline ++ "/* Known */ Pochoir_Domain " ++ pShowArrayDynamicDecl l_rangeDecl ++ ";\n")
+       return (breakline ++ "Pochoir_Domain " ++ pShowArrayDynamicDecl l_rangeDecl ++ ";\n")
 
 pParsePochoirKernel1D :: GenParser Char ParserState String
 pParsePochoirKernel1D =
