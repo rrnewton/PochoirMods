@@ -84,15 +84,15 @@ int main(int argc, char * argv[])
     N_SIZE = StrToInt(argv[1]);
     T_SIZE = StrToInt(argv[2]);
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
-	/* data structure of Pochoir - row major */
-	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
-    Pochoir<N_RANK> heat_2D;
 //    Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 #if 0
     Pochoir_Shape<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
 #else
     Pochoir_Shape<2> heat_shape_2D[5] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
 #endif
+	/* data structure of Pochoir - row major */
+	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
+    Pochoir<N_RANK> heat_2D(heat_shape_2D);
 
 	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
     Pochoir_kernel_2D(heat_2D_fn, t, i, j)
@@ -111,7 +111,7 @@ int main(int argc, char * argv[])
      */
     a.registerBV(heat_bv_2D);
     // heat_2D.registerBoundaryFn(a, heat_bv_2D);
-    heat_2D.registerShape(heat_shape_2D);
+    // heat_2D.registerShape(heat_shape_2D);
     heat_2D.registerArray(a);
 
     b.registerShape(heat_shape_2D);

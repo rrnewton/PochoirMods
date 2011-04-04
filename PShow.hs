@@ -716,6 +716,13 @@ pShowArrayDim (c:cs) = "(" ++ show c ++ pShowArrayDimL cs
     where pShowArrayDimL [] = ")"
           pShowArrayDimL (d:ds) = ", " ++ show d ++ pShowArrayDimL ds
 
+pShowPochoirDynamicDecl :: [([PName], PName, PName)] -> String
+pShowPochoirDynamicDecl [] = " "
+pShowPochoirDynamicDecl (p:ps) = pShowPochoirItem p ++  pShowPochoirDynamicDeclL ps
+    where pShowPochoirDynamicDeclL [] = " "
+          pShowPochoirDynamicDeclL qL@(q:qs) = ", " ++ pShowPochoirDynamicDecl qL
 
-
+pShowPochoirItem :: ([PName], PName, PName) -> String
+pShowPochoirItem ([], a, b) = a ++ " ( " ++ b ++ " )"
+pShowPochoirItem (qL@(q:qs), a, b) = intercalate " " qL ++ a ++ " ( " ++ b ++ ")"
 

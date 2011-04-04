@@ -70,6 +70,7 @@ data PStencil = PStencil {
     sRank :: Int,
     sToggle :: Int,
     sArrayInUse :: [PArray],
+    sShape :: PShape,
     sRegBound :: Bool
 } deriving Show
 data PShape = PShape {

@@ -18,8 +18,8 @@ heat_newspec : tb_heat_2D_NP_zero_newspec.cpp
 heat_NP_zero : tb_heat_2D_NP_zero.cpp 
 	${CC} -o heat_duo -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero.cpp
 	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_pochoir.cpp
-	perl repair.pl tb_heat_2D_NP_zero_pochoir.s > duo.s
-	${ICC} -o heat_long duo.s
+	perl repair.pl tb_heat_2D_NP_zero_pochoir.s > heat_2D_NP_zero.s
+	${ICC} -o heat_zero heat_2D_NP_zero.s
 berkeley3d7pt : tb_3d7pt.cpp
 	${CC} -o tb_3d7pt -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt.cpp
 	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp

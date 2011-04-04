@@ -120,7 +120,6 @@ ppArray l_id l_state =
            Just l_array -> 
                 do updateState $ updateArrayBoundary l_id True 
                    return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
-           -- registerBV l_id l_boundaryFn l_array 
 
 ppStencil :: String -> ParserState -> GenParser Char ParserState String
 ppStencil l_id l_state = 
@@ -137,10 +136,10 @@ ppStencil l_id l_state =
            l_shape <- parens identifier
            semi
            case Map.lookup l_id $ pStencil l_state of
-               Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with" ++ l_id ++ "*/" ++ breakline)
+               Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_id ++ "*/" ++ breakline)
                Just l_stencil ->
                    case Map.lookup l_shape $ pShape l_state of
-                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with" ++ l_id ++ "*/" ++ breakline)
+                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_id ++ "*/" ++ breakline)
                        Just l_pShape -> registerShape l_id l_shape l_pShape
     <|> do try $ pMember "registerBoundaryFn"
            l_boundaryParams <- parens $ commaSep1 identifier
@@ -148,7 +147,7 @@ ppStencil l_id l_state =
            let l_array = head l_boundaryParams
            let l_bdry = head $ tail l_boundaryParams 
            case Map.lookup l_id $ pStencil l_state of
-               Nothing -> return (l_id ++ ".registerBoundaryFn(" ++ intercalate ", " l_boundaryParams ++ "); /* UNKNOWN registerBoundaryFn with" ++ l_id ++ "*/" ++ breakline)
+               Nothing -> return (l_id ++ ".registerBoundaryFn(" ++ intercalate ", " l_boundaryParams ++ "); /* UNKNOWN registerBoundaryFn with " ++ l_id ++ "*/" ++ breakline)
                Just l_stencil -> 
                    case Map.lookup l_array $ pArray l_state of
                        Nothing -> registerUndefinedBoundaryFn l_id l_boundaryParams l_stencil
@@ -289,10 +288,10 @@ pStencilRun =
            return (show l_tstep, l_func)
     <?> "Stencil Run Parameters"
 
-registerBV :: String -> String -> PArray -> GenParser Char ParserState String
-registerBV l_id l_boundaryFn l_array =
-    do updateState $ updateArrayBoundary l_id True 
-       return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
+-- registerBV :: String -> String -> PArray -> GenParser Char ParserState String
+-- registerBV l_id l_boundaryFn l_array =
+--     do updateState $ updateArrayBoundary l_id True 
+--        return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
 
 registerShape :: String -> String -> PShape -> GenParser Char ParserState String
 registerShape l_id l_shape l_pShape = 
@@ -363,6 +362,11 @@ pDeclDynamic = do (l_qualifiers, l_name) <- try pVarDecl
                   -- exprStmtDim is something might be known at run-time
                   l_dims <- option [] (parens $ commaSep1 exprStmtDim)
                   return (l_qualifiers, l_name, l_dims)
+
+pDeclPochoir :: GenParser Char ParserState ([PName], PName, PName)
+pDeclPochoir = do (l_qualifiers, l_name) <- try pVarDecl
+                  l_shape <- option "" (parens $ pIdentifier)
+                  return (l_qualifiers, l_name, l_shape)
 
 pVarDecl :: GenParser Char ParserState ([PName], PName)
 pVarDecl = do l_qualifiers <- many cppQualifier

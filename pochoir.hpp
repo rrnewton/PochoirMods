@@ -49,7 +49,8 @@ class Pochoir {
         void cmpPhysDomainFromArray(T_Array & arr);
 
     public:
-    Pochoir() {
+    template <size_t N_SIZE>
+    Pochoir(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = 0;
             logic_grid_.x0[i] = logic_grid_.x1[i] = logic_grid_.dx0[i] = logic_grid_.dx1[i] = 0;
@@ -57,6 +58,8 @@ class Pochoir {
         }
         timestep_ = 0;
         regArrayFlag = regLogicDomainFlag = regPhysDomainFlag = regShapeFlag = false;
+        registerShape(shape);
+        regShapeFlag = true;
     }
     /* currently, we just compute the slope[] out of the shape[] */
     /* We get the grid_info out of arrayInUse */

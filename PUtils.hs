@@ -119,6 +119,12 @@ getArrayRegBound l_state l_pArray =
         Nothing -> False
         Just l_array -> aRegBound l_array
     
+getPShape :: ParserState -> String -> PShape
+getPShape l_state l_shape =
+    case Map.lookup l_shape $pShape l_state of
+        Nothing -> PShape{shapeName = "", shapeRank = 0, shapeLen = 0, shapeToggle = 0, shape = []}
+        Just l_pShape -> l_pShape
+
 getPStencil :: String -> ParserState -> PStencil -> PStencil
 getPStencil l_id l_state l_oldStencil =
     case Map.lookup l_id $ pStencil l_state of
