@@ -77,13 +77,14 @@ int main(int argc, char *argv[])
     printf("Order-%d 3D-Stencil (%d points) with space %dx%dx%d and time %d\n", 
        ds, 7, Nx, Ny, Nz, T);
 
-    Pochoir_Shape<3> fd_shape_3D[] = {
+    Pochoir_Shape_3D fd_shape_3D[] = {
         {0,0,0,0},
         {-1,0,0,0}, {-1,-1,0,0}, {-1,0,-1,0}, {-1,0,0,-1}, {-1,1,0,0}, {-1,0,1,0}, {-1,0,0,1}};
 
-    Pochoir_Array<double, 3> pa(Nz, Ny, Nx), pb(Nz, Ny, Nx);
+    Pochoir_Array_3D(double) pa(Nz, Ny, Nx), pb(Nz, Ny, Nx);
 
-    Pochoir<3> fd_3D(fd_shape_3D);
+    Pochoir_3D fd_3D(fd_shape_3D);
+    // Pochoir_3D fd_3D({{0,0,0,0}, {-1,0,0,0}, {-1,-1,0,0}, {-1,0,-1,0}, {-1,0,0,-1}, {-1,1,0,0}, {-1,0,1,0}, {-1,0,0,1}});
     Pochoir_Domain I(0+ds, Nx-ds), J(0+ds, Ny-ds), K(0+ds, Nz-ds);
 
 //    fd_3D.registerBoundaryFn(pa, fd_bv_3D);
