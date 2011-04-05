@@ -110,8 +110,9 @@ pParsePochoirShapeInfo =
        semi
        let l_len = length l_shapes
        let l_toggle = getToggleFromShape l_shapes
-       updateState $ updatePShape (l_name, l_rank, l_len, l_toggle, l_shapes)
-       return (breakline ++ "/* Known */ Pochoir_Shape <" ++ show l_rank ++ "> " ++ l_name ++ " [" ++ show l_len ++ "] = " ++ pShowShapes l_shapes ++ ";\n")
+       let l_slopes = getSlopesFromShape (l_toggle-1) l_shapes 
+       updateState $ updatePShape (l_name, l_rank, l_len, l_toggle, l_slopes, l_shapes)
+       return (breakline ++ "/* Known */ Pochoir_Shape <" ++ show l_rank ++ "> " ++ l_name ++ " [" ++ show l_len ++ "] = " ++ pShowShapes l_shapes ++ ";\n" ++ breakline ++ "/* toggle: " ++ show l_toggle ++ "; slopes: " ++ show l_slopes ++ "*/\n")
 
 pParsePochoirDomain :: GenParser Char ParserState String
 pParsePochoirDomain =

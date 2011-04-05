@@ -51,9 +51,9 @@ updatePMacro :: (PName, PValue) -> ParserState -> ParserState
 updatePMacro (l_name, l_value) parserState =
     parserState { pMacro = Map.insert l_name l_value (pMacro parserState) }
 
-updatePShape :: (PName, Int, PValue, Int, [[Int]]) -> ParserState -> ParserState
-updatePShape (l_name, l_rank, l_len, l_toggle, l_shape) parserState =
-    let l_pShape = PShape {shapeName = l_name, shapeRank = l_rank, shapeLen = l_len, shapeToggle = l_toggle, shape = l_shape}
+updatePShape :: (PName, Int, PValue, Int, [Int], [[Int]]) -> ParserState -> ParserState
+updatePShape (l_name, l_rank, l_len, l_toggle, l_slopes, l_shape) parserState =
+    let l_pShape = PShape {shapeName = l_name, shapeRank = l_rank, shapeLen = l_len, shapeToggle = l_toggle, shapeSlopes = l_slopes, shape = l_shape}
     in parserState { pShape = Map.insert l_name l_pShape (pShape parserState) }
 
 updatePArray :: [(PName, PArray)] -> ParserState -> ParserState
@@ -113,6 +113,16 @@ getToggleFromShape l_shapes =
         l_t_min = minimum l_t
     in  (1 + l_t_max - l_t_min)
 
+getSlopesFromShape :: Int -> [[Int]] -> [Int]
+getSlopesFromShape l_height l_shapes = 
+    let l_spatials = transpose $ map tail l_shapes
+        l_xs = getXSFromShape l_spatials
+    in  map (flip div l_height) l_xs
+
+getXSFromShape :: [[Int]] -> [Int]
+getXSFromShape [] = []
+getXSFromShape (a:as) = (maximum $ map abs a):getXSFromShape as
+
 getArrayRegBound :: ParserState -> PArray -> Bool
 getArrayRegBound l_state l_pArray =
     case Map.lookup (aName l_pArray) $ pArray l_state of
@@ -122,7 +132,7 @@ getArrayRegBound l_state l_pArray =
 getPShape :: ParserState -> String -> PShape
 getPShape l_state l_shape =
     case Map.lookup l_shape $pShape l_state of
-        Nothing -> PShape{shapeName = "", shapeRank = 0, shapeLen = 0, shapeToggle = 0, shape = []}
+        Nothing -> PShape{shapeName = "", shapeRank = 0, shapeLen = 0, shapeToggle = 0, shapeSlopes = [], shape = []}
         Just l_pShape -> l_pShape
 
 getPStencil :: String -> ParserState -> PStencil -> PStencil

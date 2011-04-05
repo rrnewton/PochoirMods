@@ -78,6 +78,7 @@ data PShape = PShape {
     shapeRank :: Int,
     shapeLen :: Int,
     shapeToggle :: Int,
+    shapeSlopes :: [Int],
     shape :: [[Int]]
 } deriving Show
 data PRange = PRange {
