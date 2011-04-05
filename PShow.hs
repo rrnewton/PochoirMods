@@ -700,29 +700,21 @@ pShowListIdentifiers (n:ns) = n ++ pShowListIdentifiersL ns
     where pShowListIdentifiersL [] = ""
           pShowListIdentifiersL nL@(n:ns) = ", " ++ pShowListIdentifiers nL
 
-pShowArrayDynamicDecl :: [([PName], PName, [DimExpr])] -> String
-pShowArrayDynamicDecl [] = " "
-pShowArrayDynamicDecl (p:ps) = pShowArrayItem p ++  pShowArrayDynamicDeclL ps
-    where pShowArrayDynamicDeclL [] = " "
-          pShowArrayDynamicDeclL qL@(q:qs) = ", " ++ pShowArrayDynamicDecl qL
+pShowDynamicDecl :: (Show a) => [([PName], PName, a)] -> (a -> String) -> String
+pShowDynamicDecl [] _ = ""
+pShowDynamicDecl (p:ps) showA = pShowDynamicDeclItem p showA ++ pShowDynamicDeclL ps showA
+    where pShowDynamicDeclL [] _ = ""
+          pShowDynamicDeclL xL@(x:xs) showA = ", " ++ pShowDynamicDecl xL showA
 
-pShowArrayItem :: ([PName], PName, [DimExpr]) -> String
-pShowArrayItem ([], a, bL) = a ++ pShowArrayDim bL
-pShowArrayItem (qL@(q:qs), a, bL) = intercalate " " qL ++ a ++ pShowArrayDim bL
+pShowDynamicDeclItem :: (Show a) => ([PName], PName, a) -> (a -> String) -> String
+pShowDynamicDeclItem ([], v, attr) showA = v ++ " ( " ++ showA attr ++ " ) "
+pShowDynamicDeclItem (qL@(q:qs), v, attr) showA = intercalate " " qL ++ v ++ " ( " ++
+                                                  showA attr ++ " ) "
 
 pShowArrayDim :: [DimExpr] -> String
 pShowArrayDim [] = ""
-pShowArrayDim (c:cs) = "(" ++ show c ++ pShowArrayDimL cs
-    where pShowArrayDimL [] = ")"
+pShowArrayDim (c:cs) = show c ++ pShowArrayDimL cs
+    where pShowArrayDimL [] = ""
           pShowArrayDimL (d:ds) = ", " ++ show d ++ pShowArrayDimL ds
 
-pShowPochoirDynamicDecl :: [([PName], PName, PName)] -> String
-pShowPochoirDynamicDecl [] = " "
-pShowPochoirDynamicDecl (p:ps) = pShowPochoirItem p ++  pShowPochoirDynamicDeclL ps
-    where pShowPochoirDynamicDeclL [] = " "
-          pShowPochoirDynamicDeclL qL@(q:qs) = ", " ++ pShowPochoirDynamicDecl qL
-
-pShowPochoirItem :: ([PName], PName, PName) -> String
-pShowPochoirItem ([], a, b) = a ++ " ( " ++ b ++ " )"
-pShowPochoirItem (qL@(q:qs), a, b) = intercalate " " qL ++ a ++ " ( " ++ b ++ ")"
 

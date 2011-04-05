@@ -52,10 +52,11 @@ outputSArray (l_type, l_rank, l_toggle) m_array (l_qualifiers, l_array, l_dims) 
     case Map.lookup l_array m_array of
         Nothing -> breakline ++ "Pochoir_Array <" ++ 
                     show l_type ++ ", " ++ show l_rank ++ ", " ++ show l_toggle ++ 
-                    "> " ++ pShowArrayItem (l_qualifiers, l_array, l_dims) ++ ";" 
+                    "> " ++ 
+                    pShowDynamicDecl [(l_qualifiers, l_array, l_dims)] pShowArrayDim ++ ";" 
         Just l_pArray -> breakline ++ "Pochoir_Array <" ++ 
                     show l_type ++ ", " ++ show l_rank ++ 
                     ", " ++ show (max l_toggle $ 1+aToggle l_pArray) ++ "> " ++ 
-                    pShowArrayItem (l_qualifiers, l_array, l_dims) ++ ";" 
+                    pShowDynamicDecl [(l_qualifiers, l_array, l_dims)] pShowArrayDim ++ ";" 
 
 

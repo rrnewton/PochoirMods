@@ -333,7 +333,7 @@ struct Algorithm {
         */
         int dx_recursive_[N_RANK];
         int dx_recursive_boundary_[N_RANK];
-        const int dt_recursive_;
+        int dt_recursive_;
         const int dt_recursive_boundary_;
         int Z;
         const int r_t; /* # of pieces cut in time dimension */
@@ -364,7 +364,7 @@ struct Algorithm {
     typedef enum {TILE_NCORES, TILE_BOUNDARY, TILE_MP} algor_type;
     
     /* constructor */
-    Algorithm (int const _slope[]) : dt_recursive_(3), dt_recursive_boundary_(1), r_t(1) {
+    Algorithm (int const _slope[]) : dt_recursive_boundary_(1), r_t(1) {
         for (int i = 0; i < N_RANK; ++i) {
             slope_[i] = _slope[i];
             dx_recursive_boundary_[i] = _slope[i];
@@ -372,10 +372,29 @@ struct Algorithm {
             ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
         }
-        for (int i = N_RANK-1; i > 1; --i)
-            dx_recursive_[i] = 3;
-        dx_recursive_[1] = 3;
-        dx_recursive_[0] = 1000;
+#if 0
+            for (int i = N_RANK-1; i > 1; --i)
+                dx_recursive_[i] = 3;
+            dx_recursive_[1] = 3;
+            dx_recursive_[0] = 1000;
+            dt_recursive_ = 3;
+#else
+#if DEBUG
+        dt_recursive_ = 1;
+        dx_recursive_[0] = 1;
+        for (int i = N_RANK-1; i >= 1; --i)
+            dx_recursive_[i] = 1;
+#else
+        dt_recursive_ = (N_RANK == 1) ? 20 : ((N_RANK == 2) ? 5 : 3);
+        dx_recursive_[0] = (N_RANK == 2) ? 100 : 1000;
+        for (int i = N_RANK-1; i >= 1; --i)
+            dx_recursive_[i] = (N_RANK == 2) ? 100 : 3;
+#endif
+#endif
+#if DEBUG
+        printf("dt = %d, dx_0 = %d, dx_1 = %d, dx_2 = %d\n", dt_recursive_, 
+                dx_recursive_[0], dx_recursive_[1], dx_recursive_[2]);
+#endif
         Z = 10000;
         boundarySet = false;
         physGridSet = false;

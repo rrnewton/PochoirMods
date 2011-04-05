@@ -368,6 +368,24 @@ pDeclPochoir = do (l_qualifiers, l_name) <- try pVarDecl
                   l_shape <- option "" (parens $ pIdentifier)
                   return (l_qualifiers, l_name, l_shape)
 
+pDeclPochoirWithShape :: GenParser Char ParserState ([PName], PName, PShape)
+pDeclPochoirWithShape = 
+    do (l_qualifiers, l_name) <- try pVarDecl
+       l_shapes <- option [] $ parens $ braces $ commaSep1 ppShape
+       let l_rank = (length $ head l_shapes) - 1
+       let l_len = length l_shapes
+       let l_shapeName = l_name ++ "_shape"
+       let l_toggle = getToggleFromShape l_shapes
+       let l_slopes = getSlopesFromShape (l_toggle-1) l_shapes
+       updateState $ updatePShape (l_shapeName, l_rank, l_len, l_toggle, l_slopes, l_shapes)
+       let l_pShape = PShape {shapeName = l_shapeName, 
+                              shapeRank = l_rank,
+                              shapeLen = l_len,
+                              shapeToggle = l_toggle,
+                              shapeSlopes = l_slopes,
+                              shape = l_shapes}
+       return (l_qualifiers, l_name, l_pShape)
+
 pVarDecl :: GenParser Char ParserState ([PName], PName)
 pVarDecl = do l_qualifiers <- many cppQualifier
               l_name <- identifier
