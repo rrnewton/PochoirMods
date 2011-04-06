@@ -707,9 +707,13 @@ pShowDynamicDecl (p:ps) showA = pShowDynamicDeclItem p showA ++ pShowDynamicDecl
           pShowDynamicDeclL xL@(x:xs) showA = ", " ++ pShowDynamicDecl xL showA
 
 pShowDynamicDeclItem :: (Show a) => ([PName], PName, a) -> (a -> String) -> String
-pShowDynamicDeclItem ([], v, attr) showA = v ++ " ( " ++ showA attr ++ " ) "
-pShowDynamicDeclItem (qL@(q:qs), v, attr) showA = intercalate " " qL ++ v ++ " ( " ++
-                                                  showA attr ++ " ) "
+pShowDynamicDeclItem ([], v, attr) showA = 
+    let sAttr = showA attr
+    in  if sAttr == "" then v else v ++ " ( " ++ sAttr ++ " ) "
+pShowDynamicDeclItem (qL@(q:qs), v, attr) showA = 
+    let sAttr = showA attr
+    in  if sAttr == "" then intercalate " " qL ++ v 
+                       else intercalate " " qL ++ v ++ " ( " ++ sAttr ++ " ) "
 
 pShowArrayDim :: [DimExpr] -> String
 pShowArrayDim [] = ""

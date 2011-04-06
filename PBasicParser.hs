@@ -139,7 +139,7 @@ ppStencil l_id l_state =
                Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_id ++ "*/" ++ breakline)
                Just l_stencil ->
                    case Map.lookup l_shape $ pShape l_state of
-                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_id ++ "*/" ++ breakline)
+                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_shape ++ "*/" ++ breakline)
                        Just l_pShape -> registerShape l_id l_shape l_pShape
     <|> do try $ pMember "registerBoundaryFn"
            l_boundaryParams <- parens $ commaSep1 identifier
