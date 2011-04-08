@@ -183,7 +183,7 @@ void Pochoir<N_RANK>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
     time_slope = l_max_time_shift - l_min_time_shift;
     time_shift_ = 0 - l_min_time_shift;
     toggle_ = time_slope + 1;
-    cout << "time_shift_ = " << time_shift_ << ", toggle = " << toggle_ << endl;
+    // cout << "time_shift_ = " << time_shift_ << ", toggle = " << toggle_ << endl;
     for (int i = 0; i < N_RANK; ++i) {
         slope_[i] = (int)ceil((float)slope_[i]/time_slope);
     }

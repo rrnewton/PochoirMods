@@ -34,6 +34,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <sys/time.h>
+#include "cilktime.h"
 #include <cmath>
 
 #include <pochoir.hpp>
@@ -73,6 +74,12 @@ enum alphabet{ A = -1, U = 1, G = -2, C = 2, ALPHABET_SIZE };
 
 enum err_msgs{ SEQUENCE_READ, LENGTH_READ, NO_SEQUENCE, SEQUENCE_TOO_LONG, INVALID_SEQUENCE_LENGTH, FILE_OPEN_ERROR, MEM_ALLOC_ERROR };
 
+    Pochoir_Shape< N_RANK > pRNA_shape[ 6 ] = { { 2, 0, 0 }, 
+                                                { 1, 0, 0 }, { 1, 0, -1 }, { 1, -1, 0 },
+                                                { 0, -1, 0 }, { 0, 0, -1 } };    
+
+double pochoirTime = 0, iterTime = 0;
+struct timeval start, end;
 
 int read_next_seq( char *fn, char **sq, int *len )
 {
@@ -295,11 +302,13 @@ void stencilRNAi0( int nX, char *X, int i_0,
                    P_ARRAY_R2_T3 &SMAX,                    
                    P_ARRAY_R2_T3 &SP )
 {
-    Pochoir< int, N_RANK, 3 > pRNA;    
+    Pochoir< N_RANK > pRNA(pRNA_shape); 
 //    Pochoir_Domain I( 0, nX + 1 ), K( 0, nX + 1 );
-    Pochoir_Shape< N_RANK > pRNA_shape[ 6 ] = { { 2, 0, 0 }, 
-                                                { 1, 0, 0 }, { 1, 0, -1 }, { 1, -1, 0 },
-                                                { 0, -1, 0 }, { 0, 0, -1 } };    
+    pRNA.registerArray( SL );
+    pRNA.registerArray( SR );
+    pRNA.registerArray( SM );
+    pRNA.registerArray( SMAX );
+    pRNA.registerArray( SP );
 
     for ( int k_0 = 1; k_0 <= nX; ++k_0 )
       for ( int i = i_0; i < k_0 - 1; ++i )
@@ -376,7 +385,7 @@ void stencilRNAi0( int nX, char *X, int i_0,
       
        int j = t + 2 - i - k, jj = nX - j + 1;
 
-       if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) && ( i < jj ) && ( jj <= k ) )
+       if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) & ( i < jj ) && ( jj <= k ) )
          {                   
            if ( jj == k )
              {
@@ -439,19 +448,17 @@ void stencilRNAi0( int nX, char *X, int i_0,
                       	      
     Pochoir_kernel_end
 
-    pRNA.registerShape( pRNA_shape );
-
-    pRNA.registerArray( SL );
-    pRNA.registerArray( SR );
-    pRNA.registerArray( SM );
-    pRNA.registerArray( SMAX );
-    pRNA.registerArray( SP );
                     
 //    pRNA.registerDomain( I, K );    
 
     int t = 3 * nX - 1;
 
+    gettimeofday(&start, 0);
+//    start = cilk_ticks_to_seconds(cilk_getticks());
     pRNA.run( t, pRNA_fn );
+    gettimeofday(&end, 0);
+//    end = cilk_ticks_to_seconds(cilk_getticks());
+    pochoirTime += tdiff(&end, &start);
 }
 
 
@@ -538,7 +545,9 @@ void iterativeStencilRNAi0( int nX, char *X, int i_0,
                }  
           }
 
-    
+  
+    gettimeofday(&start, 0);  
+//    start = cilk_ticks_to_seconds(cilk_getticks());
     for ( int t = 0; t <= 3 * nX - 2; ++t )
       cilk_for ( int i = 0; i < nX + 1; ++i )
         for ( int k = 0; k < nX + 1; ++k )      
@@ -550,58 +559,61 @@ void iterativeStencilRNAi0( int nX, char *X, int i_0,
                  if ( jj == k )
                    {
                      if ( base_pair( X[ i ], X[ jj ] ) ) SL( t + 2, i, k ) = 1;
-                     else SL( t + 2, i, k ) = -INF;             
+                     else SL.interior( t + 2, i, k ) = -INF;             
                    }
                  else if ( i >= i_0 )
                         {
-                          if ( base_pair( X[ i ], X[ jj ] ) ) SL( t + 2, i, k ) = 1 + SMAX( t, i - 1, k );
-                          else SL( t + 2, i, k ) = -INF;
+                          if ( base_pair( X[ i ], X[ jj ] ) ) SL.interior( t + 2, i, k ) = 1 + SMAX.interior( t, i - 1, k );
+                          else SL.interior( t + 2, i, k ) = -INF;
                        }  
-                     else SL( t + 2, i, k ) = 0;
+                     else SL.interior( t + 2, i, k ) = 0;
                          
                  if ( i == i_0 - 1 )
                    {
                      if ( k == jj + 1 )
                        {
-                         if ( base_pair( X[ jj ], X[ k ] ) ) SR( t + 2, i, k ) = 1;
-                         else SR( t + 2, i, k ) = -INF;                                             
+                         if ( base_pair( X[ jj ], X[ k ] ) ) SR.interior( t + 2, i, k ) = 1;
+                         else SR.interior( t + 2, i, k ) = -INF;                                             
                        }
-                     else SR( t + 2, i, k ) = 0;  
+                     else SR.interior( t + 2, i, k ) = 0;  
                    }
                  else   
                    {
                      if ( base_pair( X[ jj ], X[ k ] ) ) 
                        {
-                         if ( jj + 1 <= k - 1 ) SR( t + 2, i, k ) = 1 + SMAX( t, i, k - 1 );
-                         else SR( t + 2, i, k ) = 1;
+                         if ( jj + 1 <= k - 1 ) SR.interior( t + 2, i, k ) = 1 + SMAX.interior( t, i, k - 1 );
+                         else SR.interior( t + 2, i, k ) = 1;
                        }  
-                     else SR( t + 2, i, k ) = -INF;             
+                     else SR.interior( t + 2, i, k ) = -INF;             
                    }
         
-                 if ( i == i_0 - 1 ) SM( t + 2, i, k ) = 0;  
+                 if ( i == i_0 - 1 ) SM.interior( t + 2, i, k ) = 0;  
                  else
                    {
                      int v1 = -INF, v2 = -INF;
 
                      if ( jj < k ) 
                        {
-                         v1 = max( SR( t + 1, i, k - 1 ), SM( t + 1, i, k - 1 ) );
-                         v1 = max( v1, SMAX( t + 1, i, k ) );
+                         v1 = max( SR.interior( t + 1, i, k - 1 ), SM.interior( t + 1, i, k - 1 ) );
+                         v1 = max( v1, SMAX.interior( t + 1, i, k ) );
                        } 
                      
-                     if ( i - 1 < jj ) v2 = max( SL( t + 1, i - 1, k ), SM( t + 1, i - 1, k ) );
+                     if ( i - 1 < jj ) v2 = max( SL.interior( t + 1, i - 1, k ), SM.interior( t + 1, i - 1, k ) );
                                                          
-                     SM( t + 2, i, k ) = max( v1, v2 );  
+                     SM.interior( t + 2, i, k ) = max( v1, v2 );  
                    }
                                      
-                 int v = max( SL( t + 2, i, k ), SR( t + 2, i, k ) );       
+                 int v = max( SL.interior( t + 2, i, k ), SR.interior( t + 2, i, k ) );       
                         
-                 SMAX( t + 2, i, k ) = max( v, SM( t + 2, i, k ) );       
+                 SMAX.interior( t + 2, i, k ) = max( v, SM.interior( t + 2, i, k ) );       
                             
-                 if ( ( i_0 <= i ) && ( jj < k ) ) SP( 0, i, k ) = max( SMAX( t + 2, i, k ), SP( 0, i, k ) );
-                 else SP( 0, i, k ) = -INF;   
+                 if ( ( i_0 <= i ) && ( jj < k ) ) SP.interior( 0, i, k ) = max( SMAX.interior( t + 2, i, k ), SP.interior( 0, i, k ) );
+                 else SP.interior( 0, i, k ) = -INF;   
                }
           }
+    gettimeofday(&end, 0);
+//    end = cilk_ticks_to_seconds(cilk_getticks());
+    iterTime += tdiff(&end, &start);
 }
 
 
@@ -609,6 +621,13 @@ int stencilRNA( int nX, char *X, bool recursive )
 {
     P_ARRAY_R2_T3 SL( nX + 1, nX + 1 ), SR( nX + 1, nX + 1 ), SM( nX + 1, nX + 1 ), SMAX( nX + 1, nX + 1 );
     P_ARRAY_R2_T3 SP( nX + 1, nX + 1 ), S( nX + 2, nX + 2 );
+
+    SL.registerShape(pRNA_shape);
+    SR.registerShape(pRNA_shape);
+    SM.registerShape(pRNA_shape);
+    SMAX.registerShape(pRNA_shape);
+    SP.registerShape(pRNA_shape);
+    S.registerShape(pRNA_shape);
 
     for ( int i_0 = 1; i_0 <= nX; ++i_0 )
       {
@@ -702,25 +721,21 @@ int main( int argc, char *argv[ ] )
         printf( "Running pochoir-based DP..." );
         fflush( stdout );
                
-        gettimeofday( &start, 0 );        
         int maxNumBP = stencilRNA( nX, X, true );    
-        gettimeofday( &end, 0 );
 
         double t0 = tdiff( &end, &start );
               
         printf( "\n\nPochoir:\n" );
         if ( maxNumBP == -INF ) printf( "\t maximum number of base pairs = -inf\n" );    
         else printf( "\t maximum number of base pairs = %d\n", maxNumBP );    
-        printf( "\t running time = %.3lf sec\n\n", t0 );    
+        printf( "\t running time = %.3lf sec\n\n", pochoirTime );    
       
         if ( runIterativeStencil )
           {
             printf( "Running iterative stencil..." );
             fflush( stdout );
                           
-            gettimeofday( &start, 0 );        
             int maxNumBPITST = stencilRNA( nX, X, false );
-            gettimeofday( &end, 0 );
 
             double t1 = tdiff( &end, &start );
           
@@ -728,7 +743,7 @@ int main( int argc, char *argv[ ] )
             if ( maxNumBPITST == -INF ) printf( "\t maximum number of base pairs = -inf\n" );    
             else printf( "\t maximum number of base pairs = %d\n", maxNumBPITST );                
             if ( t0 > 0 ) printf( "\t running time = %.3lf sec ( %.3lf x Pochoir )\n\n", t1, t1 / t0 );    
-            else printf( "\t running time = %.3lf sec\n\n", t1 );    
+            else printf( "\t running time = %.3lf sec\n\n", iterTime );    
           }
       }
 

@@ -69,6 +69,7 @@ void print_usage( char *prog )
   printf( "\t-h               : print this help screen\n\n" );
 }
 
+   Pochoir_Shape< N_RANK > APOP_shape[ ] = { { 1, 0 }, { 0, -1 }, { 0, 0 }, { 0, 1 } };    
 
 
 int read_command_line( int argc, char *argv[ ], 
@@ -91,7 +92,7 @@ int read_command_line( int argc, char *argv[ ],
     {
      int j = i;
 
-     if ( !strcasecmp( argv[ i ], "-i" ) )
+     if ( !strcmp( argv[ i ], "-i" ) )
        {
         run_iter_stencil = 1;
          
@@ -101,7 +102,7 @@ int read_command_line( int argc, char *argv[ ],
        }
 
 
-     if ( !strcasecmp( argv[ i ], "-S" ) )
+     if ( !strcmp( argv[ i ], "-S" ) )
        {
         if ( i + 1 >= argc )
           {
@@ -123,7 +124,7 @@ int read_command_line( int argc, char *argv[ ],
        }
 
 
-     if ( !strcasecmp( argv[ i ], "-E" ) )
+     if ( !strcmp( argv[ i ], "-E" ) )
        {
         if ( i + 1 >= argc )
           {
@@ -145,7 +146,7 @@ int read_command_line( int argc, char *argv[ ],
        }
        
 
-     if ( !strcasecmp( argv[ i ], "-r" ) )
+     if ( !strcmp( argv[ i ], "-r" ) )
        {
         if ( i + 1 >= argc )
           {
@@ -167,7 +168,7 @@ int read_command_line( int argc, char *argv[ ],
        }
 
 
-     if ( !strcasecmp( argv[ i ], "-V" ) )
+     if ( !strcmp( argv[ i ], "-V" ) )
        {
         if ( i + 1 >= argc )
           {
@@ -189,7 +190,7 @@ int read_command_line( int argc, char *argv[ ],
        }
 
 
-     if ( !strcasecmp( argv[ i ], "-T" ) )
+     if ( !strcmp( argv[ i ], "-T" ) )
        {
         if ( i + 1 >= argc )
           {
@@ -211,7 +212,7 @@ int read_command_line( int argc, char *argv[ ],
        }
 
 
-     if ( !strcasecmp( argv[ i ], "-s" ) )
+     if ( !strcmp( argv[ i ], "-s" ) )
        {
         if ( i + 1 >= argc )
           {
@@ -233,7 +234,7 @@ int read_command_line( int argc, char *argv[ ],
        }
 
 
-     if ( !strcasecmp( argv[ i ], "-t" ) )
+     if ( !strcmp( argv[ i ], "-t" ) )
        {
         if ( i + 1 >= argc )
           {
@@ -255,7 +256,7 @@ int read_command_line( int argc, char *argv[ ],
        }
 
                      
-     if ( !strcasecmp( argv[ i ], "-h" ) || !strcasecmp( argv[ i ], "-help" ) || !strcasecmp( argv[ i ], "--help" ) )
+     if ( !strcmp( argv[ i ], "-h" ) || !strcmp( argv[ i ], "-help" ) || !strcmp( argv[ i ], "--help" ) )
        {
         print_usage( argv[ 0 ] );
         exit( 0 );
@@ -288,7 +289,7 @@ int read_command_line( int argc, char *argv[ ],
 
 
 void computeCoeffs( double r, double V, double T, int ns, int nt,
-		    Pochoir_Array< double, N_RANK, 3 > &c )
+		    Pochoir_Array< double, N_RANK > &c )
 {
    double V2 = V * V;
    double dt = T / nt;
@@ -319,35 +320,34 @@ double stencilAPOP( double S, double E, double r, double V, double T,
    ns = ns + ( ns & 1 );
    double dS = 2.0 * S / ns;
    
-   Pochoir_Array< double, N_RANK, 3 > c( ns + 1 );
+   Pochoir< N_RANK > APOP(APOP_shape);
+   Pochoir_Array< double, N_RANK > c( ns + 1 );
+   Pochoir_Array< double, N_RANK > f( ns + 1 );
+   APOP.registerArray( f );    
+   APOP.registerArray( c );
    
    computeCoeffs( r, V, T, ns, nt, c );   
    
-   Pochoir_Array< double, N_RANK, 2 > f( ns + 1 );
    
    cilk_for ( int i = 0; i <= ns; ++i )
        f.interior( 0, i ) = max( 0.0, E - i * dS );
        
    f.interior( 1, 0 ) = E;    
        
-   Pochoir< double, N_RANK, 2 > APOP;       
    Pochoir_Domain I( 1, ns );
-   Pochoir_Shape< N_RANK > APOP_shape[ ] = { { 1, 0 }, { 0, -1 }, { 0, 0 }, { 0, 1 } };    
     
    Pochoir_kernel_1D( APOP_fn, t, i )
         
-       double v = c.interior( 0, i ) * f( t, i - 1 )
-                + c.interior( 1, i ) * f( t, i )
-       	        + c.interior( 2, i ) * f( t, i + 1 );
+       double v = c( 0, i ) * f( t, i - 1 )
+                + c( 1, i ) * f( t, i )
+       	        + c( 2, i ) * f( t, i + 1 );
         
        f( t + 1, i ) = max( v, E - i * dS );			   
   
    Pochoir_kernel_end
 
-   APOP.registerShape( APOP_shape );
    APOP.registerDomain( I );   
-   APOP.registerArray( f );    
-   APOP.registerBoundaryFn( f, apop_bv_1D );
+   f.registerBV( apop_bv_1D );
 
    APOP.run( nt, APOP_fn );
     
@@ -362,11 +362,13 @@ double iterativeStencilAPOP( double S, double E, double r, double V, double T,
    ns = ns + ( ns & 1 );
    double dS = 2.0 * S / ns;
    
-   Pochoir_Array< double, N_RANK, 3 > c( ns + 1 );
+   Pochoir_Array< double, N_RANK > c( ns + 1 );
+   c.registerShape(APOP_shape);
    
    computeCoeffs( r, V, T, ns, nt, c );   
    
-   Pochoir_Array< double, N_RANK, 2 > f( ns + 1 );
+   Pochoir_Array< double, N_RANK > f( ns + 1 );
+   f.registerShape(APOP_shape);
    
    cilk_for ( int i = 0; i <= ns; ++i )
        f.interior( 0, i ) = max( 0.0, E - i * dS );

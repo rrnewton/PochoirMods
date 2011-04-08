@@ -4,6 +4,10 @@ ICC = icpc
 # ICC_FLAGS = -unroll-aggressive -funroll-loops -scalar-rep -ipo -xHOST -fno-alias -fno-fnalias 
 ICC_FLAGS = -unroll-aggressive -funroll-loops -scalar-rep -ipo -xHOST -fno-alias  
 all : clean klein 3dfd life heat_P heat_NP psa rna rna_struct
+apop : apop.cpp
+	${CC} -o apop -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} apop.cpp
+apop_sloop : apop_sloop.cpp
+	${CC} -o apop_sloop -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} apop_sloop.cpp
 loop_iter : tb_loop_iter.cpp
 	${ICC} -o loop_iter -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_loop_iter.cpp
 loop : tb_loop.cpp

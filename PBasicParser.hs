@@ -112,14 +112,23 @@ pMember l_memFunc =
 
 ppArray :: String -> ParserState -> GenParser Char ParserState String
 ppArray l_id l_state =
-    do try $ pMember "registerBV"
-       l_boundaryFn <- parens pIdentifier
-       semi
-       case Map.lookup l_id $ pArray l_state of
-           Nothing -> return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* UNKNOWN registerBV with " ++ l_id ++ "*/" ++ breakline)
-           Just l_array -> 
-                do updateState $ updateArrayBoundary l_id True 
-                   return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
+        do try $ pMember "registerBV"
+           l_boundaryFn <- parens pIdentifier
+           semi
+           case Map.lookup l_id $ pArray l_state of
+               Nothing -> return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* UNKNOWN registerBV with " ++ l_id ++ "*/" ++ breakline)
+               Just l_array -> 
+                    do updateState $ updateArrayBoundary l_id True 
+                       return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
+    <|> do try $ pMember "registerShape"
+           l_shape <- parens identifier
+           semi
+           case Map.lookup l_id $ pArray l_state of
+               Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_id ++ "*/" ++ breakline)
+               Just l_pArray ->
+                   case Map.lookup l_shape $ pShape l_state of
+                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_shape ++ "*/" ++ breakline)
+                       Just l_pShape -> return ("/* Known */" ++ l_id ++ ".registerShape(" ++ l_shape ++ ");" ++ breakline)
 
 ppStencil :: String -> ParserState -> GenParser Char ParserState String
 ppStencil l_id l_state = 
@@ -132,15 +141,6 @@ ppStencil l_id l_state =
                    case Map.lookup l_array $ pArray l_state of
                        Nothing -> registerUndefinedArray l_id l_array l_stencil 
                        Just l_pArray -> registerArray l_id l_array l_pArray l_stencil
-    <|> do try $ pMember "registerShape"
-           l_shape <- parens identifier
-           semi
-           case Map.lookup l_id $ pStencil l_state of
-               Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_id ++ "*/" ++ breakline)
-               Just l_stencil ->
-                   case Map.lookup l_shape $ pShape l_state of
-                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_shape ++ "*/" ++ breakline)
-                       Just l_pShape -> registerShape l_id l_shape l_pShape
     <|> do try $ pMember "registerBoundaryFn"
            l_boundaryParams <- parens $ commaSep1 identifier
            semi
