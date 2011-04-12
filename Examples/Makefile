@@ -20,10 +20,10 @@ heat_newspec : tb_heat_2D_NP_zero_newspec.cpp
 	perl repair.pl tb_heat_2D_NP_zero_newspec_pochoir.s > newspec.s
 	${ICC} -o heat_newspec newspec.s
 heat_NP_zero : tb_heat_2D_NP_zero.cpp 
-	${CC} -o heat_duo -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero.cpp
-	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_pochoir.cpp
-	perl repair.pl tb_heat_2D_NP_zero_pochoir.s > heat_2D_NP_zero.s
-	${ICC} -o heat_zero heat_2D_NP_zero.s
+	${CC} -o heat_zero -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero.cpp
+#	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_pochoir.cpp
+#	perl repair.pl tb_heat_2D_NP_zero_pochoir.s > heat_2D_NP_zero.s
+#	${ICC} -o heat_zero heat_2D_NP_zero.s
 berkeley3d7pt : tb_3d7pt.cpp
 	${CC} -o tb_3d7pt -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt.cpp
 	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp
@@ -45,7 +45,11 @@ heat_P : tb_heat_2D_P.cpp
 life : tb_life.cpp
 	${CC} -o tb_life_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_life.cpp
 rna : rna.cpp
-	${CC} -o rna_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-pointer rna.cpp
+	${CC} -o rna_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} rna.cpp
+	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} rna_pochoir.cpp
+	perl repair.pl rna_pochoir.s > rna.s
+	${ICC} -o rna rna.s
+#	${CC} -o rna_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-pointer rna.cpp
 psa : psa.cpp
 	${CC} -o psa_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-pointer psa.cpp
 psa_struct : psa_struct.cpp

@@ -57,16 +57,12 @@ void check_result(int t, int j, int i, double a, double b)
          * so the following code to set boundary index and
          * boundary rvalue is not necessary!!! 
          */
-        int new_i = i, new_j = j;
-        if (new_i < 0) 
-            new_i += arr.size(1);
-        else if (new_i >= arr.size(1))
-            new_i -= arr.size(1);
+        const int arr_size_1 = arr.size(1);
+        const int arr_size_0 = arr.size(0);
 
-        if (new_j < 0) 
-            new_j += arr.size(0);
-        else if (new_j >= arr.size(0))
-            new_j -= arr.size(0);
+        int new_i = (i >= arr_size_1) ? (i - arr_size_1) : (i < 0 ? i + arr_size_1 : i);
+        int new_j = (j >= arr_size_0) ? (j - arr_size_0) : (j < 0 ? j + arr_size_0 : j);
+
         return arr.get(t, new_i, new_j);
     Pochoir_Boundary_end
 

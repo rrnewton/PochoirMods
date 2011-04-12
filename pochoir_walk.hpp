@@ -372,24 +372,16 @@ struct Algorithm {
             ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
         }
-#if 0
-            for (int i = N_RANK-1; i > 1; --i)
-                dx_recursive_[i] = 3;
-            dx_recursive_[1] = 3;
-            dx_recursive_[0] = 1000;
-            dt_recursive_ = 3;
-#else
 #if DEBUG
         dt_recursive_ = 1;
         dx_recursive_[0] = 1;
         for (int i = N_RANK-1; i >= 1; --i)
             dx_recursive_[i] = 1;
 #else
-        dt_recursive_ = (N_RANK == 1) ? 20 : ((N_RANK == 2) ? 5 : 3);
+        dt_recursive_ = (N_RANK == 1) ? 20 : ((N_RANK == 2) ? 30 : 3);
         dx_recursive_[0] = (N_RANK == 2) ? 100 : 1000;
         for (int i = N_RANK-1; i >= 1; --i)
             dx_recursive_[i] = (N_RANK == 2) ? 100 : 3;
-#endif
 #endif
 #if DEBUG
         printf("dt = %d, dx_0 = %d, dx_1 = %d, dx_2 = %d\n", dt_recursive_, 
@@ -427,6 +419,17 @@ struct Algorithm {
     // void set_stride(int const stride[]);
     void set_slope(int const slope[]);
     inline bool touch_boundary(int i, int lt, grid_info<N_RANK> & grid);
+
+    /* followings are the sim cut of both top and bottom bar */
+    template <typename F>
+    inline void shorter_duo_sim_obase_space_cut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+    template <typename F>
+    inline void shorter_duo_sim_obase_bicut(int t0, int t1, grid_info<N_RANK> const grid, F const & f);
+
+    template <typename F, typename BF>
+    inline void shorter_duo_sim_obase_space_cut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
+    template <typename F, typename BF>
+    inline void shorter_duo_sim_obase_bicut_p(int t0, int t1, grid_info<N_RANK> const grid, F const & f, BF const & bf);
 
     /* followings are the sim cut of both top and bottom bar */
     template <typename F>

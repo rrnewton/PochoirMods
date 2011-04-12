@@ -72,7 +72,7 @@ typedef struct
    int SL, SR, SMAX, SP;
 } NODE;
 
-typedef Pochoir_Array< NODE, N_RANK, 3 > pArrayR2T3;
+typedef Pochoir_Array< NODE, N_RANK > pArrayR2T3;
 
 //#define TEST_TYPEDEF
 
@@ -94,6 +94,9 @@ enum alphabet{ A = 49, C = 88, G = 164, U = 194 };  /* A = 00110001b, U = 110000
 
 enum err_msgs{ SEQUENCE_READ, LENGTH_READ, NO_SEQUENCE, SEQUENCE_TOO_LONG, INVALID_SEQUENCE_LENGTH, FILE_OPEN_ERROR, MEM_ALLOC_ERROR };
 
+Pochoir_Shape< N_RANK > pRNA_shape[ 6 ] = { { 2, 0, 0 }, 
+                                            { 1, 0, 0 }, { 1, 0, -1 }, { 1, -1, 0 },
+                                            { 0, -1, 0 }, { 0, 0, -1 } };    
 
 int inline maxx( int a, int b ) 
 { 
@@ -348,10 +351,8 @@ int read_command_line( int argc, char *argv[ ], int &nx, char **fnX, int &run_st
 void stencilRNAi0( int nX, INT *X, int i_0, 
                    P_ARRAY_R2_T3 &pArray )
 {
-    Pochoir< NODE, N_RANK, 3 > pRNA;    
-    Pochoir_Shape< N_RANK > pRNA_shape[ 6 ] = { { 2, 0, 0 }, 
-                                                { 1, 0, 0 }, { 1, 0, -1 }, { 1, -1, 0 },
-                                                { 0, -1, 0 }, { 0, 0, -1 } };    
+    Pochoir< N_RANK > pRNA(pRNA_shape);    
+    pRNA.registerArray( pArray );
 
     cilk_for ( int k_0 = 1; k_0 <= nX; ++k_0 )
       for ( int i = i_0; i < k_0 - 1; ++i )
@@ -489,10 +490,6 @@ void stencilRNAi0( int nX, INT *X, int i_0,
                       	      
     Pochoir_kernel_end
 
-    pRNA.registerShape( pRNA_shape );
-
-    pRNA.registerArray( pArray );
-                    
     int t = 3 * nX - 1;
 
     pRNA.run( t, pRNA_fn );
@@ -647,6 +644,8 @@ void iterativeStencilRNAi0( int nX, INT *X, int i_0,
 int stencilRNA( int nX, INT *X, bool recursive )
 {
     P_ARRAY_R2_T3 pArray( nX + 1, nX + 1 );
+    pArray.registerShape(pRNA_shape);
+                    
     int S[ nX + 2][ nX + 2 ];
 
     for ( int i_0 = 1; i_0 <= 1/*nX*/; ++i_0 )

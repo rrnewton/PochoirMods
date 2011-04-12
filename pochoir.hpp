@@ -359,10 +359,10 @@ void Pochoir<N_RANK>::run_obase(int timestep, F const & f) {
     algor.obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 #pragma isat marker M2_end
 #else
-//     fprintf(stderr, "Call duo_sim_obase_bicut\n");
+//     fprintf(stderr, "Call shorter_duo_sim_obase_bicut\n");
 #pragma isat marker M2_begin
     // algor.sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
-    algor.duo_sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
+    algor.shorter_duo_sim_obase_bicut(0+time_shift_, timestep+time_shift_, logic_grid_, f);
 #pragma isat marker M2_end
 #if STAT
     for (int i = 1; i < SUPPORT_RANK; ++i) {
@@ -396,7 +396,7 @@ void Pochoir<N_RANK>::run_obase(int timestep, F const & f, BF const & bf) {
 //    fprintf(stderr, "Call sim_obase_bicut_P\n");
 #pragma isat marker M2_begin
    //  algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
-    algor.duo_sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    algor.shorter_duo_sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #pragma isat marker M2_end
 #if STAT
     for (int i = 1; i < SUPPORT_RANK; ++i) {

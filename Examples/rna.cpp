@@ -303,12 +303,13 @@ void stencilRNAi0( int nX, char *X, int i_0,
                    P_ARRAY_R2_T3 &SP )
 {
     Pochoir< N_RANK > pRNA(pRNA_shape); 
-//    Pochoir_Domain I( 0, nX + 1 ), K( 0, nX + 1 );
+    Pochoir_Domain I( 0, nX + 1 ), K( 0, nX + 1 );
     pRNA.registerArray( SL );
     pRNA.registerArray( SR );
     pRNA.registerArray( SM );
     pRNA.registerArray( SMAX );
     pRNA.registerArray( SP );
+    pRNA.registerDomain( I, K );    
 
     for ( int k_0 = 1; k_0 <= nX; ++k_0 )
       for ( int i = i_0; i < k_0 - 1; ++i )
@@ -321,135 +322,35 @@ void stencilRNAi0( int nX, char *X, int i_0,
             SMAX( t, i, k ) = -INF;
             
             int j = t - i - k, jj = nX - j + 1;
+            bool inDomain = ( j >= 0 && j <= nX && i_0 - 1 <= i && i < jj && jj <= k );
             
-            if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) && ( i < jj ) && ( jj <= k ) )
-               {                   
-                 if ( jj == k )
-                   {
-                     if ( base_pair( X[ i ], X[ jj ] ) ) SL( t, i, k ) = 1;
-                     else SL( t, i, k ) = -INF;             
-                   }
-                 else if ( i >= i_0 )
-                        {
-                          if ( base_pair( X[ i ], X[ jj ] ) ) SL( t, i, k ) = 1;
-                          else SL( t, i, k ) = -INF;
-                        }  
-                      else SL( t, i, k ) = 0;
-                         
-                 if ( i == i_0 - 1 )
-                   {
-                     if ( k == jj + 1 )
-                       {
-                         if ( base_pair( X[ jj ], X[ k ] ) ) SR( t, i, k ) = 1;
-                         else SR( t, i, k ) = -INF;                                             
-                       }
-                     else SR( t, i, k ) = 0;  
-                   }
-                 else   
-                   {
-                     if ( base_pair( X[ jj ], X[ k ] ) ) SR( t, i, k ) = 1;
-                     else SR( t, i, k ) = -INF;             
-                   }
-        
-                 if ( i == i_0 - 1 ) SM( t, i, k ) = 0;  
-                 else if ( t > 0 )
-                         {
-                           int v1 = -INF, v2 = -INF;
-                           
-                           if ( jj < k ) 
-                             {
-                               v1 = max( SR( 0, i, k - 1 ), SM( 0, i, k - 1 ) );
-                               v1 = max( v1, SMAX( 0, i, k ) );
-                             } 
-                           
-                           if ( i - 1 < jj ) v2 = max( SL( 0, i - 1, k ), SM( 0, i - 1, k ) );                           
-                                                      
-                           SM( t, i, k ) = max( v1, v2 );  
-                         }
-                      else SM( t, i, k ) = 0;     
-                                     
-                 int v = max( SL( t, i, k ), SR( t, i, k ) );       
-                        
-                 SMAX( t, i, k ) = max( v, SM( t, i, k ) );       
-                            
-                 if ( ( i_0 <= i ) && ( jj < k ) )           
-                   {
-                     SP( 0, i, k ) = max( SMAX( t, i, k ), SP( 0, i, k ) );
-                   }
-                 else SP( 0, i, k ) = -INF;   
-               }  
+            SL(t, i, k) = inDomain ? ((jj == k || i >= i_0) ? ((base_pair(X[i], X[jj])) ? 1 : -INF) : 0) : 0;
+            SR(t, i, k) = inDomain ? ((i == i_0 - 1 && k != jj + 1) ? 0 : ((base_pair(X[jj], X[k])) ? 1 : -INF)) : 0;
+            int v1 = inDomain ? ((jj < k) ? (max(max(SR(0, i, k-1), SM(0, i, k-1)), SMAX(0, i, k))) : -INF) : 0;
+            int v2 = inDomain ? ((i-1 < jj) ? (max(SL(0, i-1, k), SM(0, i-1, k))) : -INF) : 0;
+            SM(t, i, k) = inDomain ? ((i != i_0 - 1 && t > 0) ? (max(v1, v2)) : 0) : 0;
+
+            int v = inDomain ? (max( SL( t, i, k ), SR( t, i, k ) )) : 0;
+                   
+            SMAX( t, i, k ) = inDomain ? (max( v, SM( t, i, k ) )) : 0;       
+            SP(0, i, k) = inDomain ? ((i_0 <= i && jj < k) ? (max(SMAX(t, i, k), SP(0, i, k))) : -INF) : 0;
           }
 
 
     Pochoir_kernel_2D( pRNA_fn, t, i, k )
       
        int j = t + 2 - i - k, jj = nX - j + 1;
-
-       if ( ( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) & ( i < jj ) && ( jj <= k ) )
-         {                   
-           if ( jj == k )
-             {
-               if ( base_pair( X[ i ], X[ jj ] ) ) SL( t + 2, i, k ) = 1;
-               else SL( t + 2, i, k ) = -INF;             
-             }
-           else if ( i >= i_0 )
-                  {
-                    if ( base_pair( X[ i ], X[ jj ] ) ) 
-                      {
-                        if ( i - 1 < jj + 1 )  SL( t + 2, i, k ) = 1 + SMAX( t, i - 1, k );
-                        else SL( t + 2, i, k ) = 1;
-                      }  
-                    else SL( t + 2, i, k ) = -INF;
-                 }  
-               else SL( t + 2, i, k ) = 0;
-                   
-           if ( i == i_0 - 1 )
-             {
-               if ( k == jj + 1 )
-                 {
-                   if ( base_pair( X[ jj ], X[ k ] ) ) SR( t + 2, i, k ) = 1;
-                   else SR( t + 2, i, k ) = -INF;                                             
-                 }
-               else SR( t + 2, i, k ) = 0;  
-             }
-           else   
-             {
-               if ( base_pair( X[ jj ], X[ k ] ) ) 
-                 {
-                   if ( jj + 1 <= k - 1 ) SR( t + 2, i, k ) = 1 + SMAX( t, i, k - 1 );
-                   else SR( t + 2, i, k ) = 1;
-                 }  
-               else SR( t + 2, i, k ) = -INF;             
-             }
-
-           if ( i == i_0 - 1 ) SM( t + 2, i, k ) = 0;  
-           else
-             {
-               int v1 = -INF, v2 = -INF;
-               
-               if ( jj < k ) 
-                 {
-                   v1 = max( SR( t + 1, i, k - 1 ), SM( t + 1, i, k - 1 ) );
-                   v1 = max( v1, SMAX( t + 1, i, k ) );
-                 } 
-               
-               if ( i - 1 < jj ) v2 = max( SL( t + 1, i - 1, k ), SM( t + 1, i - 1, k ) );
-               
-               SM( t + 2, i, k ) = max( v1, v2 );  
-             }
-                               
-           int v = max( SL( t + 2, i, k ), SR( t + 2, i, k ) );       
-                  
-           SMAX( t + 2, i, k ) = max( v, SM( t + 2, i, k ) );       
-                      
-           if ( ( i_0 <= i ) && ( jj < k ) ) SP( 0, i, k ) = max( SMAX( t + 2, i, k ), SP( 0, i, k ) );
-           else SP( 0, i, k ) = -INF;   
-         }
+       if (( j >= 0 ) && ( j <= nX ) && ( i_0 - 1 <= i ) && ( i < jj ) && ( jj <= k )) {
+           SL(t+2, i, k) = ((jj == k) ? ((base_pair(X[i], X[jj])) ? 1 : -INF) : ((i >= i_0) ? ((base_pair(X[i], X[jj])) ? ((i-1 < jj+1) ? (1 + SMAX(t, i-1, k)) : 1) : -INF) : 0));
+           SR(t+2, i, k) = ((i == i_0 - 1) ? ((k == jj + 1) ? ((base_pair(X[jj], X[k])) ? 1 : -INF) : 0) : ((base_pair(X[jj], X[k])) ? ((jj+1 <= k-1) ? (1+SMAX(t, i, k-1)) : 1) : -INF));
+           SM(t+2, i, k) = ((i == i_0 - 1) ? 0 : (max(((jj < k) ? (max(max( SR( t + 1, i, k - 1 ), SM( t + 1, i, k - 1 ) ), SMAX(t+1, i, k))) : -INF), ((i-1 < jj) ? (max( SL( t + 1, i - 1, k ), SM( t + 1, i - 1, k ) )) : -INF))));
+           SMAX( t + 2, i, k ) = (max( (max( SL( t + 2, i, k ), SR( t + 2, i, k ) )), SM( t + 2, i, k ) ));
+           SP(0, i, k) = ((i_0 <= i && jj < k) ? (max( SMAX( t + 2, i, k ), SP( 0, i, k ) )) : (-INF));
+       }
                       	      
     Pochoir_kernel_end
 
                     
-//    pRNA.registerDomain( I, K );    
 
     int t = 3 * nX - 1;
 
@@ -716,20 +617,7 @@ int main( int argc, char *argv[ ] )
       {
         printf( "Sequence length = %d\n\n", nX );
       
-        struct timeval start, end;
-
-        printf( "Running pochoir-based DP..." );
-        fflush( stdout );
-               
-        int maxNumBP = stencilRNA( nX, X, true );    
-
-        double t0 = tdiff( &end, &start );
-              
-        printf( "\n\nPochoir:\n" );
-        if ( maxNumBP == -INF ) printf( "\t maximum number of base pairs = -inf\n" );    
-        else printf( "\t maximum number of base pairs = %d\n", maxNumBP );    
-        printf( "\t running time = %.3lf sec\n\n", pochoirTime );    
-      
+     
         if ( runIterativeStencil )
           {
             printf( "Running iterative stencil..." );
@@ -737,14 +625,22 @@ int main( int argc, char *argv[ ] )
                           
             int maxNumBPITST = stencilRNA( nX, X, false );
 
-            double t1 = tdiff( &end, &start );
-          
             printf( "\n\nIterative Stencil:\n" );
             if ( maxNumBPITST == -INF ) printf( "\t maximum number of base pairs = -inf\n" );    
             else printf( "\t maximum number of base pairs = %d\n", maxNumBPITST );                
-            if ( t0 > 0 ) printf( "\t running time = %.3lf sec ( %.3lf x Pochoir )\n\n", t1, t1 / t0 );    
-            else printf( "\t running time = %.3lf sec\n\n", iterTime );    
-          }
+            printf( "\t running time = %.3lf sec\n\n", iterTime );    
+          } else {
+              /*  run pochoir version */
+            printf( "Running pochoir-based DP..." );
+            fflush( stdout );
+                   
+            int maxNumBP = stencilRNA( nX, X, true );    
+
+            printf( "\n\nPochoir:\n" );
+            if ( maxNumBP == -INF ) printf( "\t maximum number of base pairs = -inf\n" );    
+            else printf( "\t maximum number of base pairs = %d\n", maxNumBP );    
+            printf( "\t running time = %.3lf sec\n\n", pochoirTime );    
+           }
       }
 
     if ( RNA != NULL ) free( RNA );
