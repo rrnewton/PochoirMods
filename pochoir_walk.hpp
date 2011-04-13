@@ -378,7 +378,7 @@ struct Algorithm {
         for (int i = N_RANK-1; i >= 1; --i)
             dx_recursive_[i] = 1;
 #else
-        dt_recursive_ = (N_RANK == 1) ? 20 : ((N_RANK == 2) ? 30 : 3);
+        dt_recursive_ = (N_RANK == 1) ? 20 : ((N_RANK == 2) ? 40 : 3);
         dx_recursive_[0] = (N_RANK == 2) ? 100 : 1000;
         for (int i = N_RANK-1; i >= 1; --i)
             dx_recursive_[i] = (N_RANK == 2) ? 100 : 3;

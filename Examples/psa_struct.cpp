@@ -356,14 +356,20 @@ int read_command_line( int argc, char *argv[ ], int &go_cost, int &ge_cost, int 
 
 int stencilPSA4Arrays( int nX, char *X, int nY, char *Y, int goCost, int geCost, int *mmCost )
 {
-    Pochoir< int, N_RANK > pSeq;
-    Pochoir_Array< int, N_RANK > vG( nY + 1 ), vG2( nY + 1 ), vD( nY + 1 ), vI( nY + 1 );
-    Pochoir_Domain J( 0, nY + 1 );
     Pochoir_Shape< N_RANK > pSeq_shape_G[ ] = { { 1, 0 }, { 0, 0 }, { 0, -1 } };    
     Pochoir_Shape< N_RANK > pSeq_shape_G2[ ] = { { 1, 0 }, { 0, 0 } };    
     Pochoir_Shape< N_RANK > pSeq_shape_D[ ] = { { 1, 0 }, { 0, 0 } };    
     Pochoir_Shape< N_RANK > pSeq_shape_I[ ] = { { 1, 0 }, { 0, -1 } };    
+    Pochoir< N_RANK > pSeq(pSeq_shape_G);
+    Pochoir_Array< int, N_RANK > vG( nY + 1 ), vG2( nY + 1 ), vD( nY + 1 ), vI( nY + 1 );
+    Pochoir_Domain J( 0, nY + 1 );
                 
+    pSeq.registerArray( vG );
+    pSeq.registerArray( vG2 );
+    pSeq.registerArray( vD );
+    pSeq.registerArray( vI );            
+    pSeq.registerDomain( J );
+    
     vG( 0, 0 ) = vG2( 0, 0 ) = 0;
     
     Pochoir_kernel_1D( pSeq_fn, t, j )
@@ -396,14 +402,6 @@ int stencilPSA4Arrays( int nX, char *X, int nY, char *Y, int goCost, int geCost,
                       	      
     Pochoir_kernel_end
 
-    pSeq.registerArray( vG );
-    pSeq.registerArray( vG2 );
-    pSeq.registerArray( vD );
-    pSeq.registerArray( vI );            
-    pSeq.registerShape( pSeq_shape_G );
-    
-    pSeq.registerDomain( J );
-
     int t = nX + nY;
 
     pSeq.run( t, pSeq_fn );
@@ -417,9 +415,12 @@ int stencilPSA4Arrays( int nX, char *X, int nY, char *Y, int goCost, int geCost,
 
 int stencilPSA( int nX, char *X, int nY, char *Y, int goCost, int geCost, int *mmCost )
 {
-    Pochoir< int, N_RANK, 3 > pSeq;    
-    Pochoir_Array< int, N_RANK, 3 > vG( nY + 1 ), vD( nY + 1 ), vI( nY + 1 );
-    Pochoir_Shape< N_RANK > pSeq_shape_G[ ] = { { 2, 0 }, { 1, 0 }, { 0, -1 }, { 1, -1 } };    
+    Pochoir_Shape< N_RANK > pSeq_shape_G[ ] = { { 2, 0 }, { 1, 0 }, { 0, -1 }, { 1, -1 } };
+    Pochoir< N_RANK > pSeq(pSeq_shape_G); 
+    Pochoir_Array< int, N_RANK > vG( nY + 1 ), vD( nY + 1 ), vI( nY + 1 );
+    pSeq.registerArray( vG );
+    pSeq.registerArray( vD );
+    pSeq.registerArray( vI );            
 
     vG( 0, 0 ) = vG( 1, 0 ) = 0;
     
@@ -449,12 +450,6 @@ int stencilPSA( int nX, char *X, int nY, char *Y, int goCost, int geCost, int *m
                       	      
     Pochoir_kernel_end
 
-    pSeq.registerShape( pSeq_shape_G );
-
-    pSeq.registerArray( vG );
-    pSeq.registerArray( vD );
-    pSeq.registerArray( vI );            
-    
     int t = nX + nY;
 
     pSeq.run( t, pSeq_fn );
@@ -464,13 +459,14 @@ int stencilPSA( int nX, char *X, int nY, char *Y, int goCost, int geCost, int *m
     return optCost;    
 }
 
-
+Pochoir_Shape< N_RANK > pSeq_shape[ ] = { { 2, 0 }, { 1, 0 }, { 0, -1 }, { 1, -1 } };    
 
 int stencilPSAStruct( int nX, char *X, int nY, char *Y, int goCost, int geCost, int *mmCost )
 {
-    Pochoir< NODE, N_RANK, 3 > pSeq;    
-    Pochoir_Array< NODE, N_RANK, 3 > pArray( nY + 1 );    
     Pochoir_Shape< N_RANK > pSeq_shape[ ] = { { 2, 0 }, { 1, 0 }, { 0, -1 }, { 1, -1 } };    
+    Pochoir< N_RANK > pSeq(pSeq_shape);    
+    Pochoir_Array< NODE, N_RANK > pArray( nY + 1 );    
+    pSeq.registerArray( pArray );
     
     pArray( 0, 0 ).vG = pArray( 1, 0 ).vG = 0;
     
@@ -532,9 +528,6 @@ int stencilPSAStruct( int nX, char *X, int nY, char *Y, int goCost, int geCost, 
                       	      
     Pochoir_kernel_end
 
-    pSeq.registerShape( pSeq_shape );
-    pSeq.registerArray( pArray );
-    
     int t = nX + nY;
 
     pSeq.run( t, pSeq_fn );
@@ -548,6 +541,9 @@ int stencilPSAStruct( int nX, char *X, int nY, char *Y, int goCost, int geCost, 
 int standardDPPSA( int nX, char *X, int nY, char *Y, int goCost, int geCost, int *mmCost )
 {
     Pochoir_Array< int, N_RANK > vG( nY + 1 ), vD( nY + 1 ), vI( nY + 1 );
+    vG.registerShape(pSeq_shape);
+    vD.registerShape(pSeq_shape);
+    vI.registerShape(pSeq_shape);
 
     vG.interior( 0, 0 ) = vD.interior( 0, 0 ) = vI.interior( 0, 0 ) = 0;        
     
@@ -585,6 +581,9 @@ int standardDPPSA( int nX, char *X, int nY, char *Y, int goCost, int geCost, int
 int iterativeStencilPSA( int nX, char *X, int nY, char *Y, int goCost, int geCost, int *mmCost )
 {
     Pochoir_Array< int, N_RANK, 3 > vG( nY + 1 ), vD( nY + 1 ), vI( nY + 1 );
+    vG.registerShape(pSeq_shape);
+    vD.registerShape(pSeq_shape);
+    vI.registerShape(pSeq_shape);
     
     vG( 0, 0 ) = vG( 1, 0 ) = 0;
     
