@@ -389,8 +389,9 @@ class Pochoir_Array {
 
         template <size_t N_SIZE>
         void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
+#if 0
             /* currently we just get the slope_[] out of the shape[] */
-            int l_min_time_shift=0, l_max_time_shift=0, time_slope=0;
+            int l_min_time_shift=0, l_max_time_shift=0, depth=0;
             for (int i = 0; i < N_SIZE; ++i) {
                 if (shape[i].shift[0] < l_min_time_shift)
                     l_min_time_shift = shape[i].shift[0];
@@ -400,11 +401,38 @@ class Pochoir_Array {
                     slope_[N_RANK-r] = max(slope_[N_RANK-r], abs(shape[i].shift[r]));
                 }
             }
-            time_slope = l_max_time_shift - l_min_time_shift;
-            toggle_ = time_slope + 1;
+            depth = l_max_time_shift - l_min_time_shift;
+            toggle_ = depth + 1;
             for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = (int)ceil((float)slope_[i]/time_slope);
+                slope_[i] = (int)ceil((float)slope_[i]/depth);
             }
+#else
+            /* currently we just get the slope_[] and toggle_ out of the shape[] */
+            int l_min_time_shift=0, l_max_time_shift=0, depth=0;
+            for (int r = 0; r < N_RANK; ++r) {
+                slope_[r] = 0;
+            }
+            for (int i = 0; i < N_SIZE; ++i) {
+                if (shape[i].shift[0] < l_min_time_shift)
+                    l_min_time_shift = shape[i].shift[0];
+                if (shape[i].shift[0] > l_max_time_shift)
+                    l_max_time_shift = shape[i].shift[0];
+            }
+            depth = l_max_time_shift - l_min_time_shift;
+            toggle_ = depth + 1;
+            for (int i = 0; i < N_SIZE; ++i) {
+                for (int r = 1; r < N_RANK+1; ++r) {
+                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs((int)ceil((float)shape[i].shift[r]/(l_max_time_shift - shape[i].shift[0]))));
+                }
+            }
+#if DEBUG 
+            cout << "toggle = " << toggle_ << endl;
+            for (int r = 0; r < N_RANK; ++r) {
+                printf("slope[%d] = %d, ", r, slope_[r]);
+            }
+            printf("\n");
+#endif
+#endif
             if (!allocMemFlag_) {
                 alloc_mem();
             }

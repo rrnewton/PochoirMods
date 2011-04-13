@@ -1129,7 +1129,7 @@ inline void Algorithm<N_RANK>::shorter_duo_sim_obase_bicut(int t0, int t1, grid_
         tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
         bool cut_lb = (lb < tb);
         thres = (slope_[i] * lt);
-        sim_can_cut = sim_can_cut || (cut_lb ? (lb >= 2 * thres && lb > dx_recursive_[i]) : (tb >= 2 * thres && lb > dx_recursive_[i]));
+        sim_can_cut = sim_can_cut || (cut_lb ? (lb >= 2 * thres & lb > dx_recursive_[i]) : (tb >= 2 * thres & lb > dx_recursive_[i]));
         /* as long as there's one dimension can conduct a cut, we conduct a 
          * multi-dimensional cut!
          */
@@ -1202,7 +1202,7 @@ inline void Algorithm<N_RANK>::duo_sim_obase_bicut(int t0, int t1, grid_info<N_R
         tb = (grid.x1[i] + grid.dx1[i] * lt - grid.x0[i] - grid.dx0[i] * lt);
         bool cut_lb = (lb >= tb);
         thres = (2 * slope_[i] * lt);
-        sim_can_cut = sim_can_cut || (cut_lb ? (lb >= 2 * thres && lb > dx_recursive_[i]) : (tb >= 2 * thres && lb > dx_recursive_[i]));
+        sim_can_cut = sim_can_cut || (cut_lb ? (lb >= 2 * thres & lb > dx_recursive_[i]) : (tb >= 2 * thres & lb > dx_recursive_[i]));
         /* as long as there's one dimension can conduct a cut, we conduct a 
          * multi-dimensional cut!
          */
@@ -1283,8 +1283,8 @@ inline void Algorithm<N_RANK>::shorter_duo_sim_obase_bicut_p(int t0, int t1, gri
         */
         /* lb == phys_length_[i] indicates an initial cut! */
         bool cut_lb = (lb < tb);
-        sim_can_cut = sim_can_cut || (cut_lb ? (l_touch_boundary ? (lb >= 2 * thres && lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres && lb > dx_recursive_[i])) : (l_touch_boundary ? (tb >= 2 * thres && lb > dx_recursive_boundary_[i]) : (tb > 2 * thres && lb > dx_recursive_[i])));
-        call_boundary = call_boundary || l_touch_boundary;
+        sim_can_cut = sim_can_cut || (cut_lb ? (l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres & lb > dx_recursive_[i])) : (l_touch_boundary ? (tb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (tb > 2 * thres & lb > dx_recursive_[i])));
+        call_boundary |= l_touch_boundary;
 #if STAT
         l_count_cut = (l_can_cut ? l_count_cut + 1 : l_count_cut);
         l_bottom_total_area *= lb;
@@ -1390,8 +1390,8 @@ inline void Algorithm<N_RANK>::duo_sim_obase_bicut_p(int t0, int t1, grid_info<N
         */
         /* lb == phys_length_[i] indicates an initial cut! */
         bool cut_lb = (lb >= tb);
-        sim_can_cut = sim_can_cut || (cut_lb ? (l_touch_boundary ? (lb >= 2 * thres && lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres && lb > dx_recursive_[i])) : (l_touch_boundary ? (tb >= 2 * thres && lb > dx_recursive_boundary_[i]) : (tb > 2 * thres && lb > dx_recursive_[i])));
-        call_boundary = call_boundary || l_touch_boundary;
+        sim_can_cut = sim_can_cut || (cut_lb ? (l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres & lb > dx_recursive_[i])) : (l_touch_boundary ? (tb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (tb > 2 * thres & lb > dx_recursive_[i])));
+        call_boundary |= l_touch_boundary;
 #if STAT
         l_count_cut = (l_can_cut ? l_count_cut + 1 : l_count_cut);
         l_bottom_total_area *= lb;
@@ -1487,7 +1487,7 @@ inline void Algorithm<N_RANK>::sim_obase_bicut(int t0, int t1, grid_info<N_RANK>
         int lb, thres, tb;
         lb = (grid.x1[i] - grid.x0[i]);
         thres = (2 * slope_[i] * lt);
-        sim_can_cut = sim_can_cut || (lb >= 2 * thres && lb > dx_recursive_[i]);
+        sim_can_cut = sim_can_cut || (lb >= 2 * thres & lb > dx_recursive_[i]);
         /* as long as there's one dimension can conduct a cut, we conduct a 
          * multi-dimensional cut!
          */
@@ -1567,8 +1567,8 @@ inline void Algorithm<N_RANK>::sim_obase_bicut_p(int t0, int t1, grid_info<N_RAN
          * the overhead on boundary
         */
         /* lb == phys_length_[i] indicates an initial cut! */
-        sim_can_cut = sim_can_cut || (l_touch_boundary ? (lb >= 2 * thres && lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres && lb > dx_recursive_[i]));
-        call_boundary = call_boundary || l_touch_boundary;
+        sim_can_cut = sim_can_cut || (l_touch_boundary ? (lb >= 2 * thres & lb > dx_recursive_boundary_[i]) : (lb >= 2 * thres & lb > dx_recursive_[i]));
+        call_boundary |= l_touch_boundary;
 #if STAT
         l_count_cut = (l_can_cut ? l_count_cut + 1 : l_count_cut);
         l_bottom_total_area *= lb;
@@ -1775,7 +1775,7 @@ inline void Algorithm<N_RANK>::walk_bicut_boundary_p(int t0, int t1, grid_info<N
         l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
 		lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
 		thres[i] = 2 * (2 * slope_[i] * lt);
-		call_boundary = call_boundary || l_touch_boundary[i];
+		call_boundary |= l_touch_boundary[i];
 	}	
 
 	for (int i = N_RANK-1; i >= 0; --i) {
@@ -1926,7 +1926,7 @@ inline void Algorithm<N_RANK>::walk_ncores_boundary_p(int t0, int t1, grid_info<
         l_touch_boundary[i] = touch_boundary(i, lt, l_father_grid);
 		lb[i] = (l_father_grid.x1[i] - l_father_grid.x0[i]);
 		thres[i] = (initial_cut(i)) ?  N_CORES * (2 * slope_[i] * lt) : 2 * (2 * slope_[i] * lt);
-		call_boundary = call_boundary || l_touch_boundary[i];
+		call_boundary |= l_touch_boundary[i];
 		if (l_touch_boundary[i])
 			base_cube = base_cube && (lb[i] <= dx_recursive_boundary_[i] || lb[i] < thres[i]); 
 		else 

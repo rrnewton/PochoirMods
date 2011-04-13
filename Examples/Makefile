@@ -2,7 +2,7 @@
 CC = ./pochoir
 ICC = icpc
 # ICC_FLAGS = -unroll-aggressive -funroll-loops -scalar-rep -ipo -xHOST -fno-alias -fno-fnalias 
-ICC_FLAGS = -unroll-aggressive -funroll-loops -scalar-rep -ipo -xHOST -fno-alias  
+ICC_FLAGS = -unroll-aggressive -funroll-loops -ipo -xHOST -fno-alias -fno-fnalias 
 all : clean klein 3dfd life heat_P heat_NP psa rna rna_struct
 apop : apop.cpp
 	${CC} -o apop -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} apop.cpp
@@ -25,20 +25,25 @@ heat_NP_zero : tb_heat_2D_NP_zero.cpp
 #	perl repair.pl tb_heat_2D_NP_zero_pochoir.s > heat_2D_NP_zero.s
 #	${ICC} -o heat_zero heat_2D_NP_zero.s
 berkeley3d7pt : tb_3d7pt.cpp
-	${CC} -o tb_3d7pt -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt.cpp
+	${CC} -o 3d7pt_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt.cpp
+	${ICC} -o 3d7pt_icc -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp
 	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp
 	perl repair.pl tb_3d7pt_pochoir.s > 3d7pt.s
-	${ICC} -o 3d7pt 3d7pt.s
+	${ICC} -o 3d7pt_s 3d7pt.s
 berkeley3d27pt : tb_3d27pt.cpp
-	${CC} -o tb_3d27pt -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d27pt.cpp
+	${CC} -o 3d27pt_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d27pt.cpp
+#	${ICC} -o 3d27pt_icc -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d27pt_pochoir.cpp
 	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d27pt_pochoir.cpp
-	perl repair.pl tb_3d27pt_pochoir.s > 3d27pt.s
-	${ICC} -o 3d27pt 3d27pt.s
+#	perl repair.pl tb_3d27pt_pochoir.s > 3d27pt.s
+	${ICC} -o 3d27pt_s -O3 tb_3d27pt_pochoir.s
+#	${ICC} -o 3d27pt_new_nopl 3d27pt.s
 heat_NP : tb_heat_2D_NP.cpp
 	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-c-pointer tb_heat_2D_NP.cpp
 #	${ICC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -opt-report 3 ${ICC_FLAGS} tb_heat_2D_NP_pochoir.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP.cpp
+heat_1D : tb_heat_1D_NP.cpp
+	${CC} -o heat_1D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-pointer tb_heat_1D_NP.cpp
 heat_P : tb_heat_2D_P.cpp
 	${CC} -o tb_heat_2D_P_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_P.cpp
 #	${CC} -o tb_heat_2D_P_pochoir -O0 -g3 -DDEBUG -std=c++0x -Wall -Werror -ipo -debug tb_heat_2D_P.cpp

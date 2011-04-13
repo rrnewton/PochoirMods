@@ -169,8 +169,9 @@ void Pochoir<N_RANK>::registerArray(T_Array & arr) {
 
 template <int N_RANK> template <size_t N_SIZE>
 void Pochoir<N_RANK>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
-    /* currently we just get the slope_[] out of the shape[] */
-    int l_min_time_shift=0, l_max_time_shift=0, time_slope=0;
+#if 0
+    /* currently we just get the slope_[] and toggle_ out of the shape[] */
+    int l_min_time_shift=0, l_max_time_shift=0, depth=0;
     for (int i = 0; i < N_SIZE; ++i) {
         if (shape[i].shift[0] < l_min_time_shift)
             l_min_time_shift = shape[i].shift[0];
@@ -180,14 +181,40 @@ void Pochoir<N_RANK>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
             slope_[N_RANK-r] = max(slope_[N_RANK-r], abs(shape[i].shift[r]));
         }
     }
-    time_slope = l_max_time_shift - l_min_time_shift;
+    depth = l_max_time_shift - l_min_time_shift;
     time_shift_ = 0 - l_min_time_shift;
-    toggle_ = time_slope + 1;
+    toggle_ = depth + 1;
     // cout << "time_shift_ = " << time_shift_ << ", toggle = " << toggle_ << endl;
     for (int i = 0; i < N_RANK; ++i) {
-        slope_[i] = (int)ceil((float)slope_[i]/time_slope);
+        slope_[i] = (int)ceil((float)slope_[i]/depth);
     }
     regShapeFlag = true;
+#else
+    /* currently we just get the slope_[] and toggle_ out of the shape[] */
+    int l_min_time_shift=0, l_max_time_shift=0, depth=0;
+    for (int i = 0; i < N_SIZE; ++i) {
+        if (shape[i].shift[0] < l_min_time_shift)
+            l_min_time_shift = shape[i].shift[0];
+        if (shape[i].shift[0] > l_max_time_shift)
+            l_max_time_shift = shape[i].shift[0];
+    }
+    depth = l_max_time_shift - l_min_time_shift;
+    time_shift_ = 0 - l_min_time_shift;
+    toggle_ = depth + 1;
+    for (int i = 0; i < N_SIZE; ++i) {
+        for (int r = 1; r < N_RANK+1; ++r) {
+            slope_[N_RANK-r] = max(slope_[N_RANK-r], abs((int)ceil((float)shape[i].shift[r]/(l_max_time_shift - shape[i].shift[0]))));
+        }
+    }
+#if DEBUG 
+    cout << "time_shift_ = " << time_shift_ << ", toggle = " << toggle_ << endl;
+    for (int r = 0; r < N_RANK; ++r) {
+        printf("slope[%d] = %d, ", r, slope_[r]);
+    }
+    printf("\n");
+#endif
+    regShapeFlag = true;
+#endif
 }
 
 template <int N_RANK> template <typename Domain>
@@ -395,7 +422,7 @@ void Pochoir<N_RANK>::run_obase(int timestep, F const & f, BF const & bf) {
 #else
 //    fprintf(stderr, "Call sim_obase_bicut_P\n");
 #pragma isat marker M2_begin
-   //  algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
+    // algor.sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
     algor.shorter_duo_sim_obase_bicut_p(0+time_shift_, timestep+time_shift_, logic_grid_, f, bf);
 #pragma isat marker M2_end
 #if STAT
