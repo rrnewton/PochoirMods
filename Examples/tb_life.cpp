@@ -82,18 +82,22 @@ int main(int argc, char * argv[])
     N_SIZE = StrToInt(argv[1]);
     T_SIZE = StrToInt(argv[2]);
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
-	/* data structure of Pochoir - row major */
-	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE), c(N_SIZE, N_SIZE);
-    Pochoir <bool, N_RANK> life_2D, bt_life_2D;
 //	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 #if 0
     Pochoir_Shape<2> life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
 #else
     Pochoir_Shape<2> life_shape_2D[9] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, 1}, {-1, 0, -1}, {-1, 1, 1}, {-1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}};
 #endif
+	/* data structure of Pochoir - row major */
+    Pochoir <N_RANK> life_2D(life_shape_2D), bt_life_2D(life_shape_2D);
+	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE), c(N_SIZE, N_SIZE);
 
-    life_2D.registerBoundaryFn(a, life_bv_2D);
-    bt_life_2D.registerBoundaryFn(c, life_bv_2D);
+    a.registerBV(life_bv_2D);
+    c.registerBV(life_bv_2D);
+    b.registerShape(life_shape_2D);
+
+    life_2D.registerArray(a);
+    bt_life_2D.registerArray(c);
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -129,7 +133,6 @@ int main(int argc, char * argv[])
     Pochoir_kernel_end
 
 //    life_2D.registerArray(a);
-    life_2D.registerShape(life_shape_2D);
 //    life_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
@@ -164,7 +167,6 @@ int main(int argc, char * argv[])
     Pochoir_kernel_end
 
 //    life_2D.registerArray(a);
-    bt_life_2D.registerShape(life_shape_2D);
 //    life_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
