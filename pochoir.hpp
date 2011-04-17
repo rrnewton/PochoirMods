@@ -48,7 +48,7 @@ class Pochoir {
         template <typename T_Array>
         void cmpPhysDomainFromArray(T_Array & arr);
         template <size_t N_SIZE>
-        void registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]);
+        void Register_Shape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]);
 
     public:
     template <size_t N_SIZE>
@@ -60,50 +60,50 @@ class Pochoir {
         }
         timestep_ = 0;
         regArrayFlag = regLogicDomainFlag = regPhysDomainFlag = regShapeFlag = false;
-        registerShape(shape);
+        Register_Shape(shape);
         regShapeFlag = true;
     }
     /* currently, we just compute the slope[] out of the shape[] */
     /* We get the grid_info out of arrayInUse */
     template <typename T_Array>
-    void registerArray(T_Array & arr);
+    void Register_Array(T_Array & arr);
 
-    /* We should still keep the registerDomain for zero-padding!!! */
+    /* We should still keep the Register_Domain for zero-padding!!! */
     template <typename Domain>
-    void registerDomain(Domain const & i);
+    void Register_Domain(Domain const & i);
     template <typename Domain>
-    void registerDomain(Domain const & i, Domain const & j);
+    void Register_Domain(Domain const & i, Domain const & j);
     template <typename Domain>
-    void registerDomain(Domain const & i, Domain const & j, Domain const & k);
+    void Register_Domain(Domain const & i, Domain const & j, Domain const & k);
     template <typename Domain>
-    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l);
+    void Register_Domain(Domain const & i, Domain const & j, Domain const & k, Domain const & l);
     template <typename Domain>
-    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m);
+    void Register_Domain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m);
     template <typename Domain>
-    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n);
+    void Register_Domain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n);
     template <typename Domain>
-    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n, Domain const & o);
+    void Register_Domain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n, Domain const & o);
     template <typename Domain>
-    void registerDomain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n, Domain const & o, Domain const & p);
+    void Register_Domain(Domain const & i, Domain const & j, Domain const & k, Domain const & l, Domain const & m, Domain const & n, Domain const & o, Domain const & p);
 
     /* register boundary value function with corresponding Pochoir_Array object directly */
     template <typename T_Array, typename RET>
     void registerBoundaryFn(T_Array & arr, RET (*_bv)(T_Array &, int, int, int)) {
-        arr.registerBV(_bv);
-        registerArray(arr);
+        arr.Register_Boundary(_bv);
+        Register_Array(arr);
     } 
     /* Executable Spec */
     template <typename BF>
-    void run(int timestep, BF const & bf);
+    void Run(int timestep, BF const & bf);
     /* safe/unsafe Executable Spec */
     template <typename F, typename BF>
-    void run(int timestep, F const & f, BF const & bf);
+    void Run(int timestep, F const & f, BF const & bf);
     /* obase for zero-padded region */
     template <typename F>
-    void run_obase(int timestep, F const & f);
+    void Run_Obase(int timestep, F const & f);
     /* obase for interior and ExecSpec for boundary */
     template <typename F, typename BF>
-    void run_obase(int timestep, F const & f, BF const & bf);
+    void Run_Obase(int timestep, F const & f, BF const & bf);
 };
 
 template <int N_RANK>
@@ -150,7 +150,7 @@ void Pochoir<N_RANK>::cmpPhysDomainFromArray(T_Array & arr) {
 }
 
 template <int N_RANK> template <typename T_Array>
-void Pochoir<N_RANK>::registerArray(T_Array & arr) {
+void Pochoir<N_RANK>::Register_Array(T_Array & arr) {
     if (!regShapeFlag) {
         cout << "Please register Shape before register Array!" << endl;
         exit(1);
@@ -168,7 +168,7 @@ void Pochoir<N_RANK>::registerArray(T_Array & arr) {
 }
 
 template <int N_RANK> template <size_t N_SIZE>
-void Pochoir<N_RANK>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
+void Pochoir<N_RANK>::Register_Shape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
 #if 0
     /* currently we just get the slope_[] and toggle_ out of the shape[] */
     int l_min_time_shift=0, l_max_time_shift=0, depth=0;
@@ -218,7 +218,7 @@ void Pochoir<N_RANK>::registerShape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
 }
 
 template <int N_RANK> template <typename Domain>
-void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n, Domain const & r_o, Domain const & r_p) {
+void Pochoir<N_RANK>::Register_Domain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n, Domain const & r_o, Domain const & r_p) {
     logic_grid_.x0[7] = r_i.first();
     logic_grid_.x1[7] = r_i.first() + r_i.size();
     logic_grid_.x0[6] = r_j.first();
@@ -239,7 +239,7 @@ void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Dom
 }
 
 template <int N_RANK> template <typename Domain>
-void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n, Domain const & r_o) {
+void Pochoir<N_RANK>::Register_Domain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n, Domain const & r_o) {
     logic_grid_.x0[6] = r_i.first();
     logic_grid_.x1[6] = r_i.first() + r_i.size();
     logic_grid_.x0[5] = r_j.first();
@@ -258,7 +258,7 @@ void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Dom
 }
 
 template <int N_RANK> template <typename Domain>
-void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n) {
+void Pochoir<N_RANK>::Register_Domain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m, Domain const & r_n) {
     logic_grid_.x0[5] = r_i.first();
     logic_grid_.x1[5] = r_i.first() + r_i.size();
     logic_grid_.x0[4] = r_j.first();
@@ -275,7 +275,7 @@ void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Dom
 }
 
 template <int N_RANK> template <typename Domain>
-void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m) {
+void Pochoir<N_RANK>::Register_Domain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l, Domain const & r_m) {
     logic_grid_.x0[4] = r_i.first();
     logic_grid_.x1[4] = r_i.first() + r_i.size();
     logic_grid_.x0[3] = r_j.first();
@@ -290,7 +290,7 @@ void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Dom
 }
 
 template <int N_RANK> template <typename Domain>
-void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l) {
+void Pochoir<N_RANK>::Register_Domain(Domain const & r_i, Domain const & r_j, Domain const & r_k, Domain const & r_l) {
     logic_grid_.x0[3] = r_i.first();
     logic_grid_.x1[3] = r_i.first() + r_i.size();
     logic_grid_.x0[2] = r_j.first();
@@ -303,7 +303,7 @@ void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Dom
 }
 
 template <int N_RANK> template <typename Domain>
-void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Domain const & r_k) {
+void Pochoir<N_RANK>::Register_Domain(Domain const & r_i, Domain const & r_j, Domain const & r_k) {
     logic_grid_.x0[2] = r_i.first();
     logic_grid_.x1[2] = r_i.first() + r_i.size();
     logic_grid_.x0[1] = r_j.first();
@@ -314,7 +314,7 @@ void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j, Dom
 }
 
 template <int N_RANK> template <typename Domain>
-void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j) {
+void Pochoir<N_RANK>::Register_Domain(Domain const & r_i, Domain const & r_j) {
     logic_grid_.x0[1] = r_i.first();
     logic_grid_.x1[1] = r_i.first() + r_i.size();
     logic_grid_.x0[0] = r_j.first();
@@ -323,7 +323,7 @@ void Pochoir<N_RANK>::registerDomain(Domain const & r_i, Domain const & r_j) {
 }
 
 template <int N_RANK> template <typename Domain>
-void Pochoir<N_RANK>::registerDomain(Domain const & r_i) {
+void Pochoir<N_RANK>::Register_Domain(Domain const & r_i) {
     logic_grid_.x0[0] = r_i.first();
     logic_grid_.x1[0] = r_i.first() + r_i.size();
     regLogicDomainFlag = true;
@@ -331,7 +331,7 @@ void Pochoir<N_RANK>::registerDomain(Domain const & r_i) {
 
 /* Executable Spec */
 template <int N_RANK> template <typename BF>
-void Pochoir<N_RANK>::run(int timestep, BF const & bf) {
+void Pochoir<N_RANK>::Run(int timestep, BF const & bf) {
     /* this version uses 'f' to compute interior region, 
      * and 'bf' to compute boundary region
      */
@@ -351,7 +351,7 @@ void Pochoir<N_RANK>::run(int timestep, BF const & bf) {
 
 /* safe/non-safe ExecSpec */
 template <int N_RANK> template <typename F, typename BF>
-void Pochoir<N_RANK>::run(int timestep, F const & f, BF const & bf) {
+void Pochoir<N_RANK>::Run(int timestep, F const & f, BF const & bf) {
     Algorithm<N_RANK> algor(slope_);
     algor.set_phys_grid(phys_grid_);
     /* this version uses 'f' to compute interior region, 
@@ -374,7 +374,7 @@ void Pochoir<N_RANK>::run(int timestep, F const & f, BF const & bf) {
 
 /* obase for zero-padded area! */
 template <int N_RANK> template <typename F>
-void Pochoir<N_RANK>::run_obase(int timestep, F const & f) {
+void Pochoir<N_RANK>::Run_Obase(int timestep, F const & f) {
     Algorithm<N_RANK> algor(slope_);
     algor.set_phys_grid(phys_grid_);
     timestep_ = timestep;
@@ -404,7 +404,7 @@ void Pochoir<N_RANK>::run_obase(int timestep, F const & f) {
 
 /* obase for interior and ExecSpec for boundary */
 template <int N_RANK> template <typename F, typename BF>
-void Pochoir<N_RANK>::run_obase(int timestep, F const & f, BF const & bf) {
+void Pochoir<N_RANK>::Run_Obase(int timestep, F const & f, BF const & bf) {
     int l_total_points = 1;
     Algorithm<N_RANK> algor(slope_);
     algor.set_phys_grid(phys_grid_);

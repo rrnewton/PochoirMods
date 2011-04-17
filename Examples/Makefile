@@ -14,11 +14,6 @@ loop : tb_loop.cpp
 	${ICC} -o loop -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_loop.cpp
 #	${ICC} -o loop -O0 -DDEBUG -std=c++0x -Wall -Werror -g3 tb_loop.cpp
 #	${CC} -o tb_loop_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_loop.cpp
-heat_newspec : tb_heat_2D_NP_zero_newspec.cpp 
-	${CC} -o heat_newspec -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_newspec.cpp
-	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_newspec_pochoir.cpp
-	perl repair.pl tb_heat_2D_NP_zero_newspec_pochoir.s > newspec.s
-	${ICC} -o heat_newspec newspec.s
 heat_NP_zero : tb_heat_2D_NP_zero.cpp 
 	${CC} -o heat_zero -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero.cpp
 #	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP_zero_pochoir.cpp

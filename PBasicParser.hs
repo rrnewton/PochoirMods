@@ -112,51 +112,51 @@ pMember l_memFunc =
 
 ppArray :: String -> ParserState -> GenParser Char ParserState String
 ppArray l_id l_state =
-        do try $ pMember "registerBV"
+        do try $ pMember "Register_Boundary"
            l_boundaryFn <- parens pIdentifier
            semi
            case Map.lookup l_id $ pArray l_state of
-               Nothing -> return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* UNKNOWN registerBV with " ++ l_id ++ "*/" ++ breakline)
+               Nothing -> return (l_id ++ ".Register_Boundary(" ++ l_boundaryFn ++ "); /* UNKNOWN Register_Boundary with " ++ l_id ++ "*/" ++ breakline)
                Just l_array -> 
                     do updateState $ updateArrayBoundary l_id True 
-                       return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
-    <|> do try $ pMember "registerShape"
+                       return (l_id ++ ".Register_Boundary(" ++ l_boundaryFn ++ "); /* Register_Boundary */" ++ breakline)
+    <|> do try $ pMember "Register_Shape"
            l_shape <- parens identifier
            semi
            case Map.lookup l_id $ pArray l_state of
-               Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_id ++ "*/" ++ breakline)
+               Nothing -> return (l_id ++ ".Register_Shape(" ++ l_shape ++ "); /* UNKNOWN Register_Shape with " ++ l_id ++ "*/" ++ breakline)
                Just l_pArray ->
                    case Map.lookup l_shape $ pShape l_state of
-                       Nothing -> return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* UNKNOWN registerShape with " ++ l_shape ++ "*/" ++ breakline)
-                       Just l_pShape -> return ("/* Known */" ++ l_id ++ ".registerShape(" ++ l_shape ++ ");" ++ breakline)
+                       Nothing -> return (l_id ++ ".Register_Shape(" ++ l_shape ++ "); /* UNKNOWN Register_Shape with " ++ l_shape ++ "*/" ++ breakline)
+                       Just l_pShape -> return ("/* Known */" ++ l_id ++ ".Register_Shape(" ++ l_shape ++ ");" ++ breakline)
 
 ppStencil :: String -> ParserState -> GenParser Char ParserState String
 ppStencil l_id l_state = 
-        do try $ pMember "registerArray"
+        do try $ pMember "Register_Array"
            l_array <- parens identifier
            semi
            case Map.lookup l_id $ pStencil l_state of 
-               Nothing -> return (l_id ++ ".registerArray(" ++ l_array ++ "); /* UNKNOWN registerArray with" ++ l_id ++ "*/" ++ breakline)
+               Nothing -> return (l_id ++ ".Register_Array(" ++ l_array ++ "); /* UNKNOWN Register_Array with" ++ l_id ++ "*/" ++ breakline)
                Just l_stencil -> 
                    case Map.lookup l_array $ pArray l_state of
                        Nothing -> registerUndefinedArray l_id l_array l_stencil 
                        Just l_pArray -> registerArray l_id l_array l_pArray l_stencil
-    <|> do try $ pMember "registerBoundaryFn"
+    <|> do try $ pMember "Register_Boundary"
            l_boundaryParams <- parens $ commaSep1 identifier
            semi
            let l_array = head l_boundaryParams
            let l_bdry = head $ tail l_boundaryParams 
            case Map.lookup l_id $ pStencil l_state of
-               Nothing -> return (l_id ++ ".registerBoundaryFn(" ++ intercalate ", " l_boundaryParams ++ "); /* UNKNOWN registerBoundaryFn with " ++ l_id ++ "*/" ++ breakline)
+               Nothing -> return (l_id ++ ".Register_Boundary(" ++ intercalate ", " l_boundaryParams ++ "); /* UNKNOWN Register_Boundary with " ++ l_id ++ "*/" ++ breakline)
                Just l_stencil -> 
                    case Map.lookup l_array $ pArray l_state of
                        Nothing -> registerUndefinedBoundaryFn l_id l_boundaryParams l_stencil
                        Just l_pArray -> registerBoundaryFn l_id l_boundaryParams l_pArray
-    <|> do try $ pMember "run"
+    <|> do try $ pMember "Run"
            (l_tstep, l_func) <- parens pStencilRun
            semi
            case Map.lookup l_id $ pStencil l_state of
-               Nothing -> return (l_id ++ ".run(" ++ show l_tstep ++ ", " ++ l_func ++ "); /* UNKNOWN run with " ++ l_id ++ "*/" ++ breakline)
+               Nothing -> return (l_id ++ ".Run(" ++ show l_tstep ++ ", " ++ l_func ++ "); /* UNKNOWN Run with " ++ l_id ++ "*/" ++ breakline)
                Just l_stencil -> 
                    do let l_arrayInUse = sArrayInUse l_stencil
                       let l_regBound = foldr (||) False $ map (getArrayRegBound l_state) l_arrayInUse 
@@ -164,7 +164,7 @@ ppStencil l_id l_state =
                       l_newState <- getState
                       let l_newStencil = getPStencil l_id l_newState l_stencil
                       case Map.lookup l_func $ pKernel l_newState of
-                          Nothing -> return ("{" ++ breakline ++ l_id ++ ".run(" ++ l_tstep ++ ", " ++ l_func ++ ");" ++ breakline ++ "}" ++ breakline)
+                          Nothing -> return ("{" ++ breakline ++ l_id ++ ".Run(" ++ l_tstep ++ ", " ++ l_func ++ ");" ++ breakline ++ "}" ++ breakline)
                           Just l_kernel -> 
                               let l_revKernel = transKernel l_kernel l_newStencil $ pMode l_newState
                               in  
@@ -260,7 +260,7 @@ pSplitScope (l_tag, l_id, l_tstep, l_kernel, l_stencil) l_showKernel =
         obaseKernelName = l_tag ++ oldKernelName
         obaseKernel = l_showKernel obaseKernelName l_kernel
         runKernel = obaseKernelName ++ ", " ++ oldKernelName
-    in  return ("{" ++ breakline ++ obaseKernel ++ breakline ++ l_id ++ ".run(" ++ 
+    in  return ("{" ++ breakline ++ obaseKernel ++ breakline ++ l_id ++ ".Run(" ++ 
                l_tstep ++ ", " ++ runKernel ++ ");" ++ breakline ++ "}" ++ 
                breakline)
 
@@ -275,7 +275,7 @@ pSplitObase (l_tag, l_id, l_tstep, l_kernel, l_stencil) l_showKernel =
             -- if the boundary function is NOT registered, we guess user are using 
             -- zero-padding. Note: there's no zero-padding for Periodic stencils
                         else obaseKernelName
-    in  return (obaseKernel ++ breakline ++ l_id ++ ".run_obase(" ++ l_tstep ++ 
+    in  return (obaseKernel ++ breakline ++ l_id ++ ".Run_Obase(" ++ l_tstep ++ 
                 ", " ++ runKernel ++ ");" ++ breakline)
 -------------------------------------------------------------------------------------------
 --                             Following are C++ Grammar Parser                         ---
@@ -288,15 +288,15 @@ pStencilRun =
            return (show l_tstep, l_func)
     <?> "Stencil Run Parameters"
 
--- registerBV :: String -> String -> PArray -> GenParser Char ParserState String
--- registerBV l_id l_boundaryFn l_array =
+-- Register_Boundary :: String -> String -> PArray -> GenParser Char ParserState String
+-- Register_Boundary l_id l_boundaryFn l_array =
 --     do updateState $ updateArrayBoundary l_id True 
---        return (l_id ++ ".registerBV(" ++ l_boundaryFn ++ "); /* registerBV */" ++ breakline)
+--        return (l_id ++ ".Register_Boundary(" ++ l_boundaryFn ++ "); /* Register_Boundary */" ++ breakline)
 
 registerShape :: String -> String -> PShape -> GenParser Char ParserState String
 registerShape l_id l_shape l_pShape = 
     do updateState $ updateStencilToggle l_id $ shapeToggle l_pShape
-       return (l_id ++ ".registerShape(" ++ l_shape ++ "); /* registerShape */" ++ breakline)
+       return (l_id ++ ".Register_Shape(" ++ l_shape ++ "); /* Register_Shape */" ++ breakline)
 
 registerUndefinedBoundaryFn :: String -> [String] -> PStencil -> GenParser Char ParserState String
 registerUndefinedBoundaryFn l_id l_boundaryParams l_stencil =
@@ -311,14 +311,14 @@ registerUndefinedBoundaryFn l_id l_boundaryParams l_stencil =
     in do -- updateState $ updatePArray [(l_arrayName, l_pArray)]
           -- updateState $ updateStencilArray l_id l_pArray
           -- updateState $ updateStencilBoundary l_id True
-          return (l_id ++ ".registerBoundaryFn(" ++ (intercalate ", " l_boundaryParams) ++ 
+          return (l_id ++ ".Register_Boundary(" ++ (intercalate ", " l_boundaryParams) ++ 
                   "); /* register Undefined Boundary Fn */" ++ breakline)
 
 registerBoundaryFn :: String -> [String] -> PArray -> GenParser Char ParserState String 
 registerBoundaryFn l_id l_boundaryParams l_pArray =
     do updateState $ updateStencilArray l_id l_pArray
        updateState $ updateStencilBoundary l_id True
-       return (l_id ++ ".registerBoundaryFn(" ++ (intercalate ", " l_boundaryParams) ++ 
+       return (l_id ++ ".Register_Boundary(" ++ (intercalate ", " l_boundaryParams) ++ 
                "); /* register Boundary Fn */" ++ breakline)
 
 registerUndefinedArray :: String -> String -> PStencil -> GenParser Char ParserState String
@@ -332,7 +332,7 @@ registerUndefinedArray l_id l_arrayName l_stencil =
                            aRegBound = False}
     in  do -- updateState $ updatePArray [(l_arrayName, l_pArray)]
            -- updateState $ updateStencilArray l_id l_pArray 
-           return (l_id ++ ".registerArray (" ++ l_arrayName ++ 
+           return (l_id ++ ".Register_Array (" ++ l_arrayName ++ 
                    "); /* register Undefined Array */" ++ breakline)
     
 registerArray :: String -> String -> PArray -> PStencil -> GenParser Char ParserState String
@@ -340,7 +340,7 @@ registerArray l_id l_arrayName l_pArray l_stencil =
     -- assume all participating array has the same shape/toggle! Is that true?
     let l_revArray = l_pArray { aToggle = sToggle l_stencil }
     in  do updateState $ updateStencilArray l_id l_revArray
-           return (l_id ++ ".registerArray (" ++ l_arrayName ++ 
+           return (l_id ++ ".Register_Array (" ++ l_arrayName ++ 
                    "); /* register Array */" ++ breakline)
 
 -- pDeclStatic <type, rank, toggle>
@@ -359,7 +359,7 @@ pDeclStaticNum = do l_rank <- exprDeclDim
 pDeclDynamic :: GenParser Char ParserState ([PName], PName, [DimExpr])
 pDeclDynamic = do (l_qualifiers, l_name) <- try pVarDecl
 --                  l_dims <- parens (commaSep1 exprDeclDim)
-                  -- exprStmtDim is something might be known at run-time
+                  -- exprStmtDim is something might be known at Run-time
                   l_dims <- option [] (parens $ commaSep1 exprStmtDim)
                   return (l_qualifiers, l_name, l_dims)
 

@@ -139,17 +139,17 @@ pParsePochoirDomain =
 
 pParsePochoirKernel1D :: GenParser Char ParserState String
 pParsePochoirKernel1D =
-    do reserved "Pochoir_kernel_1D"
+    do reserved "Pochoir_Kernel_1D"
        pPochoirKernel
 
 pParsePochoirKernel2D :: GenParser Char ParserState String
 pParsePochoirKernel2D =
-    do reserved "Pochoir_kernel_2D"
+    do reserved "Pochoir_Kernel_2D"
        pPochoirKernel
 
 pParsePochoirKernel3D :: GenParser Char ParserState String
 pParsePochoirKernel3D =
-    do reserved "Pochoir_kernel_3D"
+    do reserved "Pochoir_Kernel_3D"
        pPochoirKernel
 
 pParsePochoirAutoKernel :: GenParser Char ParserState String
@@ -183,7 +183,7 @@ pParseCPPComment =
 pPochoirKernel :: GenParser Char ParserState String
 pPochoirKernel = 
     do  l_kernel_params <- parens $ commaSep1 identifier           
-        exprStmts <- manyTill pStatement (try $ reserved "Pochoir_kernel_end")
+        exprStmts <- manyTill pStatement (try $ reserved "Pochoir_Kernel_End")
         l_state <- getState
         let l_iters = 
                     if pMode l_state == PIter 

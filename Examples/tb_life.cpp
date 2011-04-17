@@ -67,7 +67,7 @@ void check_result(int t, int j, int i, bool a, bool b)
         else if (new_j >= arr.size(0))
             new_j -= arr.size(0);
         return arr.get(t, new_i, new_j);
-    Pochoir_Boundary_end
+    Pochoir_Boundary_End
 
 int main(int argc, char * argv[])
 {
@@ -84,20 +84,20 @@ int main(int argc, char * argv[])
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 //	Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 #if 0
-    Pochoir_Shape<2> life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
+    Pochoir_Shape_2D life_shape_2D[9] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 1, 1}, {0, -1, -1}, {0, 1, -1}, {0, -1, 1}};
 #else
-    Pochoir_Shape<2> life_shape_2D[9] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, 1}, {-1, 0, -1}, {-1, 1, 1}, {-1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}};
+    Pochoir_Shape_2D life_shape_2D[9] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, 1}, {-1, 0, -1}, {-1, 1, 1}, {-1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}};
 #endif
 	/* data structure of Pochoir - row major */
     Pochoir <N_RANK> life_2D(life_shape_2D), bt_life_2D(life_shape_2D);
 	Pochoir_Array<bool, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE), c(N_SIZE, N_SIZE);
 
-    a.registerBV(life_bv_2D);
-    c.registerBV(life_bv_2D);
-    b.registerShape(life_shape_2D);
+    a.Register_Boundary(life_bv_2D);
+    c.Register_Boundary(life_bv_2D);
+    b.Register_Shape(life_shape_2D);
 
-    life_2D.registerArray(a);
-    bt_life_2D.registerArray(c);
+    life_2D.Register_Array(a);
+    bt_life_2D.Register_Array(c);
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -116,7 +116,7 @@ int main(int argc, char * argv[])
 
     printf("Game of Life : %d x %d, %d time steps\n", N_SIZE, N_SIZE, T_SIZE);
 
-    Pochoir_kernel_2D(life_2D_fn, t, i, j)
+    Pochoir_Kernel_2D(life_2D_fn, t, i, j)
     int neighbors = a(t-1, i-1, j-1) + a(t-1, i-1, j) + a(t-1, i-1, j+1) +
                     a(t-1, i, j-1)                  + a(t-1, i, j+1) +
                     a(t-1, i+1, j-1) + a(t-1, i+1, j) + a(t-1, i+1, j+1);
@@ -130,19 +130,19 @@ int main(int argc, char * argv[])
         a(t, i, j) = true;
     else
         a(t, i, j) = a(t-1, i, j);
-    Pochoir_kernel_end
+    Pochoir_Kernel_End
 
-//    life_2D.registerArray(a);
+//    life_2D.Register_Array(a);
 //    life_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
     for (int times = 0; times < TIMES; ++times) {
-        life_2D.run(T_SIZE, life_2D_fn);
+        life_2D.Run(T_SIZE, life_2D_fn);
     }
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
 
-    Pochoir_kernel_2D(bt_life_2D_fn, t, i, j)
+    Pochoir_Kernel_2D(bt_life_2D_fn, t, i, j)
     int neighbors = c(t-1, i-1, j-1) + c(t-1, i-1, j) + c(t-1, i-1, j+1) +
                     c(t-1, i, j-1)                  + c(t-1, i, j+1) +
                     c(t-1, i+1, j-1) + c(t-1, i+1, j) + c(t-1, i+1, j+1);
@@ -164,14 +164,14 @@ int main(int argc, char * argv[])
     c(t, i, j) = set0 ? true : (set1 ? false : c(t-1, i, j));
 //    c(t, i, j) = pCond(set0, true, pCond(set1, false, c(t-1, i, j)));
 #endif
-    Pochoir_kernel_end
+    Pochoir_Kernel_End
 
-//    life_2D.registerArray(a);
+//    life_2D.Register_Array(a);
 //    life_2D.registerDomain(I, J);
 
 	gettimeofday(&start, 0);
     for (int times = 0; times < TIMES; ++times) {
-        bt_life_2D.run(T_SIZE, bt_life_2D_fn);
+        bt_life_2D.Run(T_SIZE, bt_life_2D_fn);
     }
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET (Bit Trick): consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;
@@ -179,7 +179,7 @@ int main(int argc, char * argv[])
 	gettimeofday(&start, 0);
     // we can handle the boundary condition either by register a boundary function
     // or using following explicit modulo operation
-    // b.registerBV(life_bv_2D);
+    // b.Register_Boundary(life_bv_2D);
     for (int times = 0; times < TIMES; ++times) {
 	for (int t = 0; t < T_SIZE; ++t) {
 	cilk_for (int i = 0; i < N_SIZE; ++i) {

@@ -78,17 +78,17 @@ int main(int argc, char * argv[])
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 	/* data structure of Pochoir - row major */
 #if 1
-    Pochoir_Shape<2> heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, -1, -1}, {0, 0, -1}, {0, 0, 1}};
+    Pochoir_Shape_2D heat_shape_2D[] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, -1, -1}, {0, 0, -1}, {0, 0, 1}};
 #else
-    Pochoir_Shape<2> heat_shape_2D[] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
+    Pochoir_Shape_2D heat_shape_2D[] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
 #endif
 	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
     Pochoir<N_RANK> heat_2D(heat_shape_2D);
     Pochoir_Domain I(1, N_SIZE-1), J(1, N_SIZE-1);
 
-    heat_2D.registerArray(a);
-    heat_2D.registerDomain(I, J);
-    b.registerShape(heat_shape_2D);
+    heat_2D.Register_Array(a);
+    heat_2D.Register_Domain(I, J);
+    b.Register_Shape(heat_shape_2D);
 
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
@@ -109,7 +109,7 @@ int main(int argc, char * argv[])
 	} }
 
 	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
-    Pochoir_kernel_2D(heat_2D_fn, t, i, j)
+    Pochoir_Kernel_2D(heat_2D_fn, t, i, j)
 #if DEBUG
        a(t+1, i, j) = a(t, i-1, j-1) + 0.01; 
 #else
@@ -117,7 +117,7 @@ int main(int argc, char * argv[])
 	   a(t+1, i, j) = 0.125 * (a(t, i+1, j) - 2.0 * a(t, i, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) - 2.0 * a(t, i, j) + a(t, i, j-1)) + a(t, i, j);
 //	   a(t+1, i, j) = 0.125 * (a(t, i+1, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) + a(t, i, j-1)) + (0.5)*a(t, i, j);
 #endif
-    Pochoir_kernel_end
+    Pochoir_Kernel_End
 
 #if 1
     /* we have to bind arrayInUse and Shape together 
@@ -128,14 +128,14 @@ int main(int argc, char * argv[])
      */
     for (int times = 0; times < TIMES; ++times) {
 	    gettimeofday(&start, 0);
-        heat_2D.run(T_SIZE, heat_2D_fn);
+        heat_2D.Run(T_SIZE, heat_2D_fn);
 	    gettimeofday(&end, 0);
         min_tdiff = min(min_tdiff, (1.0e3 * tdiff(&end, &start)));
     }
 	std::cout << "Pochoir ET: consumed time :" << min_tdiff << "ms" << std::endl;
 
-    // b.registerShape(heat_shape_2D);
-    // b.registerBV(heat_bv_2D);
+    // b.Register_Shape(heat_shape_2D);
+    // b.Register_Boundary(heat_bv_2D);
 #endif
 #if 1
     min_tdiff = INF;

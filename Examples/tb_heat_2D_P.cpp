@@ -64,7 +64,7 @@ void check_result(int t, int j, int i, double a, double b)
         int new_j = (j >= arr_size_0) ? (j - arr_size_0) : (j < 0 ? j + arr_size_0 : j);
 
         return arr.get(t, new_i, new_j);
-    Pochoir_Boundary_end
+    Pochoir_Boundary_End
 
 int main(int argc, char * argv[])
 {
@@ -82,22 +82,22 @@ int main(int argc, char * argv[])
     printf("N_SIZE = %d, T_SIZE = %d\n", N_SIZE, T_SIZE);
 //    Pochoir_Domain I(0, N_SIZE), J(0, N_SIZE);
 #if 0
-    Pochoir_Shape<2> heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
+    Pochoir_Shape_2D heat_shape_2D[5] = {{1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}};
 #else
-    Pochoir_Shape<2> heat_shape_2D[5] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
+    Pochoir_Shape_2D heat_shape_2D[5] = {{0, 0, 0}, {-1, 1, 0}, {-1, -1, 0}, {-1, 0, -1}, {-1, 0, 1}};
 #endif
 	/* data structure of Pochoir - row major */
 	Pochoir_Array<double, N_RANK> a(N_SIZE, N_SIZE), b(N_SIZE, N_SIZE);
     Pochoir<N_RANK> heat_2D(heat_shape_2D);
 
 	cout << "a(T+1, J, I) = 0.125 * (a(T, J+1, I) - 2.0 * a(T, J, I) + a(T, J-1, I)) + 0.125 * (a(T, J, I+1) - 2.0 * a(T, J, I) + a(T, J, I-1)) + a(T, J, I)" << endl;
-    Pochoir_kernel_2D(heat_2D_fn, t, i, j)
+    Pochoir_Kernel_2D(heat_2D_fn, t, i, j)
 #if 0
 	    a(t+1, i, j) = 0.125 * (a(t, i+1, j) - 2.0 * a(t, i, j) + a(t, i-1, j)) + 0.125 * (a(t, i, j+1) - 2.0 * a(t, i, j) + a(t, i, j-1)) + a(t, i, j);
 #else
 	    a(t, i, j) = 0.125 * (a(t-1, i+1, j) - 2.0 * a(t-1, i, j) + a(t-1, i-1, j)) + 0.125 * (a(t-1, i, j+1) - 2.0 * a(t-1, i, j) + a(t-1, i, j-1)) + a(t-1, i, j);
 #endif
-    Pochoir_kernel_end
+    Pochoir_Kernel_End
 
     /* we have to bind arrayInUse and Shape together 
      * => One arrayInUse, one shape[] => One slope[]
@@ -105,15 +105,15 @@ int main(int argc, char * argv[])
      * the boundary region and when to call the user supplied boundary
      * value function
      */
-    a.registerBV(heat_bv_2D);
+    a.Register_Boundary(heat_bv_2D);
     // heat_2D.registerBoundaryFn(a, heat_bv_2D);
-    // heat_2D.registerShape(heat_shape_2D);
-    heat_2D.registerArray(a);
+    // heat_2D.Register_Shape(heat_shape_2D);
+    heat_2D.Register_Array(a);
 
-    b.registerShape(heat_shape_2D);
-    b.registerBV(heat_bv_2D);
+    b.Register_Shape(heat_shape_2D);
+    b.Register_Boundary(heat_bv_2D);
 
-    /* Now we can only access the Pochoir_Array after registerArray!!! */
+    /* Now we can only access the Pochoir_Array after Register_Array!!! */
 	for (int i = 0; i < N_SIZE; ++i) {
 	for (int j = 0; j < N_SIZE; ++j) {
         if (i == 0 || i == N_SIZE-1
@@ -135,7 +135,7 @@ int main(int argc, char * argv[])
 
 	gettimeofday(&start, 0);
     for (int times = 0; times < TIMES; ++times) {
-        heat_2D.run(T_SIZE, heat_2D_fn);
+        heat_2D.Run(T_SIZE, heat_2D_fn);
     }
 	gettimeofday(&end, 0);
 	std::cout << "Pochoir ET: consumed time :" << 1.0e3 * tdiff(&end, &start)/TIMES << "ms" << std::endl;

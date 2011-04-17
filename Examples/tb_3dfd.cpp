@@ -462,7 +462,7 @@ void dotest()
             return 0;
         else
             return arr.get(t, i, j, k);
-    Pochoir_Boundary_end
+    Pochoir_Boundary_End
 
 int main(int argc, char *argv[])
 {
@@ -485,11 +485,11 @@ int main(int argc, char *argv[])
   Pochoir_Domain I(0+ds, Nx-ds), J(0+ds, Ny-ds), K(0+ds, Nz-ds);
 
 //  fd_3D.registerBoundaryFn(pa, fd_bv_3D);
-  fd_3D.registerArray(pa);
-//  fd_3D.registerShape(fd_shape_3D);
-  fd_3D.registerDomain(I, J, K);
+  fd_3D.Register_Array(pa);
+//  fd_3D.Register_Shape(fd_shape_3D);
+  fd_3D.Register_Domain(I, J, K);
 
-  Pochoir_kernel_3D(fd_3D_fn, t, i, j, k)
+  Pochoir_Kernel_3D(fd_3D_fn, t, i, j, k)
     float c0 = coef[0], c1 = coef[1], c2 = coef[2], c3 = coef[3], c4 = coef[4];
     float div = c0 * pa(t, i, j, k) + 
                 c1 * ((pa(t, i, j, k+1) + pa(t, i, j, k-1)) 
@@ -505,14 +505,14 @@ int main(int argc, char *argv[])
                     + (pa(t, i, j+4, k) + pa(t, i, j-4, k)) 
                     + (pa(t, i+4, j, k) + pa(t, i-4, j, k)));
      pa(t+1, i, j, k) = 2 * pa(t, i, j, k) - pa(t+1, i, j, k) + vsq[i * Nxy + j * Nx + k] * div;
-  Pochoir_kernel_end
+  Pochoir_Kernel_End
 
   dotest();
 
   init_pochoir_array(pa);
   start = cilk_ticks_to_seconds(cilk_getticks());
 #pragma isat marker M2_begin
-  fd_3D.run(T, fd_3D_fn);
+  fd_3D.Run(T, fd_3D_fn);
 #pragma isat marker M2_end
   stop = cilk_ticks_to_seconds(cilk_getticks());
   print_summary("Pochoir", stop - start);

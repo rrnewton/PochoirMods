@@ -184,54 +184,54 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
 /* these lambda functions are for computing internal/boundary region,
  * the original 'f'/'bf'
  */
-#define Pochoir_kernel_1D(name, t, i) \
+#define Pochoir_Kernel_1D(name, t, i) \
     auto name = [&](int t, int i) { 
 
-#define Pochoir_kernel_2D(name, t, i, j) \
+#define Pochoir_Kernel_2D(name, t, i, j) \
     auto name = [&](int t, int i, int j) {
 
-#define Pochoir_kernel_3D(name, t, i, j, k) \
+#define Pochoir_Kernel_3D(name, t, i, j, k) \
     auto name = [&](int t, int i, int j, int k) {
 
-#define Pochoir_kernel_4D(name, t, i, j, k, l) \
+#define Pochoir_Kernel_4D(name, t, i, j, k, l) \
     auto name = [&](int t, int i, int j, int k, int l) {
 
-#define Pochoir_kernel_5D(name, t, i, j, k, l, m) \
+#define Pochoir_Kernel_5D(name, t, i, j, k, l, m) \
     auto name = [&](int t, int i, int j, int k, int l, int m) {
 
-#define Pochoir_kernel_6D(name, t, i, j, k, l, m, n) \
+#define Pochoir_Kernel_6D(name, t, i, j, k, l, m, n) \
     auto name = [&](int t, int i, int j, int k, int l, int m, int n) {
 
-#define Pochoir_kernel_7D(name, t, i, j, k, l, m, n, o) \
+#define Pochoir_Kernel_7D(name, t, i, j, k, l, m, n, o) \
     auto name = [&](int t, int i, int j, int k, int l, int m, int n, int o) {
 
-#define Pochoir_kernel_8D(name, t, i, j, k, l, m, n, o, p) \
+#define Pochoir_Kernel_8D(name, t, i, j, k, l, m, n, o, p) \
     auto name = [&](int t, int i, int j, int k, int l, int m, int n, int o, int p) {
 
-#define Pochoir_kernel_end }; 
+#define Pochoir_Kernel_End }; 
 
-#define Pochoir_obase_fn_1D(name, t0, t1, grid) \
+#define Pochoir_Obase_Fn_1D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<1> const & grid) {
 
-#define Pochoir_obase_fn_2D(name, t0, t1, grid) \
+#define Pochoir_Obase_Fn_2D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<2> const & grid) {
 
-#define Pochoir_obase_fn_3D(name, t0, t1, grid) \
+#define Pochoir_Obase_Fn_3D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<3> const & grid) {
 
-#define Pochoir_obase_fn_4D(name, t0, t1, grid) \
+#define Pochoir_Obase_Fn_4D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<4> const & grid) {
 
-#define Pochoir_obase_fn_5D(name, t0, t1, grid) \
+#define Pochoir_Obase_Fn_5D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<5> const & grid) {
 
-#define Pochoir_obase_fn_6D(name, t0, t1, grid) \
+#define Pochoir_Obase_Fn_6D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<6> const & grid) {
 
-#define Pochoir_obase_fn_7D(name, t0, t1, grid) \
+#define Pochoir_Obase_Fn_7D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<7> const & grid) {
 
-#define Pochoir_obase_fn_8D(name, t0, t1, grid) \
+#define Pochoir_Obase_Fn_8D(name, t0, t1, grid) \
     auto name = [&](int t0, int t1, grid_info<8> const & grid) {
 
 /* - these function templates are for computing boundary values, currently
@@ -272,6 +272,6 @@ inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid)
     template <typename T> \
     T name (Pochoir_Array<T, 8> & arr, int t, int i, int j, int k, int l, int m, int n, int o, int p) { 
 
-#define Pochoir_Boundary_end }
+#define Pochoir_Boundary_End }
 
 #endif /* POCHOIR_COMMON_H */

@@ -186,9 +186,9 @@ pUndefMacroArrayInUse (a:as) pL = pUndefMacroShadowItem a pL ++ pUndefMacroArray
             in  "#undef " ++ pShowArrayTerm l_arrayName pL ++ breakline
 
 pShowKernel :: String -> PKernel -> String
-pShowKernel l_name l_kernel = "Pochoir_kernel_" ++ show dim ++ "D(" ++ l_name ++ ", " ++
+pShowKernel l_name l_kernel = "Pochoir_Kernel_" ++ show dim ++ "D(" ++ l_name ++ ", " ++
     pShowKernelParams (kParams l_kernel) ++ ")" ++ show (kStmt l_kernel) ++
-    breakline ++ "Pochoir_kernel_end" ++ breakline
+    breakline ++ "Pochoir_Kernel_end" ++ breakline
         where dim = length (kParams l_kernel) - 1
 
 -- AutoKernel is a de-sugared kernel

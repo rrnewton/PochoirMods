@@ -50,7 +50,7 @@ void check_result(int t, int i, int j, int k, double a, double b)
 
 Pochoir_Boundary_3D(fd_bv_3D, arr, t, i, j, k)
     return 0;
-Pochoir_Boundary_end
+Pochoir_Boundary_End
 
 int main(int argc, char *argv[])
 {
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     printf("Order-%d 3D-Stencil (%d points) with space %dx%dx%d and time %d\n", 
        ds, 27, Nx, Ny, Nz, T);
 
-    Pochoir_Shape<3> fd_shape_3D[] = {
+    Pochoir_Shape_3D fd_shape_3D[] = {
         {0,0,0,0},
         {-1,0,0,0},
         {-1,-1,0,0}, {-1,0,-1,0}, {-1,0,0,-1}, {-1,0,0,1}, {-1,0,1,0}, {-1,1,0,0},
@@ -85,14 +85,14 @@ int main(int argc, char *argv[])
         {-1,-1,-1,-1}, {-1,-1,-1,1}, {-1,-1,1,-1}, {-1,-1,1,1}, {-1,1,-1,-1}, {-1,1,-1,1}, {-1,1,1,-1}, {-1,1,1,1}};
     Pochoir_Array<double, 3> pa(Nz, Ny, Nx), pb(Nz, Ny, Nx);
 
-    Pochoir<3> fd_3D(fd_shape_3D);
+    Pochoir_3D fd_3D(fd_shape_3D);
     Pochoir_Domain I(0+ds, Nx-ds), J(0+ds, Ny-ds), K(0+ds, Nz-ds);
 
 //    fd_3D.registerBoundaryFn(pa, fd_bv_3D);
-//    fd_3D.registerShape(fd_shape_3D);
-    fd_3D.registerArray(pa);
-    fd_3D.registerDomain(I, J, K);
-    pb.registerShape(fd_shape_3D);
+//    fd_3D.Register_Shape(fd_shape_3D);
+    fd_3D.Register_Array(pa);
+    fd_3D.Register_Domain(I, J, K);
+    pb.Register_Shape(fd_shape_3D);
 
     /* initialization! */
     for (int i = 0; i < Nz; ++i) {
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    Pochoir_kernel_3D(fd_3D_fn, t, i, j, k)
+    Pochoir_Kernel_3D(fd_3D_fn, t, i, j, k)
         pa(t, i, j, k) = alpha * (pa(t-1, i, j, k))
                          + beta * (pa(t-1, i, j, k-1) + pa(t-1, i, j-1, k) +
                                    pa(t-1, i, j+1, k) + pa(t-1, i, j, k+1) +
@@ -132,11 +132,11 @@ int main(int argc, char *argv[])
                                     pa(t-1, i-1, j-1, k+1) + pa(t-1, i-1, j+1, k+1) +
                                     pa(t-1, i+1, j-1, k-1) + pa(t-1, i+1, j+1, k-1) +
                                     pa(t-1, i+1, j-1, k+1) + pa(t-1, i+1, j+1, k+1));
-    Pochoir_kernel_end
+    Pochoir_Kernel_End
 
     for (int times = 0; times < TIMES; ++times) {
         gettimeofday(&start, 0);
-        fd_3D.run(T, fd_3D_fn);
+        fd_3D.Run(T, fd_3D_fn);
         gettimeofday(&end, 0);
         min_tdiff = min(min_tdiff, (1.0e3 * tdiff(&end, &start)));
     }
