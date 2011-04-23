@@ -28,7 +28,6 @@
 
 #include "pochoir_common.hpp"
 #include "pochoir_array.hpp"
-#include "pochoir_iter.hpp"
 /* assuming there won't be more than 10 Pochoir_Array in one Pochoir object! */
 #define ARRAY_SIZE 10
 template <int N_RANK>

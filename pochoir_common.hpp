@@ -43,10 +43,12 @@ static inline double tdiff (struct timeval *a, struct timeval *b)
 	    return a->tv_sec - b->tv_sec + 1e-6 * (a->tv_usec - b->tv_usec);
 }
 
+#if 0
 int StrToInt(const std::string& s)
 {
   return std::atoi(s.c_str());
 }
+#endif
 
 #define ARRAY_LENGTH(x) (int)(sizeof(x)/sizeof(x[0]))
 

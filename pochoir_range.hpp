@@ -165,6 +165,7 @@ class Pochoir_Domain {
 		friend std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range);
 };
 
+#if 0
 std::ostream& operator<<(std::ostream& os, Pochoir_pRange const & range)
 {
 	os << "Pochoir_pRange(" 
@@ -173,7 +174,6 @@ std::ostream& operator<<(std::ostream& os, Pochoir_pRange const & range)
 	return os;
 }
 
-#if 1
 std::ostream& operator<<(std::ostream& os, Pochoir_Domain const & range)
 {
 	os << "Pochoir_Domain(" 

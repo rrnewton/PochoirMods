@@ -189,15 +189,15 @@ instance Show Stmt where
     show (BRACES tL@(t:ts)) = "{" ++ showList tL "" ++ breakline ++ "}"
     show (IF expr l_stmt NOP) = "if " ++ show expr ++ 
         breakline ++ show l_stmt 
-    show (IF expr l_stmt r_stmt) = "if " ++ show expr ++ 
+    show (IF expr l_stmt r_stmt) = "if (" ++ show expr ++ ") {" ++ 
         breakline ++ show l_stmt ++ 
-        breakline ++ "else " ++ show r_stmt
+        breakline ++ "} else {" ++ show r_stmt ++ "}"
     show (SWITCH expr tL@(t:ts)) = "switch " ++ show expr ++ "{" ++
         showList tL "" ++ breakline ++ "} /* end of switch */" ++ breakline
     show (CASE l_value tL@(t:ts)) = "case " ++ show l_value ++ " : " ++
         showList tL ""
-    show (WHILE expr stmt) = "while " ++ show expr ++ 
-        show stmt ++ breakline ++ "/* end of while */" ++ breakline
+    show (WHILE expr stmt) = "while (" ++ show expr ++ ") {" ++
+        show stmt ++ breakline ++ "} /* end of while */" ++ breakline
     show (DO expr tL@(t:ts)) = "do " ++ "{" ++
         showList tL "" ++ breakline ++ "} while " ++ show expr ++ ";" ++ breakline
     show (DEFAULT tL@(t:ts)) = "default :" ++ showList tL "" 

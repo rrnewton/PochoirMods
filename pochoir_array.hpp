@@ -32,7 +32,6 @@
 #include "pochoir_range.hpp"
 #include "pochoir_common.hpp"
 #include "pochoir_wrapper.hpp"
-#include "pochoir_iter.hpp"
 
 using namespace std;
 
