@@ -2,6 +2,7 @@
 #define LBM_XO_H
 
 #include "config.h"
+#include <pochoir.hpp>
 
 typedef struct 
 {
@@ -28,12 +29,18 @@ typedef struct
 } PoCellEntry;
 
 #define MARGIN_Z 1
+#define MARGIN_Y 1
+#define MARGIN_X 1
 
-MY_EXTERN void co_basecase(LBM_GridPtr* toggle, MAIN_SimType simType,
-			   int t0, int t1,
-			   int x0, int dx0, int x1, int dx1,
-			   int y0, int dy0, int y1, int dy1, 
-			   int z0, int dz0, int z1, int dz1);
+#include "lbm_1d_array.h"
 
-MY_EXTERN void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int numTimeSteps);
+void co_basecase(LBM_GridPtr* toggle, MAIN_SimType simType,
+     int t0, int t1,
+     int x0, int dx0, int x1, int dx1,
+     int y0, int dy0, int y1, int dy1, 
+     int z0, int dz0, int z1, int dz1);
+
+void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int numTimeSteps);
+inline void LBM_performStreamCollide_pochoir( Pochoir_Array<PoCellEntry, 3> & pa, const int t, const int z, const int y, const int x);
+inline void LBM_handleInOutFlow_pochoir( Pochoir_Array<PoCellEntry, 3> & pa, const int t, const int z, const int y, const int x); 
 #endif 

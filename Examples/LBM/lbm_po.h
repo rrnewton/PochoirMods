@@ -27,7 +27,8 @@ typedef struct
     MY_TYPE _FLAGS;
 } PoCellEntry;
 
-#define MARGIN_Z 1
+#define MARGIN_Z 2
+
 typedef PoCellEntry POGRID[(2*MARGIN_Z+SIZE_Z) * SIZE_Y * SIZE_X];
 
 #define PO_INDEX(X, Y, Z)  (((Z)+MARGIN_Z)*SIZE_Y*SIZE_X + (Y)*SIZE_X + (X))

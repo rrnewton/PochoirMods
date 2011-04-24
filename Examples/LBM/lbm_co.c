@@ -61,8 +61,15 @@ void LBM_freeGrid( MY_TYPE** ptr ) {
   const size_t margin = 2*SIZE_X*SIZE_Y*N_CELL_ENTRIES;
 #endif
 
+#if 0
     MY_FREE( *ptr-margin );
 	*ptr = NULL;
+#else
+  if (*ptr) {
+      MY_FREE(*ptr-margin);
+      *ptr = NULL;
+  }
+#endif
 }
 
 /*############################################################################*/
@@ -306,10 +313,10 @@ void LBM_performStreamCollide( LBM_Grid srcGrid, LBM_Grid dstGrid,
         
                 u2 = 1.5 * (ux*ux + uy*uy + uz*uz);
 
-	        const MY_TYPE k0 = (1.0-OMEGA);
-		const MY_TYPE k1 = (DFL1*OMEGA*rho);
-		const MY_TYPE k2 = (DFL2*OMEGA*rho);
-		const MY_TYPE k3 = (DFL3*OMEGA*rho);
+                const MY_TYPE k0 = (1.0-OMEGA);
+                const MY_TYPE k1 = (DFL1*OMEGA*rho);
+                const MY_TYPE k2 = (DFL2*OMEGA*rho);
+                const MY_TYPE k3 = (DFL3*OMEGA*rho);
 		
                 *dst_c  = k0*src_c  + k1*(1.0                                 - u2);
                 
@@ -835,7 +842,7 @@ void LBM_compareVelocityField( LBM_Grid grid, const char* filename,
 						fscanf( file, "%lf %lf %lf\n", &fileUx, &fileUy, &fileUz );
 					}
 					else {
-						fscanf( file, "%f %f %f\n", &fileUx, &fileUy, &fileUz );
+						fscanf( file, "%lf %lf %lf\n", &fileUx, &fileUy, &fileUz );
 					}
 				}
 
@@ -867,6 +874,7 @@ void co_basecase_1(LBM_GridPtr* toggle,
                    int y0, int dy0, int y1, int dy1, 
                    int z0, int dz0, int z1, int dz1)
 {
+    int t;
 #ifdef TRACE_BASECASE    
     printf("co_basecase_1(): t0=%d, t1=%d\n", t0, t1);
     printf("\t\t: x0=%d, dx0=%d, x1=%d, dx1=%d\n", x0, dx0, x1, dx1);
@@ -877,8 +885,7 @@ void co_basecase_1(LBM_GridPtr* toggle,
     LBM_GridPtr src = toggle[(t0+1) & 1];
     LBM_GridPtr dst = toggle[t0 & 1];
     
-    for (int t = t0; t < t1; t++)
-    {
+    for (t = t0; t < t1; ++t) {
         //printf("\t\t : t=%d, src=%p, dst=%p, x0=%d, x1=%d, y0=%d, y1=%d, z0=%d, z1=%d\n",
         //       t, src, dst, x0, x1, y0, y1, z0, z1);
         
@@ -901,6 +908,7 @@ void co_basecase_2(LBM_GridPtr* toggle,
                    int y0, int dy0, int y1, int dy1, 
                    int z0, int dz0, int z1, int dz1)
 {
+    int t;
 #ifdef TRACE_BASECASE    
     printf("co_basecase_2(): t0=%d, t1=%d\n", t0, t1);
     printf("\t\t: x0=%d, dx0=%d, x1=%d, dx1=%d\n", x0, dx0, x1, dx1);
@@ -911,8 +919,7 @@ void co_basecase_2(LBM_GridPtr* toggle,
     LBM_GridPtr src = toggle[(t0+1) & 1];
     LBM_GridPtr dst = toggle[t0 & 1];
     
-    for (int t = t0; t < t1; t++)
-    {
+    for (t = t0; t < t1; ++t) {
         //printf("\t\t : t=%d, src=%p, dst=%p, x0=%d, x1=%d, y0=%d, y1=%d, z0=%d, z1=%d\n",
         //       t, src, dst, x0, x1, y0, y1, z0, z1);
         LBM_performStreamCollide( *src, *dst, x0, x1, y0, y1, z0, z1);

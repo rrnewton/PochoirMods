@@ -248,9 +248,9 @@ void Validate( LBM_Grid grid_curr, LBM_Grid grid_ref)
 #define dz_threshold   2  /*3*/
 #define dt_threshold   3
 
-#pragma xtune tuning scope(myScopeStart, myScopeEnd) measure(start_timing, end_timing) variable(NPIECES, (2, 8, 1)) variable(dx_threshold, (2, 128, 1)) variable(dy_threshold, (2, 128, 1)) variable(dz_threshold, (2, 128, 1)) variable(dt_threshold, (2, 128, 1)) search(independent) priority(9)
+// #pragma xtune tuning scope(myScopeStart, myScopeEnd) measure(start_timing, end_timing) variable(NPIECES, (2, 8, 1)) variable(dx_threshold, (2, 128, 1)) variable(dy_threshold, (2, 128, 1)) variable(dz_threshold, (2, 128, 1)) variable(dt_threshold, (2, 128, 1)) search(independent) priority(9)
 
-#pragma xtune marker myScopeStart
+// #pragma xtune marker myScopeStart
 void co_execute_1(LBM_GridPtr* toggle,
                 int t0, int t1, 
                 int x0, int dx0, int x1, int dx1,
@@ -526,7 +526,7 @@ void co_execute_2(LBM_GridPtr* toggle,
                           z0, dz0, z1, dz1);
         } 
 }
-#pragma xtune marker myScopeEnd
+// #pragma xtune marker myScopeEnd
 
 static int GetNumCpuThreads()
 {
@@ -549,7 +549,7 @@ static void InitCilk()
     const int nworkers_specified = x? (int)strtol(x,0,0): numThreads;
 
     // Tune the number of workers used
-    #pragma xtune tuning metric(performance) variable(nworkers_specified, (1, $NUM_CPU_THREADS, 1)) measure(start_timing, end_timing) search(independent) priority(10)
+//    #pragma xtune tuning metric(performance) variable(nworkers_specified, (1, $NUM_CPU_THREADS, 1)) measure(start_timing, end_timing) search(independent) priority(10)
                                                       
     printf("Set the number of workers used by Cilk to %d\n", nworkers_specified);
     // set the number of workers used in cilk
@@ -585,11 +585,10 @@ int main( int nArgs, char* arg[] ) {
     MAIN_startClock( &time );
 #endif
 
-#pragma xtune marker start_timing
+// #pragma xtune marker start_timing
     if ( param.simType == CHANNEL )
     {
-        for (outer_t = 1; outer_t <= param.nTimeSteps; outer_t += SHOW_STATS_INTERVAL)
-        {
+        for (outer_t = 1; outer_t <= param.nTimeSteps; outer_t += SHOW_STATS_INTERVAL) {
                 const int t0 = outer_t;
                 const int t1 = MIN(param.nTimeSteps+1, outer_t+SHOW_STATS_INTERVAL);
                 
@@ -606,14 +605,10 @@ int main( int nArgs, char* arg[] ) {
                     LBM_GridPtr src = toggleR[(t1-1) & 1];
                     LBM_showGridStatistics( *src);
                 }
-            }
         }
-        else
-        {  // don't call LBM_handleInOutFlow();
-
+    } else {  // don't call LBM_handleInOutFlow();
             // assert that this path is not taken in the SPEC run so that we don't have to optimize it.            
-            for (outer_t = 1; outer_t <= param.nTimeSteps; outer_t += SHOW_STATS_INTERVAL)
-            {
+            for (outer_t = 1; outer_t <= param.nTimeSteps; outer_t += SHOW_STATS_INTERVAL) {
                 const int t0 = outer_t;
                 const int t1 = MIN(param.nTimeSteps+1, outer_t+SHOW_STATS_INTERVAL);
                 
@@ -631,8 +626,8 @@ int main( int nArgs, char* arg[] ) {
                     LBM_showGridStatistics( *src);
                 }
             }
-        }        
-#pragma xtune marker end_timing
+    }        
+// #pragma xtune marker end_timing
     
 #if !defined(SPEC_CPU)
 	MAIN_stopClock( &time, &param );
@@ -764,7 +759,6 @@ void MAIN_initialize( const MAIN_Param* param ) {
 		LBM_initializeSpecialCellsForLDC( *srcGridV );
 		LBM_initializeSpecialCellsForLDC( *dstGridV );
 	}
-
 
         toggleV[0] = srcGridV;
         toggleV[1] = dstGridV;        

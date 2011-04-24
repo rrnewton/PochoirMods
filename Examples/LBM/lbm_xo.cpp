@@ -201,7 +201,7 @@ void LBM_performStreamCollide( LBM_Grid srcGrid, LBM_Grid dstGrid,
     
     MY_TYPE ux, uy, uz, u2, rho;
 
-    // CKLUK: Over 95% of total runtime spent in this loop
+    // CKLUK: Over 95% of total Runtime spent in this loop
     int i, x, y, z;
 
     for (z = z0; z < z1; z++)
@@ -1264,7 +1264,7 @@ void LBM_performStreamCollide_Orig ( LBM_Grid srcGrid, LBM_Grid dstGrid ) {
 
 Pochoir_Array<PoCellEntry, 3> pa((2*MARGIN_Z+SIZE_Z), SIZE_Y, SIZE_X); 
 Pochoir_Domain X(0, SIZE_X), Y(0, SIZE_Y), Z(0+MARGIN_Z, SIZE_Z+MARGIN_Z);
-Pochoir_Shape<3>  lbm_shape[8] = {{1, 0, 0, 0},
+Pochoir_Shape_3D  lbm_shape[8] = {{1, 0, 0, 0},
                                   {0, 0, 0, 0},
                                   {0, 0, 0, +1},  {0, 0, 0, -1},
                                   {0, 0, +1, 0},  {0, 0, -1, 0},
@@ -1641,17 +1641,17 @@ void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int nu
   mySimType = simtype;      
   //printf("RunPochoir, numTimeSteps=%d\n", numTimeSteps);  
   Pochoir<PoCellEntry, 3> lbm;
-  lbm.registerArray(pa);
+  lbm.Register_Array(pa);
 
   CopyLbmGridToPochoirGrid(srcGrid, pa, 0);
   CopyLbmGridToPochoirGrid(dstGrid, pa, 1);
 
-  lbm.registerShape(lbm_shape);
-  lbm.registerDomain(Z, Y, X);
+  lbm.Register_Shape(lbm_shape);
+  lbm.Register_Domain(Z, Y, X);
 
 #define z1 (z + 1)
 #define z2 (z + 2)
-  Pochoir_kernel_3D(lbm_kernel, t, z, y, x)
+  Pochoir_Kernel_3D(lbm_kernel, t, z, y, x)
 //    Po_handleInOutFlow(t, z, y, x);
     if (z == (0 + MARGIN_Z)) { 
         /* inflow */ 
@@ -1728,9 +1728,9 @@ void RunPochoir(MAIN_SimType simtype, LBM_Grid srcGrid, LBM_Grid dstGrid, int nu
             PoCellEntry( pa(t, z, y, x) )._WB = DFL3*rho*(1.0 + (-ux-uz)*(4.5*(-ux-uz) + 3.0) - u2); 
         }
     Po_performStreamCollide(t, z, y, x);
-  Pochoir_kernel_end
+  Pochoir_Kernel_End
 
-  lbm.run(numTimeSteps, lbm_kernel);   
+  lbm.Run(numTimeSteps, lbm_kernel);   
    
   CopyPochoirGridToLbmGrid(srcGrid, pa, 0);
   CopyPochoirGridToLbmGrid(dstGrid, pa, 1);

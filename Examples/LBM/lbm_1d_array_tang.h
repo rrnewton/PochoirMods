@@ -108,15 +108,15 @@ typedef LBM_Grid* LBM_GridPtr;
 #define MAGIC_CAST(v) ((unsigned int*) ((void*) (&(v))))
 #define FLAG_VAR(v) unsigned int* const _aux_ = MAGIC_CAST(v)
 
-#define TEST_FLAG_SWEEP(g,f)     ((*MAGIC_CAST(LOCAL(g, FLAGS))) & (f))
-#define SET_FLAG_SWEEP(g,f)      {FLAG_VAR(LOCAL(g, FLAGS)); (*_aux_) |=  (f);}
-#define CLEAR_FLAG_SWEEP(g,f)    {FLAG_VAR(LOCAL(g, FLAGS)); (*_aux_) &= ~(f);}
-#define CLEAR_ALL_FLAGS_SWEEP(g) {FLAG_VAR(LOCAL(g, FLAGS)); (*_aux_)  =    0;}
+#define TEST_FLAG_SWEEP(v,f)     ((*MAGIC_CAST(v)) & (f))
+#define SET_FLAG_SWEEP(v,f)      {FLAG_VAR(v); (*_aux_) |=  (f);}
+#define CLEAR_FLAG_SWEEP(v,f)    {FLAG_VAR(v); (*_aux_) &= ~(f);}
+#define CLEAR_ALL_FLAGS_SWEEP(v) {FLAG_VAR(v); (*_aux_)  =    0;}
 
-#define TEST_FLAG(g,x,y,z,f)     ((*MAGIC_CAST(GRID_ENTRY(g, x, y, z, FLAGS))) & (f))
-#define SET_FLAG(g,x,y,z,f)      {FLAG_VAR(GRID_ENTRY(g, x, y, z, FLAGS)); (*_aux_) |=  (f);}
-#define CLEAR_FLAG(g,x,y,z,f)    {FLAG_VAR(GRID_ENTRY(g, x, y, z, FLAGS)); (*_aux_) &= ~(f);}
-#define CLEAR_ALL_FLAGS(g,x,y,z) {FLAG_VAR(GRID_ENTRY(g, x, y, z, FLAGS)); (*_aux_)  =    0;}
+#define TEST_FLAG(v,f)     ((*MAGIC_CAST(v)) & (f))
+#define SET_FLAG(v,f)      {FLAG_VAR(v); (*_aux_) |=  (f);}
+#define CLEAR_FLAG(v,f)    {FLAG_VAR(v); (*_aux_) &= ~(f);}
+#define CLEAR_ALL_FLAGS(v) {FLAG_VAR(v); (*_aux_)  =    0;}
 
 /*############################################################################*/
 
