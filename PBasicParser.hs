@@ -61,7 +61,7 @@ lexer = Token.makeTokenParser (javaStyle
                                 "Pochoir_Boundary_3D", "Pochoir_Boundary_end",
                                 "#define", "int", "float", "double", "bool", "true", "false",
                                 "if", "else", "switch", "case", "break", "default",
-                                "while", "do", "for"],
+                                "while", "do", "for", "return", "continue"],
                caseSensitive = True})
 
 {- definition of all token parser -}
@@ -164,7 +164,7 @@ ppStencil l_id l_state =
                       l_newState <- getState
                       let l_newStencil = getPStencil l_id l_newState l_stencil
                       case Map.lookup l_func $ pKernel l_newState of
-                          Nothing -> return ("{" ++ breakline ++ l_id ++ ".Run(" ++ l_tstep ++ ", " ++ l_func ++ ");" ++ breakline ++ "}" ++ breakline)
+                          Nothing -> return ("{" ++ breakline ++ l_id ++ ".Run(" ++ l_tstep ++ ", " ++ l_func ++ ");" ++ breakline ++ "} /* Didn't find the kernel_func */ " ++ breakline)
                           Just l_kernel -> 
                               let l_revKernel = transKernel l_kernel l_newStencil $ pMode l_newState
                               in  
@@ -423,11 +423,14 @@ pStatement = try pParenStmt
          <|> try pDeclLocalStmt
          <|> try pIfStmt
          <|> try pSwitchStmt
-         <|> try pWhileStmt
          <|> try pDoStmt
+         <|> try pWhileStmt
          <|> try pForStmt
          <|> try pExprStmt
          <|> try pNOPStmt
+         <|> try pRetStmt
+         <|> try pReturnStmt
+         <|> try pContStmt
           -- pStubStatement scan in everything else except the "Pochoir_kernel_end" or "};"
          <|> try pStubStatement
          <?> "Statement"
@@ -436,6 +439,25 @@ pNOPStmt :: GenParser Char ParserState Stmt
 pNOPStmt =
     do semi
        return NOP
+
+pContStmt :: GenParser Char ParserState Stmt
+pContStmt =
+    do reserved "continue"
+       semi
+       return (CONT)
+
+pReturnStmt :: GenParser Char ParserState Stmt
+pReturnStmt =
+    do reserved "return"
+       semi
+       return (RETURN)
+
+pRetStmt :: GenParser Char ParserState Stmt
+pRetStmt =
+    do reserved "return"
+       l_expr <- try exprStmt
+       semi
+       return (RET l_expr)
 
 pExprStmt :: GenParser Char ParserState Stmt
 pExprStmt =
@@ -454,11 +476,12 @@ pForStmt =
 pDoStmt :: GenParser Char ParserState Stmt
 pDoStmt =
     do reserved "do"
-       l_stmts <- braces (many pStatement)
+       -- l_stmts <- braces $ many pStatement
+       l_stmt <- pStatement
        reserved "while"
        l_expr <- exprStmt
        semi
-       return (DO l_expr l_stmts)
+       return (DO l_expr l_stmt)
 
 pWhileStmt :: GenParser Char ParserState Stmt
 pWhileStmt =

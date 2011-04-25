@@ -138,9 +138,12 @@ data Stmt = BRACES [Stmt]
           | DEFAULT [Stmt]
           | NOP
           | BREAK
-          | DO Expr [Stmt]
+          | DO Expr Stmt
           | WHILE Expr Stmt
           | FOR [[Stmt]] Stmt
+          | CONT
+          | RET Expr
+          | RETURN
           | UNKNOWN String
           deriving Eq
 
@@ -198,8 +201,7 @@ instance Show Stmt where
         showList tL ""
     show (WHILE expr stmt) = "while (" ++ show expr ++ ") {" ++
         show stmt ++ breakline ++ "} /* end of while */" ++ breakline
-    show (DO expr tL@(t:ts)) = "do " ++ "{" ++
-        showList tL "" ++ breakline ++ "} while " ++ show expr ++ ";" ++ breakline
+    show (DO expr stmt) = "do " ++ show stmt ++ " while " ++ show expr ++ ";" ++ breakline
     show (DEFAULT tL@(t:ts)) = "default :" ++ showList tL "" 
     show (FOR ttL@(t:ts) l_stmt) = "for " ++ showForListList ttL ++
         breakline ++ show l_stmt
@@ -213,6 +215,9 @@ instance Show Stmt where
                   showForExpr (EXPR expr) = show expr 
                   showForExpr (DEXPR qs declType expr) = intercalate " " qs ++ 
                                                          " " ++ show expr
+    show CONT = "continue;" ++ breakline
+    show (RET e) = "return (" ++ show e ++ ")" ++ breakline
+    show RETURN = "return;"
     showList [] = showString ""
     showList (x:xs) = showString breakline . shows x . showList xs
 

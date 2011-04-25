@@ -32,6 +32,8 @@ berkeley3d27pt : tb_3d27pt.cpp
 #	perl repair.pl tb_3d27pt_pochoir.s > 3d27pt.s
 	${ICC} -o 3d27pt_s -O3 tb_3d27pt_pochoir.s
 #	${ICC} -o 3d27pt_new_nopl 3d27pt.s
+example : tb_example.cpp
+	${CC} -o tb_example_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_example.cpp
 heat_NP : tb_heat_2D_NP.cpp
 	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-c-pointer tb_heat_2D_NP.cpp

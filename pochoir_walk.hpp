@@ -156,6 +156,9 @@ struct meta_grid_boundary <3, BF>{
                 int new_j = pmod_lu(j, initial_grid.x0[1], initial_grid.x1[1]);
         for (int k = grid.x0[0]; k < grid.x1[0]; ++k) {
             int new_k = pmod_lu(k, initial_grid.x0[0], initial_grid.x1[0]);
+#if DEBUG
+                printf("bf(%d, %d, %d, %d)\n", t, new_i, new_j, new_k);
+#endif
                 bf(t, new_i, new_j, new_k);
         } } }
 	} 

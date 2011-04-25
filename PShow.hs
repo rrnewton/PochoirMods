@@ -77,9 +77,9 @@ getFromStmts l_action l_arrayMap l_stmts@(a:as) =
           getFromStmt (DEFAULT stmts) = getFromStmts l_action l_arrayMap stmts
           getFromStmt NOP = []
           getFromStmt BREAK = []
-          getFromStmt (DO e stmts) = 
+          getFromStmt (DO e stmt) = 
               let iter1 = getFromExpr e 
-                  iter2 = getFromStmts l_action l_arrayMap stmts
+                  iter2 = getFromStmt stmt
               in  union iter1 iter2
           getFromStmt (WHILE e stmt) = 
               let iter1 = getFromExpr e 
@@ -90,6 +90,8 @@ getFromStmts l_action l_arrayMap l_stmts@(a:as) =
                   iter2 = concat $ map (getFromStmts l_action l_arrayMap) sL
               in  union iter1 iter2
           getFromStmt (UNKNOWN s) = []
+          getFromStmt (RET e) = getFromExpr e
+          getFromStmt (RETURN) = []
           getFromExpr (VAR q v) = []
           getFromExpr (BVAR v dim) = []
           getFromExpr (PVAR q v dL) = 
@@ -122,7 +124,9 @@ transStmts l_stmts@(a:as) l_action = transStmt a : transStmts as l_action
           transStmt (DEFAULT stmts) = DEFAULT $ transStmts stmts l_action
           transStmt NOP =  NOP
           transStmt BREAK =  BREAK
-          transStmt (DO e stmts) = DO (transExpr e) (transStmts stmts l_action)
+          transStmt (DO e stmt) = DO (transExpr e) (transStmt stmt)
+          transStmt RETURN = RETURN
+          transStmt (RET e) = RET (transExpr e)
           transStmt (WHILE e stmt) = WHILE (transExpr e)
                                                 (transStmt stmt)
           transStmt (FOR sL s) = FOR (map (flip transStmts l_action) sL)
@@ -195,7 +199,7 @@ pShowKernel l_name l_kernel = "Pochoir_Kernel_" ++ show dim ++ "D(" ++ l_name ++
 pShowAutoKernel :: String -> PKernel -> String
 pShowAutoKernel l_name l_kernel = 
     let l_params = zipWith (++) (repeat "int ") (kParams l_kernel)
-    in  "auto " ++ l_name ++ " = [&] (" ++ 
+    in  "/* known! */ auto " ++ l_name ++ " = [&] (" ++ 
         pShowKernelParams l_params ++ ") {" ++ breakline ++
         show (kStmt l_kernel) ++
         breakline ++ "};" ++ breakline
