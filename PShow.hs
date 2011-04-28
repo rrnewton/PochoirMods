@@ -75,29 +75,31 @@ getFromStmts l_action l_arrayMap l_stmts@(a:as) =
               in  union iter1 iter2
           getFromStmt (CASE v stmts) = getFromStmts l_action l_arrayMap stmts
           getFromStmt (DEFAULT stmts) = getFromStmts l_action l_arrayMap stmts
-          getFromStmt NOP = []
-          getFromStmt BREAK = []
-          getFromStmt (DO e stmt) = 
+          getFromStmt (NOP) = []
+          getFromStmt (BREAK) = []
+          getFromStmt (DO e stmts) = 
               let iter1 = getFromExpr e 
-                  iter2 = getFromStmt stmt
+                  iter2 = getFromStmts l_action l_arrayMap stmts
               in  union iter1 iter2
-          getFromStmt (WHILE e stmt) = 
+          getFromStmt (WHILE e stmts) = 
               let iter1 = getFromExpr e 
-                  iter2 = getFromStmt stmt
+                  iter2 = getFromStmts l_action l_arrayMap stmts
               in  union iter1 iter2
           getFromStmt (FOR sL s) = 
               let iter1 = getFromStmt s 
                   iter2 = concat $ map (getFromStmts l_action l_arrayMap) sL
               in  union iter1 iter2
-          getFromStmt (UNKNOWN s) = []
+          getFromStmt (CONT) = []
           getFromStmt (RET e) = getFromExpr e
           getFromStmt (RETURN) = []
+          getFromStmt (UNKNOWN s) = []
           getFromExpr (VAR q v) = []
-          getFromExpr (BVAR v dim) = []
           getFromExpr (PVAR q v dL) = 
               case Map.lookup v l_arrayMap of
                    Nothing -> []
                    Just arrayInUse -> l_action arrayInUse (PVAR q v dL)
+          getFromExpr (BVAR v dim) = []
+          getFromExpr (BExprVAR v e) = getFromExpr e
           getFromExpr (SVAR t e c f) = getFromExpr e
           getFromExpr (PSVAR t e c f) = getFromExpr e
           getFromExpr (Uno uop e) = getFromExpr e
@@ -124,20 +126,21 @@ transStmts l_stmts@(a:as) l_action = transStmt a : transStmts as l_action
           transStmt (DEFAULT stmts) = DEFAULT $ transStmts stmts l_action
           transStmt NOP =  NOP
           transStmt BREAK =  BREAK
-          transStmt (DO e stmt) = DO (transExpr e) (transStmt stmt)
-          transStmt RETURN = RETURN
-          transStmt (RET e) = RET (transExpr e)
-          transStmt (WHILE e stmt) = WHILE (transExpr e)
-                                                (transStmt stmt)
+          transStmt (DO e stmts) = DO (transExpr e) (transStmts stmts l_action)
+          transStmt (WHILE e stmts) = WHILE (transExpr e)
+                                                (transStmts stmts l_action)
           transStmt (FOR sL s) = FOR (map (flip transStmts l_action) sL)
                                          (transStmt s) 
+          transStmt (CONT) = CONT
+          transStmt (RETURN) = RETURN
+          transStmt (RET e) = RET (transExpr e)
           transStmt (UNKNOWN s) = UNKNOWN s 
           transExpr (VAR q v) =  VAR q v
           -- if it's in the form of BVAR, then the user must have already done some
           -- manual transformation on its source, we just leave them untouched!
+          transExpr (PVAR q v dL) = l_action (PVAR q v dL)
           transExpr (BVAR v dim) = BVAR v dim
           transExpr (BExprVAR v e) = BExprVAR v $ transExpr e
-          transExpr (PVAR q v dL) = l_action (PVAR q v dL)
           transExpr (SVAR t e c f) = SVAR t (transExpr e) c f
           transExpr (PSVAR t e c f) = PSVAR t (transExpr e) c f
           transExpr (Uno uop e) = Uno uop $ transExpr e

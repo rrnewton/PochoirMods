@@ -698,6 +698,7 @@ class Pochoir_Array {
             bool l_boundary = check_boundary1(_idx1, _idx0);
             if (l_boundary) {
                 printf("Off-boundary write, Quit!\n");
+                return (*l_null);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
@@ -707,6 +708,7 @@ class Pochoir_Array {
 		inline T & operator() (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
             if (l_boundary) {
+                return (*l_null);
                 printf("Off-boundary write, Quit!\n");
                 exit(1);
             }
@@ -717,7 +719,8 @@ class Pochoir_Array {
 		inline T & operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
-                printf("Off-boundary write, Quit!\n");
+                return (*l_null);
+                printf("Off-boundary write (%d, %d, %d, %d), Quit!\n", _idx3, _idx2, _idx1, _idx0);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
@@ -727,6 +730,7 @@ class Pochoir_Array {
 		inline T & operator() (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
+                return (*l_null);
                 printf("Off-boundary write, Quit!\n");
                 exit(1);
             }
@@ -737,6 +741,7 @@ class Pochoir_Array {
 		inline T & operator() (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
+                return (*l_null);
                 printf("Off-boundary write, Quit!\n");
                 exit(1);
             }
@@ -747,6 +752,7 @@ class Pochoir_Array {
 		inline T & operator() (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
+                return (*l_null);
                 printf("Off-boundary write, Quit!\n");
                 exit(1);
             }
@@ -757,6 +763,7 @@ class Pochoir_Array {
 		inline T & operator() (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
+                return (*l_null);
                 printf("Off-boundary write, Quit!\n");
                 exit(1);
             }
@@ -767,6 +774,7 @@ class Pochoir_Array {
 		inline T & operator() (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
+                return (*l_null);
                 printf("Off-boundary write, Quit!\n");
                 exit(1);
             }

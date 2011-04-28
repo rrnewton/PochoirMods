@@ -43,12 +43,10 @@ static inline double tdiff (struct timeval *a, struct timeval *b)
 	    return a->tv_sec - b->tv_sec + 1e-6 * (a->tv_usec - b->tv_usec);
 }
 
-#if 0
-int StrToInt(const std::string& s)
+static inline int StrToInt(const std::string& s)
 {
   return std::atoi(s.c_str());
 }
-#endif
 
 #define ARRAY_LENGTH(x) (int)(sizeof(x)/sizeof(x[0]))
 
@@ -67,17 +65,17 @@ int StrToInt(const std::string& s)
 
 #define pCond(b, x, y) (x&(-b)) | (y&-(!b))
 
-inline bool select(bool b, bool x, bool y) {
+static inline bool select(bool b, bool x, bool y) {
     return (x&(-b)) | (y&-(!b));
 }
-inline int select(bool b, int x, int y) {
+static inline int select(bool b, int x, int y) {
     return (x&(-b)) | (y&-(!b));
 }
-inline float select(bool b, float x, float y) {
+static inline float select(bool b, float x, float y) {
     int __ir__ = ((*(int*)&x) & (-b)) | ((*(int*)&y) & -(!b)); 
     return *(float*)&__ir__; 
 }   
-inline double select(bool b, double x, double y) {
+static inline double select(bool b, double x, double y) {
     long __ir__ = ((*(long*)&x) & (-b)) | ((*(long*)&y) & -(!b));
     return *(double*)&__ir__;
 }
@@ -107,7 +105,7 @@ size_t ArraySize (Pochoir_Shape<N_RANK> (& arr)[N]) { return N; }
 #define BICUT 1
 #define STAT 0
 
-inline void klein(int & new_i, int & new_j, grid_info<2> const & grid) {
+static inline void klein(int & new_i, int & new_j, grid_info<2> const & grid) {
     int l_arr_size_1 = grid.x1[1] - grid.x0[1];
     int l_arr_size_0 = grid.x1[0] - grid.x0[0];
 
@@ -125,7 +123,7 @@ inline void klein(int & new_i, int & new_j, grid_info<2> const & grid) {
     return;
 }
 
-inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid) {
+static inline void klein_region(grid_info<2> & grid, grid_info<2> const & initial_grid) {
     grid_info<2> orig_grid;
     const int l_arr_size_1 = initial_grid.x1[1] - initial_grid.x0[1];
     const int l_arr_size_0 = initial_grid.x1[0] - initial_grid.x0[0];

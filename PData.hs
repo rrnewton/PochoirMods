@@ -138,8 +138,8 @@ data Stmt = BRACES [Stmt]
           | DEFAULT [Stmt]
           | NOP
           | BREAK
-          | DO Expr Stmt
-          | WHILE Expr Stmt
+          | DO Expr [Stmt]
+          | WHILE Expr [Stmt]
           | FOR [[Stmt]] Stmt
           | CONT
           | RET Expr
@@ -183,13 +183,10 @@ instance Show DimExpr where
                             showl (x:xs) = showString ", " . shows x . showl xs
 
 instance Show Stmt where
-    show NOP = ""
-    show (UNKNOWN stmt) = stmt ++ "\t/* Unrecognized! */" 
-    show BREAK = "break;"
+    show (BRACES tL@(t:ts)) = "{" ++ showList tL "" ++ breakline ++ "}"
     show (EXPR expr) = show expr ++ ";"
     show (DEXPR qs declType es) = intercalate " " qs ++ " " ++ 
         (intercalate ", " $ map show es) ++ ";"
-    show (BRACES tL@(t:ts)) = "{" ++ showList tL "" ++ breakline ++ "}"
     show (IF expr l_stmt NOP) = "if " ++ show expr ++ 
         breakline ++ show l_stmt 
     show (IF expr l_stmt r_stmt) = "if (" ++ show expr ++ ") {" ++ 
@@ -199,10 +196,14 @@ instance Show Stmt where
         showList tL "" ++ breakline ++ "} /* end of switch */" ++ breakline
     show (CASE l_value tL@(t:ts)) = "case " ++ show l_value ++ " : " ++
         showList tL ""
-    show (WHILE expr stmt) = "while (" ++ show expr ++ ") {" ++
-        show stmt ++ breakline ++ "} /* end of while */" ++ breakline
-    show (DO expr stmt) = "do " ++ show stmt ++ " while " ++ show expr ++ ";" ++ breakline
     show (DEFAULT tL@(t:ts)) = "default :" ++ showList tL "" 
+    show (NOP) = ""
+    show (BREAK) = "break;"
+    show (DO expr stmts) = "do {" ++ 
+                            breakline ++ showList stmts "" ++ breakline ++ 
+                            " }while " ++ show expr ++ ";" ++ breakline
+    show (WHILE expr stmts) = "while (" ++ show expr ++ ") {" ++
+        showList stmts "" ++ breakline ++ "} /* end of while */" ++ breakline
     show (FOR ttL@(t:ts) l_stmt) = "for " ++ showForListList ttL ++
         breakline ++ show l_stmt
             where showForListList (t:ts) = "(" ++ showForList t ++ showForListListL ts
@@ -215,11 +216,13 @@ instance Show Stmt where
                   showForExpr (EXPR expr) = show expr 
                   showForExpr (DEXPR qs declType expr) = intercalate " " qs ++ 
                                                          " " ++ show expr
-    show CONT = "continue;" ++ breakline
-    show (RET e) = "return (" ++ show e ++ ")" ++ breakline
-    show RETURN = "return;"
+    show (CONT) = "continue;" ++ breakline
+    show (RET e) = "return (" ++ show e ++ ");" ++ breakline
+    show (RETURN) = "return;" ++ breakline
+    show (UNKNOWN stmt) = stmt ++ "\t/* Unrecognized! */" 
     showList [] = showString ""
-    showList (x:xs) = showString breakline . shows x . showList xs
+    showList (x:xs) = shows x . showString breakline . showList xs
+    -- showList (x:xs) = showString breakline . shows x . showList xs
 
 instance Show PShift where
     show (PShift n) = show n

@@ -412,7 +412,11 @@ ppShape = do l_shape <- braces (commaSep1 $ integer >>= return . fromInteger)
 
 {- parse a single statement which is ended by ';' -}
 pStubStatement :: GenParser Char ParserState Stmt
-pStubStatement = do stmt <- manyTill anyChar $ try eol 
+pStubStatement = do stmt <- manyTill anyChar $ try semi
+                    return (UNKNOWN $ stmt ++ ";")
+             <|> do stmt <- manyTill anyChar $ try $ symbol "}"
+                    return (UNKNOWN $ stmt ++ "}")
+             <|> do stmt <- manyTill anyChar $ try eol 
                     return (UNKNOWN $ stmt)
 
 {- parse a single statement which is ended by ';' 
@@ -428,12 +432,17 @@ pStatement = try pParenStmt
          <|> try pForStmt
          <|> try pExprStmt
          <|> try pNOPStmt
+       --  <|> try pNOOPStmt
          <|> try pRetStmt
          <|> try pReturnStmt
          <|> try pContStmt
           -- pStubStatement scan in everything else except the "Pochoir_kernel_end" or "};"
          <|> try pStubStatement
          <?> "Statement"
+
+-- pNOOPStmt :: GenParser Char ParserState Stmt
+-- pNOOPStmt =
+--     do return NOP
 
 pNOPStmt :: GenParser Char ParserState Stmt
 pNOPStmt =
@@ -476,18 +485,20 @@ pForStmt =
 pDoStmt :: GenParser Char ParserState Stmt
 pDoStmt =
     do reserved "do"
-       -- l_stmts <- braces $ many pStatement
-       l_stmt <- pStatement
+       symbol "{"
+       l_stmts <- manyTill pStatement (try $ symbol "}")
+       -- l_stmt <- pStatement
        reserved "while"
        l_expr <- exprStmt
        semi
-       return (DO l_expr l_stmt)
+       return (DO l_expr l_stmts)
 
 pWhileStmt :: GenParser Char ParserState Stmt
 pWhileStmt =
     do reserved "while"
        l_boolExpr <- exprStmt
-       l_stmts <- pStatement
+       symbol "{"
+       l_stmts <- manyTill pStatement (try $ symbol "}")
        return (WHILE l_boolExpr l_stmts)
 
 pParenStmt :: GenParser Char ParserState Stmt
