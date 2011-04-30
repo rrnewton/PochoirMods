@@ -173,14 +173,14 @@ pShowShadowArrayInUse aL@(a:as) =
                 breakline ++ pShowShadowHeader (l_type, l_rank, l_toggle) ++
                 l_name ++ "(" ++ l_name ++ "_shadow);" ++ breakline
 
-pDefMacroArrayInUse :: [PArray] -> [PName] -> String
-pDefMacroArrayInUse [] _ = ""
-pDefMacroArrayInUse (a:as) pL = pDefMacroShadowItem a pL ++ pDefMacroArrayInUse as pL
-    where pDefMacroShadowItem a pL = 
+pDefMacroArrayInUse :: PName -> [PArray] -> [PName] -> String
+pDefMacroArrayInUse _ [] _ = ""
+pDefMacroArrayInUse l_macro (a:as) pL = pDefMacroShadowItem l_macro a pL ++ pDefMacroArrayInUse l_macro as pL
+    where pDefMacroShadowItem l_macro a pL = 
             let l_arrayName = aName a
-                l_arrayInteriorName = l_arrayName ++ ".interior"
+                l_arrayMacroName = l_arrayName ++ l_macro
             in  "#define " ++ pShowArrayTerm l_arrayName pL ++ " " ++
-                pShowArrayTerm l_arrayInteriorName pL ++ breakline
+                pShowArrayTerm l_arrayMacroName pL ++ breakline
 
 pShowArrayTerm :: PName -> [PName] -> String
 pShowArrayTerm a pL = a ++ "(" ++ pShowListIdentifiers pL ++ ")"
@@ -234,12 +234,12 @@ pShowTypeKernel l_sArrayInUse l_name l_kernel =
     --  in  pShowShadowArrayInUse l_array ++ pShowAutoKernel l_name l_kernel 
     in  pShowShadowArrayInUse l_sArrayInUse ++ pShowAutoKernel l_name l_kernel 
 
-pShowMacroKernel :: [PArray] -> String -> PKernel -> String
-pShowMacroKernel l_sArrayInUse l_name l_kernel =
+pShowMacroKernel :: PName -> [PArray] -> String -> PKernel -> String
+pShowMacroKernel l_macro l_sArrayInUse l_name l_kernel =
     let l_iter = kIter l_kernel
         l_array = unionArrayIter l_iter
         -- shadowArrayInUse = pDefMacroArrayInUse l_array (kParams l_kernel)
-        shadowArrayInUse = pDefMacroArrayInUse l_sArrayInUse (kParams l_kernel)
+        shadowArrayInUse = pDefMacroArrayInUse l_macro l_sArrayInUse (kParams l_kernel)
         -- unshadowArrayInUse = pUndefMacroArrayInUse l_array (kParams l_kernel)
         unshadowArrayInUse = pUndefMacroArrayInUse l_sArrayInUse (kParams l_kernel)
     in  shadowArrayInUse ++ pShowAutoKernel l_name l_kernel ++ unshadowArrayInUse

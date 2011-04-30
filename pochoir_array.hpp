@@ -863,6 +863,167 @@ class Pochoir_Array {
 			return (*view_)[l_idx];
 		}
 
+		/* index operator() for the format of a.boundary(i, j, k) 
+         * - The highest dimension is always time dimension
+         * - this is the boundary version, ie. we always check boundary
+         *   if calling this function.
+         */
+		inline T boundary (int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary1(_idx1, _idx0);
+            /* we have to guard the use of bv_ by conditional, 
+             * otherwise it may lead to some segmentation fault!
+             */
+            bool set_boundary = (l_boundary && bv1_ != NULL);
+            T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
+            return (set_boundary ? (l_bvalue) : (*view_)[l_idx]);
+		}
+
+		inline T boundary (int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv2_ != NULL);
+            T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T boundary (int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv3_ != NULL);
+            T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T boundary (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv4_ != NULL);
+            T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T boundary (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv5_ != NULL);
+            T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T boundary (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv6_ != NULL);
+            T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T boundary (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv7_ != NULL);
+            T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+		inline T boundary (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+            bool set_boundary = (l_boundary && bv8_ != NULL);
+            T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
+            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
+		}
+
+        /* boundary value can only be used for read, NOT for write! */
+		inline T & boundary (int _idx1, int _idx0) {
+            bool l_boundary = check_boundary1(_idx1, _idx0);
+            if (l_boundary) {
+                printf("Off-boundary write, Quit!\n");
+                return (*l_null);
+                exit(1);
+            }
+			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
+            return (l_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & boundary (int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
+            if (l_boundary) {
+                return (*l_null);
+                printf("Off-boundary write, Quit!\n");
+                exit(1);
+            }
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
+            return (l_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & boundary (int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
+            if (l_boundary) {
+                return (*l_null);
+                printf("Off-boundary write (%d, %d, %d, %d), Quit!\n", _idx3, _idx2, _idx1, _idx0);
+                exit(1);
+            }
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
+            return (l_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & boundary (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
+            if (l_boundary) {
+                return (*l_null);
+                printf("Off-boundary write, Quit!\n");
+                exit(1);
+            }
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
+            return (l_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & boundary (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+            if (l_boundary) {
+                return (*l_null);
+                printf("Off-boundary write, Quit!\n");
+                exit(1);
+            }
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
+            return (l_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & boundary (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+            if (l_boundary) {
+                return (*l_null);
+                printf("Off-boundary write, Quit!\n");
+                exit(1);
+            }
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
+            return (l_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & boundary (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+            if (l_boundary) {
+                return (*l_null);
+                printf("Off-boundary write, Quit!\n");
+                exit(1);
+            }
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
+            return (l_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
+		inline T & boundary (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+            if (l_boundary) {
+                return (*l_null);
+                printf("Off-boundary write, Quit!\n");
+                exit(1);
+            }
+			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
+            return (l_boundary ? (*l_null) : (*view_)[l_idx]);
+		}
+
 		/* index operator() for the format of a.interior(i, j, k) 
          * - The highest dimension is always time dimension
          * - this is the interior (non-checking) version

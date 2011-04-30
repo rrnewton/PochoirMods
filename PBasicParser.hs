@@ -156,7 +156,7 @@ ppStencil l_id l_state =
            (l_tstep, l_func) <- parens pStencilRun
            semi
            case Map.lookup l_id $ pStencil l_state of
-               Nothing -> return (l_id ++ ".Run(" ++ show l_tstep ++ ", " ++ l_func ++ "); /* UNKNOWN Run with " ++ l_id ++ "*/" ++ breakline)
+               Nothing -> return (l_id ++ ".Run(" ++ show l_tstep ++ ", " ++ l_func ++ "); /*Run with  UNKNOWN Stencil " ++ l_id ++ "*/" ++ breakline)
                Just l_stencil -> 
                    do let l_arrayInUse = sArrayInUse l_stencil
                       let l_regBound = foldr (||) False $ map (getArrayRegBound l_state) l_arrayInUse 
@@ -187,7 +187,7 @@ ppStencil l_id l_state =
                                         pSplitScope 
                                           ("macro_", l_id, l_tstep, l_revKernel, 
                                             l_newStencil) 
-                                          (pShowMacroKernel $ sArrayInUse l_newStencil)
+                                          (pShowMacroKernel ".interior" $ sArrayInUse l_newStencil)
                                     PInterior -> 
                                         pSplitScope 
                                           ("interior_", l_id, l_tstep, l_revKernel, 
@@ -257,26 +257,33 @@ transKernel l_kernel l_stencil l_mode =
 pSplitScope :: (String, String, String, PKernel, PStencil) -> (String -> PKernel -> String) -> GenParser Char ParserState String
 pSplitScope (l_tag, l_id, l_tstep, l_kernel, l_stencil) l_showKernel = 
     let oldKernelName = kName l_kernel
+        bdryKernelName = "bdry_" ++ oldKernelName
         obaseKernelName = l_tag ++ oldKernelName
+        bdryKernel = pShowMacroKernel ".boundary" (sArrayInUse l_stencil) 
+                                                  bdryKernelName l_kernel
         obaseKernel = l_showKernel obaseKernelName l_kernel
-        runKernel = obaseKernelName ++ ", " ++ oldKernelName
-    in  return ("{" ++ breakline ++ obaseKernel ++ breakline ++ l_id ++ ".Run(" ++ 
-               l_tstep ++ ", " ++ runKernel ++ ");" ++ breakline ++ "}" ++ 
-               breakline)
+        runKernel = obaseKernelName ++ ", " ++ bdryKernelName
+    in  return ("{" ++ breakline ++ bdryKernel ++ breakline ++ obaseKernel ++ breakline ++ 
+                l_id ++ ".Run(" ++ l_tstep ++ ", " ++ runKernel ++ ");" ++ breakline ++ 
+                "}" ++ breakline)
 
 pSplitObase :: (String, String, String, PKernel, PStencil) -> (String -> PKernel -> String) -> GenParser Char ParserState String
 pSplitObase (l_tag, l_id, l_tstep, l_kernel, l_stencil) l_showKernel = 
     let oldKernelName = kName l_kernel 
+        bdryKernelName = "bdry_" ++ oldKernelName
         obaseKernelName = l_tag ++ oldKernelName 
         regBound = sRegBound l_stencil
+        bdryKernel = pShowMacroKernel ".boundary" (sArrayInUse l_stencil) 
+                                                  bdryKernelName l_kernel
         obaseKernel = l_showKernel obaseKernelName l_kernel 
         runKernel = 
-            if regBound then obaseKernelName ++ ", " ++ oldKernelName
+            if regBound then obaseKernelName ++ ", " ++ bdryKernelName
             -- if the boundary function is NOT registered, we guess user are using 
             -- zero-padding. Note: there's no zero-padding for Periodic stencils
                         else obaseKernelName
-    in  return (obaseKernel ++ breakline ++ l_id ++ ".Run_Obase(" ++ l_tstep ++ 
-                ", " ++ runKernel ++ ");" ++ breakline)
+    in  return ("{" ++ breakline ++ bdryKernel ++ breakline ++ obaseKernel ++ breakline ++ 
+                l_id ++ ".Run_Obase(" ++ l_tstep ++ ", " ++ runKernel ++ ");" ++ 
+                breakline ++ "}" ++ breakline)
 -------------------------------------------------------------------------------------------
 --                             Following are C++ Grammar Parser                         ---
 -------------------------------------------------------------------------------------------
