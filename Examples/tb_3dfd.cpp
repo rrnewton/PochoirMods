@@ -511,9 +511,7 @@ int main(int argc, char *argv[])
 
   init_pochoir_array(pa);
   start = cilk_ticks_to_seconds(cilk_getticks());
-#pragma isat marker M2_begin
   fd_3D.Run(T, fd_3D_fn);
-#pragma isat marker M2_end
   stop = cilk_ticks_to_seconds(cilk_getticks());
   print_summary("Pochoir", stop - start);
 

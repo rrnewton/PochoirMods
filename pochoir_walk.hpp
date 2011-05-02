@@ -600,6 +600,7 @@ template <int N_RANK> template <typename BF>
 inline void Algorithm<N_RANK>::base_case_kernel_boundary(int t0, int t1, grid_info<N_RANK> const grid, BF const & bf) {
 	grid_info<N_RANK> l_grid = grid;
 	for (int t = t0; t < t1; ++t) {
+        home_cell_[0] = t;
 		/* execute one single time step */
 		meta_grid_boundary<N_RANK, BF>::single_step(t, l_grid, phys_grid_, bf);
 
