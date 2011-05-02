@@ -99,6 +99,8 @@ class Pochoir_Array {
         bool allocMemFlag_;
 		int total_size_;
         int slope_[N_RANK], toggle_;
+        Pochoir_Shape<N_RANK> * shape_;
+        int shape_size_;
         typedef T (*BValue_1D)(Pochoir_Array<T, 1> &, int, int);
         typedef T (*BValue_2D)(Pochoir_Array<T, 2> &, int, int, int);
         typedef T (*BValue_3D)(Pochoir_Array<T, 3> &, int, int, int, int);
@@ -386,28 +388,52 @@ class Pochoir_Array {
             }
         }
 
-        template <size_t N_SIZE>
-        void Register_Shape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
-#if 0
-            /* currently we just get the slope_[] out of the shape[] */
+        void Register_Shape(Pochoir_Shape<N_RANK> * shape, int shape_size) {
+            /* currently we just get the slope_[] and toggle_ out of the shape[] */
             int l_min_time_shift=0, l_max_time_shift=0, depth=0;
-            for (int i = 0; i < N_SIZE; ++i) {
+            shape_ = new Pochoir_Shape<N_RANK>[shape_size];
+            shape_size_ = shape_size;
+            for (int r = 0; r < N_RANK; ++r) {
+                slope_[r] = 0;
+            }
+            for (int i = 0; i < shape_size; ++i) {
                 if (shape[i].shift[0] < l_min_time_shift)
                     l_min_time_shift = shape[i].shift[0];
                 if (shape[i].shift[0] > l_max_time_shift)
                     l_max_time_shift = shape[i].shift[0];
-                for (int r = 1; r < N_RANK+1; ++r) {
-                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs(shape[i].shift[r]));
+                for (int r = 0; r < N_RANK+1; ++r) {
+                    shape_[i].shift[r] = shape[i].shift[r];
                 }
             }
             depth = l_max_time_shift - l_min_time_shift;
             toggle_ = depth + 1;
-            for (int i = 0; i < N_RANK; ++i) {
-                slope_[i] = (int)ceil((float)slope_[i]/depth);
+            for (int i = 0; i < shape_size; ++i) {
+                for (int r = 1; r < N_RANK+1; ++r) {
+                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs((int)ceil((float)shape[i].shift[r]/(l_max_time_shift - shape[i].shift[0]))));
+                    /* array copy from input parameter shape 
+                     * NOTE: this copy exclude the time dimension, 
+                     * which is not needed in checking the shape !
+                     */
+                }
             }
-#else
+#if DEBUG 
+            printf("toggle = %d\n", toggle_);
+            for (int r = 0; r < N_RANK; ++r) {
+                printf("slope[%d] = %d, ", r, slope_[r]);
+            }
+            printf("\n");
+#endif
+            if (!allocMemFlag_) {
+                alloc_mem();
+            }
+        }
+
+        template <size_t N_SIZE>
+        void Register_Shape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
             /* currently we just get the slope_[] and toggle_ out of the shape[] */
             int l_min_time_shift=0, l_max_time_shift=0, depth=0;
+            shape_ = new Pochoir_Shape<N_RANK>[N_SIZE];
+            shape_size_ = N_SIZE;
             for (int r = 0; r < N_RANK; ++r) {
                 slope_[r] = 0;
             }
@@ -422,19 +448,66 @@ class Pochoir_Array {
             for (int i = 0; i < N_SIZE; ++i) {
                 for (int r = 1; r < N_RANK+1; ++r) {
                     slope_[N_RANK-r] = max(slope_[N_RANK-r], abs((int)ceil((float)shape[i].shift[r]/(l_max_time_shift - shape[i].shift[0]))));
+                    /* array copy from input parameter shape 
+                     * NOTE: this copy exclude the time dimension, 
+                     * which is not needed in checking the shape !
+                     */
+                    shape_[i].shift[r] = shape[i].shift[r];
                 }
             }
 #if DEBUG 
-            cout << "toggle = " << toggle_ << endl;
+            printf("toggle = %d\n", toggle_);
             for (int r = 0; r < N_RANK; ++r) {
                 printf("slope[%d] = %d, ", r, slope_[r]);
             }
             printf("\n");
 #endif
-#endif
             if (!allocMemFlag_) {
                 alloc_mem();
             }
+        }
+
+        inline void print_shape(void) {
+            printf("\nInput Pochoir_Shape<%d> = \n{", N_RANK);
+            for (int i = 0; i < shape_size_-1; ++i) {
+                printf("{");
+                for (int r = 1; r < N_RANK; ++r) {
+                    printf("%d, ", shape_[i].shift[r]);
+                }
+                for (int r = N_RANK; r < N_RANK+1; ++r) {
+                    printf("%d", shape_[i].shift[r]);
+                }
+                printf("}, ");
+            }
+
+            for (int i = shape_size_-1; i < shape_size_; ++i) {
+                printf("{");
+                for (int r = 1; r < N_RANK; ++r) {
+                    printf("%d, ", shape_[i].shift[r]);
+                }
+                for (int r = N_RANK; r < N_RANK+1; ++r) {
+                    printf("%d", shape_[i].shift[r]);
+                }
+                printf("}");
+            }
+            printf("}\n");
+        }
+
+        inline bool check_shape(int const (& l_shift) [N_RANK+1]) {
+            bool shape_match;
+            int const l_home_time_cord = shape_[0].shift[0];
+            for (int i = 0; i < shape_size_; ++i) {
+                shape_match = true;
+                for (int r = 1; shape_match && r < N_RANK+1; ++r) {
+                    if (shape_[i].shift[r] != l_shift[r]) {
+                        shape_match = false;
+                        break;
+                    }
+                }
+                if (shape_match) 
+                    return true;
+            }
+            return false;
         }
 
         void set_slope(int _slope[N_RANK]) { 
@@ -627,6 +700,17 @@ class Pochoir_Array {
          * - this is the uninterior version
          */
 		inline T operator() (int _idx1, int _idx0) const {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx0 - home_cell_[1];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d), shape{%d}\n",
+                            _idx0, l_shift[1]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary1(_idx1, _idx0);
             /* we have to guard the use of bv_ by conditional, 
              * otherwise it may lead to some segmentation fault!
@@ -638,6 +722,18 @@ class Pochoir_Array {
 		}
 
 		inline T operator() (int _idx2, int _idx1, int _idx0) const {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx1 - home_cell_[1]; l_shift[2] = _idx0 - home_cell_[2];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d), shape{%d, %d}\n",
+                            _idx1, _idx0, 
+                            l_shift[1], l_shift[2]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv2_ != NULL);
             T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
@@ -646,6 +742,19 @@ class Pochoir_Array {
 		}
 
 		inline T operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx2 - home_cell_[1]; l_shift[2] = _idx1 - home_cell_[2]; 
+                l_shift[3] = _idx0 - home_cell_[3];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d), shape{%d, %d, %d}\n",
+                            _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv3_ != NULL);
             T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
@@ -654,6 +763,19 @@ class Pochoir_Array {
 		}
 
 		inline T operator() (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx3 - home_cell_[1]; l_shift[2] = _idx2 - home_cell_[2]; 
+                l_shift[3] = _idx1 - home_cell_[3]; l_shift[4] = _idx0 - home_cell_[4];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d), shape{%d, %d, %d, %d}\n",
+                            _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv4_ != NULL);
             T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
@@ -662,6 +784,20 @@ class Pochoir_Array {
 		}
 
 		inline T operator() (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx4 - home_cell_[1]; l_shift[2] = _idx3 - home_cell_[2]; 
+                l_shift[3] = _idx2 - home_cell_[3]; l_shift[4] = _idx1 - home_cell_[4];
+                l_shift[5] = _idx0 - home_cell_[5];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d}\n",
+                            _idx4, _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv5_ != NULL);
             T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
@@ -670,6 +806,20 @@ class Pochoir_Array {
 		}
 
 		inline T operator() (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx5 - home_cell_[1]; l_shift[2] = _idx4 - home_cell_[2]; 
+                l_shift[3] = _idx3 - home_cell_[3]; l_shift[4] = _idx2 - home_cell_[4];
+                l_shift[5] = _idx1 - home_cell_[5]; l_shift[6] = _idx0 - home_cell_[6];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d}\n",
+                            _idx5, _idx4, _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv6_ != NULL);
             T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
@@ -678,6 +828,21 @@ class Pochoir_Array {
 		}
 
 		inline T operator() (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx6 - home_cell_[1]; l_shift[2] = _idx5 - home_cell_[2]; 
+                l_shift[3] = _idx4 - home_cell_[3]; l_shift[4] = _idx3 - home_cell_[4];
+                l_shift[5] = _idx2 - home_cell_[5]; l_shift[6] = _idx1 - home_cell_[6];
+                l_shift[7] = _idx0 - home_cell_[7];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d}\n",
+                            _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6], l_shift[7]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv7_ != NULL);
             T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
@@ -686,6 +851,21 @@ class Pochoir_Array {
 		}
 
 		inline T operator() (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx7 - home_cell_[1]; l_shift[2] = _idx6 - home_cell_[2]; 
+                l_shift[3] = _idx5 - home_cell_[3]; l_shift[4] = _idx4 - home_cell_[4];
+                l_shift[5] = _idx3 - home_cell_[5]; l_shift[6] = _idx2 - home_cell_[6];
+                l_shift[7] = _idx1 - home_cell_[7]; l_shift[8] = _idx0 - home_cell_[8];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d, %d}\n",
+                            _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6], l_shift[7], l_shift[8]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv8_ != NULL);
             T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
@@ -695,6 +875,16 @@ class Pochoir_Array {
 
         /* boundary value can only be used for read, NOT for write! */
 		inline T & operator() (int _idx1, int _idx0) {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx0 - home_cell_[1];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d), shape{%d}\n",
+                            _idx0, l_shift[1]);
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary1(_idx1, _idx0);
             if (l_boundary) {
                 printf("Off-boundary write, Quit!\n");
@@ -706,6 +896,17 @@ class Pochoir_Array {
 		}
 
 		inline T & operator() (int _idx2, int _idx1, int _idx0) {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx1 - home_cell_[1]; l_shift[2] = _idx0 - home_cell_[2];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d), shape{%d, %d}\n",
+                            _idx1, _idx0, l_shift[1], l_shift[2]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
             if (l_boundary) {
                 return (*l_null);
@@ -717,6 +918,18 @@ class Pochoir_Array {
 		}
 
 		inline T & operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx2 - home_cell_[1]; l_shift[2] = _idx1 - home_cell_[2]; 
+                l_shift[3] = _idx0 - home_cell_[3];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d), shape{%d, %d, %d}\n",
+                            _idx2, _idx1, _idx0, l_shift[1], l_shift[2], l_shift[3]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
                 return (*l_null);
@@ -728,6 +941,19 @@ class Pochoir_Array {
 		}
 
 		inline T & operator() (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx3 - home_cell_[1]; l_shift[2] = _idx2 - home_cell_[2]; 
+                l_shift[3] = _idx1 - home_cell_[3]; l_shift[4] = _idx0 - home_cell_[4];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d), shape{%d, %d, %d, %d}\n",
+                            _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
                 return (*l_null);
@@ -739,6 +965,20 @@ class Pochoir_Array {
 		}
 
 		inline T & operator() (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx4 - home_cell_[1]; l_shift[2] = _idx3 - home_cell_[2]; 
+                l_shift[3] = _idx2 - home_cell_[3]; l_shift[4] = _idx1 - home_cell_[4];
+                l_shift[5] = _idx0 - home_cell_[5];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d}\n",
+                            _idx4, _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
                 return (*l_null);
@@ -750,6 +990,20 @@ class Pochoir_Array {
 		}
 
 		inline T & operator() (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx5 - home_cell_[1]; l_shift[2] = _idx4 - home_cell_[2]; 
+                l_shift[3] = _idx3 - home_cell_[3]; l_shift[4] = _idx2 - home_cell_[4];
+                l_shift[5] = _idx1 - home_cell_[5]; l_shift[6] = _idx0 - home_cell_[6];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d}\n",
+                            _idx5, _idx4, _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
                 return (*l_null);
@@ -761,6 +1015,21 @@ class Pochoir_Array {
 		}
 
 		inline T & operator() (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx6 - home_cell_[1]; l_shift[2] = _idx5 - home_cell_[2]; 
+                l_shift[3] = _idx4 - home_cell_[3]; l_shift[4] = _idx3 - home_cell_[4];
+                l_shift[5] = _idx2 - home_cell_[5]; l_shift[6] = _idx1 - home_cell_[6];
+                l_shift[7] = _idx0 - home_cell_[7];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d}\n",
+                            _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6], l_shift[7]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
                 return (*l_null);
@@ -772,6 +1041,21 @@ class Pochoir_Array {
 		}
 
 		inline T & operator() (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (inRun) {
+                int l_shift[N_RANK+1];
+                l_shift[1] = _idx7 - home_cell_[1]; l_shift[2] = _idx6 - home_cell_[2]; 
+                l_shift[3] = _idx5 - home_cell_[3]; l_shift[4] = _idx4 - home_cell_[4];
+                l_shift[5] = _idx3 - home_cell_[5]; l_shift[6] = _idx2 - home_cell_[6];
+                l_shift[7] = _idx1 - home_cell_[7]; l_shift[8] = _idx0 - home_cell_[8];
+                bool l_within_shape = check_shape(l_shift);
+                if (!l_within_shape) {
+                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d, %d}\n",
+                            _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0, 
+                            l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6], l_shift[7], l_shift[8]);
+                    print_shape();
+                    exit(1);
+                }
+            }
             bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             if (l_boundary) {
                 return (*l_null);

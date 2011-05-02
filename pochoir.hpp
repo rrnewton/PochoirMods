@@ -48,6 +48,8 @@ class Pochoir {
         void cmpPhysDomainFromArray(T_Array & arr);
         template <size_t N_SIZE>
         void Register_Shape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]);
+        Pochoir_Shape<N_RANK> * shape_;
+        int shape_size_;
 
     public:
     template <size_t N_SIZE>
@@ -64,8 +66,8 @@ class Pochoir {
     }
     /* currently, we just compute the slope[] out of the shape[] */
     /* We get the grid_info out of arrayInUse */
-    template <typename T_Array>
-    void Register_Array(T_Array & arr);
+    template <typename T>
+    void Register_Array(Pochoir_Array<T, N_RANK> & arr);
 
     /* We should still keep the Register_Domain for zero-padding!!! */
     template <typename Domain>
@@ -148,8 +150,8 @@ void Pochoir<N_RANK>::cmpPhysDomainFromArray(T_Array & arr) {
     }
 }
 
-template <int N_RANK> template <typename T_Array>
-void Pochoir<N_RANK>::Register_Array(T_Array & arr) {
+template <int N_RANK> template <typename T>
+void Pochoir<N_RANK>::Register_Array(Pochoir_Array<T, N_RANK> & arr) {
     if (!regShapeFlag) {
         cout << "Please register Shape before register Array!" << endl;
         exit(1);
@@ -160,42 +162,29 @@ void Pochoir<N_RANK>::Register_Array(T_Array & arr) {
     } else {
         cmpPhysDomainFromArray(arr);
     }
+    arr.Register_Shape(shape_, shape_size_);
+#if 0
     arr.set_slope(slope_);
     arr.set_toggle(toggle_);
     arr.alloc_mem();
+#endif
     regArrayFlag = true;
 }
 
 template <int N_RANK> template <size_t N_SIZE>
 void Pochoir<N_RANK>::Register_Shape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
-#if 0
     /* currently we just get the slope_[] and toggle_ out of the shape[] */
+    shape_ = new Pochoir_Shape<N_RANK>[N_SIZE];
+    shape_size_ = N_SIZE;
     int l_min_time_shift=0, l_max_time_shift=0, depth=0;
     for (int i = 0; i < N_SIZE; ++i) {
         if (shape[i].shift[0] < l_min_time_shift)
             l_min_time_shift = shape[i].shift[0];
         if (shape[i].shift[0] > l_max_time_shift)
             l_max_time_shift = shape[i].shift[0];
-        for (int r = 1; r < N_RANK+1; ++r) {
-            slope_[N_RANK-r] = max(slope_[N_RANK-r], abs(shape[i].shift[r]));
+        for (int r = 0; r < N_RANK+1; ++r) {
+            shape_[i].shift[r] = shape[i].shift[r];
         }
-    }
-    depth = l_max_time_shift - l_min_time_shift;
-    time_shift_ = 0 - l_min_time_shift;
-    toggle_ = depth + 1;
-    // cout << "time_shift_ = " << time_shift_ << ", toggle = " << toggle_ << endl;
-    for (int i = 0; i < N_RANK; ++i) {
-        slope_[i] = (int)ceil((float)slope_[i]/depth);
-    }
-    regShapeFlag = true;
-#else
-    /* currently we just get the slope_[] and toggle_ out of the shape[] */
-    int l_min_time_shift=0, l_max_time_shift=0, depth=0;
-    for (int i = 0; i < N_SIZE; ++i) {
-        if (shape[i].shift[0] < l_min_time_shift)
-            l_min_time_shift = shape[i].shift[0];
-        if (shape[i].shift[0] > l_max_time_shift)
-            l_max_time_shift = shape[i].shift[0];
     }
     depth = l_max_time_shift - l_min_time_shift;
     time_shift_ = 0 - l_min_time_shift;
@@ -213,7 +202,6 @@ void Pochoir<N_RANK>::Register_Shape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
     printf("\n");
 #endif
     regShapeFlag = true;
-#endif
 }
 
 template <int N_RANK> template <typename Domain>
@@ -340,7 +328,9 @@ void Pochoir<N_RANK>::Run(int timestep, BF const & bf) {
     /* base_case_kernel() will mimic exact the behavior of serial nested loop!
     */
     checkFlags();
+    inRun = true;
     algor.base_case_kernel_boundary(0 + time_shift_, timestep + time_shift_, logic_grid_, bf);
+    inRun = false;
     // algor.sim_bicut_zero(0 + time_shift_, timestep + time_shift_, logic_grid_, bf);
     /* obase_boundary_p() is a parallel divide-and-conquer algorithm, which checks
      * boundary for every point

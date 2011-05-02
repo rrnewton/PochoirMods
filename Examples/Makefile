@@ -21,10 +21,11 @@ heat_NP_zero : tb_heat_2D_NP_zero.cpp
 #	${ICC} -o heat_zero heat_2D_NP_zero.s
 berkeley3d7pt : tb_3d7pt.cpp
 	${CC} -o 3d7pt_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt.cpp
-	${ICC} -o 3d7pt_icc -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp
-	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp
-	perl repair.pl tb_3d7pt_pochoir.s > 3d7pt.s
-	${ICC} -o 3d7pt_s 3d7pt.s
+#	${ICC} -o 3d7pt_pochoir -O3 -DNDEBUG -I${POCHOIR_LIB_PATH} -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt.cpp
+#	${ICC} -o 3d7pt_icc -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp
+#	${ICC} -S -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d7pt_pochoir.cpp
+#	perl repair.pl tb_3d7pt_pochoir.s > 3d7pt.s
+#	${ICC} -o 3d7pt_s 3d7pt.s
 berkeley3d27pt : tb_3d27pt.cpp
 	${CC} -o 3d27pt_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d27pt.cpp
 #	${ICC} -o 3d27pt_icc -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_3d27pt_pochoir.cpp
@@ -33,7 +34,9 @@ berkeley3d27pt : tb_3d27pt.cpp
 	${ICC} -o 3d27pt_s -O3 tb_3d27pt_pochoir.s
 #	${ICC} -o 3d27pt_new_nopl 3d27pt.s
 example : tb_example.cpp
-	${CC} -o tb_example_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_example.cpp
+#	${CC} -o tb_example_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_example.cpp
+#	${ICC} -o tb_example_pochoir -O3 -I${POCHOIR_LIB_PATH} -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_example.cpp
+	${ICC} -o tb_example_pochoir -O0 -g3 -I${POCHOIR_LIB_PATH} -DDEBUG -std=c++0x -Wall -Werror tb_example.cpp
 heat_NP : tb_heat_2D_NP.cpp
 	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-c-pointer tb_heat_2D_NP.cpp

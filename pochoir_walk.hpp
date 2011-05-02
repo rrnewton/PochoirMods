@@ -61,6 +61,12 @@ struct meta_grid_boundary <8, BF>{
             int new_o = pmod_lu(o, initial_grid.x0[1], initial_grid.x1[1]);
             for (int p = grid.x0[0]; p < grid.x1[0]; ++p) {
                 int new_p = pmod_lu(p, initial_grid.x0[0], initial_grid.x1[0]);
+                if (inRun) {
+                    home_cell_[8] = new_p; home_cell_[7] = new_o;
+                    home_cell_[6] = new_n; home_cell_[5] = new_m;
+                    home_cell_[4] = new_l; home_cell_[3] = new_k;
+                    home_cell_[2] = new_j; home_cell_[1] = new_i;
+                }
                 bf(t, new_i, new_j, new_k, new_l, new_m, new_n, new_o, new_p);
             } } } } } } } }
     }
@@ -84,6 +90,12 @@ struct meta_grid_boundary <7, BF>{
                 int new_n = pmod_lu(n, initial_grid.x0[1], initial_grid.x1[1]);
         for (int o = grid.x0[0]; o < grid.x1[0]; ++o) {
             int new_o = pmod_lu(o, initial_grid.x0[0], initial_grid.x1[0]);
+                if (inRun) {
+                    home_cell_[7] = new_o;
+                    home_cell_[6] = new_n; home_cell_[5] = new_m;
+                    home_cell_[4] = new_l; home_cell_[3] = new_k;
+                    home_cell_[2] = new_j; home_cell_[1] = new_i;
+                }
                 bf(t, new_i, new_j, new_k, new_l, new_m, new_n, new_o);
             } } } } } } }
     }
@@ -105,6 +117,11 @@ struct meta_grid_boundary <6, BF>{
             int new_m = pmod_lu(m, initial_grid.x0[1], initial_grid.x1[1]);
             for (int n = grid.x0[0]; n < grid.x1[0]; ++n) {
                 int new_n = pmod_lu(n, initial_grid.x0[0], initial_grid.x1[0]);
+                if (inRun) {
+                    home_cell_[6] = new_n; home_cell_[5] = new_m;
+                    home_cell_[4] = new_l; home_cell_[3] = new_k;
+                    home_cell_[2] = new_j; home_cell_[1] = new_i;
+                }
                 bf(t, new_i, new_j, new_k, new_l, new_m, new_n);
             } } } } } } 
     }
@@ -124,6 +141,11 @@ struct meta_grid_boundary <5, BF>{
                 int new_l = pmod_lu(l, initial_gird.x0[1], initial_grid.x1[1]);
         for (int m = grid.x0[0]; m < grid.x1[0]; ++m) {
             int new_m = pmod_lu(m, initial_grid.x0[0], initial_grid.x1[0]);
+                if (inRun) {
+                    home_cell_[5] = new_m;
+                    home_cell_[4] = new_l; home_cell_[3] = new_k;
+                    home_cell_[2] = new_j; home_cell_[1] = new_i;
+                }
                 bf(t, new_i, new_j, new_k, new_l, new_m);
             } } } } } 
     }
@@ -141,6 +163,10 @@ struct meta_grid_boundary <4, BF>{
             int new_k = pmod_lu(k, initial_grid.x0[1], initial_grid.x1[1]);
             for (int l = grid.x0[0]; l < grid.x1[0]; ++l) {
                 int new_l = pmod_lu(l, initial_gird.x0[0], initial_grid.x1[0]);
+                if (inRun) {
+                    home_cell_[4] = new_l; home_cell_[3] = new_k;
+                    home_cell_[2] = new_j; home_cell_[1] = new_i;
+                }
                 bf(t, new_i, new_j, new_k, new_l);
             } } } } 
     } 
@@ -159,6 +185,11 @@ struct meta_grid_boundary <3, BF>{
 #if DEBUG
                 printf("bf(%d, %d, %d, %d)\n", t, new_i, new_j, new_k);
 #endif
+                do {
+                    home_cell_[3] = inRun ? new_k : 0;
+                    home_cell_[2] = inRun ? new_j : 0;
+                    home_cell_[1] = inRun ? new_i : 0;
+                } while (0);
                 bf(t, new_i, new_j, new_k);
         } } }
 	} 
@@ -178,6 +209,10 @@ struct meta_grid_boundary <2, BF>{
                 int new_i = i, new_j = j;
                 klein(new_i, new_j, initial_grid);
 #endif
+                do {
+                    home_cell_[2] = inRun ? new_j : 0;
+                    home_cell_[1] = inRun ? new_i : 0;
+                } while (0);
                 bf(t, new_i, new_j);
 			} }
 	} 
@@ -188,6 +223,9 @@ struct meta_grid_boundary <1, BF>{
 	static inline void single_step(int t, grid_info<1> const & grid, grid_info<1> const & initial_grid, BF const & bf) {
 		for (int i = grid.x0[0]; i < grid.x1[0]; ++i) {
             int new_i = pmod_lu(i, initial_grid.x0[0], initial_grid.x1[0]);
+            do {
+                home_cell_[1] = inRun ? new_i : 0;
+            } while (0);
 		    bf(t, new_i);
         }
 	} 
@@ -385,10 +423,6 @@ struct Algorithm {
         dx_recursive_[0] = (N_RANK == 2) ? 100 : 1000;
         for (int i = N_RANK-1; i >= 1; --i)
             dx_recursive_[i] = (N_RANK == 2) ? 100 : 3;
-#endif
-#if DEBUG
-        printf("dt = %d, dx_0 = %d, dx_1 = %d, dx_2 = %d\n", dt_recursive_, 
-                dx_recursive_[0], dx_recursive_[1], dx_recursive_[2]);
 #endif
         Z = 10000;
         boundarySet = false;
