@@ -413,17 +413,6 @@ struct Algorithm {
             ulb_boundary[i] = uub_boundary[i] = lub_boundary[i] = 0;
             // dx_recursive_boundary_[i] = 10;
         }
-#if DEBUG
-        dt_recursive_ = 1;
-        dx_recursive_[0] = 1;
-        for (int i = N_RANK-1; i >= 1; --i)
-            dx_recursive_[i] = 1;
-#else
-        dt_recursive_ = (N_RANK == 1) ? 20 : ((N_RANK == 2) ? 40 : 3);
-        dx_recursive_[0] = (N_RANK == 2) ? 100 : 1000;
-        for (int i = N_RANK-1; i >= 1; --i)
-            dx_recursive_[i] = (N_RANK == 2) ? 100 : 3;
-#endif
         Z = 10000;
         boundarySet = false;
         physGridSet = false;
@@ -447,6 +436,27 @@ struct Algorithm {
      * - walk_ncores_hybrid
      * - walk_ncores_boundary
      */
+    inline void set_thres(int arr_type_size) {
+#if DEBUG
+        dt_recursive_ = 1;
+        dx_recursive_[0] = 1;
+        for (int i = N_RANK-1; i >= 1; --i)
+            dx_recursive_[i] = 1;
+#else
+        dt_recursive_ = (N_RANK == 1) ? 20 : ((N_RANK == 2) ? 40 : 5);
+        dx_recursive_[0] = (N_RANK == 2) ? (int)ceil(float((100 * sizeof(double))/arr_type_size)) : (int)floor(float((600 * sizeof(double))/arr_type_size));
+//        dx_recursive_[0] = 30;
+        for (int i = N_RANK-1; i >= 1; --i)
+            dx_recursive_[i] = (N_RANK == 2) ? (int)ceil(float(100 * sizeof(double))/arr_type_size): 10;
+#endif
+#if DEBUG
+        printf("arr_type_size = %d\n", arr_type_size);
+        printf("dt_thres = %d, ", dt_recursive_);
+        for (int i = N_RANK-1; i >=1; --i)
+            printf("dx_thres[%d] = %d, ", i, dx_recursive_[i]);
+        printf("dx_thres[%d] = %d\n", 0, dx_recursive_[0]);
+#endif
+    }
     inline void push_queue(int dep, int level, int t0, int t1, grid_info<N_RANK> const & grid);
     inline queue_info & top_queue(int dep);
     inline void pop_queue(int dep);
