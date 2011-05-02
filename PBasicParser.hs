@@ -178,26 +178,11 @@ ppStencil l_id l_state =
                                              ("Default_", l_id, l_tstep, l_revKernel, 
                                                l_newStencil) 
                                              l_showKernel
-                                    PTypeShadow -> 
-                                        pSplitScope 
-                                          ("type_", l_id, l_tstep, l_revKernel, 
-                                            l_newStencil) 
-                                          (pShowTypeKernel $ sArrayInUse l_newStencil)
                                     PMacroShadow -> 
                                         pSplitScope 
                                           ("macro_", l_id, l_tstep, l_revKernel, 
                                             l_newStencil) 
                                           (pShowMacroKernel ".interior" $ sArrayInUse l_newStencil)
-                                    PInterior -> 
-                                        pSplitScope 
-                                          ("interior_", l_id, l_tstep, l_revKernel, 
-                                            l_newStencil) 
-                                          pShowInteriorKernel
-                                    PIter -> 
-                                         pSplitObase 
-                                          ("Iter_", l_id, l_tstep, l_revKernel, 
-                                            l_newStencil) 
-                                          pShowObaseKernel
                                     PPointer -> 
                                          pSplitObase 
                                           ("Pointer_", l_id, l_tstep, l_revKernel, 
@@ -222,16 +207,7 @@ transKernel l_kernel l_stencil l_mode =
            l_kernelParams = kParams l_kernel
            l_iters =
                    case l_mode of 
-                       PTypeShadow -> getFromStmts getIter 
-                                    (transArrayMap $ sArrayInUse l_stencil) 
-                                    l_exprStmts
                        PMacroShadow -> getFromStmts getIter 
-                                    (transArrayMap $ sArrayInUse l_stencil) 
-                                    l_exprStmts
-                       PInterior -> getFromStmts getIter 
-                                    (transArrayMap $ sArrayInUse l_stencil) 
-                                    l_exprStmts
-                       PIter -> getFromStmts getIter 
                                     (transArrayMap $ sArrayInUse l_stencil) 
                                     l_exprStmts
                        PCPointer -> getFromStmts getIter 

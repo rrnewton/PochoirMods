@@ -47,15 +47,6 @@ main = do args <- getArgs
           whilst (mode == PHelp) $ do
              printUsage
              exitFailure
-{-
-          fileExist <- doesFileExist $ inDir ++ inFile
-          whilst (not fileExist) $ do
-             putStrLn (inDir ++ inFile ++ " doesn't exist!")
-             exitFailure
-          whilst (mode == PError) $ do
-             putStrLn ("command line argument error" ++ concat args)
-             exitFailure
--}
           whilst (mode /= PNoPP) $ do
              ppopp (mode, debug, showFile, userArgs) (zip inFiles inDirs)
           -- directly pass the output file of pochoir to icc and userArgs
@@ -64,22 +55,6 @@ main = do args <- getArgs
           -- putStrLn ("userArgs = " ++ intercalate " " userArgs)
           putStrLn (icc ++ " " ++ intercalate " " iccArgs)
           rawSystem icc iccArgs
-{-
-          -- a pass of compilation of user's original executable spec
-          let objInFile  = getObjFile inDir inFile
-          let iccInFileArgs = if debug == False 
-                then objInFile ++ iccFlags ++ envPath ++ [inFile]
-                else objInFile ++ iccDebugFlags ++ envPath ++ [inFile]
-          putStrLn (icc ++ " " ++ intercalate " " iccInFileArgs)
-          rawSystem icc iccInFileArgs
-          -- a pass of compilation of pochoir optimized executable spec
-          let objOutFile = getObjFile inDir outFile
-          let iccOutFileArgs = if debug == False 
-                then objOutFile ++ iccFlags ++ envPath ++ [outFile]
-                else objOutFile ++ iccDebugFlags ++ envPath ++ [outFile]
-          putStrLn (icc ++ " " ++ intercalate " " iccOutFileArgs)
-          rawSystem icc iccOutFileArgs
--}
           whilst (showFile == False) $ do
              let outFiles = map (rename "_pochoir") inFiles 
              removeFile $ intercalate " " outFiles
@@ -91,29 +66,25 @@ whilst False action = return ()
 ppopp :: (PMode, Bool, Bool, [String]) -> [(String, String)] -> IO ()
 ppopp (_, _, _, _) [] = return ()
 ppopp (mode, debug, showFile, userArgs) ((inFile, inDir):files) = 
-    do putStrLn ("ppopp called! with mode =" ++ show mode)
-       cilkHeaderPath <- catch (getEnv "CILK_HEADER_PATH")(\e -> return "EnvError")
-       whilst (cilkHeaderPath == "EnvError") $ do
-          putStrLn ("Environment variable CILK_HEADER_PATH is NOT set")
-          exitFailure
+    do putStrLn ("pochoir called with mode =" ++ show mode)
        pochoirLibPath <- catch (getEnv "POCHOIR_LIB_PATH")(\e -> return "EnvError")
        whilst (pochoirLibPath == "EnvError") $ do
           putStrLn ("Environment variable POCHOIR_LIB_PATH is NOT set")
           exitFailure
-       let envPath = ["-I" ++ cilkHeaderPath] ++ ["-I" ++ pochoirLibPath]
+       let envPath = ["-I" ++ pochoirLibPath]
        let iccPPFile = inDir ++ getPPFile inFile
        let iccPPArgs = if debug == False
              then iccPPFlags ++ envPath ++ [inFile]
              else iccDebugPPFlags ++ envPath ++ [inFile] 
        -- a pass of icc preprocessing
        putStrLn (icc ++ intercalate " " iccPPArgs)
-       putStrLn ("inFile = " ++ inDir ++ inFile ++ 
-                 "; icc preprocessed File = " ++ iccPPFile)
+--       putStrLn ("inFile = " ++ inDir ++ inFile ++ 
+--                 "; icc preprocessed File = " ++ iccPPFile)
        rawSystem icc iccPPArgs
        -- a pass of pochoir compilation
        let outFile = rename "_pochoir" inFile
-       putStrLn ("pochoir -" ++ show mode ++ " " ++ iccPPFile)
-       putStrLn ("inFile = " ++ iccPPFile ++ "; Pochoir outFile = " ++ inDir ++ outFile)
+--       putStrLn ("pochoir -" ++ show mode ++ " " ++ iccPPFile)
+--       putStrLn ("inFile = " ++ iccPPFile ++ "; Pochoir outFile = " ++ inDir ++ outFile)
        inh <- openFile iccPPFile ReadMode
        outh <- openFile outFile WriteMode
        pProcess mode inh outh
@@ -153,10 +124,6 @@ parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL
         let l_mode = PHelp
             aL' = delete "-help" aL
         in  (inFiles, inDirs, l_mode, debug, showFile, aL')
-    | elem "-split-type-shadow" aL = 
-        let l_mode = PTypeShadow
-            aL' = delete "-split-type-shadow" aL
-        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-split-caching" aL =
         let l_mode = PCaching
             aL' = delete "-split-caching" aL
@@ -172,14 +139,6 @@ parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL
     | elem "-split-pointer" aL =
         let l_mode = PPointer
             aL' = delete "-split-pointer" aL
-        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
-    | elem "-split-iter" aL =
-        let l_mode = PIter
-            aL' = delete "-split-iter" aL
-        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
-    | elem "-split-interior" aL =
-        let l_mode = PInterior
-            aL' = delete "-split-interior" aL
         in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-split-macro-shadow" aL =
         let l_mode = PMacroShadow
@@ -199,10 +158,6 @@ parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL
     | otherwise = 
         let l_mode = PNoPP
         in  (inFiles, inDirs, l_mode, debug, showFile, aL)
-{-
-        let l_mode = PError
-        in  (inFile, inDir, l_mode, debug, showFile, aL)
--}
 
 findCPP :: [String] -> ([String], [String], PMode, [String]) -> ([String], [String], PMode, [String])
 findCPP [] (l_files, l_dirs, l_mode, l_al) = 
@@ -226,12 +181,9 @@ findCPP (a:as) (l_files, l_dirs, l_mode, l_al)
 printUsage :: IO ()
 printUsage = 
     do putStrLn ("Usage: ")
-       putStrLn ("pochoir -split-type-shadow $filename : " ++ breakline ++ 
-               "using type tricks to split the interior and boundary regions")
+       putStrLn ("pochoir $filename : " ++ breakline ++ "Let the Pochoir compiler automatically choose the best optimizing level for you!")
        putStrLn ("pochoir -split-macro-shadow $filename : " ++ breakline ++ 
                "using macro tricks to split the interior and boundary regions")
-       putStrLn ("pochoir -split-iter $filename : " ++ breakline ++ 
-               "split the interior and boundary region, and using iterators to optimize the base case")
        putStrLn ("pochoir -split-opt-pointer $filename : " ++ breakline ++ 
                "split the interior and boundary region, and using optimized C-style pointer to optimize the base case")
        putStrLn ("pochoir -split-pointer $filename : " ++ breakline ++ 
