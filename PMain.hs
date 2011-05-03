@@ -71,7 +71,11 @@ ppopp (mode, debug, showFile, userArgs) ((inFile, inDir):files) =
        whilst (pochoirLibPath == "EnvError") $ do
           putStrLn ("Environment variable POCHOIR_LIB_PATH is NOT set")
           exitFailure
-       let envPath = ["-I" ++ pochoirLibPath]
+       cilkStubPath <- catch (getEnv "CILK_HEADER_PATH")(\e -> return "EnvError")
+       whilst (cilkStubPath == "EnvError") $ do
+          putStrLn ("Environment variable CILK_HEADER_PATH is NOT set")
+          exitFailure
+       let envPath = ["-I" ++ cilkStubPath] ++ ["-I" ++ pochoirLibPath]
        let iccPPFile = inDir ++ getPPFile inFile
        let iccPPArgs = if debug == False
              then iccPPFlags ++ envPath ++ [inFile]
