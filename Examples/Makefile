@@ -38,7 +38,8 @@ example : tb_example.cpp
 	${ICC} -o tb_example_pochoir -O3 -I${POCHOIR_LIB_PATH} -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_example.cpp
 #	${ICC} -o tb_example_pochoir -O0 -g3 -I${POCHOIR_LIB_PATH} -DDEBUG -std=c++0x -Wall -Werror tb_example.cpp
 heat_NP : tb_heat_2D_NP.cpp
-	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
+#	${CC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} tb_heat_2D_NP.cpp
+	${ICC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -I${POCHOIR_LIB_PATH} ${ICC_FLAGS} tb_heat_2D_NP.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O3 -DDEBUG -std=c++0x -Wall -Werror ${ICC_FLAGS} -split-c-pointer tb_heat_2D_NP.cpp
 #	${ICC} -o tb_heat_2D_NP_pochoir -O3 -DNDEBUG -std=c++0x -Wall -Werror -opt-report 3 ${ICC_FLAGS} tb_heat_2D_NP_pochoir.cpp
 #	${CC} -o tb_heat_2D_NP_pochoir -O0 -DDEBUG -std=c++0x -Wall -Werror -debug -g3 -ipo tb_heat_2D_NP.cpp

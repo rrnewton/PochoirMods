@@ -105,12 +105,6 @@ int main(int argc, char * argv[])
 #endif
     Pochoir_Kernel_End
 
-    /* we have to bind arrayInUse and Shape together 
-     * => One arrayInUse, one shape[] => One slope[]
-     * because each arrayInUse needs to know the slope to determine
-     * the boundary region and when to call the user supplied boundary
-     * value function
-     */
     a.Register_Boundary(heat_bv_2D);
 //    heat_2D.registerBoundaryFn(a, heat_bv_2D);
 //    heat_2D.Register_Shape(heat_shape_2D);

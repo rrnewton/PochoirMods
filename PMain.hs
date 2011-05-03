@@ -77,7 +77,7 @@ ppopp (mode, debug, showFile, userArgs) ((inFile, inDir):files) =
              then iccPPFlags ++ envPath ++ [inFile]
              else iccDebugPPFlags ++ envPath ++ [inFile] 
        -- a pass of icc preprocessing
-       putStrLn (icc ++ intercalate " " iccPPArgs)
+       putStrLn (icc ++ " " ++ intercalate " " iccPPArgs)
 --       putStrLn ("inFile = " ++ inDir ++ inFile ++ 
 --                 "; icc preprocessed File = " ++ iccPPFile)
        rawSystem icc iccPPArgs

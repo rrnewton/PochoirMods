@@ -121,7 +121,7 @@ void Pochoir<N_RANK>::checkFlag(bool flag, char const * str) {
 
 template <int N_RANK>
 void Pochoir<N_RANK>::checkFlags(void) {
-    checkFlag(regArrayFlag, "Array");
+    checkFlag(regArrayFlag, "Pochoir_Array");
     checkFlag(regLogicDomainFlag, "Logic Domain");
     checkFlag(regPhysDomainFlag, "Physical Domain");
     checkFlag(regShapeFlag, "Shape");
@@ -148,7 +148,7 @@ void Pochoir<N_RANK>::cmpPhysDomainFromArray(T_Array & arr) {
     /* check the consistency of all engaged Pochoir_Array */
     for (int j = 0; j < N_RANK; ++j) {
         if (arr.size(j) != phys_grid_.x1[j]) {
-            printf("Not all engaged Pochoir_Arrays are of the same size!! Quit!\n");
+            printf("Size Mismatch in registered Pochoir_Array(s)!\n");
             exit(1);
         }
     }
@@ -169,7 +169,7 @@ void Pochoir<N_RANK>::Register_Array(Pochoir_Array<T, N_RANK> & arr) {
 #endif
     } else {
         if (sizeof(T) != arr_type_size_) {
-            printf("Pochoir_Array type size doesn't match!\n");
+            printf("Type Mismatch in registered Pochoir_Array(s)!\n");
             exit(1);
         }
     }
