@@ -1,5 +1,0 @@
-#!/bin/sh
-
-./tb_3dfd_pochoir 200 200 200 200
-
-
