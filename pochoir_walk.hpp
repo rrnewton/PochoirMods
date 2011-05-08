@@ -1,8 +1,8 @@
 /*
  **********************************************************************************
- *  Copyright (C) 2010  Massachusetts Institute of Technology
- *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- * 		                Charles E. Leiserson <cel@mit.edu>
+ *  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ *  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ * 		                     Charles E. Leiserson <cel@mit.edu>
  * 	 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -182,9 +182,6 @@ struct meta_grid_boundary <3, BF>{
                 int new_j = pmod_lu(j, initial_grid.x0[1], initial_grid.x1[1]);
         for (int k = grid.x0[0]; k < grid.x1[0]; ++k) {
             int new_k = pmod_lu(k, initial_grid.x0[0], initial_grid.x1[0]);
-#if DEBUG
-                printf("bf(%d, %d, %d, %d)\n", t, new_i, new_j, new_k);
-#endif
                 do {
                     home_cell_[3] = inRun ? new_k : 0;
                     home_cell_[2] = inRun ? new_j : 0;

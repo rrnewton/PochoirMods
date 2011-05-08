@@ -1,8 +1,8 @@
 {-
  ----------------------------------------------------------------------------------
- -  Copyright (C) 2010  Massachusetts Institute of Technology
- -  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- - 		                Charles E. Leiserson <cel@mit.edu>
+ -  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ -  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ - 		                     Charles E. Leiserson <cel@mit.edu>
  - 	 
  -   This program is free software: you can redistribute it and/or modify
  -   it under the terms of the GNU General Public License as published by
@@ -36,27 +36,25 @@ import qualified Data.Map as Map
 
 pToken1 :: GenParser Char ParserState String
 pToken1 = do reserved "Pochoir_Array"
-             (l_type, l_rank, l_toggle) <- angles pDeclStatic <?> "Pochoir_Array static parameters"
+             (l_type, l_rank) <- angles pDeclStatic <?> "Pochoir_Array static parameters"
              l_arrayDecl <- commaSep1 pDeclDynamic <?> "Pochoir_Array Dynamic parameters"
              semi 
              l_state <- getState
              return (concat $ 
-                   map (outputSArray (l_type, l_rank, l_toggle) (pArray l_state)) l_arrayDecl)
+                   map (outputSArray (l_type, l_rank) (pArray l_state)) l_arrayDecl)
              -- return ("Pochoir_Array <" ++ show l_type ++ ", " ++ show l_rank ++ "> " ++ pShowArrayDynamicDecl l_arrayDecl ++ ";\n")
       <|> do ch <- anyChar
              return [ch]
       <?> "line"
 
-outputSArray :: (PType, Int, Int) -> Map.Map PName PArray -> ([PName], PName, [DimExpr]) -> String
-outputSArray (l_type, l_rank, l_toggle) m_array (l_qualifiers, l_array, l_dims) =
+outputSArray :: (PType, Int) -> Map.Map PName PArray -> ([PName], PName, [DimExpr]) -> String
+outputSArray (l_type, l_rank) m_array (l_qualifiers, l_array, l_dims) =
     case Map.lookup l_array m_array of
         Nothing -> breakline ++ "Pochoir_Array <" ++ 
-                    show l_type ++ ", " ++ show l_rank ++ ", " ++ show l_toggle ++ 
-                    "> " ++ 
+                    show l_type ++ ", " ++ show l_rank ++ "> " ++ 
                     pShowDynamicDecl [(l_qualifiers, l_array, l_dims)] pShowArrayDim ++ ";" 
         Just l_pArray -> breakline ++ "Pochoir_Array <" ++ 
-                    show l_type ++ ", " ++ show l_rank ++ 
-                    ", " ++ show (max l_toggle $ 1+aToggle l_pArray) ++ "> " ++ 
+                    show l_type ++ ", " ++ show l_rank ++ "> " ++ 
                     pShowDynamicDecl [(l_qualifiers, l_array, l_dims)] pShowArrayDim ++ ";" 
 
 

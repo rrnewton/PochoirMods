@@ -1,8 +1,8 @@
 {-
  ----------------------------------------------------------------------------------
- -  Copyright (C) 2010  Massachusetts Institute of Technology
- -  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- - 		                Charles E. Leiserson <cel@mit.edu>
+ -  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ -  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ - 		                     Charles E. Leiserson <cel@mit.edu>
  - 	 
  -   This program is free software: you can redistribute it and/or modify
  -   it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ data PType = PType {
     typeName :: String
 } deriving Eq
 data PState = PochoirBegin | PochoirEnd | PochoirMacro | PochoirDeclArray | PochoirDeclRange | PochoirError | Unrelated deriving (Show, Eq)
-data PMode = PHelp | PDefault | PIter | PCaching | PCPointer | POptPointer | PPointer | PTypeShadow | PInterior | PMacroShadow | PNoPP deriving (Show, Eq)
+data PMode = PHelp | PDefault | PDebug | PCaching | PCPointer | POptPointer | PPointer | PMacroShadow | PNoPP deriving (Show, Eq)
 data PMacro = PMacro {
     mName :: PName,
     mValue :: PValue

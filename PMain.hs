@@ -1,8 +1,8 @@
 {-
  ----------------------------------------------------------------------------------
- -  Copyright (C) 2010  Massachusetts Institute of Technology
- -  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- - 		                Charles E. Leiserson <cel@mit.edu>
+ -  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ -  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ - 		                     Charles E. Leiserson <cel@mit.edu>
  - 	 
  -   This program is free software: you can redistribute it and/or modify
  -   it under the terms of the GNU General Public License as published by
@@ -49,10 +49,8 @@ main = do args <- getArgs
              exitFailure
           whilst (mode /= PNoPP) $ do
              ppopp (mode, debug, showFile, userArgs) (zip inFiles inDirs)
-          -- directly pass the output file of pochoir to icc and userArgs
-          -- let objInFile = getObjFile inDir outFile
+          -- pass everything to icc after preprocessing and Pochoir optimization
           let iccArgs = userArgs
-          -- putStrLn ("userArgs = " ++ intercalate " " userArgs)
           putStrLn (icc ++ " " ++ intercalate " " iccArgs)
           rawSystem icc iccArgs
           whilst (showFile == False) $ do
@@ -71,30 +69,41 @@ ppopp (mode, debug, showFile, userArgs) ((inFile, inDir):files) =
        whilst (pochoirLibPath == "EnvError") $ do
           putStrLn ("Environment variable POCHOIR_LIB_PATH is NOT set")
           exitFailure
+{-
        cilkStubPath <- catch (getEnv "CILK_HEADER_PATH")(\e -> return "EnvError")
        whilst (cilkStubPath == "EnvError") $ do
           putStrLn ("Environment variable CILK_HEADER_PATH is NOT set")
           exitFailure
        let envPath = ["-I" ++ cilkStubPath] ++ ["-I" ++ pochoirLibPath]
+-}
+       let envPath = ["-I" ++ pochoirLibPath]
        let iccPPFile = inDir ++ getPPFile inFile
        let iccPPArgs = if debug == False
              then iccPPFlags ++ envPath ++ [inFile]
              else iccDebugPPFlags ++ envPath ++ [inFile] 
        -- a pass of icc preprocessing
        putStrLn (icc ++ " " ++ intercalate " " iccPPArgs)
---       putStrLn ("inFile = " ++ inDir ++ inFile ++ 
---                 "; icc preprocessed File = " ++ iccPPFile)
        rawSystem icc iccPPArgs
        -- a pass of pochoir compilation
-       let outFile = rename "_pochoir" inFile
---       putStrLn ("pochoir -" ++ show mode ++ " " ++ iccPPFile)
---       putStrLn ("inFile = " ++ iccPPFile ++ "; Pochoir outFile = " ++ inDir ++ outFile)
-       inh <- openFile iccPPFile ReadMode
-       outh <- openFile outFile WriteMode
-       pProcess mode inh outh
-       hClose inh
-       hClose outh
+       whilst (mode /= PDebug) $ do
+           let outFile = rename "_pochoir" inFile
+           inh <- openFile iccPPFile ReadMode
+           outh <- openFile outFile WriteMode
+           putStrLn ("pochoir " ++ show mode ++ " " ++ iccPPFile)
+           pProcess mode inh outh
+           hClose inh
+           hClose outh
+       whilst (mode == PDebug) $ do
+           let midFile = getMidFile inFile
+           let outFile = rename "_pochoir" midFile
+           putStrLn ("mv " ++ midFile ++ " " ++ outFile)
+           renameFile midFile outFile
        ppopp (mode, debug, showFile, userArgs) files
+
+getMidFile :: String -> String
+getMidFile a  
+    | isSuffixOf ".cpp" a || isSuffixOf ".cxx" a = take (length a - 4) a ++ ".i"
+    | otherwise = a
 
 rename :: String -> String -> String
 rename pSuffix fname = name ++ pSuffix ++ ".cpp"
@@ -116,11 +125,13 @@ icc = "icpc"
 
 iccFlags = ["-O3", "-DNDEBUG", "-std=c++0x", "-Wall", "-Werror", "-ipo"]
 
-iccPPFlags = ["-P", "-C", "-DNDEBUG", "-std=c++0x", "-Wall", "-Werror", "-ipo"]
+iccPPFlags = ["-P", "-C", "-DNCHECK_SHAPE", "-DNDEBUG", "-std=c++0x", "-Wall", "-Werror", "-ipo"]
 
-iccDebugFlags = ["-DDEBUG", "-O0", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
+-- iccDebugFlags = ["-DDEBUG", "-O0", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
+iccDebugFlags = ["-DDEBUG", "-O0", "-g3", "-std=c++0x"]
 
-iccDebugPPFlags = ["-P", "-C", "-DDEBUG", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
+-- iccDebugPPFlags = ["-P", "-C", "-DCHECK_SHAPE", "-DDEBUG", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
+iccDebugPPFlags = ["-P", "-C", "-DCHECK_SHAPE", "-DDEBUG", "-g3", "-std=c++0x"]
 
 parseArgs :: ([String], [String], PMode, Bool, Bool, [String]) -> [String] -> ([String], [String], PMode, Bool, Bool, [String])
 parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL 
@@ -153,9 +164,10 @@ parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL
             aL' = delete "-showFile" aL
         in  parseArgs (inFiles, inDirs, mode, debug, l_showFile, aL') aL'
     | elem "-debug" aL =
-        let l_debug = True
+        let l_debug = True 
+            l_mode = PDebug
             aL' = delete "-debug" aL
-        in  parseArgs (inFiles, inDirs, mode, l_debug, showFile, aL') aL'
+        in  parseArgs (inFiles, inDirs, l_mode, l_debug, showFile, aL') aL'
     | null aL == False =
         let (l_files, l_dirs, l_mode, aL') = findCPP aL ([], [], mode, aL)
         in  (l_files, l_dirs, l_mode, debug, showFile, aL')

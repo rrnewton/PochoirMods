@@ -1,8 +1,8 @@
 /*
  **********************************************************************************
- *  Copyright (C) 2010  Massachusetts Institute of Technology
- *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- * 		                Charles E. Leiserson <cel@mit.edu>
+ *  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ *  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ * 		                     Charles E. Leiserson <cel@mit.edu>
  * 	 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -28,76 +28,6 @@
 #include <cstddef>
 #include <cassert>
 #include <iostream>
-
-/* Pochoir Range */
-class Pochoir_pRange {
-	protected:
-		int first_, last_, stride_;
-		int index_, shift_;
-
-	public:
-		typedef int T_numtype;
-
-		Pochoir_pRange() : first_(0), last_(0), stride_(1), shift_(0), index_(0) { }
-
-		Pochoir_pRange(Pochoir_pRange const & r) {
-			first_ = r.first();
-			last_ = r.last();
-			stride_ = r.stride();
-			shift_ = r.shift();
-			index_ = first_;
-		}
-
-		Pochoir_pRange(int first, int last, int stride=1, int shift=0)
-			: first_(first), last_(last), stride_(stride), shift_(shift), index_(first) {}
-
-		int first() const { 
-			return first_; 
-		}
-
-		int last() const {
-			return last_;
-		}
-
-		int stride() const { 
-			return stride_; 
-		}
-
-		int shift() const {
-			return shift_;
-		}
-
-		inline int size() const {
-			return (last_ - first_) / stride_ + 1;
-		}
-
-		bool isUnitStride() const { 
-			return stride_ == 1; 
-		}
-
-		/* We don't change the original 'range' */
-		inline Pochoir_pRange const operator-(int shift) const { 
-			return Pochoir_pRange(first_ - shift, last_ - shift, stride_, shift); 
-		}
-
-		/* We don't change the original 'range' */
-		inline Pochoir_pRange const operator+(int shift) const { 
-			return Pochoir_pRange(first_ + shift, last_ + shift, stride_, shift); 
-		}
-
-		/* put a 'virtual' keyword , and 'inheritance' to rewrite the function 
-		 * in base class is a BAD BAD idea, which incurs very heavy overhead
-		*/
-		inline int operator() (int _idx) const {
-			return (first_ + _idx * stride_);
-		}
-
-		inline int operator[] (int _idx) const {
-			return (first_ + _idx * stride_);
-		}
-
-		friend std::ostream& operator<<(std::ostream& os, Pochoir_pRange const & range);
-};
 
 /* unit-stride Range */
 class Pochoir_Domain {

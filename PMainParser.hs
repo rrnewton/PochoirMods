@@ -1,8 +1,8 @@
 {-
  ----------------------------------------------------------------------------------
- -  Copyright (C) 2010  Massachusetts Institute of Technology
- -  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- - 		                Charles E. Leiserson <cel@mit.edu>
+ -  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ -  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ - 		                     Charles E. Leiserson <cel@mit.edu>
  - 	 
  -   This program is free software: you can redistribute it and/or modify
  -   it under the terms of the GNU General Public License as published by
@@ -51,8 +51,11 @@ pToken =
         try pParseCPPComment
     <|> try pParseMacro
     <|> try pParsePochoirArray
+    <|> try pParsePochoirArrayAsParam
     <|> try pParsePochoirStencil
     <|> try pParsePochoirStencilWithShape
+    <|> try pParsePochoirStencilAsParam
+    <|> try pParsePochoirStencilWithShapeAsParam
     <|> try pParsePochoirShapeInfo
     <|> try pParsePochoirDomain
     <|> try pParsePochoirKernel1D
@@ -74,13 +77,24 @@ pParseMacro =
 pParsePochoirArray :: GenParser Char ParserState String
 pParsePochoirArray =
     do reserved "Pochoir_Array"
-       (l_type, l_rank, l_toggle) <- angles $ try pDeclStatic
+       (l_type, l_rank) <- angles $ try pDeclStatic
        l_arrayDecl <- commaSep1 pDeclDynamic
        l_delim <- pDelim 
-       updateState $ updatePArray $ transPArray (l_type, l_rank, l_toggle) l_arrayDecl
+       updateState $ updatePArray $ transPArray (l_type, l_rank) l_arrayDecl
        return (breakline ++ "/* Known*/ Pochoir_Array <" ++ show l_type ++ 
                ", " ++ show l_rank ++ "> " ++ 
                pShowDynamicDecl l_arrayDecl pShowArrayDim ++ l_delim)
+
+pParsePochoirArrayAsParam :: GenParser Char ParserState String
+pParsePochoirArrayAsParam =
+    do reserved "Pochoir_Array"
+       (l_type, l_rank) <- angles $ try pDeclStatic
+       l_arrayDecl <- pDeclDynamic
+       l_delim <- pDelim 
+       updateState $ updatePArray $ transPArray (l_type, l_rank) [l_arrayDecl]
+       return (breakline ++ "/* Known*/ Pochoir_Array <" ++ show l_type ++ 
+               ", " ++ show l_rank ++ "> " ++ 
+               pShowDynamicDecl [l_arrayDecl] pShowArrayDim ++ l_delim)
 
 pParsePochoirStencil :: GenParser Char ParserState String
 pParsePochoirStencil = 
@@ -112,6 +126,37 @@ pParsePochoirStencilWithShape =
        return (breakline ++ "/* Known */ Pochoir <" ++ show l_rank ++ 
                "> " ++ pShowDynamicDecl l_rawStencils (pShowShapes . shape) ++ l_delim ++ 
                "/* toggles = " ++ (show $ map shapeToggle l_pShapes) ++ "*/")
+
+pParsePochoirStencilAsParam :: GenParser Char ParserState String
+pParsePochoirStencilAsParam = 
+    do reserved "Pochoir"
+       l_rank <- angles exprDeclDim
+       l_rawStencil <- pDeclPochoir
+       l_delim <- pDelim
+       l_state <- getState
+       let l_stencil = pSecond l_rawStencil
+       let l_shape = pThird l_rawStencil
+       let l_pShape = getPShape l_state l_shape
+       let l_toggle = shapeToggle l_pShape
+       updateState $ updatePStencil $ transPStencil l_rank [l_stencil] [l_pShape]
+       return (breakline ++ "/* Known */ Pochoir <" ++ show l_rank ++ 
+               "> " ++ pShowDynamicDecl [l_rawStencil] (showString "") ++ l_delim ++ 
+               "/* toggles = " ++ show l_toggle ++ "*/")
+
+pParsePochoirStencilWithShapeAsParam :: GenParser Char ParserState String
+pParsePochoirStencilWithShapeAsParam = 
+    do reserved "Pochoir"
+       l_rank <- angles exprDeclDim
+       l_rawStencil <- pDeclPochoirWithShape
+       l_delim <- pDelim
+       l_state <- getState
+       let l_stencil = pSecond l_rawStencil
+       let l_pShape = pThird l_rawStencil 
+       let l_toggle = shapeToggle l_pShape
+       updateState $ updatePStencil $ transPStencil l_rank [l_stencil] [l_pShape]
+       return (breakline ++ "/* Known */ Pochoir <" ++ show l_rank ++ 
+               "> " ++ pShowDynamicDecl [l_rawStencil] (pShowShapes . shape) ++ 
+               l_delim ++ "/* toggles = " ++ (show $ shapeToggle l_pShape) ++ "*/")
 
 pParsePochoirShapeInfo :: GenParser Char ParserState String
 pParsePochoirShapeInfo = 
@@ -185,10 +230,8 @@ pPochoirKernel =
     do  l_kernel_params <- parens $ commaSep1 identifier           
         exprStmts <- manyTill pStatement (try $ reserved "Pochoir_Kernel_End")
         l_state <- getState
-        let l_iters = 
-                    if pMode l_state == PIter 
-                        then getFromStmts getIter (pArray l_state) exprStmts
-                        else getFromStmts (getPointer $ tail l_kernel_params) (pArray l_state) exprStmts
+        let l_iters = getFromStmts (getPointer $ tail l_kernel_params) 
+                                   (pArray l_state) exprStmts
         let l_revIters = transIterN 0 l_iters
         let l_kernel = PKernel { kName = head l_kernel_params, 
                          kParams = tail l_kernel_params,
@@ -220,12 +263,12 @@ pMacroValue l_name =
                  return ("#define " ++ l_name ++ " " ++ l_value ++ "\n")
           <?> "Macro Definition"
 
-transPArray :: (PType, Int, Int) -> [([PName], PName, [DimExpr])] -> [(PName, PArray)]
-transPArray (l_type, l_rank, l_toggle) [] = []
-transPArray (l_type, l_rank, l_toggle) (p:ps) =
+transPArray :: (PType, Int) -> [([PName], PName, [DimExpr])] -> [(PName, PArray)]
+transPArray (l_type, l_rank) [] = []
+transPArray (l_type, l_rank) (p:ps) =
     let l_name = pSecond p
         l_dims = pThird p
-    in  (l_name, PArray {aName = l_name, aType = l_type, aRank = l_rank, aDims = l_dims, aMaxShift = 0, aToggle = l_toggle, aRegBound = False}) : transPArray (l_type, l_rank, l_toggle) ps
+    in  (l_name, PArray {aName = l_name, aType = l_type, aRank = l_rank, aDims = l_dims, aMaxShift = 0, aToggle = 0, aRegBound = False}) : transPArray (l_type, l_rank) ps
 
 transPStencil :: Int -> [PName] -> [PShape] -> [(PName, PStencil)]
 transPStencil l_rank [] _ = []

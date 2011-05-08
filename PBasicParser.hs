@@ -1,8 +1,8 @@
 {-
  ----------------------------------------------------------------------------------
- -  Copyright (C) 2010  Massachusetts Institute of Technology
- -  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- - 		                Charles E. Leiserson <cel@mit.edu>
+ -  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ -  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ - 		                     Charles E. Leiserson <cel@mit.edu>
  - 	 
  -   This program is free software: you can redistribute it and/or modify
  -   it under the terms of the GNU General Public License as published by
@@ -326,14 +326,13 @@ registerArray l_id l_arrayName l_pArray l_stencil =
            return (l_id ++ ".Register_Array (" ++ l_arrayName ++ 
                    "); /* register Array */" ++ breakline)
 
--- pDeclStatic <type, rank, toggle>
-pDeclStatic :: GenParser Char ParserState (PType, PValue, PValue)
+-- pDeclStatic <type, rank>
+pDeclStatic :: GenParser Char ParserState (PType, PValue)
 pDeclStatic = do l_type <- pType 
                  comma
                  -- exprDeclDim is an int that has to be known at compile-time
                  l_rank <- exprDeclDim
-                 l_toggle <- option 2 (comma >> exprDeclDim)
-                 return (l_type, l_rank, l_toggle)
+                 return (l_type, l_rank)
 
 pDeclStaticNum :: GenParser Char ParserState (PValue)
 pDeclStaticNum = do l_rank <- exprDeclDim
@@ -380,8 +379,6 @@ cppQualifier =
           return "*"
    <|> do reservedOp "&"
           return "&"
-   <|> do reservedOp "&&"
-          return "&&"
    <|> do reserved "const"
           return "const"
    <|> do reserved "volatile"

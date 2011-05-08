@@ -1,8 +1,8 @@
 /*
  **********************************************************************************
- *  Copyright (C) 2010  Massachusetts Institute of Technology
- *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- * 		                Charles E. Leiserson <cel@mit.edu>
+ *  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ *  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ * 		                     Charles E. Leiserson <cel@mit.edu>
  * 	 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -1161,42 +1161,74 @@ class Pochoir_Array {
 			return (*view_)[l_idx];
 		}
 
-		inline T & get (int _idx1, int _idx0) {
+		inline T get (int _idx1, int _idx0) {
+            if (check_boundary1(_idx1, _idx0)) {
+                printf("Off-boundary access in boundary function at arr.get(%d, %d)\n", _idx1, _idx0);
+                exit(1);
+            }
 			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
-		inline T & get (int _idx2, int _idx1, int _idx0) {
+		inline T get (int _idx2, int _idx1, int _idx0) {
+            if (check_boundary2(_idx2, _idx1, _idx0)) {
+                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d)\n", _idx2, _idx1, _idx0);
+                exit(1);
+            }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
-		inline T & get (int _idx3, int _idx2, int _idx1, int _idx0) {
+		inline T get (int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (check_boundary3(_idx3, _idx2, _idx1, _idx0)) {
+                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d)\n", _idx3, _idx2, _idx1, _idx0);
+                exit(1);
+            }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
-		inline T & get (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+		inline T get (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0)) {
+                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d)\n", _idx4, _idx3, _idx2, _idx1, _idx0);
+                exit(1);
+            }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
-		inline T & get (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+		inline T get (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0)) {
+                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d, %d)\n", _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+                exit(1);
+            }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
-		inline T & get (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+		inline T get (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0)) {
+                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d, %d, %d)\n", _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+                exit(1);
+            }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
-		inline T & get (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+		inline T get (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0)) {
+                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d, %d, %d, %d)\n", _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+                exit(1);
+            }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
 
-		inline T & get (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+		inline T get (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
+            if (check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0)) {
+                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d, %d, %d, %d, %d)\n", _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+                exit(1);
+            }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
 			return (*view_)[l_idx];
 		}
