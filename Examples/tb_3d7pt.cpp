@@ -1,8 +1,8 @@
 /*
  **********************************************************************************
- *  Copyright (C) 2010  Massachusetts Institute of Technology
- *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- *                      Charles E. Leiserson <cel@mit.edu>
+ *  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ *  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ *                           Charles E. Leiserson <cel@mit.edu>
  *   
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -25,10 +25,12 @@
  *********************************************************************************
  */
 
+/* It's an order 1, 3D 7 point stencil to match up with Berkeley Kaushik Datta's
+ * autotuner
+ */
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include <math.h>
 #include <sys/time.h>
 
 #include <pochoir.hpp>
@@ -84,11 +86,8 @@ int main(int argc, char *argv[])
     Pochoir_Array_3D(double) pa(Nz, Ny, Nx), pb(Nz, Ny, Nx);
 
     Pochoir_3D fd_3D(fd_shape_3D);
-    // Pochoir_3D fd_3D({{0,0,0,0}, {-1,0,0,0}, {-1,-1,0,0}, {-1,0,-1,0}, {-1,0,0,-1}, {-1,1,0,0}, {-1,0,1,0}, {-1,0,0,1}});
     Pochoir_Domain I(0+ds, Nx-ds), J(0+ds, Ny-ds), K(0+ds, Nz-ds);
 
-//    fd_3D.registerBoundaryFn(pa, fd_bv_3D);
-//    fd_3D.Register_Shape(fd_shape_3D);
     fd_3D.Register_Array(pa);
     fd_3D.Register_Domain(I, J, K);
     pb.Register_Shape(fd_shape_3D);
@@ -102,13 +101,8 @@ int main(int argc, char *argv[])
                     || k == 0 || k == Nx-1) {
                     pa(0, i, j, k) = pa(1, i, j, k) = 0;
                 } else {
-#if DEBUG
-                    pa(0, i, j, k) = 1;
-                    pa(1, i, j, k) = 0;
-#else
                     pa(0, i, j, k) = 1.0 * (rand() % BASE);
                     pa(1, i, j, k) = 0;
-#endif
                 }
                 pb(0, i, j, k) = pa(0, i, j, k);
                 pb(1, i, j, k) = 0;

@@ -1,8 +1,8 @@
 /*
  **********************************************************************************
- *  Copyright (C) 2010  Massachusetts Institute of Technology
- *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- * 		                Charles E. Leiserson <cel@mit.edu>
+ *  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ *  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ * 		                     Charles E. Leiserson <cel@mit.edu>
  * 	 
  *  Written by: Rezaul Alam Chowdhury <rezaul@mit.edu>
  *
@@ -64,7 +64,7 @@ void print_usage( char *prog )
   printf( "\t-s value : steps in space dimension ( default: %d )\n", DEFAULT_s );
   printf( "\t-t value : steps in time dimension ( default: %d )\n\n", DEFAULT_t );
 
-  printf( "\t-i               : run iterative stencil\n\n" );  
+  printf( "\t-i               : Run iterative stencil\n\n" );  
    
   printf( "\t-h               : print this help screen\n\n" );
 }
@@ -75,7 +75,7 @@ void print_usage( char *prog )
 int read_command_line( int argc, char *argv[ ], 
 		       double &S, double &E, double &r, double &V, double &T, 
 		       int &ns, int &nt,
-                       int &run_iter_stencil )
+                       int &Run_iter_stencil )
 {
   S = DEFAULT_S;
   E = DEFAULT_E;
@@ -86,7 +86,7 @@ int read_command_line( int argc, char *argv[ ],
   ns = DEFAULT_s;
   nt = DEFAULT_t;
   
-  run_iter_stencil = 0;
+  Run_iter_stencil = 0;
 
   for ( int i = 1; i < argc; )
     {
@@ -94,7 +94,7 @@ int read_command_line( int argc, char *argv[ ],
 
      if ( !strcmp( argv[ i ], "-i" ) )
        {
-        run_iter_stencil = 1;
+        Run_iter_stencil = 1;
          
         i++;
         
@@ -310,7 +310,7 @@ Pochoir_Boundary_1D( apop_bv_1D, arr, t, i )
    if ( ( i < arr.size( 0 ) - 1 ) || ( t == 0 ) ) return arr.get( t, i );
    else return 0;
 
-Pochoir_Boundary_end
+Pochoir_Boundary_End
 
 
 
@@ -323,8 +323,8 @@ double stencilAPOP( double S, double E, double r, double V, double T,
    Pochoir< N_RANK > APOP(APOP_shape);
    Pochoir_Array< double, N_RANK > c( ns + 1 );
    Pochoir_Array< double, N_RANK > f( ns + 1 );
-   APOP.registerArray( f );    
-   APOP.registerArray( c );
+   APOP.Register_Array( f );    
+   APOP.Register_Array( c );
    
    computeCoeffs( r, V, T, ns, nt, c );   
    
@@ -336,7 +336,7 @@ double stencilAPOP( double S, double E, double r, double V, double T,
        
    Pochoir_Domain I( 1, ns );
     
-   Pochoir_kernel_1D( APOP_fn, t, i )
+   Pochoir_Kernel_1D( APOP_fn, t, i )
         
        double v = c( 0, i ) * f( t, i - 1 )
                 + c( 1, i ) * f( t, i )
@@ -344,12 +344,12 @@ double stencilAPOP( double S, double E, double r, double V, double T,
         
        f( t + 1, i ) = max( v, E - i * dS );			   
   
-   Pochoir_kernel_end
+   Pochoir_Kernel_End
 
-   APOP.registerDomain( I );   
-   f.registerBV( apop_bv_1D );
+   APOP.Register_Domain( I );   
+   f.Register_Boundary( apop_bv_1D );
 
-   APOP.run( nt, APOP_fn );
+   APOP.Run( nt, APOP_fn );
     
    return f.interior( nt, ( ns >> 1 ) );    
 }
@@ -363,12 +363,12 @@ double iterativeStencilAPOP( double S, double E, double r, double V, double T,
    double dS = 2.0 * S / ns;
    
    Pochoir_Array< double, N_RANK > c( ns + 1 );
-   c.registerShape(APOP_shape);
+   c.Register_Shape(APOP_shape);
    
    computeCoeffs( r, V, T, ns, nt, c );   
    
    Pochoir_Array< double, N_RANK > f( ns + 1 );
-   f.registerShape(APOP_shape);
+   f.Register_Shape(APOP_shape);
    
    cilk_for ( int i = 0; i <= ns; ++i )
        f.interior( 0, i ) = max( 0.0, E - i * dS );
@@ -396,14 +396,14 @@ double iterativeStencilAPOP( double S, double E, double r, double V, double T,
 
 int main( int argc, char *argv[ ] )
 {
-    printf( "\nStencil-based DP for the price of American put option ( run with option -h for help ).\n\n" );
+    printf( "\nStencil-based DP for the price of American put option ( Run with option -h for help ).\n\n" );
 
     double S, E, r, V, T; 
     int ns, nt;
     
-    int runIterativeStencil;
+    int RunIterativeStencil;
 
-    if ( !read_command_line( argc, argv, S, E, r, V, T, ns, nt, runIterativeStencil ) )
+    if ( !read_command_line( argc, argv, S, E, r, V, T, ns, nt, RunIterativeStencil ) )
       {
         print_usage( argv[ 0 ] );
         return 1;
@@ -422,9 +422,9 @@ int main( int argc, char *argv[ ] )
           
     printf( "\n\nPochoir:\n" );
     printf( "\t option price = %.2lf\n", price0 );    
-    printf( "\t running time = %.3lf sec\n\n", t0 );    
+    printf( "\t Running time = %.3lf sec\n\n", t0 );    
   
-    if ( runIterativeStencil )
+    if ( RunIterativeStencil )
       {
         printf( "Running iterative stencil..." );
         fflush( stdout );
@@ -437,8 +437,8 @@ int main( int argc, char *argv[ ] )
       
         printf( "\n\nIterative Stencil:\n" );
         printf( "\t option price = %.2lf\n", price1 );    
-        if ( t0 > 0 ) printf( "\t running time = %.3lf sec ( %.3lf x Pochoir )\n\n", t1, t1 / t0 );    
-        else printf( "\t running time = %.3lf sec\n\n", t1 );    
+        if ( t0 > 0 ) printf( "\t Running time = %.3lf sec ( %.3lf x Pochoir )\n\n", t1, t1 / t0 );    
+        else printf( "\t Running time = %.3lf sec\n\n", t1 );    
       }
        
     return 0;

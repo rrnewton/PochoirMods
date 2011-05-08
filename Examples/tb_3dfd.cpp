@@ -1,8 +1,8 @@
 /*
  **********************************************************************************
- *  Copyright (C) 2010  Massachusetts Institute of Technology
- *  Copyright (C) 2010  Yuan Tang <yuantang@csail.mit.edu>
- *                      Charles E. Leiserson <cel@mit.edu>
+ *  Copyright (C) 2010-2011  Massachusetts Institute of Technology
+ *  Copyright (C) 2010-2011  Yuan Tang <yuantang@csail.mit.edu>
+ *                           Charles E. Leiserson <cel@mit.edu>
  *   
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,13 +23,13 @@
  *********************************************************************************
  */
 
+/* It's order-4, 3D 15 point stencil, to match up with Matteo Frigo's
+ * hand-optimized wave equation 
+ */
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include <math.h>
 #include <sys/time.h>
-#include "cilktime.h"
-//#include "tbb/blocked_range.h"
 
 #include <pochoir.hpp>
 
@@ -413,40 +413,37 @@ void dotest()
   A[1] = new float[Nx * Ny * Nz];
   vsq = new float[Nx * Ny * Nz];
 
-  double start;
-  double stop;
+  struct timeval start, end;
 	
   ///////////////////////////////////////////////                                                                      
 #if 1
   
   init_variables();
-  start = cilk_ticks_to_seconds(cilk_getticks());
-  
+  gettimeofday(&start, 0);
   /* this is loop based version */
   loop_opt3(0, T,
             ds, Nx - ds, 
             ds, Ny - ds,
             ds, Nz - ds);
-  
+  gettimeofday(&end, 0);
   //basecase(0, T,
   //	    ds, 0, Nx - ds, 0, 
   //	    ds, 0, Ny - ds, 0, 
   //	    ds, 0, Nz - ds, 0);
-  stop = cilk_ticks_to_seconds(cilk_getticks()); 
   //copy_A_to_B();
-  print_summary("base", stop - start);
+  print_summary("base", tdiff(&end, &start));
   ///////////////////////////////////////////////
   
   init_variables();
   // verify_A_and_B();
-  start = cilk_ticks_to_seconds(cilk_getticks());
+  gettimeofday(&start, 0);
   /* this is the divide-and-conquer version in cilk++ */
   walk3(0, T,
 	    ds, 0, Nx - ds, 0, 
 		ds, 0, Ny - ds, 0, 
 		ds, 0, Nz - ds, 0);
-  stop = cilk_ticks_to_seconds(cilk_getticks());
-  print_summary("COStencilTask", stop - start);
+  gettimeofday(&end, 0);
+  print_summary("COStencilTask", tdiff(&end, &start));
 
   // verify_A_and_B();
   //print_y();
@@ -454,19 +451,13 @@ void dotest()
 #endif
 }
 
-    Pochoir_Boundary_3D(fd_bv_3D, arr, t, i, j, k)
-        const int ds = 4;
-        if (i < ds || i >= arr.size(2)-ds 
-         || j < ds || j >= arr.size(1)-ds 
-         || k < ds || k >= arr.size(0)-ds)
-            return 0;
-        else
-            return arr.get(t, i, j, k);
-    Pochoir_Boundary_End
+Pochoir_Boundary_3D(fd_bv_3D, arr, t, i, j, k)
+    return 0;
+Pochoir_Boundary_End
 
 int main(int argc, char *argv[])
 {
-  double start, stop;
+  struct timeval start, end;
   if (argc > 3) {
     Nx = atoi(argv[1]);
     Ny = atoi(argv[2]);
@@ -484,9 +475,7 @@ int main(int argc, char *argv[])
   Pochoir_3D fd_3D(fd_shape_3D);
   Pochoir_Domain I(0+ds, Nx-ds), J(0+ds, Ny-ds), K(0+ds, Nz-ds);
 
-//  fd_3D.registerBoundaryFn(pa, fd_bv_3D);
   fd_3D.Register_Array(pa);
-//  fd_3D.Register_Shape(fd_shape_3D);
   fd_3D.Register_Domain(I, J, K);
 
   Pochoir_Kernel_3D(fd_3D_fn, t, i, j, k)
@@ -510,10 +499,10 @@ int main(int argc, char *argv[])
   dotest();
 
   init_pochoir_array(pa);
-  start = cilk_ticks_to_seconds(cilk_getticks());
+  gettimeofday(&start, 0);
   fd_3D.Run(T, fd_3D_fn);
-  stop = cilk_ticks_to_seconds(cilk_getticks());
-  print_summary("Pochoir", stop - start);
+  gettimeofday(&end, 0);
+  print_summary("Pochoir", tdiff(&end, &start));
 
   delete[] A;
   delete[] vsq;
