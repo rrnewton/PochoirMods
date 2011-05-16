@@ -144,6 +144,10 @@ parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL
         let l_mode = PHelp
             aL' = delete "-h" aL
         in  (inFiles, inDirs, l_mode, debug, showFile, aL')
+    | elem "-auto-optimize" aL =
+        let l_mode = PDefault
+            aL' = delete "-auto-optimize" aL
+        in  (inFiles, inDirs, l_mode, debug, showFile, aL')
     | elem "-split-caching" aL =
         let l_mode = PCaching
             aL' = delete "-split-caching" aL
