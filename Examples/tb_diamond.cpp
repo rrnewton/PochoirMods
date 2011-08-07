@@ -92,10 +92,10 @@ int main(int argc, char * argv[])
     Pochoir_Guard_1D(guard_interior, t, i)
         /* (T/2) / (N/2) = T / N */
         float _slope = float(T) / (N);
-        if (float(t)/(i - N/2) < _slope ||
-            float(T - t)/(i - N/2) < _slope ||
-            float(T - t)/(N/2 - i) < _slope ||
-            float(t)/(N/2 - i) < _slope)
+        if ((t <= T/2 && i > N/2 && float(t)/(i - N/2) < _slope) ||
+            (t > T/2 && i > N/2 && float(T - t)/(i - N/2) < _slope) ||
+            (t > T/2 && i < N/2 && float(T - t)/(N/2 - i) < _slope) ||
+            (t <= T/2 && i < N/2 && float(t)/(N/2 - i) < _slope))
             return false;
         else
             return true;
@@ -135,9 +135,11 @@ int main(int argc, char * argv[])
         b(0, i) = a(0, i);
     }
 
+    leap_frog.Gen_Plan(6 * T);
     for (int times = 0; times < TIMES; ++times) {
         gettimeofday(&start, 0);
-        leap_frog.Run(6*T);
+        leap_frog.Load_Plan();
+        // leap_frog.Run(6*T);
         gettimeofday(&end, 0);
         min_tdiff = min(min_tdiff, (1.0e3 * tdiff(&end, &start)));
     }
