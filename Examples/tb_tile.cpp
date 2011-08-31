@@ -148,6 +148,8 @@ int main(int argc, char * argv[])
 
     printf("Pochoir_Kernel size = %d, sizeof(int) = %d\n", sizeof(k3), sizeof(int));
     /* this is a 2D checkerboard style tiling of the entire rectangular region/domain */
+    Pochoir_Kernel<1> tile0[2] = {};
+    Pochoir_Kernel<1> tile1[2] = {k0, k1};
     Pochoir_Kernel<1> tile_2D_checkerboard[2][2] = {{k0, k1}, {k2, k3}};
     leap_frog.Register_Tile_Kernels(Default_Guard_1D, tile_2D_checkerboard, 2, 2);
     leap_frog.Register_Array(a);
@@ -160,7 +162,7 @@ int main(int argc, char * argv[])
 
     Pochoir_Plan<1> & l_plan = leap_frog.Gen_Plan(T);
     sprintf(pochoir_plan_file_name, "pochoir_%d_%d.dat", N, T);
-    leap_frog.Store_Plan(l_plan, pochoir_plan_file_name);
+    leap_frog.Store_Plan(pochoir_plan_file_name, l_plan);
     Pochoir_Plan<1> & ll_plan = leap_frog.Load_Plan(pochoir_plan_file_name);
 //    leap_frog.Load_Plan();
     for (int times = 0; times < TIMES; ++times) {
@@ -181,6 +183,7 @@ int main(int argc, char * argv[])
         for (int t = 1; t < T + 1; ++t) {
             for (int i = 0; i < N; ++i) {
                 if ((t - 1) % 2 == 0 && i % 2 == 0) {
+                    /* k0 */
 #if DEBUG
                         printf("<i0> b(%d, %d) = f(b(%d, %d) <%.3f>, b(%d, %d) <%.3f>, b(%d, %d) <%.3f>)\n", t, i, t-1, i-1, b(t-1, i-1), t-1, i, b(t-1, i), t-1, i+1, b(t-1, i+1));
                         printf("<i0> b(%d, %d) : %.3f -> ", t, i, b(t, i));
@@ -190,6 +193,7 @@ int main(int argc, char * argv[])
                         printf("%.3f\n", b(t, i));
 #endif
                 } else if ((t - 1) % 2 == 0 && i % 2 == 1) {
+                    /* k1 */
 #if DEBUG
                         printf("<i1> b(%d, %d) = f(b(%d, %d) <%.3f>, b(%d, %d) <%.3f>, b(%d, %d) <%.3f>)\n", t, i, t-1, i-1, b(t-1, i-1), t-1, i, b(t-1, i), t-1, i+1, b(t-1, i+1));
                         printf("<i1> b(%d, %d) : %.3f -> ", t, i, b(t, i));
@@ -199,6 +203,7 @@ int main(int argc, char * argv[])
                         printf("%.3f\n", b(t, i));
 #endif
                 } else if ((t - 1) % 2 == 1 && i % 2 == 0) {
+                    /* k2 */
 #if DEBUG
                         printf("<i2> b(%d, %d) = f(b(%d, %d) <%.3f>, b(%d, %d) <%.3f>, b(%d, %d) <%.3f>)\n", t, i, t-1, i-1, b(t-1, i-1), t-1, i, b(t-1, i), t-1, i+1, b(t-1, i+1));
                         printf("<i2> b(%d, %d) : %.3f -> ", t, i, b(t, i));
@@ -208,6 +213,7 @@ int main(int argc, char * argv[])
                         printf("%.3f\n", b(t, i));
 #endif
                 } else if ((t - 1) % 2 == 1 && i % 2 == 1) {
+                    /* k3 */
 #if DEBUG
                         printf("<e0> b(%d, %d) = f(b(%d, %d) <%.3f>, b(%d, %d) <%.3f>, b(%d, %d) <%.3f>)\n", t, i, t-1, i-1, b(t-1, i-1), t-1, i, b(t-1, i), t-1, i+1, b(t-1, i+1));
                         printf("<e0> b(%d, %d) : %.3f -> ", t, i, b(t, i));
