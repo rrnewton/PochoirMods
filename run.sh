@@ -1,16 +1,45 @@
 #!/bin/bash
-step_low=200
-step_high=4000
-step_step=200
-size_low=200
-size_high=4000
-step_size=200
 
-for ((step=${step_low}; step <= ${step_high}; step += ${step_step})) do
-	for ((size=${size_low}; size <= ${size_high}; size += ${step_size})) do
-		echo "./loop $size $step"
-		./loop $size $step
-		echo "./obase $size $step"
-		./obase $size $step
+STEP_BASE=200
+STEP_BOUND=4000
+STEP_STEP=200
+
+SIZE_BASE=200
+SIZE_BOUND=4000
+SIZE_STEP=200
+
+LOOP_PATH=.
+OBASE_PATH=.
+
+EXIT_STAT=0
+
+if [ -e $LOOP_PATH/loop ] && [ -e $OBASE_PATH/obase ]
+then   
+
+    for STEP in {$STEP_BASE..$STEP_BOUND..$STEP_STEP} 
+    do
+	for SIZE in {$SIZE_BASE..$SIZE_BOUND..$SIZE_STEP}
+	do
+	    echo "$LOOP_PATH/loop $SIZE $STEP"
+	    $LOOP_PATH/loop $SIZE $STEP
+	    echo "$OBASE_PATH/obase $SIZE $STEP"
+	    $OBASE_PATH/obase $SIZE $STEP
 	done
-done
+    done
+
+fi
+
+if [ ! -e $LOOP_PATH/loop ]
+then
+    echo "$LOOP_PATH/loop doesn't exist"
+    EXIT_STAT=1
+fi
+
+if [ ! -e $OBASE_PATH/obase ]
+then
+    echo "$OBASE_PATH/obase doesn't exist"
+    EXIT_STAT=1
+fi
+
+exit $EXIT_STAT
+    
