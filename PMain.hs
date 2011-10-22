@@ -34,6 +34,9 @@ import Data.Char (isSpace)
 import qualified Data.Map as Map
 import Text.ParserCombinators.Parsec (runParser)
 
+import Data.Maybe (fromMaybe)
+import System.Console.GetOpt
+
 import PData
 import PMainParser
 
@@ -133,6 +136,8 @@ iccDebugFlags = ["-DDEBUG", "-O0", "-g3", "-std=c++0x"]
 
 -- iccDebugPPFlags = ["-P", "-C", "-DCHECK_SHAPE", "-DDEBUG", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
 iccDebugPPFlags = ["-P", "-C", "-DCHECK_SHAPE", "-DDEBUG", "-g3", "-std=c++0x"]
+
+data Flag = Help | 
 
 parseArgs :: ([String], [String], PMode, Bool, Bool, [String]) -> [String] -> ([String], [String], PMode, Bool, Bool, [String])
 parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL 
