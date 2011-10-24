@@ -1,86 +1,43 @@
-#!/bin/bash
-CC = ./pochoir
-ICC = icpc
-OPT_FLAGS = -O3 -DNDEBUG -Wall -Werror -unroll-aggressive -funroll-loops -ipo -xHOST -fno-alias -fno-fnalias -std=c++0x
-POCHOIR_DEBUG_FLAGS = -O0 -g3 -DDEBUG -debug -Wall -Werror -std=c++0x
-ICC_DEBUG_FLAGS = -O0 -g3 -DDEBUG -Wall -Werror -std=c++0x
-heat_1D_NP : tb_heat_1D_NP.cpp
-#   Phase-II compilation
-	${CC} -o tb_heat_1D_NP_pochoir ${OPT_FLAGS} tb_heat_1D_NP.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_heat_1D_NP_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_1D_NP.cpp
+#-----PATH VARIABLES-----#
 
-heat_NP : tb_heat_2D_NP.cpp
-#   Phase-II compilation
-	${CC} -o tb_heat_2D_NP_pochoir ${OPT_FLAGS} tb_heat_2D_NP.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_heat_2D_NP_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_2D_NP.cpp
+# Path variables #
+PC_PATH=..
+EXAMPLE_PATH=.
 
-heat_NP_zero : tb_heat_2D_NP_zero.cpp
-#   Phase-II compilation
-#	${CC} -o tb_heat_2D_NP_zero_pochoir ${OPT_FLAGS} tb_heat_2D_NP_zero.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_heat_2D_NP_zero_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_2D_NP_zero.cpp
+# Compiler variables #
+PC=$(PC_PATH)/pochoir
+CPP_FLAGS=-Wall -Werror -std=c++0x -o
+PHASE_I_FLAGS=-O3 -DNDEBUG  -unroll-aggressive -funroll-loops -ipo\
+ -xHOST -fno-alias -fno-fnalias $(CPP_FLAGS)
+PHASE_II_FLAGS=-O0 -g3 -DDEBUG -debug $(CPP_FLAGS) 
+# Default to the phase I flags
+FLAGS=$(PHASE_I_FLAGS)
 
-heat_P : tb_heat_2D_P.cpp
-#   Phase-II compilation
-	${CC} -o tb_heat_2D_P_pochoir ${OPT_FLAGS} tb_heat_2D_P.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_heat_2D_P_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_2D_P.cpp
+# File and target variables #
+EXAMPLE_SOURCE=$(wildcard $(EXAMPLE_PATH)/*.cpp)
 
-heat_3D_NP : tb_heat_3D_NP.cpp
-#   Phase-II compilation
-	${CC} -o tb_heat_3D_NP_pochoir ${OPT_FLAGS} tb_heat_3D_NP.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_heat_3D_NP_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_3D_NP.cpp
+# Cleanup flags #
+RM=rm
+RM_FLAGS=-f
+CLEAN_FILES=*.o *.i *_pochoir *_pochoir.cpp *.out
 
-apop : apop.cpp
-#   Phase-II compilation
-	${CC} -o apop_pochoir ${OPT_FLAGS} apop.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o apop_pochoir ${POCHOIR_DEBUG_FLAGS} apop.cpp
 
-life : tb_life.cpp
-#   Phase-II compilation
-	${CC} -o tb_life_pochoir ${OPT_FLAGS} tb_life.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_life_pochoir ${POCHOIR_DEBUG_FLAGS} tb_life.cpp
+#-----COMPILE RULES-----#
 
-psa_struct : tb_psa_struct.cpp
-#   Phase-II compilation
-#	${CC} -o tb_psa_struct_pochoir ${OPT_FLAGS} tb_psa_struct.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_psa_struct_pochoir ${POCHOIR_DEBUG_FLAGS} tb_psa_struct.cpp
+help :
+	@echo Available examples:
+	@echo $(notdir $(basename $(EXAMPLE_SOURCE)))
 
-rna : tb_rna.cpp
-#   Phase-II compilation
-	${CC} -o tb_rna_pochoir ${OPT_FLAGS} tb_rna.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_rna_pochoir ${POCHOIR_DEBUG_FLAGS} tb_rna.cpp
+% : %.cpp
+	$(PC) $(FLAGS) $@ $<
 
-lcs : tb_lcs.cpp
-#   Phase-II compilation
-#	${CC} -o tb_lcs_pochoir ${OPT_FLAGS} tb_lcs.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_lcs_pochoir ${POCHOIR_DEBUG_FLAGS} tb_lcs.cpp
+phase-i : FLAGS=$(PHASE_I_FLAGS)
 
-berkeley3d7pt : tb_3d7pt.cpp
-#   Phase-II compilation
-#	${CC} -o tb_3d7pt_pochoir ${OPT_FLAGS} tb_3d7pt.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_3d7pt_pochoir ${POCHOIR_DEBUG_FLAGS} tb_3d7pt.cpp
+phase-ii : FLAGS=$(PHASE_II_FLAGS)
 
-berkeley3d27pt : tb_3d27pt.cpp
-#   Phase-II compilation
-#	${CC} -o tb_3d27pt_pochoir ${OPT_FLAGS} tb_3d27pt.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_3d27pt_pochoir ${POCHOIR_DEBUG_FLAGS} tb_3d27pt.cpp
+clean : 
+	$(RM) $(RM_FLAGS) $(CLEAN_FILES)
 
-tb_3dfd : tb_3dfd.cpp
-#   Phase-II compilation
-	${CC} -o tb_3dfd_pochoir ${OPT_FLAGS} tb_3dfd.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_3dfd_pochoir ${POCHOIR_DEBUG_FLAGS} tb_3dfd.cpp
+clobber : clean
+	$(RM) $(RM_FLAGS) $(EXAMPLES)
 
-clean: 
-	rm -f *.o *.i *_pochoir *_pochoir.cpp *.out
