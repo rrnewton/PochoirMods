@@ -33,9 +33,8 @@ CPP_STD_FLAG=-std=c++0x
 # Phase flags
 VERIFY_FLAGS=-O0 -g3 -DDEBUG -debug $(WARNING_FLAGS) $(CPP_STD_FLAG)
 COMPILE_FLAGS=-O3 -DNDEBUG $(WARNING_FLAGS) $(OPT_FLAGS) -xHOST $(ALIAS_FLAGS) $(CPP_STD_FLAG)
-# I wouldn't bet my life on this, but I think all the examples are already verified
-# We assume they can go directly to phase II (compile) flags
 CURRENT_FLAGS=$(COMPILE_FLAGS)
+
 
 #- Cleanup variables -#
 RM=rm
@@ -49,13 +48,16 @@ FINAL_FILES=*_pochoir
 # Build a given example
 % : %.cpp
 	$(PC) $(CURRENT_FLAGS) $< -o $@_pochoir
-	echo NOTE: Executable is named $@_pochoir
+	@echo "NOTE: Executable is named $@_pochoir"
 
-# Set the flags for verification (phase I) compilation
-verify : CURRENT_FLAGS=$(VERIFY_FLAGS)
+verify : 
+	$(eval CURRENT_FLAGS=$(VERIFY_FLAGS))
+	@echo "Performing Phase I (verification) compilation"
 
 # Set the flags for the compile (phase II) compilation (default)
-compile : CURRENT_FLAGS=$(COMPILE_FLAGS)
+compile : 
+	$(eval CURRENT_FLAGS=$(COMPILE_FLAGS))
+	@echo "Performing Phase II (final) compilation"
 
 # Tacky, but so is having the necessary environment variable
 set-path : 
