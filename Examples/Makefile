@@ -15,9 +15,11 @@
 
 # Pochoir depends on an environment variable that isn't documented
 # Since the repo comes packaged with Pochoir in the parent directory,
-# let's just assume that
-# POCHOIR_LIB_PATH=/u/cjfrisz/projects/pochoir-mods
-POCHOIR_LIB_PATH=..
+# let's just assume that it's in the parent directory
+ifndef $(POCHOIR_LIB_PATH)
+	export POCHOIR_LIB_PATH=..
+endif
+
 # Pochoir compiler
 PC=$(POCHOIR_LIB_PATH)/pochoir
 
