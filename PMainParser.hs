@@ -23,7 +23,7 @@
  --------------------------------------------------------------------------------
  -}
 
-module PMainParser where
+module PMainParser (pParser) where
 
 import Text.ParserCombinators.Parsec
 
@@ -37,6 +37,7 @@ import PShow
 -- import Text.Show
 import qualified Data.Map as Map
 
+-- The main parser, which ALSO is the main code generator.
 pParser :: GenParser Char ParserState String
 pParser = do tokens0 <- many $ pToken
              eof
