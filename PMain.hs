@@ -45,7 +45,7 @@ main = do args <- getArgs
           let (inFiles, inDirs, mode, debug, showFile, userArgs) 
                 = parseArgs ([], [], PDefault, False, True, []) args
           whilst (mode == PHelp) $ do
-             printUsage
+             printOptions
              exitFailure
           whilst (mode /= PNoPP) $ do
              ppopp (mode, debug, showFile, userArgs) (zip inFiles inDirs)
@@ -67,15 +67,9 @@ ppopp (mode, debug, showFile, userArgs) ((inFile, inDir):files) =
     do putStrLn ("pochoir called with mode =" ++ show mode)
        pochoirLibPath <- catch (getEnv "POCHOIR_LIB_PATH")(\e -> return "EnvError")
        whilst (pochoirLibPath == "EnvError") $ do
-          putStrLn ("Environment variable POCHOIR_LIB_PATH is NOT set")
+          putStrLn ("Pochoir environment variable not set:")
+          putStrLn ("POCHOIR_LIB_PATH")
           exitFailure
-{-
-       cilkStubPath <- catch (getEnv "CILK_HEADER_PATH")(\e -> return "EnvError")
-       whilst (cilkStubPath == "EnvError") $ do
-          putStrLn ("Environment variable CILK_HEADER_PATH is NOT set")
-          exitFailure
-       let envPath = ["-I" ++ cilkStubPath] ++ ["-I" ++ pochoirLibPath]
--}
        let envPath = ["-I" ++ pochoirLibPath]
        let iccPPFile = inDir ++ getPPFile inFile
        let iccPPArgs = if debug == False
@@ -113,13 +107,7 @@ getPPFile :: String -> String
 getPPFile fname = name ++ ".i"
     where (name, suffix) = break ('.' ==) fname
 
-{-
-getObjFile :: String -> String -> [String]
-getObjFile dir fname = ["-o"] ++ [dir++name]
-    where (name, suffix) = break ('.' ==) fname 
--}
-
-pInitState = ParserState { pMode = PCaching, pState = Unrelated, pMacro = Map.empty, pArray = Map.empty, pStencil = Map.empty, pShape = Map.empty, pRange = Map.empty, pKernel = Map.empty}
+pInitState = ParserState { pMode = PCaching, pMacro = Map.empty, pArray = Map.empty, pStencil = Map.empty, pShape = Map.empty, pRange = Map.empty, pKernel = Map.empty, pKernelFunc = Map.empty, pGuard = Map.empty, pGuardFunc = Map.empty, pTile = Map.empty, pTileOrder = 0 }
 
 icc = "icpc"
 
@@ -128,20 +116,100 @@ iccFlags = ["-O3", "-DNDEBUG", "-std=c++0x", "-Wall", "-Werror", "-ipo"]
 iccPPFlags = ["-P", "-C", "-DNCHECK_SHAPE", "-DNDEBUG", "-std=c++0x", "-Wall", "-Werror", "-ipo"]
 
 -- iccDebugFlags = ["-DDEBUG", "-O0", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
-iccDebugFlags = ["-DDEBUG", "-O0", "-g3", "-std=c++0x"]
+iccDebugFlags = ["-DNDEBUG", "-O0", "-g3", "-std=c++0x"]
 
 -- iccDebugPPFlags = ["-P", "-C", "-DCHECK_SHAPE", "-DDEBUG", "-g3", "-std=c++0x", "-include", "cilk_stub.h"]
-iccDebugPPFlags = ["-P", "-C", "-DCHECK_SHAPE", "-DDEBUG", "-g3", "-std=c++0x"]
+-- iccDebugPPFlags = ["-P", "-C", "-DCHECK_SHAPE", "-DDEBUG", "-g3", "-std=c++0x"]
+iccDebugPPFlags = ["-P", "-C", "-DNDEBUG", "-g3", "-std=c++0x"]
 
 parseArgs :: ([String], [String], PMode, Bool, Bool, [String]) -> [String] -> ([String], [String], PMode, Bool, Bool, [String])
 parseArgs (inFiles, inDirs, mode, debug, showFile, userArgs) aL 
-    | elem "-help" aL =
+    | elem "--help" aL =
         let l_mode = PHelp
-            aL' = delete "-help" aL
+            aL' = delete "--help" aL
         in  (inFiles, inDirs, l_mode, debug, showFile, aL')
+    | elem "-h" aL =
+        let l_mode = PHelp
+            aL' = delete "-h" aL
+        in  (inFiles, inDirs, l_mode, debug, showFile, aL')
+    | elem "-auto-optimize" aL =
+        let l_mode = PDefault
+            aL' = delete "-auto-optimize" aL
+        in  (inFiles, inDirs, l_mode, debug, showFile, aL')
+------------------------------------------------------------------------------
+-- so far, the split-caching mode doesn't work for multiple-kernel case!!!! --
+------------------------------------------------------------------------------
     | elem "-split-caching" aL =
         let l_mode = PCaching
             aL' = delete "-split-caching" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-all-cond-tile-macro-overlap" aL =
+        let l_mode = PAllCondTileMacroOverlap
+            aL' = delete "-all-cond-tile-macro-overlap" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-all-cond-tile-c-pointer-overlap" aL =
+        let l_mode = PAllCondTileCPointerOverlap
+            aL' = delete "-all-cond-tile-c-pointer-overlap" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-all-cond-tile-pointer-overlap" aL =
+        let l_mode = PAllCondTilePointerOverlap
+            aL' = delete "-all-cond-tile-pointer-overlap" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-all-cond-tile-opt-pointer-overlap" aL =
+        let l_mode = PAllCondTileOptPointerOverlap
+            aL' = delete "-all-cond-tile-opt-pointer-overlap" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-unroll-t-tile-macro-overlap" aL =
+        let l_mode = PUnrollTimeTileMacroOverlap
+            aL' = delete "-unroll-t-tile-macro-overlap" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-unroll-t-tile-c-pointer-overlap" aL =
+        let l_mode = PUnrollTimeTileCPointerOverlap
+            aL' = delete "-unroll-t-tile-c-pointer-overlap" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-unroll-t-tile-pointer-overlap" aL =
+        let l_mode = PUnrollTimeTilePointerOverlap
+            aL' = delete "-unroll-t-tile-pointer-overlap" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-unroll-t-tile-opt-pointer-overlap" aL =
+        let l_mode = PUnrollTimeTileOptPointerOverlap
+            aL' = delete "-unroll-t-tile-opt-pointer-overlap" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-all-cond-tile-macro" aL =
+        let l_mode = PAllCondTileMacro
+            aL' = delete "-all-cond-tile-macro" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-all-cond-tile-c-pointer" aL =
+        let l_mode = PAllCondTileCPointer
+            aL' = delete "-all-cond-tile-c-pointer" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-all-cond-tile-pointer" aL =
+        let l_mode = PAllCondTilePointer
+            aL' = delete "-all-cond-tile-pointer" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-all-cond-tile-opt-pointer" aL =
+        let l_mode = PAllCondTileOptPointer
+            aL' = delete "-all-cond-tile-opt-pointer" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-unroll-t-tile-macro" aL =
+        let l_mode = PUnrollTimeTileMacro
+            aL' = delete "-unroll-t-tile-macro" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-unroll-t-tile-c-pointer" aL =
+        let l_mode = PUnrollTimeTileCPointer
+            aL' = delete "-unroll-t-tile-c-pointer" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-unroll-t-tile-pointer" aL =
+        let l_mode = PUnrollTimeTilePointer
+            aL' = delete "-unroll-t-tile-pointer" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-unroll-t-tile-opt-pointer" aL =
+        let l_mode = PUnrollTimeTileOptPointer
+            aL' = delete "-unroll-t-tile-opt-pointer" aL
+        in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
+    | elem "-unroll-multi-kernel" aL =
+        let l_mode = PMUnroll
+            aL' = delete "-unroll-multi-kernel" aL
         in  parseArgs (inFiles, inDirs, l_mode, debug, showFile, aL') aL'
     | elem "-split-c-pointer" aL =
         let l_mode = PCPointer
@@ -195,15 +263,28 @@ findCPP (a:as) (l_files, l_dirs, l_mode, l_al)
     | otherwise = findCPP as (l_files, l_dirs, l_mode, l_al)
 
 printUsage :: IO ()
-printUsage = 
-    do putStrLn ("Usage: ")
-       putStrLn ("pochoir $filename : " ++ breakline ++ "Let the Pochoir compiler automatically choose the best optimizing level for you!")
-       putStrLn ("pochoir -split-macro-shadow $filename : " ++ breakline ++ 
+printUsage =
+    do putStrLn ("Usage: pochoir [OPTION] [filename]")
+       putStrLn ("Try `pochoir --help' for more options.")
+
+printOptions :: IO ()
+printOptions = 
+    do putStrLn ("Usage: pochoir [OPTION] [filename]")
+       putStrLn ("Run the Pochoir stencil compiler on [filename].")
+       putStrLn ("-auto-optimize : " ++ breakline ++ "Let the Pochoir compiler automatically choose the best optimizing level for you! (default)")
+       putStrLn ("-split-macro-shadow $filename : " ++ breakline ++ 
                "using macro tricks to split the interior and boundary regions")
-       putStrLn ("pochoir -split-opt-pointer $filename : " ++ breakline ++ 
-               "split the interior and boundary region, and using optimized C-style pointer to optimize the base case")
-       putStrLn ("pochoir -split-pointer $filename : " ++ breakline ++ 
+       putStrLn ("-split-pointer $filename : " ++ breakline ++ 
                "Default Mode : split the interior and boundary region, and using C-style pointer to optimize the base case")
+       putStrLn ("\n--Following modes are for experimental tiled specification of irregular stencil computation--\n")
+       putStrLn ("-all-cond-tile-macro $filename : " ++ breakline ++
+               "put all conditional check in inner-most loop, and use -split-macro-shadow mode for optimizing the base case")
+       putStrLn ("-all-cond-tile-pointer $filename : " ++ breakline ++
+               "put all conditional check in inner-most loop, and use -split-pointer mode for optimizing the base case")
+       putStrLn ("-unroll-t-tile-macro $filename : " ++ breakline ++
+               "unroll the tiled kernels along time dimension, for conditional check on spatial dimension, we leave them in the inner-most kernel, and use -split-macro-shadow mode for optimizing the base case")
+       putStrLn ("-unroll-t-tile-pointer $filename : " ++ breakline ++
+               "unroll the tiled kernels along time dimension, for conditional check on spatial dimension, we leave them in the inner-most kernel, and use -split-macro-pointer mode for optimizing the base case")
 
 pProcess :: PMode -> Handle -> Handle -> IO ()
 pProcess mode inh outh = 

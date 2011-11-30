@@ -24,8 +24,8 @@
 
 #ifndef POCHOIR_ARRAY_H
 #define POCHOIR_ARRAY_H
-#include <iostream>
-#include <iomanip>
+// #include <iostream>
+// #include <iomanip>
 #include <cstdio>
 #include <cstdlib>
 
@@ -128,6 +128,7 @@ class Pochoir_Array {
             logic_start_[0] = 0; logic_end_[0] = sz0;
             stride_[0] = 1; 
             total_size_ = sz0;
+            shape_ = NULL;
             view_ = NULL;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
             l_null = (T*) calloc(1, sizeof(T));
@@ -142,6 +143,7 @@ class Pochoir_Array {
             logic_start_[0] = 0; logic_end_[0] = sz0;
             logic_start_[1] = 0; logic_end_[1] = sz1;
 			stride_[1] = sz0; stride_[0] = 1; 
+            shape_ = NULL;
 			total_size_ = phys_size_[0] * phys_size_[1];
 			view_ = NULL;
             bv1_ = NULL; bv2_ = NULL; bv3_ = NULL;
@@ -159,6 +161,7 @@ class Pochoir_Array {
             logic_start_[2] = 0; logic_end_[2] = sz2;
 			stride_[0] = 1;  
 			total_size_ = phys_size_[2];
+            shape_ = NULL;
 			for (int i = 0; i < 2; ++i) {
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
@@ -181,6 +184,7 @@ class Pochoir_Array {
             logic_start_[3] = 0; logic_end_[3] = sz3;
 			stride_[0] = 1;  
 			total_size_ = phys_size_[3];
+            shape_ = NULL;
 			for (int i = 0; i < 3; ++i) {
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
@@ -204,6 +208,7 @@ class Pochoir_Array {
             logic_start_[4] = 0; logic_end_[4] = sz4;
 			stride_[0] = 1;  
 			total_size_ = phys_size_[4];
+            shape_ = NULL;
 			for (int i = 0; i < 4; ++i) {
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
@@ -228,6 +233,7 @@ class Pochoir_Array {
             logic_start_[5] = 0; logic_end_[5] = sz5;
 			stride_[0] = 1;  
 			total_size_ = phys_size_[5];
+            shape_ = NULL;
 			for (int i = 0; i < 5; ++i) {
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
@@ -253,6 +259,7 @@ class Pochoir_Array {
             logic_start_[6] = 0; logic_end_[6] = sz6;
 			stride_[0] = 1;  
 			total_size_ = phys_size_[6];
+            shape_ = NULL;
 			for (int i = 0; i < 6; ++i) {
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
@@ -279,6 +286,7 @@ class Pochoir_Array {
             logic_start_[7] = 0; logic_end_[7] = sz7;
 			stride_[0] = 1;  
 			total_size_ = phys_size_[7];
+            shape_ = NULL;
 			for (int i = 0; i < 7; ++i) {
 				total_size_ *= phys_size_[i];
 				stride_[i+1] = stride_[i] * phys_size_[i];
@@ -318,6 +326,7 @@ class Pochoir_Array {
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
             allocMemFlag_ = true;
+            shape_ = NULL;
 		}
 
         /* assignment operator for vector<> */
@@ -343,6 +352,7 @@ class Pochoir_Array {
             data_ = view_->data();
             l_null = (T*) calloc(1, sizeof(T));
             allocMemFlag_ = true;
+            shape_ = NULL;
             return *this;
 		}
 
@@ -351,6 +361,8 @@ class Pochoir_Array {
 			view_->dec_ref();
             allocMemFlag_ = false;
             free(l_null);
+            if (shape_ != NULL) 
+                delete[] shape_;
 		}
 
 		inline Storage<T> * view() {
@@ -380,7 +392,7 @@ class Pochoir_Array {
 
         void unRegister_Boundary(void) { bv1_ = NULL;  bv2_ = NULL; bv3_ = NULL; bv4_ = NULL; ; bv5_ = NULL; bv6_ = NULL; bv7_ = NULL; bv8_ = NULL}
 
-        void Register_Domain(grid_info<N_RANK> initial_grid) {
+        void Register_Domain(Grid_Info<N_RANK> initial_grid) {
             for (int i = 0; i < N_RANK; ++i) {
                 logic_start_[i] = initial_grid.x0[i];
                 logic_end_[i] = initial_grid.x1[i];
@@ -388,6 +400,8 @@ class Pochoir_Array {
             }
         }
 
+        /* This function will be called from Pochoir::Register_Array in pochoir.hpp
+         */
         void Register_Shape(Pochoir_Shape<N_RANK> * shape, int shape_size) {
             /* currently we just get the slope_[] and toggle_ out of the shape[] */
             int l_min_time_shift=0, l_max_time_shift=0, depth=0;
@@ -409,17 +423,17 @@ class Pochoir_Array {
             toggle_ = depth + 1;
             for (int i = 0; i < shape_size; ++i) {
                 for (int r = 1; r < N_RANK+1; ++r) {
-                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs((int)ceil((float)shape[i].shift[r]/(l_max_time_shift - shape[i].shift[0]))));
+                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs((int)ceil((float)shape_[i].shift[r]/(l_max_time_shift - shape_[i].shift[0]))));
                     /* array copy from input parameter shape 
                      * NOTE: this copy exclude the time dimension, 
                      * which is not needed in checking the shape !
                      */
                 }
             }
-#if DEBUG 
-            printf("toggle = %d\n", toggle_);
+#if 1 
+            printf("<%s> toggle = %d\n", __FUNCTION__, toggle_);
             for (int r = 0; r < N_RANK; ++r) {
-                printf("slope[%d] = %d, ", r, slope_[r]);
+                printf("<%s> slope[%d] = %d, ", __FUNCTION__, r, slope_[r]);
             }
             printf("\n");
 #endif
@@ -428,6 +442,9 @@ class Pochoir_Array {
             }
         }
 
+        /* This function could be called directly from user's app to 
+         * register a shape with Pochoir_Array
+         */
         template <size_t N_SIZE>
         void Register_Shape(Pochoir_Shape<N_RANK> (& shape)[N_SIZE]) {
             /* currently we just get the slope_[] and toggle_ out of the shape[] */
@@ -442,17 +459,65 @@ class Pochoir_Array {
                     l_min_time_shift = shape[i].shift[0];
                 if (shape[i].shift[0] > l_max_time_shift)
                     l_max_time_shift = shape[i].shift[0];
+                for (int r = 0; r < N_RANK+1; ++r) {
+                    shape_[i].shift[r] = shape[i].shift[r];
+                }
             }
             depth = l_max_time_shift - l_min_time_shift;
             toggle_ = depth + 1;
             for (int i = 0; i < N_SIZE; ++i) {
                 for (int r = 1; r < N_RANK+1; ++r) {
-                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs((int)ceil((float)shape[i].shift[r]/(l_max_time_shift - shape[i].shift[0]))));
-                    /* array copy from input parameter shape 
-                     * NOTE: this copy exclude the time dimension, 
-                     * which is not needed in checking the shape !
-                     */
-                    shape_[i].shift[r] = shape[i].shift[r];
+                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs((int)ceil((float)shape_[i].shift[r]/(l_max_time_shift - shape_[i].shift[0]))));
+                }
+            }
+#if DEBUG 
+            printf("toggle = %d\n", toggle_);
+            for (int r = 0; r < N_RANK; ++r) {
+                printf("slope[%d] = %d, ", r, slope_[r]);
+            }
+            printf("\n");
+#endif
+            if (!allocMemFlag_) {
+                alloc_mem();
+            }
+        }
+
+        /* This function could be called directly from user's app to 
+         * register a shape with Pochoir_Array
+         */
+        template <size_t N_SIZE1, size_t N_SIZE2>
+        void Register_Shape(Pochoir_Shape<N_RANK> (& shape1)[N_SIZE1], Pochoir_Shape<N_RANK> (& shape2)[N_SIZE2]) {
+            /* currently we just get the slope_[] and toggle_ out of the shape[] */
+            int l_min_time_shift=0, l_max_time_shift=0, depth=0;
+            shape_ = new Pochoir_Shape<N_RANK>[N_SIZE1+N_SIZE2];
+            shape_size_ = N_SIZE1+N_SIZE2;
+            int i;
+            for (int r = 0; r < N_RANK; ++r) {
+                slope_[r] = 0;
+            }
+            for (i = 0; i < N_SIZE1; ++i) {
+                if (shape1[i].shift[0] < l_min_time_shift)
+                    l_min_time_shift = shape1[i].shift[0];
+                if (shape1[i].shift[0] > l_max_time_shift)
+                    l_max_time_shift = shape1[i].shift[0];
+                for (int r = 0; r < N_RANK+1; ++i) {
+                    shape_[i].shift[r] = shape1[i].shift[r];
+                }
+            }
+            for (i = 0; i < N_SIZE2; ++i) {
+                if (shape2[i].shift[0] < l_min_time_shift)
+                    l_min_time_shift = shape2[i].shift[0];
+                if (shape2[i].shift[0] > l_max_time_shift)
+                    l_max_time_shift = shape2[i].shift[0];
+                for (int r = 0; r < N_RANK+1; ++r) {
+                    shape_[i+N_SIZE1].shift[r] = shape2[i].shift[r];
+                }
+            }
+            depth = l_max_time_shift - l_min_time_shift;
+            toggle_ = depth + 1;
+            for (i = 0; i < N_SIZE1+N_SIZE2; ++i) {
+                for (int r = 1; r < N_RANK+1; ++r) {
+                    slope_[N_RANK-r] = max(slope_[N_RANK-r], abs((int)ceil((float)shape_[i].shift[r]/(l_max_time_shift - shape_[i].shift[0]))));
                 }
             }
 #if DEBUG 
@@ -532,15 +597,13 @@ class Pochoir_Array {
 		int logic_size(int _dim) const { return logic_size_[_dim]; }
         /* the size() function is for user's convenience! */
 		int size(int _dim) const { return phys_size_[_dim]; }
+		int slope(int _dim) const { return slope_[_dim]; }
 
 		/* return total_size_ */
 		int total_size() const { return total_size_; }
 
 		/* return stride */
 		int stride (int _dim) const { return stride_[_dim]; }
-
-        /* return slope */
-        int slope (int _dim) const { return slope_[_dim]; }
 
         inline bool check_boundary(size_info const & _idx) const {
             bool touch_boundary = false;
@@ -645,247 +708,11 @@ class Pochoir_Array {
          * - The highest dimension is always time dimension
          * - this is the uninterior version
          */
-		inline T operator() (int _idx1, int _idx0) const {
-            if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before accessing!\n", N_RANK);
-                exit(1);
-            }
-#ifdef CHECK_SHAPE
-            if (inRun) {
-                int l_shift[N_RANK+1];
-                int const l_home_time_cord = shape_[0].shift[0];
-                l_shift[0] = _idx1 - home_cell_[0];
-                l_shift[1] = _idx0 - home_cell_[1];
-                bool l_within_shape = check_shape(l_shift);
-                if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d), shape{%d, %d}\n",
-                            _idx1, _idx0, l_shift[0], l_shift[1]);
-                    print_shape();
-                    exit(1);
-                }
-            }
-#endif
-            bool l_boundary = check_boundary1(_idx1, _idx0);
-            /* we have to guard the use of bv_ by conditional, 
-             * otherwise it may lead to some segmentation fault!
-             */
-            bool set_boundary = (l_boundary && bv1_ != NULL);
-            T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
-            return (set_boundary ? (l_bvalue) : (*view_)[l_idx]);
-		}
-
-		inline T operator() (int _idx2, int _idx1, int _idx0) const {
-            if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
-                exit(1);
-            }
-#ifdef CHECK_SHAPE
-            if (inRun) {
-                int l_shift[N_RANK+1];
-                int const l_home_time_cord = shape_[0].shift[0];
-                l_shift[0] = _idx2 - home_cell_[0];
-                l_shift[1] = _idx1 - home_cell_[1]; l_shift[2] = _idx0 - home_cell_[2];
-                bool l_within_shape = check_shape(l_shift);
-                if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d), shape{%d, %d, %d}\n",
-                            _idx2, _idx1, _idx0,
-                            l_shift[0], l_shift[1], l_shift[2]);
-                    print_shape();
-                    exit(1);
-                }
-            }
-#endif
-            bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv2_ != NULL);
-            T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T operator() (int _idx3, int _idx2, int _idx1, int _idx0) const {
-            if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
-                exit(1);
-            }
-#ifdef CHECK_SHAPE
-            if (inRun) {
-                int l_shift[N_RANK+1];
-                int const l_home_time_cord = shape_[0].shift[0];
-                l_shift[0] = _idx3 - home_cell_[0];
-                l_shift[1] = _idx2 - home_cell_[1]; l_shift[2] = _idx1 - home_cell_[2];
-                l_shift[3] = _idx0 - home_cell_[3];
-                bool l_within_shape = check_shape(l_shift);
-                if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d), shape{%d, %d, %d, %d}\n",
-                            _idx3, _idx2, _idx1, _idx0,
-                            l_shift[0], l_shift[1], l_shift[2], l_shift[3]);
-                    print_shape();
-                    exit(1);
-                }
-            }
-#endif
-            bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv3_ != NULL);
-            T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T operator() (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
-                exit(1);
-            }
-#ifdef CHECK_SHAPE
-            if (inRun) {
-                int l_shift[N_RANK+1];
-                int const l_home_time_cord = shape_[0].shift[0];
-                l_shift[0] = _idx4 - home_cell_[0];
-                l_shift[1] = _idx3 - home_cell_[1]; l_shift[2] = _idx2 - home_cell_[2];
-                l_shift[3] = _idx1 - home_cell_[3]; l_shift[4] = _idx0 - home_cell_[4];
-                bool l_within_shape = check_shape(l_shift);
-                if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d}\n",
-                            _idx4, _idx3, _idx2, _idx1, _idx0,
-                            l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4]);
-                    print_shape();
-                    exit(1);
-                }
-            }
-#endif
-            bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv4_ != NULL);
-            T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T operator() (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
-                exit(1);
-            }
-#ifdef CHECK_SHAPE
-            if (inRun) {
-                int l_shift[N_RANK+1];
-                int const l_home_time_cord = shape_[0].shift[0];
-                l_shift[0] = _idx5 - home_cell_[0];
-                l_shift[1] = _idx4 - home_cell_[1]; l_shift[2] = _idx3 - home_cell_[2];
-                l_shift[3] = _idx2 - home_cell_[3]; l_shift[4] = _idx1 - home_cell_[4];
-                l_shift[5] = _idx0 - home_cell_[5];
-                bool l_within_shape = check_shape(l_shift);
-                if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d}\n",
-                            _idx5, _idx4, _idx3, _idx2, _idx1, _idx0,
-                            l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5]);
-                    print_shape();
-                    exit(1);
-                }
-            }
-#endif
-            bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv5_ != NULL);
-            T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T operator() (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
-                exit(1);
-            }
-#ifdef CHECK_SHAPE
-            if (inRun) {
-                int l_shift[N_RANK+1];
-                int const l_home_time_cord = shape_[0].shift[0];
-                l_shift[0] = _idx6 - home_cell_[0];
-                l_shift[1] = _idx5 - home_cell_[1]; l_shift[2] = _idx4 - home_cell_[2];
-                l_shift[3] = _idx3 - home_cell_[3]; l_shift[4] = _idx2 - home_cell_[4];
-                l_shift[5] = _idx1 - home_cell_[5]; l_shift[6] = _idx0 - home_cell_[6];
-                bool l_within_shape = check_shape(l_shift);
-                if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d}\n",
-                            _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0,
-                            l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6]);
-                    print_shape();
-                    exit(1);
-                }
-            }
-#endif
-            bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv6_ != NULL);
-            T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T operator() (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
-                exit(1);
-            }
-#ifdef CHECK_SHAPE
-            if (inRun) {
-                int l_shift[N_RANK+1];
-                int const l_home_time_cord = shape_[0].shift[0];
-                l_shift[0] = _idx7 - home_cell_[0];
-                l_shift[1] = _idx6 - home_cell_[1]; l_shift[2] = _idx5 - home_cell_[2];
-                l_shift[3] = _idx4 - home_cell_[3]; l_shift[4] = _idx3 - home_cell_[4];
-                l_shift[5] = _idx2 - home_cell_[5]; l_shift[6] = _idx1 - home_cell_[6];
-                l_shift[7] = _idx0 - home_cell_[7];
-                bool l_within_shape = check_shape(l_shift);
-                if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d, %d}\n",
-                            _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0,
-                            l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6], l_shift[7]);
-                    print_shape();
-                    exit(1);
-                }
-            }
-#endif
-            bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv7_ != NULL);
-            T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T operator() (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
-                exit(1);
-            }
-#ifdef CHECK_SHAPE
-            if (inRun) {
-                int l_shift[N_RANK+1];
-                int const l_home_time_cord = shape_[0].shift[0];
-                l_shift[0] = _idx8 - home_cell_[0];
-                l_shift[1] = _idx7 - home_cell_[1]; l_shift[2] = _idx6 - home_cell_[2];
-                l_shift[3] = _idx5 - home_cell_[3]; l_shift[4] = _idx4 - home_cell_[4];
-                l_shift[5] = _idx3 - home_cell_[5]; l_shift[6] = _idx2 - home_cell_[6];
-                l_shift[7] = _idx1 - home_cell_[7]; l_shift[8] = _idx0 - home_cell_[8];
-                bool l_within_shape = check_shape(l_shift);
-                if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d, %d, %d}\n",
-                            _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0,
-                            l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6], l_shift[7], l_shift[8]);
-                    print_shape();
-                    exit(1);
-                }
-            }
-#endif
-            bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv8_ != NULL);
-            T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
 
 		inline T & operator() (int _idx1, int _idx0) {
             if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
+                printf("Pochoir array access error:\n");
+                printf("A Pochoir array is accessed without being registered with a Pochoir object.\n");
                 exit(1);
             }
 #ifdef CHECK_SHAPE
@@ -896,7 +723,8 @@ class Pochoir_Array {
                 l_shift[1] = _idx0 - home_cell_[1];
                 bool l_within_shape = check_shape(l_shift);
                 if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d), shape{%d, %d}\n",
+                    printf("Pochoir off-shape access error:\n");
+                    printf("Pochoir array index (%d, %d)\nShape index {%d, %d}\n",
                             _idx1, _idx0, l_shift[0], l_shift[1]);
                     print_shape();
                     exit(1);
@@ -905,14 +733,17 @@ class Pochoir_Array {
 #endif
             bool l_boundary = check_boundary1(_idx1, _idx0);
             bool set_boundary = (l_boundary && bv1_ != NULL);
-            T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary) 
+                l_bvalue = bv1_(*this, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx2, int _idx1, int _idx0) {
             if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
+                printf("Pochoir array access error:\n");
+                printf("A Pochoir array is accessed without being registered with a Pochoir object.\n");
                 exit(1);
             }
 #ifdef CHECK_SHAPE
@@ -929,7 +760,8 @@ class Pochoir_Array {
                  */
                 if (!l_within_shape) {
 #if 1
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d), shape{%d, %d, %d}\n", _idx2, _idx1, _idx0, l_shift[0], l_shift[1], l_shift[2]);
+                    printf("Pochoir off-shape access error:\n");
+                    printf("Pochoir array index (%d, %d, %d)\nShape index {%d, %d, %d}\n", _idx2, _idx1, _idx0, l_shift[0], l_shift[1], l_shift[2]);
                     print_shape();
                     exit(1);
 #endif
@@ -938,14 +770,17 @@ class Pochoir_Array {
 #endif
             bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv2_ != NULL);
-            T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv2_(*this, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx3, int _idx2, int _idx1, int _idx0) {
             if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
+                printf("Pochoir array access error:\n");
+                printf("A Pochoir array is accessed without being registered with a Pochoir object.\n");
                 exit(1);
             }
 #ifdef CHECK_SHAPE
@@ -957,7 +792,8 @@ class Pochoir_Array {
                 l_shift[3] = _idx0 - home_cell_[3];
                 bool l_within_shape = check_shape(l_shift);
                 if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d), shape{%d, %d, %d, %d}\n",
+                    printf("Pochoir off-shape access error:\n");
+                    printf("Pochoir array index (%d, %d, %d, %d)\nShape index {%d, %d, %d, %d}\n",
                             _idx3, _idx2, _idx1, _idx0,
                             l_shift[0], l_shift[1], l_shift[2], l_shift[3]);
                     print_shape();
@@ -967,14 +803,17 @@ class Pochoir_Array {
 #endif
             bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv3_ != NULL);
-            T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv3_(*this, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
+                printf("Pochoir array access error:\n");
+                printf("A Pochoir array is accessed without being registered with a Pochoir object.\n");
                 exit(1);
             }
 #ifdef CHECK_SHAPE
@@ -986,7 +825,8 @@ class Pochoir_Array {
                 l_shift[3] = _idx1 - home_cell_[3]; l_shift[4] = _idx0 - home_cell_[4];
                 bool l_within_shape = check_shape(l_shift);
                 if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d}\n",
+                    printf("Pochoir off-shape access error:\n");
+                    printf("Pochoir array index (%d, %d, %d, %d, %d)\nShape index {%d, %d, %d, %d, %d}\n",
                             _idx4, _idx3, _idx2, _idx1, _idx0,
                             l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4]);
                     print_shape();
@@ -996,14 +836,17 @@ class Pochoir_Array {
 #endif
             bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv4_ != NULL);
-            T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
+                printf("Pochoir array access error:\n");
+                printf("A Pochoir array is accessed without being registered with a Pochoir object.\n");
                 exit(1);
             }
 #ifdef CHECK_SHAPE
@@ -1016,7 +859,8 @@ class Pochoir_Array {
                 l_shift[5] = _idx0 - home_cell_[5];
                 bool l_within_shape = check_shape(l_shift);
                 if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d}\n",
+                    printf("Pochoir off-shape access error:\n");
+                    printf("Pochoir array index (%d, %d, %d, %d, %d, %d)\nShape index {%d, %d, %d, %d, %d, %d}\n",
                             _idx5, _idx4, _idx3, _idx2, _idx1, _idx0,
                             l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5]);
                     print_shape();
@@ -1026,14 +870,17 @@ class Pochoir_Array {
 #endif
             bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv5_ != NULL);
-            T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
+                printf("Pochoir array access error:\n");
+                printf("A Pochoir array is accessed without being registered with a Pochoir object.\n");
                 exit(1);
             }
 #ifdef CHECK_SHAPE
@@ -1046,7 +893,8 @@ class Pochoir_Array {
                 l_shift[5] = _idx1 - home_cell_[5]; l_shift[6] = _idx0 - home_cell_[6];
                 bool l_within_shape = check_shape(l_shift);
                 if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d}\n",
+                    printf("Pochoir off-shape access error:\n");
+                    printf("Pochoir array index (%d, %d, %d, %d, %d, %d, %d)\nShape index {%d, %d, %d, %d, %d, %d, %d}\n",
                             _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0,
                             l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6]);
                     print_shape();
@@ -1056,14 +904,17 @@ class Pochoir_Array {
 #endif
             bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv6_ != NULL);
-            T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
+                printf("Pochoir array access error:\n");
+                printf("A Pochoir array is accessed without being registered with a Pochoir object.\n");
                 exit(1);
             }
 #ifdef CHECK_SHAPE
@@ -1077,7 +928,8 @@ class Pochoir_Array {
                 l_shift[7] = _idx0 - home_cell_[7];
                 bool l_within_shape = check_shape(l_shift);
                 if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d, %d}\n",
+                    printf("Pochoir off-shape access error:\n");
+                    printf("Pochoir array index (%d, %d, %d, %d, %d, %d, %d, %d)\nShape index {%d, %d, %d, %d, %d, %d, %d, %d}\n",
                             _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0,
                             l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6], l_shift[7]);
                     print_shape();
@@ -1087,14 +939,17 @@ class Pochoir_Array {
 #endif
             bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv7_ != NULL);
-            T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
 
 		inline T & operator() (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (!allocMemFlag_) {
-                printf("Please Register the Pochoir_Array<%d> with a Pochoir object before access!\n", N_RANK);
+                printf("Pochoir array access error:\n");
+                printf("A Pochoir array is accessed without being registered with a Pochoir object.\n");
                 exit(1);
             }
 #ifdef CHECK_SHAPE
@@ -1108,7 +963,8 @@ class Pochoir_Array {
                 l_shift[7] = _idx1 - home_cell_[7]; l_shift[8] = _idx0 - home_cell_[8];
                 bool l_within_shape = check_shape(l_shift);
                 if (!l_within_shape) {
-                    printf("Off-shape access at Pochoir_Array(%d, %d, %d, %d, %d, %d, %d, %d, %d), shape{%d, %d, %d, %d, %d, %d, %d, %d, %d}\n",
+                    printf("Pochoir off-shape access error:\n");
+                    printf("Pochoir array index (%d, %d, %d, %d, %d, %d, %d, %d, %d)\nShape{%d, %d, %d, %d, %d, %d, %d, %d, %d}\n",
                             _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0,
                             l_shift[0], l_shift[1], l_shift[2], l_shift[3], l_shift[4], l_shift[5], l_shift[6], l_shift[7], l_shift[8]);
                     print_shape();
@@ -1118,7 +974,9 @@ class Pochoir_Array {
 #endif
             bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv8_ != NULL);
-            T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
@@ -1166,7 +1024,8 @@ class Pochoir_Array {
 
 		inline T get (int _idx1, int _idx0) {
             if (check_boundary1(_idx1, _idx0)) {
-                printf("Off-boundary access in boundary function at arr.get(%d, %d)\n", _idx1, _idx0);
+                printf("Pochoir illegal access by boundary function error:\n");
+                printf("Out-of-range access by boundary function at index (%d, %d)\n", _idx1, _idx0);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
@@ -1175,7 +1034,8 @@ class Pochoir_Array {
 
 		inline T get (int _idx2, int _idx1, int _idx0) {
             if (check_boundary2(_idx2, _idx1, _idx0)) {
-                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d)\n", _idx2, _idx1, _idx0);
+                printf("Pochoir illegal access by boundary function error:\n");
+                printf("Out-of-range access by boundary function at index (%d, %d, %d)\n", _idx2, _idx1, _idx0);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
@@ -1184,7 +1044,8 @@ class Pochoir_Array {
 
 		inline T get (int _idx3, int _idx2, int _idx1, int _idx0) {
             if (check_boundary3(_idx3, _idx2, _idx1, _idx0)) {
-                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d)\n", _idx3, _idx2, _idx1, _idx0);
+                printf("Pochoir illegal access by boundary function error:\n");
+                printf("Out-of-range access by boundary function at index (%d, %d, %d, %d)\n", _idx3, _idx2, _idx1, _idx0);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
@@ -1193,7 +1054,8 @@ class Pochoir_Array {
 
 		inline T get (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0)) {
-                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d)\n", _idx4, _idx3, _idx2, _idx1, _idx0);
+                printf("Pochoir illegal access by boundary function error:\n");
+                printf("Out-of-range access by boundary function at index (%d, %d, %d, %d, %d)\n", _idx4, _idx3, _idx2, _idx1, _idx0);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
@@ -1202,7 +1064,8 @@ class Pochoir_Array {
 
 		inline T get (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0)) {
-                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d, %d)\n", _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+                printf("Pochoir illegal access by boundary function error:\n");
+                printf("Out-of-range access by boundary function at index (%d, %d, %d, %d, %d, %d)\n", _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
@@ -1211,7 +1074,8 @@ class Pochoir_Array {
 
 		inline T get (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0)) {
-                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d, %d, %d)\n", _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+                printf("Pochoir illegal access by boundary function error:\n");
+                printf("Out-of-range accesss by boundary function at index (%d, %d, %d, %d, %d, %d, %d)\n", _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
@@ -1220,7 +1084,8 @@ class Pochoir_Array {
 
 		inline T get (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0)) {
-                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d, %d, %d, %d)\n", _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+                printf("Pochoir illegal access by boundary function error:\n");
+                printf("Out-of-range access by boundary function at index (%d, %d, %d, %d, %d, %d, %d, %d)\n", _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
@@ -1229,7 +1094,8 @@ class Pochoir_Array {
 
 		inline T get (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             if (check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0)) {
-                printf("Off-boundary access in boundary function at arr.get(%d, %d, %d, %d, %d, %d, %d, %d, %d)\n", _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
+                printf("Pochoir illegal access by boundary function error:\n");
+                printf("Out-of-range access by boundary function at index (%d, %d, %d, %d, %d, %d, %d, %d, %d)\n", _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
                 exit(1);
             }
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
@@ -1240,45 +1106,6 @@ class Pochoir_Array {
          * - The highest dimension is always time dimension
          * - this is the interior (non-checking) version
          */
-		inline T interior (int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
-			return (*view_)[l_idx];
-		}
-
-		inline T interior (int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
-			return (*view_)[l_idx];
-		}
-
-		inline T interior (int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
-			return (*view_)[l_idx];
-		}
-
-		inline T interior (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
-			return (*view_)[l_idx];
-		}
-
-		inline T interior (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
-			return (*view_)[l_idx];
-		}
-
-		inline T interior (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
-			return (*view_)[l_idx];
-		}
-
-		inline T interior (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
-			return (*view_)[l_idx];
-		}
-
-		inline T interior (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
-			return (*view_)[l_idx];
-		}
 
 		inline T & interior (int _idx1, int _idx0) {
 			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
@@ -1320,77 +1147,12 @@ class Pochoir_Array {
 			return (*view_)[l_idx];
 		}
 
-		inline T boundary (int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary1(_idx1, _idx0);
-            /* we have to guard the use of bv_ by conditional, 
-             * otherwise it may lead to some segmentation fault!
-             */
-            bool set_boundary = (l_boundary && bv1_ != NULL);
-            T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
-            return (set_boundary ? (l_bvalue) : (*view_)[l_idx]);
-		}
-
-		inline T boundary (int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv2_ != NULL);
-            T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T boundary (int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv3_ != NULL);
-            T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T boundary (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv4_ != NULL);
-            T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T boundary (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv5_ != NULL);
-            T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T boundary (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv6_ != NULL);
-            T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T boundary (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv7_ != NULL);
-            T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
-		inline T boundary (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) const {
-            bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
-            bool set_boundary = (l_boundary && bv8_ != NULL);
-            T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
-			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
-            return (set_boundary ? l_bvalue : (*view_)[l_idx]);
-		}
-
 		inline T & boundary (int _idx1, int _idx0) {
             bool l_boundary = check_boundary1(_idx1, _idx0);
             bool set_boundary = (l_boundary && bv1_ != NULL);
-            T l_bvalue = (set_boundary) ? bv1_(*this, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv1_(*this, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + (_idx1 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
@@ -1398,7 +1160,9 @@ class Pochoir_Array {
 		inline T & boundary (int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary2(_idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv2_ != NULL);
-            T l_bvalue = (set_boundary) ? bv2_(*this, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv2_(*this, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + (_idx2 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
@@ -1406,7 +1170,9 @@ class Pochoir_Array {
 		inline T & boundary (int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary3(_idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv3_ != NULL);
-            T l_bvalue = (set_boundary) ? bv3_(*this, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv3_(*this, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + (_idx3 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
@@ -1414,7 +1180,9 @@ class Pochoir_Array {
 		inline T & boundary (int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary4(_idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv4_ != NULL);
-            T l_bvalue = (set_boundary) ? bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv4_(*this, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + (_idx4 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
@@ -1422,7 +1190,9 @@ class Pochoir_Array {
 		inline T & boundary (int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary5(_idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv5_ != NULL);
-            T l_bvalue = (set_boundary) ? bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv5_(*this, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + (_idx5 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
@@ -1430,7 +1200,9 @@ class Pochoir_Array {
 		inline T & boundary (int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary6(_idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv6_ != NULL);
-            T l_bvalue = (set_boundary) ? bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv6_(*this, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + (_idx6 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
@@ -1438,7 +1210,9 @@ class Pochoir_Array {
 		inline T & boundary (int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary7(_idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv7_ != NULL);
-            T l_bvalue = (set_boundary) ? bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv7_(*this, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + (_idx7 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
@@ -1446,11 +1220,12 @@ class Pochoir_Array {
 		inline T & boundary (int _idx8, int _idx7, int _idx6, int _idx5, int _idx4, int _idx3, int _idx2, int _idx1, int _idx0) {
             bool l_boundary = check_boundary8(_idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
             bool set_boundary = (l_boundary && bv8_ != NULL);
-            T l_bvalue = (set_boundary) ? bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0) : (*l_null);
+            T & l_bvalue(*l_null);
+            if (set_boundary)
+                l_bvalue = bv8_(*this, _idx8, _idx7, _idx6, _idx5, _idx4, _idx3, _idx2, _idx1, _idx0);
 			int l_idx = _idx0 * stride_[0] + _idx1 * stride_[1] + _idx2 * stride_[2] + _idx3 * stride_[3] + _idx4 * stride_[4] + _idx5 * stride_[5] + _idx6 * stride_[6] + _idx7 * stride_[7] + (_idx8 % toggle_) * total_size_;
             return (set_boundary ? l_bvalue : (*view_)[l_idx]);
 		}
-
 
 		/* size_info is of type int[] */
 		static inline bool update_index(int * index, bool & line_break, int const * head_index, int const * tail_index)
@@ -1472,10 +1247,13 @@ class Pochoir_Array {
 			return whole_done;
 		}
 
+#if 1
 		template <typename T2, int N2>
 		friend std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x); 
+#endif
 };
 
+#if 1
 template<typename T2, int N2>
 std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x) { 
 	typedef int size_info[N2];
@@ -1505,4 +1283,5 @@ std::ostream& operator<<(std::ostream& os, Pochoir_Array<T2, N2> const & x) {
 	}
 	return os; 
 }
+#endif
 #endif // POCHOIR_ARRAY_H
