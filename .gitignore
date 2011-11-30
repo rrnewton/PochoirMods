@@ -2,6 +2,11 @@
 pochoir
 *.hi
 *.o
+*.i
+*_pochoir
+
+# .cpp files created during compilation
+*_pochoir.cpp
 
 # It seems that there are a number of files generated for the Scripts directory
 *.dat
