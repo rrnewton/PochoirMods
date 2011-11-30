@@ -1,0 +1,10 @@
+# Compiled files
+pochoir
+*.hi
+*.o
+
+# It seems that there are a number of files generated for the Scripts directory
+*.dat
+*.span
+*.perf
+*.scal
