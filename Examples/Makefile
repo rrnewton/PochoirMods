@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# File Makefile2: The Reckoning
+# File Makefile: The Reckoning
 # Written by Chris Frisz
 # Created 30 Nov 2011
 # Last updated 30 Nov 2011
@@ -16,7 +16,8 @@
 # Pochoir depends on an environment variable that isn't documented
 # Since the repo comes packaged with Pochoir in the parent directory,
 # let's just assume that
-POCHOIR_LIB_PATH:=..
+# POCHOIR_LIB_PATH=/u/cjfrisz/projects/pochoir-mods
+POCHOIR_LIB_PATH=..
 # Pochoir compiler
 PC=$(POCHOIR_LIB_PATH)/pochoir
 
@@ -46,16 +47,19 @@ FINAL_FILES=*_pochoir
 #----- RULES -----#
 
 # Build a given example
-%_pochoir : %.cpp
-	$(PC) $(CURRENT_FLAGS) $< -o $@
+% : %.cpp
+	$(PC) $(CURRENT_FLAGS) $< -o $@_pochoir
+	echo NOTE: Executable is named $@_pochoir
 
 # Set the flags for verification (phase I) compilation
 verify : CURRENT_FLAGS=$(VERIFY_FLAGS)
-verify :
 
 # Set the flags for the compile (phase II) compilation (default)
 compile : CURRENT_FLAGS=$(COMPILE_FLAGS)
-compile :
+
+# Tacky, but so is having the necessary environment variable
+set-path : 
+	export POCHOIR_LIB_PATH=$(POCHOIR_LIB_PATH)
 
 # Clean up intermediate files
 clean :
