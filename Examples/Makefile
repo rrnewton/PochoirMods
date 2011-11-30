@@ -1,86 +1,66 @@
-#!/bin/bash
-CC = ./pochoir
-ICC = icpc
-OPT_FLAGS = -O3 -DNDEBUG -Wall -Werror -unroll-aggressive -funroll-loops -ipo -xHOST -fno-alias -fno-fnalias -std=c++0x
-POCHOIR_DEBUG_FLAGS = -O0 -g3 -DDEBUG -debug -Wall -Werror -std=c++0x
-ICC_DEBUG_FLAGS = -O0 -g3 -DDEBUG -Wall -Werror -std=c++0x
-heat_1D_NP : tb_heat_1D_NP.cpp
-#   Phase-II compilation
-	${CC} -o tb_heat_1D_NP_pochoir ${OPT_FLAGS} tb_heat_1D_NP.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_heat_1D_NP_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_1D_NP.cpp
+#----------------------------------------------------------------------
+# File Makefile2: The Reckoning
+# Written by Chris Frisz
+# Created 30 Nov 2011
+# Last updated 30 Nov 2011
+#
+# Builds the example programs for the Pochoir stencil compiler
+#
+# This time let's do it right
+#----------------------------------------------------------------------
 
-heat_NP : tb_heat_2D_NP.cpp
-#   Phase-II compilation
-	${CC} -o tb_heat_2D_NP_pochoir ${OPT_FLAGS} tb_heat_2D_NP.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_heat_2D_NP_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_2D_NP.cpp
+#----- VARIABLES -----#
 
-heat_NP_zero : tb_heat_2D_NP_zero.cpp
-#   Phase-II compilation
-#	${CC} -o tb_heat_2D_NP_zero_pochoir ${OPT_FLAGS} tb_heat_2D_NP_zero.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_heat_2D_NP_zero_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_2D_NP_zero.cpp
+#- Path and compiler variables -#
 
-heat_P : tb_heat_2D_P.cpp
-#   Phase-II compilation
-	${CC} -o tb_heat_2D_P_pochoir ${OPT_FLAGS} tb_heat_2D_P.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_heat_2D_P_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_2D_P.cpp
+# Pochoir depends on an environment variable that isn't documented
+# Since the repo comes packaged with Pochoir in the parent directory,
+# let's just assume that
+POCHOIR_LIB_PATH:=..
+# Pochoir compiler
+PC=$(POCHOIR_LIB_PATH)/pochoir
 
-heat_3D_NP : tb_heat_3D_NP.cpp
-#   Phase-II compilation
-	${CC} -o tb_heat_3D_NP_pochoir ${OPT_FLAGS} tb_heat_3D_NP.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_heat_3D_NP_pochoir ${POCHOIR_DEBUG_FLAGS} tb_heat_3D_NP.cpp
+#- Compiler flags -#
 
-apop : apop.cpp
-#   Phase-II compilation
-	${CC} -o apop_pochoir ${OPT_FLAGS} apop.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o apop_pochoir ${POCHOIR_DEBUG_FLAGS} apop.cpp
+# Common flags
+WARNING_FLAGS=-Wall -Werror
+UNROLL_FLAGS=-unroll-aggressive -funroll-loops
+OPT_FLAGS=$(UNROLL_FLAGS) -ipo
+ALIAS_FLAGS=-fno-alias -fno-fnalias
+CPP_STD_FLAG=-std=c++0x
 
-life : tb_life.cpp
-#   Phase-II compilation
-	${CC} -o tb_life_pochoir ${OPT_FLAGS} tb_life.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_life_pochoir ${POCHOIR_DEBUG_FLAGS} tb_life.cpp
+# Phase flags
+VERIFY_FLAGS=-O0 -g3 -DDEBUG -debug $(WARNING_FLAGS) $(CPP_STD_FLAG)
+COMPILE_FLAGS=-O3 -DNDEBUG $(WARNING_FLAGS) $(OPT_FLAGS) -xHOST $(ALIAS_FLAGS) $(CPP_STD_FLAG)
+# I wouldn't bet my life on this, but I think all the examples are already verified
+# We assume they can go directly to phase II (compile) flags
+CURRENT_FLAGS=$(COMPILE_FLAGS)
 
-psa_struct : tb_psa_struct.cpp
-#   Phase-II compilation
-#	${CC} -o tb_psa_struct_pochoir ${OPT_FLAGS} tb_psa_struct.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_psa_struct_pochoir ${POCHOIR_DEBUG_FLAGS} tb_psa_struct.cpp
+#- Cleanup variables -#
+RM=rm
+RM_FLAGS=-f
+INTERMED_FILES=*.o *.i *_pochoir.cpp *.out
+FINAL_FILES=*_pochoir
 
-rna : tb_rna.cpp
-#   Phase-II compilation
-	${CC} -o tb_rna_pochoir ${OPT_FLAGS} tb_rna.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_rna_pochoir ${POCHOIR_DEBUG_FLAGS} tb_rna.cpp
 
-lcs : tb_lcs.cpp
-#   Phase-II compilation
-#	${CC} -o tb_lcs_pochoir ${OPT_FLAGS} tb_lcs.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_lcs_pochoir ${POCHOIR_DEBUG_FLAGS} tb_lcs.cpp
+#----- RULES -----#
 
-berkeley3d7pt : tb_3d7pt.cpp
-#   Phase-II compilation
-#	${CC} -o tb_3d7pt_pochoir ${OPT_FLAGS} tb_3d7pt.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_3d7pt_pochoir ${POCHOIR_DEBUG_FLAGS} tb_3d7pt.cpp
+# Build a given example
+%_pochoir : %.cpp
+	$(PC) $(CURRENT_FLAGS) $< -o $@
 
-berkeley3d27pt : tb_3d27pt.cpp
-#   Phase-II compilation
-#	${CC} -o tb_3d27pt_pochoir ${OPT_FLAGS} tb_3d27pt.cpp
-#	Phase-I compilation with debugging aid
-	${CC} -o tb_3d27pt_pochoir ${POCHOIR_DEBUG_FLAGS} tb_3d27pt.cpp
+# Set the flags for verification (phase I) compilation
+verify : CURRENT_FLAGS=$(VERIFY_FLAGS)
+verify :
 
-tb_3dfd : tb_3dfd.cpp
-#   Phase-II compilation
-	${CC} -o tb_3dfd_pochoir ${OPT_FLAGS} tb_3dfd.cpp
-#	Phase-I compilation with debugging aid
-#	${CC} -o tb_3dfd_pochoir ${POCHOIR_DEBUG_FLAGS} tb_3dfd.cpp
+# Set the flags for the compile (phase II) compilation (default)
+compile : CURRENT_FLAGS=$(COMPILE_FLAGS)
+compile :
 
-clean: 
-	rm -f *.o *.i *_pochoir *_pochoir.cpp *.out
+# Clean up intermediate files
+clean :
+	$(RM) $(RM_FLAGS) $(INTERMED_FILES)
+
+# Clean up all files
+clobber : clean
+	$(RM) $(RM_FLAGS) $(FINAL_FILES)
