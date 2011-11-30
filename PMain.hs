@@ -25,8 +25,9 @@
 
 module Main where
 
-import System
-import IO hiding (try) -- "try" is also defined in Parsec
+import System.Environment
+import System.Exit
+import System.IO
 import Data.List
 import System.Directory 
 import System.Cmd (rawSystem)
